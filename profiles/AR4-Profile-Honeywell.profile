@@ -44,7 +44,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>AR_webinar_Object__c.webinar_cust_field__c</field>
         <readable>true</readable>
     </fieldPermissions>
