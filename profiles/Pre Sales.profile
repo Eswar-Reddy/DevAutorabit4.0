@@ -11,7 +11,6 @@
         <visible>false</visible>
     </applicationVisibilities>
     <custom>true</custom>
-    <description>testing changes 2</description>
     <fieldPermissions>
         <editable>true</editable>
         <field>dddd__c.Name__c</field>

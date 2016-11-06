@@ -146,6 +146,16 @@
         <field>Student__c.Student_Texter__c</field>
         <readable>false</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>dddd__c.Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>dddd__c.skills__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <layoutAssignments>
         <layout>ARCB1__c-ARCB1 Layout</layout>
         <recordType>ARCB1__c.ARCB1R1</recordType>
@@ -194,6 +204,9 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Suggestion__c-Suggestion Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>dddd__c-dddd Layout</layout>
     </layoutAssignments>
     <pageAccesses>
         <apexPage>ARHelp</apexPage>
@@ -245,6 +258,10 @@
     <userPermissions>
         <enabled>true</enabled>
         <name>ApiEnabled</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ApproveContract</name>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
@@ -301,6 +318,10 @@
     <userPermissions>
         <enabled>true</enabled>
         <name>EditOppLineItemUnitPrice</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>EditReports</name>
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
