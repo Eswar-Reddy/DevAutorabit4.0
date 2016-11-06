@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
+        <application>FirstApp</application>
+        <default>false</default>
+        <visible>false</visible>
+    </applicationVisibilities>
+    <applicationVisibilities>
+        <application>Suggestion_Box</application>
+        <default>false</default>
+        <visible>false</visible>
+    </applicationVisibilities>
+    <applicationVisibilities>
         <application>testLightning_Page</application>
         <default>false</default>
         <visible>true</visible>
@@ -179,6 +189,12 @@
     <layoutAssignments>
         <layout>Chair__c-Chair Layout</layout>
     </layoutAssignments>
+    <layoutAssignments>
+        <layout>FirstApp__c-FirstApp Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Suggestion__c-Suggestion Layout</layout>
+    </layoutAssignments>
     <pageAccesses>
         <apexPage>ARHelp</apexPage>
         <enabled>false</enabled>
@@ -198,8 +214,16 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>FirstApp__c</tab>
+        <visibility>Hidden</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>Sampler</tab>
         <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
+        <tab>Suggestion__c</tab>
+        <visibility>Hidden</visibility>
     </tabVisibilities>
     <userLicense>Salesforce</userLicense>
     <userPermissions>
