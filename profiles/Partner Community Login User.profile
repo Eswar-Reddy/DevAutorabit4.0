@@ -182,9 +182,9 @@
     </classAccesses>
     <custom>false</custom>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>ARCobjA1__c.ARCobjA1_desc__c</field>
-        <readable>true</readable>
+        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
@@ -387,14 +387,11 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>ArObjB1__c-ArObjB1 Layout</layout>
+        <recordType>ArObjB1__c.ArObjB1_qustions2</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>ArObjB1__c-ArObjB1 Layout</layout>
         <recordType>ArObjB1__c.ArObjB1</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>ArObjB1__c-ArObjB1 Layout</layout>
-        <recordType>ArObjB1__c.ArObjB1_qustions2</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Asset-Asset Layout</layout>

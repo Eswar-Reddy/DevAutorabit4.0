@@ -387,14 +387,11 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>ArObjB1__c-ArObjB1 Layout</layout>
+        <recordType>ArObjB1__c.ArObjB1_qustions2</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>ArObjB1__c-ArObjB1 Layout</layout>
         <recordType>ArObjB1__c.ArObjB1</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>ArObjB1__c-ArObjB1 Layout</layout>
-        <recordType>ArObjB1__c.ArObjB1_qustions2</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Asset-Asset Layout</layout>
@@ -404,9 +401,6 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>CampaignMember-Campaign Member Page Layout</layout>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>Case-Case Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Case-Case Layout</layout>
