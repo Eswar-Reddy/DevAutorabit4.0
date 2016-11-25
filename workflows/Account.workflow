@@ -9,6 +9,15 @@
         <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
+    <fieldUpdates>
+        <fullName>FIeldUpdate1</fullName>
+        <field>AccountSource</field>
+        <literalValue>Phone Inquiry</literalValue>
+        <name>FIeldUpdate1</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
     <rules>
         <fullName>AccountWFR Test</fullName>
         <actions>
