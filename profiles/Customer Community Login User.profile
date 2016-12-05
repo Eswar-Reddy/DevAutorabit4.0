@@ -152,6 +152,10 @@
         <apexClass>Welcome31</apexClass>
         <enabled>false</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>WelcomeTest2</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
     <custom>false</custom>
     <fieldPermissions>
         <editable>false</editable>
@@ -329,14 +333,11 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>ArObjB1__c-ArObjB1 Layout</layout>
+        <recordType>ArObjB1__c.ArObjB1_qustions2</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>ArObjB1__c-ArObjB1 Layout</layout>
         <recordType>ArObjB1__c.ArObjB1</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>ArObjB1__c-ArObjB1 Layout</layout>
-        <recordType>ArObjB1__c.ArObjB1_qustions2</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Asset-Asset Layout</layout>
