@@ -24,6 +24,10 @@
             <name>Account_WFU_Test</name>
             <type>FieldUpdate</type>
         </actions>
+        <actions>
+            <name>FIeldUpdate1</name>
+            <type>FieldUpdate</type>
+        </actions>
         <active>true</active>
         <criteriaItems>
             <field>Account.Name</field>
