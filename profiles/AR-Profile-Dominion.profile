@@ -5,6 +5,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>ARApexClass</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ARApexClass1</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -45,7 +49,37 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>AR_CustObj_PTCDemo__c.AR_CustField_PTC__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>AR_CustObj_Sunrun__c.CustField_Sunrun__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>AR_CustomObj_VeriMatrixDemo__c.AR_CustField_VeriMatrix__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>AR_Illumina_Obj__c.AR_Illumina_CustField__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>AR_Toyota_CustObj__c.AR_Toyota_CustField__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>AR_webinar_Object__c.webinar_cust_field__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>AlexObject01__c.Child_Pick__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -56,6 +90,16 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>CiscoDemoObj__c.CiscoDemoCustField__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>CustObj_SunTrust__c.CustField_SunTrust__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>MckessenDemo__c.MckessenField__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <layoutAssignments>
@@ -84,6 +128,31 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Opportunity Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AR_CustObj_PTCDemo__c-AR-CustObj-PTCDemo Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AR_CustObj_Sunrun__c-AR-CustObj-Sunrun Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AR_CustomObj_VeriMatrixDemo__c-AR-CustomObj-VeriMatrixDemo Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AR_Illumina_Obj__c-AR-Illumina-Obj Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AR_Toyota_CustObj__c-AR-Toyota-CustObj Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AlexObject01__c-AlexObject01 Layout</layout>
+        <recordType>AlexObject01__c.Alex_Type_02</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>CustObj_SunTrust__c-CustObj_SunTrust Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>MckessenDemo__c-MckessenDemo Layout</layout>
     </layoutAssignments>
     <objectPermissions>
         <allowCreate>false</allowCreate>
@@ -148,6 +217,20 @@
         <object>CiscoDemoObj__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>AlexObject01__c.Alex_Type_01</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>true</default>
+        <recordType>AlexObject01__c.Alex_Type_02</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <tabVisibilities>
+        <tab>AlexObject01__c</tab>
+        <visibility>Hidden</visibility>
+    </tabVisibilities>
     <userLicense>Salesforce</userLicense>
     <userPermissions>
         <enabled>true</enabled>
