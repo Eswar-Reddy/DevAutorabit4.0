@@ -1,0 +1,126 @@
+<apex:page controller="LiveChatPreFormController" showHeader="false" language="{!language}">
+    <script type="text/javascript">
+        (function() {
+            function handlePageLoad() {
+                var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+                document.getElementById('prechatForm').setAttribute('action',
+                decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+            }
+            if (window.addEventListener) {
+                window.addEventListener('load', handlePageLoad, false);
+            } else {
+                window.attachEvent('onload', handlePageLoad, false);
+            }
+        })();
+        
+        function setName(){
+            var firstName = document.getElementById("customField1").value;
+            var lastName = document.getElementById("customField2").value;
+            var emailAddress = document.getElementById("customField3").value;
+            var firstNameTrim = myTrim(firstName);
+            var lastNameTrim = myTrim(lastName);
+            var emailAddressTrim = myTrim(emailAddress);
+            if (firstNameTrim != "") {
+                document.getElementById("windowName").value = firstNameTrim + " " + lastNameTrim;
+            } else if (lastNameTrim != "") {
+                document.getElementById("windowName").value = lastNameTrim;
+            } else if (emailAddressTrim != "") {
+                document.getElementById("windowName").value = emailAddressTrim;
+            }
+            return true;
+        }
+        
+        function myTrim(x) {
+            return x.replace(/^\s+|\s+$/gm,'');
+        }
+
+    </script>
+    
+    <form method='post' id='prechatForm'>
+        <div class="center">
+        
+        <table>
+            <tr>
+                <td align="center">
+                    <c:LiveChatSunpowerImage />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">{!$Label.Live_Chat_Survey_Chat_with_CSR}</td>
+            </tr>
+        </table>
+        <div style="height:40px"></div>
+        <table>
+            <tr>
+                <td style="width:100px">{!$Label.Live_Chat_Survey_First_Name}</td>
+                <td><input type='text' name='liveagent.prechat:FirstNameDetail' id='customField1' style="width:300px"/></td>
+            </tr>
+            <tr>
+                <td>{!$Label.Live_Chat_Survey_Last_Name}</td>
+                <td><input type='text' name='liveagent.prechat:LastNameDetail' id='customField2' style="width:300px"/></td>
+            </tr>
+            <tr>
+                <td>{!$Label.Live_Chat_Survey_E_mail_Address}</td>
+                <td><input type='text' name='liveagent.prechat:EmailAddress' id='customField3' style="width:300px"/></td>
+            </tr>
+            <tr>
+                <td>{!$Label.Live_Chat_Survey_Phone_Number}</td>
+                <td><input type='text' name='liveagent.prechat:PhoneNumber' id='customField4' style="width:300px"/></td>
+            </tr>
+            <tr>
+                <td>{!$Label.Live_Chat_Survey_Case_Number}</td>
+                <td><input type='text' name='liveagent.prechat:CaseNumber' id='customField6' style="width:100px"/></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="radio" name="liveagent.prechat:RelatedTo" value="Lease"/>Lease<br/>
+                    <input type="radio" name="liveagent.prechat:RelatedTo" value="Purchase"/>Purchase<br/>
+                    <input type="radio" name="liveagent.prechat:RelatedTo" value="Other"/>Other
+                    
+                </td>
+            </tr>
+        </table>
+        
+        <table>
+            <tr>
+                <td>{!$Label.Live_Chat_Survey_How_can_we_help_you}</td>
+                <td></td>
+            </tr>
+                <td><textarea name='liveagent.prechat:HowCanWeHelpYou' id='customField7' style='width:300px;height:50px'/></td>
+                <td><input type='submit' value='Submit' onClick="setName()" id='prechat_submit'/></td>
+            <tr>
+            
+            </tr>
+        </table>
+        
+        </div>
+
+        <input type="hidden" name="liveagent.prechat.findorcreate.map:Contact" value="FirstName,FirstNameDetail;LastName,LastNameDetail;Email,EmailAddress" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map:Lead" value="FirstName,FirstNameDetail;LastName,LastNameDetail;Email,EmailAddress" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map:Account" value="FirstName,FirstNameDetail;LastName,LastNameDetail;Email__c,EmailAddress" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map:Case" value="CaseNumber,CaseNumber" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Contact" value="Email,true" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Lead" value="Email,true" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Account" value="Email__c,true" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map.doFind:Case" value="CaseNumber,true" />
+        <input type="hidden" name="liveagent.prechat.findorcreate.map.isExactMatch:Contact" value="Email,true" />
+        
+        <input type="hidden" name="liveagent.prechat.name" id='windowName' />
+        
+        <input type="hidden" name="liveagent.prechat.save:FirstNameDetail" value="First_Name__c" />
+        <input type="hidden" name="liveagent.prechat.save:LastNameDetail" value="Last_Name__c" />
+        <input type="hidden" name="liveagent.prechat.save:EmailAddress" value="Email_Address__c" />
+        <input type="hidden" name="liveagent.prechat.save:PhoneNumber" value="Phone_Number__c" />
+        <input type="hidden" name="liveagent.prechat.save:CaseNumber" value="Case_Number__c" />
+        <input type="hidden" name="liveagent.prechat.save:RelatedTo" value="Related_To__c" />
+        <input type="hidden" name="liveagent.prechat.save:HowCanWeHelpYou" value="How_can_we_help_you__c" />
+        
+        <style type="text/css">
+            .center {
+                margin: 5px;
+                border:1px solid black;
+                padding: 5px;
+            }
+        </style>
+    </form>
+</apex:page>

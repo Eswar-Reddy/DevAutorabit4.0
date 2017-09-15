@@ -1,0 +1,141 @@
+<apex:page controller="QuoteAmendmentDeltaController" docType="html-5.0"  standardStylesheets="false">
+<!--
+	<apex:includeScript value="{!URLFOR($Resource.jQuery_3_2_1_min)}"/>
+	<apex:includeScript value="{!URLFOR($Resource.Moment_js_2_18_1_with_locals)}"/>
+
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+
+    <style type="text/css">
+        .sunpower-style .btn {
+            line-height: 1;
+        }
+        .sunpower-style .btn.disabled,
+        .sunpower-style .btn:disabled {
+        	pointer-events: none !important;
+        }
+        .sp-blue {
+            color: #0076be;
+        }
+    </style>
+
+    <body class="detail-container">
+	    <div class="sunpower-style">
+	    	<apex:form >
+	    		<apex:messages />
+	    		<div class="row">
+	    			<div class="col-xs-12">
+		                <h3>Quote Amendment</h3>
+		                <hr/>
+		            </div>
+	    		</div>
+	    		<div id="headerSection">
+	    			<div class="row">
+		    			<div class="col-xs-12">
+			                <div class="alert alert--info">
+			                	<span>Please select which type of Amendment you would like to process.</span>
+			                </div>
+			            </div>
+		    		</div>
+		    		<div class="row" style="margin-bottom: .5rem;">
+		    			<div class="col-xs-12">
+			                <h4>Homeowner Information Amendment</h4>
+			                <div style="text-align: right;">
+			                	<span>Click this button to add/remove cosignees, update addresses, etc, etc...&nbsp;&nbsp;&nbsp;</span>
+			                	<apex:commandButton styleClass="btn btn-secondary btn--small" action="{!goHOChange}" value="Launch"/>
+			                </div>
+			                <hr/>
+			            </div>
+		    		</div>
+		    		<div class="row" style="margin-bottom: .5rem;">
+		    			<div class="col-xs-12">
+			                <h4>Economic Amendment</h4>
+			                <div style="text-align: right;">
+			                	<span>Click this button to change products and pricing.&nbsp;&nbsp;&nbsp;</span>
+			                	<button class="btn btn-secondary btn--small">Launch</button>
+			                </div>
+			                <hr/>
+			            </div>
+		    		</div>
+		    		<h4>Admin Test Section</h4>
+			    	<apex:pageBlock >
+		    			<apex:pageBlockSection >
+		    				<apex:inputField value="{!newQuote.Amended_Lease__c}" label="Select New Quote "/>
+		    				<apex:inputField value="{!oldQuote.Amended_Lease__c}" label="Select Old Quote "/>
+				        </apex:pageBlockSection>
+				        <apex:pageBlockButtons location="bottom">
+				        	<apex:commandButton styleClass="btn btn-primary btn--small" action="{!runComparison}" value="Compare Quotes"/>
+				        </apex:pageBlockButtons>
+				    </apex:pageBlock>
+				</div>
+	    		<div id="amendmentChanges">
+		    		<div class="row" style="margin-bottom: .5rem;">
+		    			<div class="col-xs-12">
+		    				<div class="row" style="margin-bottom: .25rem;">
+				    			<div class="col-xs-12">
+					                <h4>Review Economic Changes</h4>
+					                <p>Scroll down and click the submit button once you've reviewed your changes.</p>
+					            </div>
+				    		</div>
+					    	<apex:repeat value="{!objectChangesMap}" var="lbl">
+					    		<div class="row" style="margin-bottom: .25rem;">
+					    			<div class="col-xs-12">
+						                <h5>{!lbl}&nbsp;Changes</h5>
+						            </div>
+					    		</div>
+					    		<table class="table">
+					                <thead>
+					                    <td width="33%" style="font-weight: bold;">Field</td>
+					                    <td width="33%" style="font-weight: bold;">New Value</td>
+					                    <td width="33%" style="font-weight: bold;">Old Value</td>
+					                </thead>
+					                <tbody>
+					                    <apex:repeat value="{!objectChangesMap[lbl]}" var="cd">
+					                        <tr>
+					                        	<td width="33%">{!cd.fieldLabel}</td>
+					                        	<td width="33%">{!cd.newValue}</td>
+					                        	<td width="33%">{!cd.oldValue}</td>
+					                        </tr>
+					                    </apex:repeat>
+					                </tbody>
+					            </table>
+					    	</apex:repeat>
+					    </div>
+					</div>
+					<div class="row" style="align-items: baseline;">
+						<div class="col-xs-9" style="text-align: right;">
+							<strong>
+		    				<apex:inputCheckbox value="{!overridePrice}">Override Price&nbsp;</apex:inputCheckbox>&nbsp;&nbsp;&nbsp;&nbsp;
+		    				<apex:inputCheckbox value="{!overrideProduct}">Override Product&nbsp;</apex:inputCheckbox>&nbsp;&nbsp;&nbsp;&nbsp;
+		    				<apex:inputCheckbox value="{!overrideEnegry}">Override Enegry&nbsp;</apex:inputCheckbox>
+		    				</strong>
+		    			</div>
+		    			<div class="col-xs-3" style="text-align: right;">
+		    				<apex:commandButton styleClass="btn btn-primary btn--small" action="{!submitChanges}" value="Submit Changes"/>
+		    			</div>
+		    		</div>
+		    	</div>
+		    </apex:form>
+	    </div>
+	</body>
+	<footer class="sunpower-style">
+		<div class="row" >
+			<div class="col-xs-12">
+			</div>
+		</div>
+	</footer>
+
+    <c:SPCommunityAppResources_JS />
+    <script type="text/javascript">
+        $(document).ready(function() {
+        	var isDeltaView = '{!hasIds}';
+        	// check if page has Id's for delta view
+        	if(isDeltaView == 'true') {
+        		$('#amendmentChanges').show();
+        		$('#headerSection').hide();
+        	} else {
+        		$('#headerSection').show();
+        		$('#amendmentChanges').hide();
+        	}
+        })
+    </script>-->
+</apex:page>

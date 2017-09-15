@@ -1,0 +1,47 @@
+<apex:page showHeader="false" sidebar="false" controller="UploadFileNewController" id="pg">
+<script>
+</script>
+
+<apex:form > 
+	
+	<!-- <apex:pageBlock id="pgblockQues" title="Image already Uploaded on Questions :" rendered="{!isQuestions}">
+		  <apex:pageblockTable id="pbtQues" value="{!lstquesno}" var="ques" columns="3" >
+		  	<apex:column HeaderValue="Question number" value="{!ques}"/>
+		  </apex:pageblockTable>
+		</apex:pageBlock>
+		
+		<br/><br/> -->	
+		
+		<apex:pageBlock id="pgblockQuesImg" title="Question number with Uploaded Image:" rendered="{!isQuestions}">
+		  <apex:pageblockTable id="pbtQues" value="{!lstShowQuesClass}" var="quesImg" columns="3" >
+		  	<apex:column headerValue="Question number" value="Ques No. {!quesImg.quesno}"/>
+		    <apex:column headerValue="Image" >
+		       <image src = "/servlet/servlet.FileDownload?file={!quesImg.attachImg}" style="height:100px;width:100px;" /> 
+		     </apex:column> 
+		  </apex:pageblockTable>
+		</apex:pageBlock>
+		<br/><br/>
+        <apex:pageBlock id="pgblockImport" title="Upload File">
+           <apex:pageBlockButtons location="top" id="importButton">
+        		<input type="button" id="close" value="Close" onclick="window.close();" class="btn"/>
+           </apex:pageBlockButtons>
+           <apex:pageblockSection >
+            	<apex:pageBlockSectionItem >
+               			<apex:outputLabel value="Enter Question no."/>
+                     	<apex:inputtext id="inptextquestion" required="true" value="{!quesnumber}" ></apex:inputtext>
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Upload From" />
+                        <apex:inputFile value="{!contentFile}" filename="{!nameFile}"  />  <!-- contentType="{!contentTypeFile}" -->
+                </apex:pageBlockSectionItem>
+                <br/>
+                <apex:pageblockSectionItem >
+                   		<apex:commandButton value="Upload" action="{!UploadFile}" />
+                          <!--
+                          <input type="button" value="Upload" onclick="jsUploadFile()" />
+                          -->
+            	</apex:pageblockSectionItem>
+         </apex:pageblockSection>
+       </apex:pageBlock>
+     </apex:form>
+</apex:page>

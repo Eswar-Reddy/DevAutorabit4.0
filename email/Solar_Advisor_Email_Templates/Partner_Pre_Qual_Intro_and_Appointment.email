@@ -1,0 +1,142 @@
+<messaging:emailTemplate subject="{!relatedTo.Primary_Contact_First_Name__c}, meet your SunPower Partner!" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+    <style type="text/css">
+    body {
+        background-color: #FFFFFF;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        font-family: Arial, Futura;
+        color: #555555;
+    }
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    table {
+        margin-top: 0pt;
+    }
+    p,table{
+        font-size: 11pt;
+    }
+    a { color:#0070c0; text-decoration:none}
+    a:visited { color:#0070c0; text-decoration:none}
+    a:link { color:#0070c0; text-decoration:none}
+    a:hover { color:#0070c0; text-decoration:none}
+
+    li {
+        line-height:20px;
+        margin-bottom: 10pt;
+        display: list-item;
+        padding-bottom:5px;
+    }
+    
+    </style>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="960px"><img src="https://c.na6.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+            <tr>
+                <td align="right"  style="padding-top:20px; padding-right:50px; outline:none">
+                    <!-- Company Name Merge Field-->
+                    <span style="text-align:right;font-family:Avenir Next;font-size:20pt;"><b>Meet your SunPower® Partner</b></span>
+                </td>
+            </tr>
+            
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px" style="padding-left:50px; padding-right:25px; text-decoration:none; outline:none;">
+                    
+                    <p style="margin-top:20px">Hello <font color="#555555">{!relatedTo.Primary_Contact_First_Name__c}</font>,</p>
+                    
+                    <p style="margin-right:20px">Thank you so much for your interest in SunPower®. We’re excited that you have taken the first step to going solar at home. 
+                        Below is a confirmation of your appointment with {!relatedTo.Partner_Account_Id__r.Name}.  
+                        {!relatedTo.Partner_Account_Id__r.Name} is a highly trained and qualified SunPower® partner who work with you to deliver the right solar system to meet your specific needs.</p>
+
+                    <!--Table-->
+                    <table width="98%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#FDB723;border-spacing:0;">
+                    <tr>
+                        <td style="background: #FDB723;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                            <span style="font-size:16px;font-weight:bold;align:center"> Appointment and SunPower Partner Information: </span>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                        <td style="padding-top:20px;padding-right:30px;"> 
+                            <ul>
+                              <li>
+                                 <b>Date and Time: </b><br/>
+                                        <apex:outputText value="{0,date,long}">
+                                        <apex:param value="{!relatedTo.Appointment_Date__c}" />
+                                        </apex:outputText> {!relatedTo.Appointment_Time__c}<br/><br/>
+
+                                 <b>Location:</b> <br/>
+                                    {!relatedto.account.BillingStreet}<br/>
+                                    {!relatedto.account.BillingCity}, {!relatedto.account.Billingstate} {!relatedto.account.BillingPostalCode}<br/><br/>
+                             
+                              </li>    
+                              <li>
+                                 <b>{!relatedTo.Partner_Account_text__c}</b> will support you during this process. If you need to reach your SunPower Partner: <br/>
+                                          <b>Phone: </b>{!relatedTo.Partner_Phone__c} <br/>
+                                          <b>Email: </b>{!relatedTo.Partner_Account_Id__r.Email__c} 
+                              </li>
+                              <li>
+                                 Click <apex:outputLink value="{!relatedTo.Partner_Account_Id__r.Website}"> here </apex:outputlink> to learn more about your SunPower Partner.          
+                              </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </table>
+                    
+                    <p style="margin-top:20px"> 
+                        In order to build a solution for your home, {!relatedTo.Partner_Account_Id__r.Name} will need your electric usage for the past 12 months prior to your meeting.  
+                        Your usage information will help {!relatedTo.Partner_Account_Id__r.Name} understand your energy usage. 
+                    </p>
+
+                    <pstyle="margin-top:20px">
+                        We know that making the right choice for your home is extremely important and we want to make certain we have enough time to answer all of your questions.  
+                        For that reason, please plan on spending at least 45 minutes with {!relatedTo.Partner_Account_Id__r.Name}. 
+                    </p>
+                    
+                    
+                    <p style="margin-top:20px">Thank you again for your interest in the best solar solution under the sun. Looking forward to changing how our world is powered together.</p>
+                    <p style="margin-top:20px">Regards,</p>
+                    <p style="margin-top:20px">
+                        <b>The SunPower Team</b>
+                        <br></br>
+                    </p>
+                </td>
+                
+            </tr>
+            <tr>
+                <td>
+                    <!-- SUN IMAGE we can't put this as a background, if we made it as a background image, it will work on gmail but not on MS Outlook -- in PROD -->
+                    <img src="https://c.na6.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOy&oid=00D80000000ZF1L&lastMod=1395962974000" width="960px"/>
+                </td>
+            </tr>
+            <!--Footer Wrapper-->
+            <tr>
+                <td  style="padding-top:20px; padding-left:50px; padding-right:50px; outline:none; margin-bottom:0pt;line-height:normal;margin-left:18pt;margin-right:17pt;font-size:8pt;">
+                    <p style="font-size: 8pt">
+                        Disclaimers:
+                         
+                            <p>We do not share your information outside of SunPower and your Dealer Partner. <a href="http://us.sunpower.com/privacy/">Privacy Statement</a></p>
+
+                       © 2015 SunPower Corporation.  All Rights Reserved.  SUNPOWER and the SUNPOWER logo are trademarks or registered trademarks of SunPower Corporation in the U.S. and other countries as well.  
+                    </p>
+                    
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

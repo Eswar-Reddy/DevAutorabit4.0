@@ -1,0 +1,192 @@
+<apex:page standardController="Roof_Design__c" extensions="DesignDetailsController" tabStyle="Account" >
+    <style>
+        .ct{text-align:center;}
+    </style>
+    
+    <br/>
+        <apex:sectionHeader subtitle="{!rDesignWrapper.roofDesign.Account_Name__r.Name}" title="Account"/>
+    
+    
+    <b><apex:outputLabel value="Design output for " style="font-size: 120%;" ></apex:outputLabel></b>
+    <a href="#" onclick="window.top.location='/{!rDesignWrapper.roofDesign.Id}';"><font size="3em">{!rDesignWrapper.roofDesign.Name}</font></a>
+    <br/><br/>
+    <apex:pageBlock mode="maindetail" >
+        <apex:pageBlockSection title="System Summary" collapsible="false" columns="2">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Size (kW)</apex:outputLabel>
+                
+                <apex:outputText value="{0, number,####.##}">
+                    <apex:param value="{!rDesignWrapper.roofDesign.System_Size__c/1000}" />
+                </apex:outputText>
+                <!--<apex:outputText >{!rDesignWrapper.roofDesign.System_Size__c/1000}</apex:outputText>-->
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Annual Production (kWh)</apex:outputLabel>
+                <apex:outputText value="{0, number, integer}">
+                    <apex:param value="{!rDesignWrapper.energyProdYr1.Annual__c}" />
+                </apex:outputText>
+                <!--<apex:outputLabel >{!rDesignWrapper.energyProdYr1.Annual__c}</apex:outputLabel>-->
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Inverter(s)</apex:outputLabel>
+                <apex:outputLabel >{!rDesignWrapper.inverters}</apex:outputLabel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Module Count</apex:outputLabel>
+                <apex:outputLabel >{!rDesignWrapper.moduleCount}</apex:outputLabel>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        
+        <apex:pageBlockSection title="Monthly Production (kWh)" collapsible="false" columns="1">
+            <apex:pageBlockTable columnClasses="ct" value="{!rDesignWrapper}" var="rDes" columns="12" width="100%">
+                <apex:column headerValue="January" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Jan__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="February" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Feb__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="March" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Mar__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="April" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Apr__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="May" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.May__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="June" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Jun__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="July" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Jul__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="August" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Aug__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="September" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Sep__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="October" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Oct__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="November" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Nov__c}" />
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headerValue="December" headerClass="ct">
+                    <apex:outputText value="{0, number, integer}">
+                        <apex:param value="{!rDes.energyProdYr1.Dec__c}" />
+                    </apex:outputText>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        
+        <br/><br/>
+        
+        <!--------------------------------------------ROOF(ARRAY) DETAILS----------------------------------->
+        
+        <apex:pageBlockSection title="Roof(s)" collapsible="false" columns="1" >
+        
+            <apex:repeat value="{!rDetailWrapperList}" var="rDet">
+            
+                <apex:pageBlockSection columns="2" title="{!rDet.RoofDetail.Name}" collapsible="false">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Azimuth (Degrees)</apex:outputLabel>
+                        <apex:outputText value="{0, number,integer}">
+                            <apex:param value="{!rDet.RoofDetail.Direction__c}" />
+                        </apex:outputText>
+                        <!--<apex:outputLabel >{!rDet.RoofDetail.Direction__c}</apex:outputLabel>-->
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Pitch (Degrees)</apex:outputLabel>
+                        <!--
+                        <apex:outputText value="{0, number,integer}">
+                            <apex:param value="{!rDet.RoofDetail.Pitch__c}" />
+                        </apex:outputText>-->
+                        <apex:outputLabel >{!rDet.RoofDetail.Pitch__c}</apex:outputLabel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Module</apex:outputLabel>
+                        <apex:outputLabel >{!rDet.module}</apex:outputLabel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Module Count</apex:outputLabel>
+                        <apex:outputLabel >{!rDet.moduleCount}</apex:outputLabel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Inverter(s)</apex:outputLabel>
+                        <apex:outputLabel >{!rDet.inverter}</apex:outputLabel>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <br/>
+                <!-----------------------------------------SOLAR ACCESS PER ROOF------------------------------------------------>
+                <apex:outputText value="Solar Access % Averaged Across Modules" style="font-weight:800;"></apex:outputText>
+                <apex:pageBlockTable columnClasses="ct" value="{!rDetailWrapperMap[rDet.RoofDetail.Id]}" var="rDt" columns="12" width="100%">
+                
+                <apex:column headerValue="January" headerClass="ct">
+                    {!rDt.RoofDetail.Jan__c}
+                </apex:column>
+                <apex:column headerValue="February" headerClass="ct">
+                    {!rDt.RoofDetail.Feb__c}
+                </apex:column>
+                <apex:column headerValue="March" headerClass="ct">
+                    {!rDt.RoofDetail.Mar__c}
+                </apex:column>
+                <apex:column headerValue="April" headerClass="ct">
+                    {!rDt.RoofDetail.Apr__c}
+                </apex:column>
+                <apex:column headerValue="May" headerClass="ct">
+                    {!rDt.RoofDetail.May__c}
+                </apex:column>
+                <apex:column headerValue="June" headerClass="ct">
+                    {!rDt.RoofDetail.Jun__c}
+                </apex:column>
+                <apex:column headerValue="July" headerClass="ct">
+                    {!rDt.RoofDetail.Jul__c}
+                </apex:column>
+                <apex:column headerValue="August" headerClass="ct">
+                    {!rDt.RoofDetail.Aug__c}
+                </apex:column>
+                <apex:column headerValue="September" headerClass="ct">
+                    {!rDt.RoofDetail.Sep__c}
+                </apex:column>
+                <apex:column headerValue="October" headerClass="ct">
+                    {!rDt.RoofDetail.Oct__c}
+                </apex:column>
+                <apex:column headerValue="November" headerClass="ct">
+                    {!rDt.RoofDetail.Nov__c}
+                </apex:column>
+                <apex:column headerValue="December" headerClass="ct">
+                    {!rDt.RoofDetail.Dec__c}
+                </apex:column>
+            </apex:pageBlockTable>
+            
+            <br/>
+            
+            </apex:repeat>
+        </apex:pageBlockSection>
+        
+    </apex:pageBlock>
+</apex:page>

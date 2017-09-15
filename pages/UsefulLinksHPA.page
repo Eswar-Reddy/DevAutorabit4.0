@@ -1,0 +1,63 @@
+<apex:page id="thePage">
+
+<script>
+    window.onload = function onloadPage(){
+        document.body.style.background = "#F1F1F2";
+        document.getElementById('thePage').style.display = "block";  
+    }
+function Invisimount(){
+    //MAM 14.JUN.2015 update the URL if production instance start
+    //var url = 'http://qabom.us.sunpowermonitor.com/index.html?baseUrl={!$Label.InvisiMountServerURL}&sessionId={!$Api.Session_ID}'; 
+    //var url = 'https://invisimountdesign.us.sunpower.com/index.html?baseUrl={!$Label.InvisiMountServerURL}&sessionId={!$Api.Session_ID}';  
+    
+    var url = '{!$Setup.Base_URL__c.Invisimount_PORTAL_QA_URL__c}';
+    
+    if('{!$Organization.Id}' == '00D80000000ZF1LEAW'){
+        url = '{!$Setup.Base_URL__c.Invisimount_PORTAL_PROD_URL__c}';
+    }
+    
+    url+='?baseUrl={!$Label.InvisiMountServerURL}&sessionId={!$Api.Session_ID}';
+    //MAM 14.JUN.2015 end 
+    
+    var win = window.open(url, '_blank'); 
+    win.focus();
+}
+</script>
+<!--
+<ul style="padding: 0; display: inline">
+
+<li><p style="margin: 0px; background-color: #BEBDB0; ">
+    <a href="/apex/PartnerTimeline"  style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; " target="_top">Lease Timeline</a>
+</p></li>
+<li><p style="margin: 0px; background-color: #BEBDB0; ">
+    <a href="javascript:Invisimount();" style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; ">Invisimount Design</a>
+</p></li>
+
+<li><p style="margin: 0px; background-color: #BEBDB0; ">
+    <a href="/apex/PortalPublisher_InvisiMountResources"  style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; " target="_top">InvisiMount Resources Page</a>
+</p></li>
+<li><p style="margin: 0px; padding: 0px; outline: 0px; font-size: 10px; border: 0px; color: rgb(190, 189, NaN); line-height: 12px; text-align: left; ">
+    <iframe src="/apex/PVSIMUserLink?core.apexpages.devmode.url=1" width="100%" frameborder="0" height="30"></iframe>
+</p></li>
+</ul>-->
+
+<p style="margin-bottom:-1px;">
+    <a href="/apex/PartnerTimeline"  style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; " target="_top">Lease Timeline</a>
+</p>
+<p style="margin-bottom:-1px;">
+    <a href="/apex/PartnerTimeline?contractType=Loan"  style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; " target="_top">Loan Timeline</a>
+</p>
+<!-- RRA 23.JUN.2015 - Made Invisimount Link Label configurable through custom label -->
+<p style="margin-bottom:-1px;">
+    <a href="javascript:Invisimount();" style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; ">{!$Label.Invisimount_Design_Link}</a>
+</p>
+<p style="margin-bottom:1px; ">
+    <a href="/apex/PortalPublisher_InvisiMountResources"  style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; " target="_top">InvisiMount Resources Page</a>
+</p>
+<p style=" margin-top:2px; font-size: 10px; border: 0px; color: rgb(190, 189, NaN);  text-align: left; ">
+    <iframe  src="/apex/PVSIMUserLink?core.apexpages.devmode.url=1" width="100%" frameborder="0" height="22" scrolling="no" ></iframe>
+</p>
+<p style="margin-bottom:1px; ">
+    <a href="/apex/PortalPublisher_HelixResources"  style="font-size: 11px; font-family: Arial, Helvetica, sans-serif; color: #333; border-bottom: 1px dotted; text-decoration: none; margin-left: 8px; " target="_top">Helix Resources Page</a>
+</p>
+</apex:page>

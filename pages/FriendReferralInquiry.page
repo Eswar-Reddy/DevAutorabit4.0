@@ -1,0 +1,76 @@
+<apex:page standardController="Opportunity" extensions="ReferralInquiryController">
+    <style>
+        [id$=responseTable] {
+            min-height: 142px;
+        }
+        [id$=firstName] {
+            width: 150px;
+            margin: 10px;
+        }
+        [id$=lastName]{
+            width: 150px;
+            margin: 10px;
+        }
+        [id$=email]{
+            width: 250px;
+            margin: 10px;
+        }
+        [id$=title]{
+            font-size: 16px;
+            font-style: bold;
+        }
+        [id$=infoTitle]{
+            font-size: 14px;
+            font-style: bold;
+        }
+        [id$=result]{
+            overflow:scroll;
+            height:160px;
+        }
+    </style>
+
+    <apex:outputLabel value="Referral Information" id="title"/>
+    <br/>
+    <apex:pageBlock >
+        <apex:form >
+            <apex:pageMessages id="theError"/>
+            <apex:outputLabel value="Friend Information" id="infoTitle"/>
+            <br/>
+            <apex:outputLabel value="First Name " for="firstName"/>
+            <apex:inputText value="{!firstName}" id="firstName"/>
+            <apex:outputLabel value="Last Name " for="lastName"/>
+            <apex:inputText value="{!lastName}" id="lastName"/>
+            <apex:outputLabel value="Email " for="email"/>
+            <apex:inputText value="{!email}" id="email"/>
+
+            <apex:commandButton action="{!search}" value="Search" reRender="responseTable, theError"/>
+
+        </apex:form>
+    </apex:pageBlock>
+
+    <div id = "result">
+	    <apex:pageBlock id="responseTable">
+	        <apex:outputLabel value="Sharer Information" id="infoTitle"/>
+	        <br/>
+	        <apex:outputLabel value="Search Result: "/>
+	            {!responseRows.size}<br/>
+		        <apex:pageBLockTable value="{!responseRows}" var="response">
+		            <apex:column headerValue="First Name">
+		                {!response.firstName}
+		            </apex:column>
+		            <apex:column headerValue="Last Name">
+		                {!response.lastName}
+		            </apex:column>
+		            <apex:column headerValue="Email">
+		                {!response.email}
+		            </apex:column>
+		            <apex:column headerValue="Date">
+		                {!response.referralDate}
+		            </apex:column>
+		            <apex:column headerValue="Status">
+		                {!response.status}
+		            </apex:column>
+		        </apex:pageBLockTable>
+        </apex:pageBlock>
+    </div>
+</apex:page>

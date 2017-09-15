@@ -1,0 +1,106 @@
+<apex:page Controller="OpportunityReportController"  contenttype="application/vnd.ms-excel#OpportunityReport.xls" cache="true">
+		<apex:pageBlock >
+			<apex:pageBlockSection title="Report Filters" columns="10" collapsible="false">
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Business_Unit__c.label}"
+					for="bu" style="font-weight:bold;width:25%"  rendered="{!IF(showbusiUnits = '',false,true)}"/>
+				<apex:outputText value="{!showbusiUnits}" id="bu"/>
+				
+				<!-- Case#00063588 replaced Region1__c with Country__c -->
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Country__c.label}"
+					for="region" style="font-weight:bold;"  rendered="{!IF(showregions= '',false,true)}"/>
+				<apex:outputText value="{!showregions}" id="region"/>					
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Sub_Region__c.label}"
+					for="subregion" style="font-weight:bold;"  rendered="{!IF(showsubRegions= '',false,true)}" />
+				<apex:outputText value="{!showsubRegions}" id="subregion"/>
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.stageName.label}"
+					for="stage" style="font-weight:bold;"  rendered="{!IF(showsalesStages= '',false,true)}"/>
+				<apex:outputText value="{!showsalesStages}" id="stage"/>
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Probability.label}"
+					for="prob" style="font-weight:bold;width:25%"  rendered="{!IF(showprobs= '',false,true)}"/>
+				<apex:outputText value="{!showprobs}" id="prob"/>					
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+		<apex:outputPanel id="theReportTable">
+			<apex:pageBlock title="Opportunity Report">
+				<table border="1" bordercolor="grey" cellpadding="0" cellspacing="0" width="100%">
+					<tr style="text-align: center;">
+						<th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">S.No.</th>                        
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Opportunity Name</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Site City</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Sales Stage</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Probability</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">System Size(PV)</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">% Of Useable Land (Average)</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Date Land Option</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Interconnection Request Filed</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Phase I Study Received</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Phase I Study Accepted</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Permit Submitted</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Next Meeting with Authorities</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Environmental Request Filed</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Environmental Request Approved</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Appeal Period 
+						Start Date</th>
+						<th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Appeal Period 
+						End Date</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Phase II Study Filed</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Phase II Study Received</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Phase II Study Accepted</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Land Expiry</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Mounting System</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">PV Module</th>
+                        <th style="white-space: nowrap; padding-left: 2px;padding-right: 2px;">Total Land Size</th>
+					</tr>
+					<apex:repeat value="{!listOppRep}" var="opp">
+						<tr>
+							<td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputText value="{!opp.Id}" /></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputField value="{!opp.innerOpp.Name}"  rendered="{!opp.show}"/>
+                            <b><apex:outputField value="{!opp.innerOpp.Sub_Region__c}" rendered="{!NOT(opp.show)}"/></b> </td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputText value="{!opp.Muncipality}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputField value="{!opp.innerOpp.StageName}"  rendered="{!opp.show}"/>
+                            <b><apex:outputText value="{!opp.innerOpp.StageName}" rendered="{!NOT(opp.show)}" styleClass="totalRow" /></b></td>                            
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputField value="{!opp.innerOpp.Probability}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;" align="right"><apex:outputField value="{!opp.innerOpp.System_SizePV__c}"  rendered="{!opp.show}"/>
+                            <b><apex:outputField value="{!opp.innerOpp.System_Size_PV_Report__c}" rendered="{!NOT(opp.show)}"/></b></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;" align="right"><apex:outputField value="{!opp.innerOpp.Average_Usable_Land_Percentage__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.Land_Option_Color}"><apex:outputField value="{!opp.innerOpp.Binding_Offer_Accepted_Date__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.STMG_Req_Filed_Color}"><apex:outputField value="{!opp.innerOpp.Account.Interconnection_Request_Filed__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.STMG_Receiving_Color}"><apex:outputField value="{!opp.innerOpp.Account.Phase_I_Study_Received__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.STMG_Accepted_Color}"><apex:outputField value="{!opp.innerOpp.Account.Phase_I_Study_Accepted__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.Autho_Req_Filed_Color}"><apex:outputField value="{!opp.innerOpp.Permit_Submitted__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.First_Call_CDS_Color}"><apex:outputField value="{!opp.innerOpp.Next_Meeting_with_Authorities__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.VIA_Req_Filed_Color}"><apex:outputField value="{!opp.innerOpp.Environmental_Request_Filed__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.VIA_Approval_Color}"><apex:outputField value="{!opp.innerOpp.Environmental_Request_Approved__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.Appeal_Period_Start_Color}"><apex:outputField value="{!opp.innerOpp.Appeal_Period_Start_Date__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.Appeal_Period_End_Color}"><apex:outputField value="{!opp.innerOpp.Appeal_Period_End_Date__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.STMD_Req_Filed_Color}"><apex:outputField value="{!opp.innerOpp.Phase_II_Study_Filed1__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.STMD_Receiving_Color}"><apex:outputField value="{!opp.innerOpp.Phase_II_Study_Received1__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.STMD_Accepted_Color}"><apex:outputField value="{!opp.innerOpp.Phase_II_Study_Accepted1__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;color:{!opp.Land_Expiry_Color}"><apex:outputField value="{!opp.innerOpp.X75_Meeting_Date__c}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputText value="{!opp.Technology}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;"><apex:outputText value="{!opp.Modules}"  rendered="{!opp.show}"/></td>
+                            <td style="white-space: nowrap; padding-left: 2px;padding-right: 2px;" align="right"><apex:outputField value="{!opp.innerOpp.Total_Land_Size__c}"  rendered="{!opp.show}"/>
+                            <b><apex:outputField value="{!opp.innerOpp.Total_Land_Size__c}" rendered="{!NOT(opp.show)}"/></b></td>
+                        </tr>
+					</apex:repeat>
+					<tr style = "display:{!IF(message='','none','')}">
+						<td colspan="24" style="font-weight: bold; width: 25%"><apex:outputLabel value="{!message}" />&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="3"></td>
+						<td style="font-weight: bold; width: 25%" align="center">Total System Size(PV):</td>
+						<td colspan="1"></td>
+						<td style="font-weight: bold; width: 25%" align="right"><apex:outputField value="{!sumOppCapacity.System_Size_PV_Report__c}"/></td>
+						<td colspan="18"></td>
+					</tr>
+					<tr>
+						<td colspan="3"></td>
+						<td style="font-weight: bold; width: 25%" align="center">Total Opportunities:</td>
+						<td colspan="1"></td>
+						<td style="font-weight: bold; width: 25%" align="right">{!countOpp}</td>
+						<td colspan="18"></td>
+					</tr>
+				</table>
+			</apex:pageBlock>
+		</apex:outputPanel>
+</apex:page>

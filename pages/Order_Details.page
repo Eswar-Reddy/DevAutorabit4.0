@@ -1,0 +1,159 @@
+<apex:page controller="DesignToolsController" showHeader="true" tabStyle="Purchase_Order__c" id="pg" >
+  <apex:pageMessages ></apex:pageMessages>
+    <apex:includeScript value="{!$Resource.partner_portal_gaq}"/>
+
+<!-- Added by Thirupathi-->
+  <script>
+        function setCookie(c_name,value)
+        {
+            var exdate=new Date();
+            exdate.setDate(exdate.getDate() + 99);
+            var c_value=(escape(value) + : "; expires="+exdate.toUTCString());
+            document.cookie=c_name + "=" + c_value;
+        }
+    </script>
+
+    <!-- <apex:form >
+        <apex:actionFunction name="setTab" onComplete="return false;" rerender="tabpanel">
+            <apex:param name="activeTab" assignTo="{!ActiveTab}" value="" />
+        </apex:actionFunction>
+    </apex:form> -->
+  <apex:iframe src="/apex/APPR_PUB__CustomMessages?tabName=Order" height="200"/>  
+  <!-- End By Thirupathi-->
+  <!-- set activetab attribute under case#00087202 -->
+  <!-- Added Profiles 'SunPower Partner Ambassador', 'EU Partner Delegated Administrator', 'EU Partner Executive' for the case - 384850  -->
+  <!-- Modified by Nikki - CS 01/14/15: Added SunPower Order Management Profile - CASE# 00429509 -->
+  <!-- Added Profiles 'SunPower Partner Ambassador', 'EU Partner Delegated Administrator', 'EU Partner Executive' for the case - 384850, Added SunPower Order Management profile -CASE#: 00429509 JT 1/14/2015   -->
+  <!-- Added Profile 'System Administrator - No DDL' MAM 20.FEB.2015 case 00468406-->
+    <apex:tabPanel switchType="server" id="tabpanel"> <!-- value="{!if(ActiveTab != null, ActiveTab, 'tab1')}" -->
+        <apex:tab label="{!$Label.OrderDetails_PurchaseOrders}" name="tab1" id="object1" ontabenter="setCookie('apex__counter','tab1');" switchType="client" 
+                  rendered="{!$Profile.Name=='NA CRD Pilot' || $Profile.Name == 'Sunpower Admin (No Deployment)' || $Profile.Name=='EU CRD Pilot'||$Profile.Name=='System Administrator'|| $Profile.Name=='System Administrator - No DDL' || $Profile.Name=='Partner Delegated Administrator'|| ($Profile.Name=='Partner Operations'&& Not(contains($Label.SOAPIUIenable,$User.Id))) ||$Profile.Name=='Partner Executive' ||$Profile.Name=='SunPower Partner Ambassador' ||$Profile.Name=='EU Partner Delegated Administrator' ||$Profile.Name=='EU Partner Executive'||$Profile.Name=='SunPower Order Management' || Contains($Label.SOAPI_EMEA_PSR,$User.Id)}" >
+            <apex:ListViews id="POSelectedView" type="Purchase_Order__c" />
+    </apex:tab>  
+    
+  <!-- Adding Booked Orders Tab Sashi-->
+  <!-- Modified by Nikki - CS 01/14/15: Added SunPower Order Management Profile - CASE# 00429509 -->
+  <!-- Added Profile 'System Administrator - No DDL' MAM 20.FEB.2015 case 00468406 -->
+    <apex:tab label="{!$Label.BookedOrders}" name="tab2" id="object2"  ontabenter="setCookie('apex__counter','tab2');" switchType="client" 
+              rendered="{!($Profile.Name=='System Administrator'&& Not(contains($Label.SOAPIUIenable,$User.Id))) || Contains($Label.SOAPI_EMEA_PSR,$User.Id) || $Profile.Name == 'Sunpower Admin (No Deployment)' || $Profile.Name=='System Administrator - No DDL' ||$Profile.Name== 'AU Partner Executive'||($Profile.Name=='SunPower Order Management'&& Not(contains($Label.SOAPIUIenable,$User.Id))) || $Profile.Name=='SunPower Partner Ambassador' }"><!--|| isEUPartnerUser-->
+             <apex:ListViews id="POSelected" type="oe_order_headers__c" /> 
+             <!--apex:iframe height="900px" src="/apex/BookedOrders" id="BookedOrdersFrame" scrolling="false"></apex:iframe>-->
+            
+    </apex:tab>
+    
+      
+     <apex:tab label="{!$Label.BookedOrders}" name="tab21" id="object21"  ontabenter="setCookie('apex__counter','tab21');window.open('/apex/BookedOrders','_blank');" switchType="client" 
+               rendered="{!Contains($Label.SOAPIUIenable,$User.Id) || $Profile.Name=='Partner Operations' || $Profile.Name == 'Sunpower Admin (No Deployment)' || $Profile.Name=='Partner Delegated Administrator' || $Profile.Name=='Partner Executive' || $Profile.Name=='SunPower Partner Ambassador' || $Profile.Name=='SunPower Order Management' || $Profile.Name=='System Administrator' || Contains($Label.SOAPI_EMEA_PSR,$User.Id) || isEUPartnerUser}"> <!--|| Contains($Label.SOAPI_EMEA_PSR,$User.Id) || isEUPartnerUser-->
+             <!--apex:ListViews id="POSelected" type="oe_order_headers__c" /--> 
+           <!-- <apex:iframe height="900px" src="/apex/BookedOrders" id="BookedOrdersFrame" scrolling="false"></apex:iframe> -->
+    </apex:tab>
+    
+   <!-- Modified by Nikki - CS 01/14/15: Added SunPower Order Management Profile - CASE# 00429509 -->
+   <!-- MAM 15.MAY.2015 - Case 00501509 added isEUPartnerUser -->
+    <apex:tab label="{!$Label.StatementofAccount}" name="tab3" id="object3" ontabenter="setCookie('apex__counter','tab3');window.open('/apex/StatementOfAccount','_blank');" switchType="client" 
+              rendered="{!$Profile.Name=='NA CRD Pilot'||$Profile.Name=='EU CRD Pilot' ||$Profile.Name=='System Administrator' || $Profile.Name == 'Sunpower Admin (No Deployment)' || $Profile.Name=='Partner Delegated Administrator'|| $Profile.Name== 'Partner Operations'||$Profile.Name=='Partner Executive' || $Profile.Name=='SunPower Order Management' || isEUPartnerUser || Contains($Label.SOAPI_EMEA_PSR,$User.Id)}">
+        <apex:iframe width="1020px" height="1500px" scrolling="false" id="OrderDetailsFrame"></apex:iframe>
+            
+            <script>
+                gaqPush( 'OrderDetailsFrame', "{!designToolsBaseURL}/Stringsizer/orders/Init1.jsf?sessionid={!currentSessionID}&serverurl={!$Api.Enterprise_Server_URL_150}'" );
+
+                _gaq.push(function() {
+                    var iframe = document.getElementById('OrderDetailsFrame');
+                    iframe.src = pageTracker._getLinkerUrl('{!designToolsBaseURL}/Stringsizer/orders/Init1.jsf?sessionid={!currentSessionID}&serverurl={!$Api.Enterprise_Server_URL_150}');
+                });         
+            </script>                    
+    </apex:tab>  
+        <!-- MAM 15.MAY.2015 - Case 00501509 - Removed $Profile.Name=='EU Partner Delegated Administrator'||$Profile.Name=='EU Partner Executive' || $Profile.Name== 'EU Partner Operations' || $Profile.Name=='EU Partner Restricted' || $Profile.Name=='EU Partner Technical' || $Profile.Name=='EU Partner Sales' -->
+        <apex:tab label="{!$Label.OrderDetails_OrderDetails}" name="tab4" id="object4" ontabenter="setCookie('apex__counter','tab4');" switchType="client" 
+                  rendered="{!$Profile.Name=='Partner Restricted' || $Profile.Name=='Partner Technical' || $Profile.Name=='Partner Sales'||$Profile.Name=='SunPower Administrator'||$Profile.Name=='SunPower Campaign Vendor'||$Profile.Name=='SunPower Credit'||$Profile.Name=='SunPower CTI'||$Profile.Name=='SunPower Direct Sales RLC'||$Profile.Name=='SunPower External Integration'||$Profile.Name=='SunPower External Integration Eloqua'||$Profile.Name=='SunPower Help Desk'||$Profile.Name=='SunPower Inspector'||$Profile.Name=='SunPower Inspector New'||$Profile.Name=='SunPower Lead Generation Vendor'||$Profile.Name=='SunPower Lease Payment User'||$Profile.Name=='SunPower Lease Payment User - Advance'||$Profile.Name=='SunPower LMS Administrator'||$Profile.Name=='SunPower Partner Ambassador'||$Profile.Name=='SunPower Product Vendor Supplier'||$Profile.Name=='SunPower Read Only'||$Profile.Name=='SunPower Sales User'||$Profile.Name=='SunPower Super User'||$Profile.Name=='SunPower User'||$Profile.Name=='SunPower User - Alliance'||$Profile.Name=='SunPower User - PM Tool'||$Profile.Name=='SunPower User - PM ToolNew'||$Profile.Name=='SunPower User - WW'||$Profile.Name=='Sunpower Vendor - Lease Dimensions'||$Profile.Name=='Sunpower Vendor - Lease Support'||$Profile.Name=='SunPower Super User - PKB' }">
+            <apex:iframe width="1020px" height="1500px" scrolling="false" id="OrderDetailsFrame1"></apex:iframe>
+                <script>
+                        gaqPush( 'OrderDetailsFrame1', "{!designToolsBaseURL}/Stringsizer/orders/Init.jsf?sessionid={!currentSessionID}&serverurl={!$Api.Enterprise_Server_URL_150}'" );
+
+                        _gaq.push(function() {
+                            var iframe = document.getElementById('OrderDetailsFrame1');
+                            iframe.src = pageTracker._getLinkerUrl('{!designToolsBaseURL}/Stringsizer/orders/Init.jsf?sessionid={!currentSessionID}&serverurl={!$Api.Enterprise_Server_URL_150}');
+                        });         
+                </script>                    
+      </apex:tab>  
+      </apex:tabPanel>
+  
+  
+   <!--  
+    PR-03075   
+    Date : Nov, 18 2009    
+    Desription : Partner Contacts with "EU Residential Installer" Portal User Profile are not 
+    allowed to enter Ala Carte orders.When they are on the Purchase Order screen the
+    button "New Purchase Order" is removed.           
+   -->
+   
+   
+   <!-- Script starts -->
+  <script>
+  
+    function highlightTab(){
+        var tableId = document.getElementById("tabBar");
+        var rowId  = tableId.tBodies[0].rows[0];
+        var cellIds = rowId.getElementsByTagName('td');
+        for(var i=0;i<cellIds.length;i++){
+            var cellId1 = cellIds[i]; 
+            var DivTag = cellId1.getElementsByTagName('div');
+            var divT = DivTag[0];
+            var aTag = divT.getElementsByTagName('a');
+            var aT = aTag[0];
+            if(aT.href.indexOf('01rT00000004blQ')>0 || aT.href.indexOf('01r8000000094uI')>0){
+                if(cellId1!=null){
+                    if(cellId1.getAttribute('className')!='currentTab primaryPalette' || cellId1.getAttribute('class')!='currentTab primaryPalette'){
+                        cellId1.setAttribute('className','currentTab primaryPalette');
+                        cellId1.setAttribute('class','currentTab primaryPalette');
+                    }
+                }
+                break;
+            }
+        }
+    }
+    
+    window.onload = function(){ highlightTab(); };
+    
+    if("{!profileName}" == "EU Residential Installer"){
+        var inputTags = document.getElementsByTagName("input");
+        for(var i=0; i < inputTags.length;i++){         
+            if(inputTags[i].name == "new" && inputTags[i].type == "button" && inputTags[i].className == "btn"){
+                inputTags[i].parentNode.removeChild(inputTags[i]);
+                //break;
+            }
+            if(inputTags[i].name == "clone" && inputTags[i].type == "button" && inputTags[i].className == "btn" && !{!isNAPremAuth}){
+                inputTags[i].parentNode.removeChild(inputTags[i]);
+                //break;
+            }
+            
+        }
+    }
+    
+    if('{!$Profile.Name}'=='System Administrator'){
+    }
+    else{
+        var inputTags = document.getElementsByTagName("input");
+            
+            for(var i=0; i < inputTags.length;i++){
+                        
+                if(inputTags[i].name == "ok_to_ship" && inputTags[i].type == "submit" && inputTags[i].className == "btn"){
+                    if(('{!partnerAcc.Country_Domain__c}' == 'rvar-us' || '{!partnerAcc.Country_Domain__c}' == 'combo-us') && {! !partnerAcc.Partner_Opt_Out_Ok_To_Ship__c} && ('{!$Profile.Name}'=='Partner Delegated Administrator' || '{!$Profile.Name}'=='Partner Executive' || '{!$Profile.Name}'=='Partner Operations')){
+                      
+                    }
+                    else
+                        inputTags[i].parentNode.removeChild(inputTags[i]);
+                }
+                if(inputTags[i].name == "change_shipto_address" && inputTags[i].type == "submit" && inputTags[i].className == "btn" && '{!partnerAcc.Country_Domain__c}' != 'rvar-us' && '{!partnerAcc.Country_Domain__c}' != 'combo-us'){
+                    if(('{!partnerAcc.Country_Domain__c}' == 'rvar-us' || '{!partnerAcc.Country_Domain__c}' == 'combo-us') && ('{!$Profile.Name}'=='Partner Delegated Administrator' || '{!$Profile.Name}'=='Partner Executive' || '{!$Profile.Name}'=='Partner Operations')){
+                      
+                    }
+                    else
+                        inputTags[i].parentNode.removeChild(inputTags[i]);
+                }
+            }
+     }
+    
+  </script>
+  <!-- Script ends -->
+</apex:page>

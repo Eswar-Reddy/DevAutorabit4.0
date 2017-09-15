@@ -1,0 +1,672 @@
+<apex:page id="PartnerAppPdf_de" standardController="Partner_Application__c" renderAs="pdf" extensions="PartnerApplicationPdfController">
+<apex:form style="font-size:12px">
+
+<c:Header id="header"/><br/>
+ <table width="100%" style="background-color:#FBB917" border="0">
+     <tr>
+         <td width="100%" align="center" ><font color="#000000" size="5"><B>SunPower Bewerbungsbogen zur Authorisierung eines</B></font>
+         </td> 
+
+     </tr>
+     <tr>
+         <td align="center"><font color="#000000" size="5"><B>Installationsbetriebes</B></font>
+         </td>
+     </tr>
+ </table>
+<apex:outputPanel style="padding-left:5px;padding-top5px" layout="block">
+   <table width="100%"  border="0">
+     <tr>
+        <td>
+            <b>Anleitung:</b>Bitte füllen Sie alle Sektoren dieser „Bewerbung zum authorisierten Installtionsbetrieb“ aus und senden Sie diese an: solarde@sunpowercorp.com
+        </td>
+     </tr>
+     <tr>
+        <td>
+            Auf freiwilliger Basis können Sie die letzte Bilanz und GuV Ihrer Firma anhängen
+        </td>
+     </tr>
+     
+   </table>
+
+</apex:outputPanel>
+<!-- 
+<apex:pageBlock >
+ -->
+
+        <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="4">
+                    <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Generelle Angaben</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+           <tr>
+
+               <td align="left" width="25%"style="padding-left:5px"><apex:outputlabel value="Firma"/>&nbsp;</td>
+
+               <td width="25%"><apex:outputField style="width:75%" value="{!partnerApp.Company_Name__c}"/>&nbsp;</td>
+
+               <td align="left" width="30%" style="padding-left:5px">Datum</td>
+
+               <td width="20%"><apex:outputField style="width:40%" value="{!partnerApp.Application_Date__c}"/>&nbsp;</td>
+
+           </tr>
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">Inhaber</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Owner__c}"/>&nbsp;</td>
+
+               <td align="left" style="padding-left:5px">Seit wieviel Jahren in der PV tätig</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Experience_years__c}"/>&nbsp;</td>
+
+           </tr>           
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">Lizenznehmer</td>
+
+               <td colspan="3"><apex:outputField style="width:94%" value="{!partnerApp.Legal_Name__c}" />&nbsp;</td>
+
+           </tr>           
+        </table>     
+
+       
+
+        <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Firmen - Wachstum</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:25px">
+                <td colspan="4" style="padding-left:5px">
+                    Bitte füllen Sie die unten stehenden Felder aus. Wieviel Watt wurden verbaut.? Wie hoch ist der gesamte Betriebsumsatz (nicht nur aus der PV)? Anzahl der Angestellten am Jahresende?
+                </td>
+            </tr>
+          
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right">Jahr</td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Wieviel kWp an PV verkauft?</td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Umsatz</td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Anzahl der Angestellten am Jahresende</td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right">{!YEAR(TODAY()) - 3}</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_3_years_ago__c}"/>&nbsp;</td>
+
+               <td align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_3_years_ago__c}" />&nbsp;</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_3_years_ago__c}"/>&nbsp;</td>
+
+           </tr>
+
+          <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right">{!YEAR(TODAY()) - 2}</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_2_years_ago__c}"/>&nbsp;</td>
+
+               <td align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_2_years_ago__c}" />&nbsp;</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_2_years_ago__c}"/>&nbsp;</td>
+
+           </tr>
+              <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right">{!YEAR(TODAY()) - 1}</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_last_year__c}"/>&nbsp;</td>
+
+               <td  align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_last_year__c}" />&nbsp;</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_last_year__c}"/>&nbsp;</td>
+
+           </tr>
+           <tr style="height:20px">
+              <td colspan="4" style="padding:5px">Prognose für {!YEAR(TODAY())}
+               </td>
+           </tr>    
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">1.Quartale</td>
+
+                  <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q1__c}"/>&nbsp;</td>
+
+                  <td align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q1__c}" />&nbsp;</td>
+
+                 <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q1__c}"/>&nbsp;</td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">2.Quartal</td>
+
+                  <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q2__c}"/>&nbsp;</td>
+
+                  <td align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q2__c}" />&nbsp;</td>
+
+                 <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q2__c}"/>&nbsp;</td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">3.Quartal</td>
+
+                  <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q3__c}"/>&nbsp;</td>
+
+                  <td align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q3__c}" />&nbsp;</td>
+
+                 <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q3__c}"/>&nbsp;</td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">4.Quartal</td>
+
+                  <td><apex:outputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q4__c}"/>&nbsp;</td>
+
+                  <td align="left"><apex:outputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q4__c}" />&nbsp;</td>
+
+                 <td><apex:outputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q4__c}"/>&nbsp;</td>
+            </tr>
+        </table>
+    <!-- Number of Employees at present  -->    
+         <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="8">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Anzahl der derzeitigen Angestellten</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:25px">
+                <td colspan="8" style="padding-left:5px">
+                                Bitte tragen Sie in die unten stehenden Felder die Anzahl der Manager, die Anzahl der Angestellten in dem jeweiligen Bereich, sowie  den Grad der praktischen Erfahrung ein.
+
+                </td>
+            </tr>
+           <tr>
+                <td align="right">
+                        Geschäftsleitung
+                </td>
+                <td colspan="7">&nbsp;
+                </td>
+           </tr> 
+            <tr style="font-weight:bold;">
+
+                <td></td>
+
+                <td align="center">Verkauf</td>
+
+                <td align="center">Marketing</td>
+
+                <td align="center">Installa-tionen</td>
+
+                <td align="center">Operatives Geschäft</td>
+
+                <td align="center">Gestaltung</td>
+
+                <td align="center">Finanz-wesen</td>
+
+                <td align="center">Andere</td>
+
+            </tr>
+
+            <tr>
+
+                <td  align="center">Direktoren oder Manager</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Sales_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Marketing_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Installation_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Operations_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Design_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Finance_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Manager_Other_Employees__c}"/>&nbsp;</td>
+
+            </tr>
+
+            <tr>
+
+                <td style="white-space:nowrap;" align="center">Angestellte</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Sales_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Marketing_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Installation_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Operations_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Design_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Finance_Employees__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Field_Level_Other_Employees__c}"/>&nbsp;</td>
+
+            </tr>
+           
+      
+        </table>
+<!-- Number of Employees at present  END-->
+
+<table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="4">
+                    <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Geschäftssegment</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:20px">
+                <td style="padding-left:5px" colspan="4">
+                    Wenn Ihre Firma derzeit im PV-Geschäft tätig ist, dann tragen Sie bitte in den unten stehenden Feldern ein, wieviel Prozent auf Privat/Eigenheim und wieviel Prozent auf dem Gewerblichen Bereich liegen. Desweiteren teilen Sie uns bitte mit, wie groß die Anlagen im Durchschnitt in den jeweiligen Bereichen sind.
+                </td>
+            </tr>
+           <tr>
+
+               <td align="left" width="25%"style="padding-left:5px">% kWp auf Eigenheim Installationen</td>
+
+               <td width="25%"><apex:outputField style="width:75%" value="{!partnerApp.Percentage_Residential_Projects__c}"/>&nbsp;&nbsp;</td>
+
+               <td align="left" width="30%" style="padding-left:5px">Durchschnittliche Projektgröße Privat/Eigenheim</td>
+
+               <td width="20%"><apex:outputField style="width:75%" value="{!partnerApp.Average_Size_Residential_Projects__c}"/>&nbsp;kW</td>
+
+           </tr>
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">% kWp auf  kommerzielle Installationen</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Percentage_Commercial_Projects__c}"/>&nbsp;&nbsp;</td>
+
+               <td align="left" style="padding-left:5px">Durchschnittliche Projektgröße Kommerziell</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Average_Size_Commercial_Projects__c}"/>&nbsp;kW</td>
+
+           </tr>           
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">% kWp auf Freilandanlagen </td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Percentage_Ground_Projects__c}" />&nbsp;</td>
+               <td align="left" style="padding-left:5px">Durchschnittliche Projektgröße Freilandanlagen</td>
+
+               <td><apex:outputField style="width:75%" value="{!partnerApp.Average_Size_Ground_Projects__c}"/>&nbsp;kW</td>
+                
+
+           </tr>           
+        </table>     
+
+          <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="3">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Regionale Abdeckung</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="padding:5px;" align="left" colspan="3">Für den Fall dass Sie mehr als einen Firmenstandort haben, geben Sie bitte 4 weitere Standorte sowie die Anzahl der Angestellten und die Hauptkonkurrenten in der jeweiligen Region an.</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="25%">Standort</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="25%">Anzahl der Angestellten</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="50%">
+                    Größte Konkurrenz am Standort
+                </td>
+                
+            </tr>  
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_1_Number_of_Employees__c}"/>&nbsp;</td>
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_1_Primary_Competition__c}"/>&nbsp;</td>
+            </tr>   
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_2_Number_of_Employees__c}"/>&nbsp;</td>
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_2_Primary_Competition__c}"/>&nbsp;</td>
+            </tr>
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_3__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_3_Number_of_Employees__c}"/>&nbsp;</td>
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Location_3_Primary_Competition__c}"/>&nbsp;</td>                
+
+            </tr>
+             
+        </table>
+       
+         <div style = "page-break-after: always;" />   
+       
+        <!-- Product Start -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Produkte</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Bitte tragen Sie in die unten stehenden Felder die TOP 4 Hersteller der jeweiligen Produkte ein.</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">PV</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Wechselrichter</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Gestelle</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Überwachung</td>
+            </tr> 
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Product_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Product_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Product_1__c}"/>&nbsp;</td>
+                
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Product_1__c}"/>&nbsp;</td>                
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Product_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Product_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Product_2__c}"/>&nbsp;</td>
+                
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Product_2__c}"/>&nbsp;</td>                                
+
+            </tr>
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Product_3__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Product_3__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Product_3__c}"/>&nbsp;</td>
+                
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Product_3__c}"/>&nbsp;</td>                                
+
+            </tr>
+            
+              <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Product_4__c}"/>&nbsp;</td>            
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Product_4__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Product_4__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Product_4__c}"/>&nbsp;</td>                                
+
+            </tr>
+        </table>
+        <!--  Product End -->
+        
+        <!-- Distributor sor Manufacturers -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Bezugsquellen</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="padding:7px;" align="left" colspan="4">Bitte tragen Sie in die unten stehenden Felder die TOP 4 Lieferanten (oder Hersteller, wenn Sie direkt kaufen) ein, welche Ihre Firma mit dem jeweiligen Produkt beliefert.</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">PV</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Wechselrichter</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Gestelle</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Überwachung</td>
+            </tr> 
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Distributor_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Distributor_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Distributor_1__c}"/>&nbsp;</td>
+                
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Distributor_1__c}"/>&nbsp;</td>                
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Distributor_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Distributor_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Distributor_2__c}"/>&nbsp;</td>
+                
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Distributor_2__c}"/>&nbsp;</td>                
+
+            </tr>
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Distributor_3__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Distributor_3__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Distributor_3__c}"/>&nbsp;</td>
+                
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Distributor_3__c}"/>&nbsp;</td>                
+
+            </tr>
+            
+              <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.PV_Distributor_4__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Inverter_Distributor_4__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Racking_Distributor_4__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Monitoring_Distributor_4__c}"/>&nbsp;</td>                
+
+            </tr>
+        </table>
+        <!-- Distributor sor Manufacturers END-->       
+        
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Versicherung</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Art</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Versicherungsgesellschaft</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Versicherungslimit</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Police Nummer</td>
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Type_1__c}"/>&nbsp;</td>
+
+                <td> <apex:outputField style="width:100%" value="{!partnerApp.Insurance_Carrier_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Coverage_1__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_1__c}"/>&nbsp;</td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Type_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Carrier_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Coverage_2__c}"/>&nbsp;</td>
+
+                <td><apex:outputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_2__c}"/>&nbsp;</td>
+
+            </tr>
+
+        </table>
+         <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="2">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Bankbürgschaft</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="height:20px">
+                <td colspan="2" style="padding-left:5px">
+                    Falls Ihre Firma nicht den Ansprüchen von SunPower gerecht wird, um von uns Kredite zu erhalten, hätten Sie eine Bank, die Ihnen diese gewähren würde?
+                </td>
+            </tr>       
+            <tr>
+                  <td align="right" width="25%"style="padding-right:15px;"><B>Ja</B></td>
+                  <td width="75%"><apex:outputField style="width:75%" value="{!partnerApp.Bank_Guarantee__c}"/>&nbsp;</td>                  
+            </tr>
+        </table>    
+        <!-- Misc Start -->
+         <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="3">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Verschiedenes</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    Verfügt Ihr Unternehmen über Büro, Werkstatt und Lager?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>Ja</B></td>
+                   <td width="20%"><apex:outputField value="{!partnerApp.Formal_office_workshop_warehouse__c}"/>&nbsp;</td>                   
+            </tr>       
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    Haben Sie eine Firmenhomepage?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>Ja</B></td>
+                 <td width="20%"><apex:outputField value="{!partnerApp.Web_Page__c}"/>&nbsp;</td>                 
+            </tr>   
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    Verfügt Ihr Unternehmen über eigenes Marketingmaterial?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>Ja</B></td>
+                 <td width="20%"><apex:outputField value="{!partnerApp.Marketing_Material__c}"/>&nbsp;</td>                 
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    Haben Sie einen eigenen Showroom?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>Ja</B></td>
+                 <td><apex:outputField value="{!partnerApp.Showroom__c}"/>&nbsp;</td>                 
+            </tr>       
+            <tr >
+                <td style="padding-left:5px">
+                    Verfügt Ihr Unternehmen über eine eigene Fahrzeugflotte zur Installation?
+                </td>
+                 <td align="center"  style="padding-right:15px;"><B>Ja</B></td>
+                 <td><apex:outputField value="{!partnerApp.Installation_Vehicle_Fleet__c}"/>&nbsp;</td>                 
+            </tr>           
+            <tr >
+                <td style="padding-left:5px">
+                    Verfügt Ihr Unternehmen über ein Commercial Monitoring Tool?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>Ja</B></td>
+                 <td><apex:outputField value="{!partnerApp.CRM__c}"/>&nbsp;</td>                 
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    Ist oder war Ihr Unternehmen in einen Gerichtsprozess verwickelt?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>Ja</B></td>
+                 <td ><apex:outputField value="{!partnerApp.Existing_Pending_Litigation__c}"/>&nbsp;</td>                 
+            </tr>
+            <!-- Start 95084 -->
+			<tr >
+				<td style="padding-left:5px">
+					Verfügt Ihr Unternehmen über einen fest angestellten Elektromeister?
+				</td>
+				 <td align="center" style="padding-right:15px;"><B>Ja</B></td>
+
+	               <td ><apex:outputField value="{!partnerApp.Company_have_fulltime_master_electrician__c}"/></td>
+			</tr>
+			<!-- End 95084 -->               
+        </table>    
+        <!--  Misc End -->
+         <!--
+    </apex:pageBlock>
+    -->
+
+</apex:form>
+</apex:page>

@@ -1,0 +1,200 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false" id="page1">
+<apex:form id="form1">
+<c:Header id="header"/><br/>
+<apex:pageMessages />
+<apex:pageBlock >
+ <apex:pageBlockButtons >
+                <apex:commandButton value="Retour" action="{!step2_fr}"/>
+                <apex:commandButton value="Sauver" action="{!step4_fr}"/>
+                <apex:commandButton value="Annuler" action="{!cancelPartner_fr}"/>
+            </apex:pageBlockButtons>
+          
+
+        <br/><br/>
+        
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Insurance</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Type</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Compagnie d’Assurance</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Garantie couverte</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Numéro de police</td>
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_1__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_1__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_2__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_3__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_4__c}"/> </td>
+
+            </tr>
+        </table>
+         <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="2">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Bank Guarantee</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="height:20px">
+                <td colspan="2" style="padding-left:5px">
+                    Si votre société ne répond pas aux conditions financière requises par SunPower, pourriez-vous fournir une garantie bancaire d’au moins 50.000€?
+                </td>
+            </tr>       
+            <tr>
+                  <td align="right" width="25%"style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td width="75%"><apex:inputField value="{!partnerApp.Bank_Guarantee__c}" />
+                   </td>
+    
+            </tr>
+        </table>    
+        <!-- Misc Start -->
+         <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="3">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Divers</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    Votre entreprise dispose t’elle de bureau, atelier et entrepôts?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td width="20%"><apex:inputField value="{!partnerApp.Formal_office_workshop_warehouse__c}"/></td>
+            </tr>       
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    Votre entreprise a t’elle une page Web?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td width="20%"><apex:inputField value="{!partnerApp.Web_Page__c}"/></td>
+            </tr>   
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    Votre entreprise a t’elle son propre matériel marketing?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td width="20%"><apex:inputField value="{!partnerApp.Marketing_Material__c}"/></td>
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    Votre entreprise dispose t’elle de son propre showroom?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Showroom__c}"/></td>
+            </tr>       
+            <tr >
+                <td style="padding-left:5px">
+                    Votre entreprise a t’elle sa propre flotte de véhicules d’installation?
+                </td>
+                 <td align="center"  style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td><apex:inputField value="{!partnerApp.Installation_Vehicle_Fleet__c}"/></td>
+            </tr>           
+            <tr >
+                <td style="padding-left:5px">
+                    Votre entreprise utilise t’elle un outil de suivi commercial?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.CRM__c}"/></td>
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    Votre entreprise a t’elle déjà été soumise à une procédure judiciaire?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>OUI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Existing_Pending_Litigation__c}"/></td>
+            </tr>               
+        </table>    
+        <!--  Misc End -->
+    </apex:pageBlock>
+    </apex:form>
+    <script>
+      	function removeWarningMsg(){
+      	       try{      	       
+				    var ctrl = document.getElementById("page1:form1");
+					var pTags = document.getElementById("page1:form1").getElementsByTagName('div');
+					for(i=0;pTags != null && i < pTags.length; i++ ){
+						var pHTML =pTags[i].innerHTML;
+						if(pHTML != null && pHTML.indexOf('Warning:') >=0){
+						    pTags[i].innerHTML='&nbsp;';
+							pTags[i].className='&nbsp;';
+						}	
+					}
+									
+				}catch(e){}
+			}
+			removeWarningMsg();
+			
+     </script>
+</apex:page>

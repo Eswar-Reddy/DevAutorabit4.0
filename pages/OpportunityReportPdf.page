@@ -1,0 +1,193 @@
+<apex:page Controller="OpportunityReportController" renderas="pdf" showheader="false" sidebar="false">
+	<head>
+		<script type="text/javascript"  src="{!URLFOR($Resource.yui1,'yui/yahoo-min.js')}"></script>
+		<script type="text/javascript" src="{!URLFOR($Resource.yui1,'yui/event-min.js')}"></script>
+		<script src="/static/102207/js/spch.js" type="text/javascript"></script>
+		<style type="text/css">
+			@page {    				
+    				size: Ledger landscape;
+    				margin-top: 20px;
+					margin-bottom: 80px;
+					margin-right: 10px;
+					margin-left: 8px;
+    				@bottom-right { 
+         				white-space: pre;
+         				content: "Page " counter(page) " of " counter(pages);
+				         vertical-align: top;
+				         text-align : right; 
+				         font-size: 14px;
+				    }   
+			}
+		</style>
+		<style>
+			.popupdiv {   
+				       DISPLAY: none; 
+				       Z-INDEX: 108;
+				       WIDTH: 500px; 
+				       LEFT: 250px; 
+				       POSITION: absolute;
+				       TOP: 280px; 
+				       
+			} 
+		</style>
+	</head>
+		<apex:pageBlock >
+			<apex:pageBlockSection title="Report Filters" columns="19" collapsible="false">
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Business_Unit__c.label}"
+					for="bu" style="font-weight:bold;width:25%"  rendered="{!IF(showbusiUnits = '',false,true)}"/>
+				&nbsp;<apex:outputText value="{!showbusiUnits}" id="bu"/>	&nbsp;
+				
+				<!-- Case#00063588 replaced Region1__c with Country__c -->
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Country__c.label}"
+					for="region" style="font-weight:bold;"  rendered="{!IF(showregions= '',false,true)}"/>
+				&nbsp;<apex:outputText value="{!showregions}" id="region"/>	&nbsp;				
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Sub_Region__c.label}"
+					for="subregion" style="font-weight:bold;"  rendered="{!IF(showsubRegions= '',false,true)}" />
+				&nbsp;<apex:outputText value="{!showsubRegions}" id="subregion"/>&nbsp;
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.stageName.label}"
+					for="stage" style="font-weight:bold;"  rendered="{!IF(showsalesStages= '',false,true)}"/>
+				&nbsp;<apex:outputText value="{!showsalesStages}" id="stage"/>&nbsp;
+				<apex:outputLabel value="{!$ObjectType.opportunity.fields.Probability.label}"
+					for="prob" style="font-weight:bold;width:25%"  rendered="{!IF(showprobs= '',false,true)}"/>
+				&nbsp;<apex:outputText value="{!showprobs}" id="prob"/>					
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+			<apex:pageBlock title="Opportunity Report" rendered="{!show}">                
+				<apex:pageBlockTable value="{!listOppRep}" var="opp" border="1" style="font-size: 60%;">
+				<apex:column >
+					<apex:facet name="header">S.<br/>No.</apex:facet>
+					<apex:outputText value="{!opp.Id}" />
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Opportunity Name</apex:facet>
+					<a href="/{!opp.innerOpp.Id}" target="_blank"><apex:outputField value="{!opp.innerOpp.Name}" rendered="{!opp.show}"/></a>
+					<b><apex:outputField value="{!opp.innerOpp.Sub_Region__c}" rendered="{!NOT(opp.show)}"/></b> 
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Site City</apex:facet>
+					<apex:outputText value="{!opp.Muncipality}"  rendered="{!opp.show}"/>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Sales Stage</apex:facet>
+					<apex:outputField value="{!opp.innerOpp.StageName}" rendered="{!opp.show}"/>
+					<apex:facet name="footer"><B>Total System Size(PV):</B></apex:facet>
+					<apex:outputText value="{!opp.innerOpp.StageName}" rendered="{!NOT(opp.show)}" styleClass="totalRow" />
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Probability</apex:facet>
+					<apex:outputField value="{!opp.innerOpp.Probability}" rendered="{!opp.show}"/>					
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">System Size<br/>(PV)</apex:facet>
+					<apex:outputField value="{!opp.innerOpp.System_SizePV__c}" rendered="{!opp.show}"/>
+					<b><apex:outputField value="{!opp.innerOpp.System_Size_PV_Report__c}" rendered="{!NOT(opp.show)}"/></b>
+					<apex:facet name="footer"><apex:outputField value="{!sumOppCapacity.System_Size_PV_Report__c}"/></apex:facet>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">% Of Useable <br/>Land <br/>(Average)</apex:facet>
+					<apex:outputField value="{!opp.innerOpp.Average_Usable_Land_Percentage__c}"  rendered="{!opp.show}"/>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Date Land <br/>Option</apex:facet>
+					<apex:outputPanel style="color:{!opp.Land_Option_Color};">
+						<apex:outputField value="{!opp.innerOpp.Binding_Offer_Accepted_Date__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Interconnection <br/>Request Filed</apex:facet>
+					<apex:outputPanel style="color:{!opp.STMG_Req_Filed_Color};">
+						<apex:outputField value="{!opp.innerOpp.Account.Interconnection_Request_Filed__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Phase I Study <br/>Received</apex:facet>
+					<apex:outputPanel style="color:{!opp.STMG_Receiving_Color};">
+						<apex:outputField value="{!opp.innerOpp.Account.Phase_I_Study_Received__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Phase I Study <br/>Accepted</apex:facet>
+					<apex:outputPanel style="color:{!opp.STMG_Accepted_Color};">
+						<apex:outputField value="{!opp.innerOpp.Account.Phase_I_Study_Accepted__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Permit <br/>Submitted</apex:facet>
+					<apex:outputPanel style="color:{!opp.Autho_Req_Filed_Color};">
+						<apex:outputField value="{!opp.innerOpp.Permit_Submitted__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Next Meeting <br/>with Authorities</apex:facet>
+					<apex:outputPanel style="color:{!opp.First_Call_CDS_Color};">
+						<apex:outputField value="{!opp.innerOpp.Next_Meeting_with_Authorities__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Environmental <br/>Request Filed</apex:facet>
+					<apex:outputPanel style="color:{!opp.VIA_Req_Filed_Color};">
+						<apex:outputField value="{!opp.innerOpp.Environmental_Request_Filed__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Environmental <br/>Request Approved</apex:facet>
+					<apex:outputPanel style="color:{!opp.VIA_Approval_Color};">
+						<apex:outputField value="{!opp.innerOpp.Environmental_Request_Approved__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Appeal Period <br />Start Date</apex:facet>
+					<apex:outputPanel style="color:{!opp.Appeal_Period_Start_Color};">
+						<apex:outputField value="{!opp.innerOpp.Appeal_Period_Start_Date__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Appeal Period <br />End Date</apex:facet>
+					<apex:outputPanel style="color:{!opp.Appeal_Period_End_Color};">
+						<apex:outputField value="{!opp.innerOpp.Appeal_Period_End_Date__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Phase II <br/>Study Filed</apex:facet>
+					<apex:outputPanel style="color:{!opp.STMD_Req_Filed_Color};">
+						<apex:outputField value="{!opp.innerOpp.Phase_II_Study_Filed1__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Phase II Study <br/>Received</apex:facet>
+					<apex:outputPanel style="color:{!opp.STMD_Receiving_Color};">
+						<apex:outputField value="{!opp.innerOpp.Phase_II_Study_Received1__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Phase II Study <br/>Accepted</apex:facet>
+					<apex:outputPanel style="color:{!opp.STMD_Accepted_Color};">
+						<apex:outputField value="{!opp.innerOpp.Phase_II_Study_Accepted1__c}"  rendered="{!opp.show}"/>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Land <br/>Expiry</apex:facet>
+					<apex:outputPanel style="color:{!opp.Land_Expiry_Color};">
+						<apex:outputLink value="/{!opp.siteId}" target="_blank" style="color:{!opp.Land_Expiry_Color};" rendered="{!NOT(opp.siteId==null || opp.siteId=='')}"><apex:outputField value="{!opp.innerOpp.X75_Meeting_Date__c}"  rendered="{!opp.show}"/>
+						</apex:outputLink>
+					</apex:outputPanel>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Mounting <br/>System</apex:facet>
+					<apex:outputText value="{!opp.Technology}"  rendered="{!opp.show}"/>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">PV <br/>Modules</apex:facet>
+					<apex:outputText value="{!opp.Modules}"  rendered="{!opp.show}"/>
+				</apex:column>
+				<apex:column >
+					<apex:facet name="header">Total<br/>Land<br/>Size</apex:facet>
+					<apex:outputField value="{!opp.innerOpp.Total_Land_Size__c}" rendered="{!opp.show}"/>
+					<b><apex:outputField value="{!opp.innerOpp.Total_Land_Size__c}" rendered="{!NOT(opp.show)}"/></b>
+				</apex:column>								
+			</apex:pageBlockTable>
+			<apex:outputLabel value="Total Opportunities:                                         {!countOpp}" styleClass="totalRow" />
+			<br/>
+            <apex:outputLabel value="{!message}" />    
+            </apex:pageBlock>
+</apex:page>

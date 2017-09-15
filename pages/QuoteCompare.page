@@ -1,0 +1,323 @@
+<apex:page controller="QuoteCompareCTRL" title="Quote Compare" showHeader="false" sidebar="false">
+<style type="text/css">
+.content{
+    height:19.4px;
+    background-color:lightgray;
+    border:1px solid white;
+    padding-left:10px;
+   border-left-style:none;
+} 
+Table td.Border 
+{
+   border:none;
+}   
+
+table.myTable {  
+ border-collapse:collapse; 
+ border:1px solid white;
+}
+</style>
+<apex:form style="padding-left:150px;">
+    <tr>
+        <td width="719">
+        <table cellpadding="0" cellspacing="0" width="719">
+            <tr>
+                <td height="85" style="background-color:black; padding-left:20px">
+                    <apex:image width="200" height="40" value="{!$Resource.ImgSunPower}"/>
+                </td>
+                <td width="75%" style="background-color:black; color:white; padding-left:35px; font-size:16pt;">
+                    Lease Quote Summary For {!accName}
+                </td>
+            </tr>
+            <tr height="5px">
+                <td colspan="2" style="background:#FACC2E;"></td>
+            </tr>
+        </table>
+            
+        </td>
+    </tr>
+<apex:outputPanel id="Selected_Qots">
+<table width="719" class="myTable" style="margin-top:20px;" height="55%" border="1" cellspacing="0" cellpadding="0">
+    
+    <tr>
+        <td valign="Top"  class="Border">
+            <table  width="100%" class="myTable" height="100%" border="1" cellspacing="0" cellpadding="0">
+                <tr><td class="content" style="background:#FACC2E;"><b>Quote Summary</b></td></tr>
+                <tr><td class="content">System Size DC</td></tr>
+                <tr><td class="content">Module</td></tr>
+                <tr><td class="content">Total Energy- Year 1</td></tr>
+                <tr><td class="content">Monthly Payment</td></tr>
+                <tr><td class="content">Annual Escalator to Monthly Payment</td></tr>
+                <tr><td class="content">Upfront Payment</td></tr>
+                <tr><td class="content">Yr 1 Monthly Electric Bill Before Solar</td></tr>
+                <tr><td class="content">Yr 1 Monthly Electric Bill After Solar</td></tr>
+                <tr><td class="content">Yr 1 Monthly Electric Bill Savings</td></tr>
+                <tr><td class="content">% Electricity Produced</td></tr>
+                <tr><td class="content">Avoided Cost of Energy Per kWh</td></tr>
+                <tr><td class="content">Yr 1 SPWR Cost Per kWh</td></tr>
+                <tr><td class="content">Net Savings Over 20 Years</td></tr>
+            </table>    
+        </td>
+        <td width="{!width1}" class="Border"   height="100%" valign="Top">
+            <apex:outputPanel rendered="{!s1panel}" id="Selected_Qots1">
+                <table  width="100%" class="myTable" style="border-left-style:none;" height="100%"  cellspacing="0" cellpadding="0">
+                    <tr><td class="content" align="center" style="background:#FACC2E;"><b>{!s1.quote__r.Description__c}</b></td></tr>
+                    <tr><td class="content">{!s1.System_Size_DC__c}</td></tr>
+                    <tr><td class="content">{!subModule1}</td></tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0}">
+                                <apex:param value="{!tEnergy1}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{!leasePayment}">
+                               
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0.0'%'}">
+                                <apex:param value="{!s1.quote__r.Lease_Annual_Escalation__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!UpPayment1}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!eWithoutPV}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!eWithPV}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!s1.Monthly_Electric_Bill_saving_year1__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0.00'%'}">
+                                <apex:param value="{!s1.Percentage_Electricity_Produced__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,###,##0.00}">
+                                <apex:param value="{!Leasesch1}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!sprdAnnual}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0}">
+                                <apex:param value="{!tempNtSavALL1}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                 </table>
+            </apex:outputPanel>
+        </td>
+        <td width="{!width2}" height="100%"  class="Border"  valign="Top">
+            <apex:outputPanel rendered="{!s2panel}" id="Selected_Qots2">
+                <table  width="100%" style="border-left-style:none;" class="myTable"  height="100%"  cellspacing="0" cellpadding="0">
+                    <tr><td class="content" align="center" style="background:#FACC2E;"><b>{!s2.quote__r.Description__c}</b></td></tr>
+                    <tr><td class="content">{!s2.System_Size_DC__c}</td></tr>
+                    <tr><td class="content">{!subModule2}</td></tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0}">
+                                <apex:param value="{!tEnergy2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{!leasePayment2}">
+                               
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0.0'%'}">
+                                <apex:param value="{!s2.quote__r.Lease_Annual_Escalation__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!UpPayment2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!eWithoutPV2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!eWithPV2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!s2.Monthly_Electric_Bill_saving_year1__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0.00'%'}">
+                                <apex:param value="{!s2.Percentage_Electricity_Produced__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,###,##0.00}">
+                                <apex:param value="{!Leasesch2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!sprdAnnual1}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0}">
+                                <apex:param value="{!tempNtSavALL2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                  </table>
+            </apex:outputPanel>
+        </td>
+        <td width="{!width3}" height="100%" class="Border"  valign="Top">
+            <apex:outputPanel rendered="{!s3panel}" id="Selected_Qots3">
+                <table  width="100%" class="myTable" style="border-left-style:none;"  height="100%" cellspacing="0" cellpadding="0">
+                    <tr><td class="content" align="center" style="background:#FACC2E;"><b>{!s3.quote__r.Description__c}</b></td></tr>
+                    <tr><td class="content">{!s3.System_Size_DC__c}</td></tr>
+                    <tr><td class="content">{!subModule3}</td></tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0}">
+                                <apex:param value="{!tEnergy3}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{!leasePayment3}">
+                              
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0.0'%'}">
+                                <apex:param value="{!s3.quote__r.Lease_Annual_Escalation__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!UpPayment3}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!eWithoutPV3}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!eWithPV3}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!s3.Monthly_Electric_Bill_saving_year1__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,###,##,##0.00'%'}">
+                                <apex:param value="{!s3.Percentage_Electricity_Produced__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,###,##0.00}">
+                                <apex:param value="{!Leasesch3}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0.00}">
+                                <apex:param value="{!sprdAnnual2}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <apex:outputText value="{0, number,$###,##,##0}">
+                                <apex:param value="{!tempNtSavALL3}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                  </table>
+            </apex:outputPanel>
+        </td>
+    </tr>
+</table>
+</apex:outputPanel>
+</apex:form>
+</apex:page>

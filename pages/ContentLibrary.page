@@ -1,0 +1,420 @@
+<apex:page controller="DocumentLibraryController" sidebar="true" tabStyle="Content__c" showHeader="true" id="page1">
+<script>
+
+function highlightTab(){
+    var tableId = document.getElementById("tabBar");
+    var rowId  = tableId.tBodies[0].rows[0];
+    var cellIds = rowId.getElementsByTagName('td');
+    for(var i=0;i<cellIds.length;i++){
+        var cellId1 = cellIds[i]; 
+        var DivTag = cellId1.getElementsByTagName('div');
+        var divT = DivTag[0];
+        var aTag = divT.getElementsByTagName('a');
+        var aT = aTag[0];
+        if(aT.href.indexOf('01rT00000004boZ')>0 || aT.href.indexOf('01r80000000Puys')>0){
+            if(cellId1!=null){
+                if(cellId1.getAttribute('className')!='currentTab primaryPalette' || cellId1.getAttribute('class')!='currentTab primaryPalette'){
+                    cellId1.setAttribute('className','currentTab primaryPalette');
+                    cellId1.setAttribute('class','currentTab primaryPalette');
+                }
+            }
+            break;
+        }
+    }
+}
+
+window.onload = function(){ highlightTab(); };
+    
+function ShowHideArchive(){
+    var ctrl = document.getElementById("page1:block1:form1:chkArchive");
+    var bttn = document.getElementById('page1:block1:form1:btnSearch');
+    bttn.disabled = true;
+    
+    if(ctrl != undefined){           
+        ShowHideArchive1(ctrl.checked);
+    }
+}
+
+function enableSearch(){
+    var bttn = document.getElementById('page1:block1:form1:btnSearch');
+    
+    bttn.disabled = false;
+}
+
+function MoveToSelPage(strClick){       
+       MoveToPage(strClick);
+}
+function deleteCurrent(Id) {
+    if(confirm("Are you sure?")) {
+       removeContent(Id);      
+    }
+    else
+      return false;     
+}
+</script>
+ <apex:pageBlock id="block1">   
+     <apex:form id="form1">
+         <apex:actionFunction name="removeContent" action="{!remove}" reRender="panelknowledge,panelMarketing,panelTechnical,panelProcessDoc" >
+            <apex:param assignTo="{!idToDelete}" value="" name="p2"></apex:param>
+         </apex:actionFunction>
+
+
+
+                  <apex:tabPanel id="tabPanelInner" switchType="client" selectedTab="{!selectedSubTab}">
+                       <apex:tab label="{!$Label.ContentKnowledgeBaseTab}" name="KnowledgeBase" id="tabKnowledgeBase" style="background-color:white;">
+                            <apex:actionFunction name="filldocBySearch" action="{!FillKnowledgeDoclistBySearch}" reRender="panelknowledge" />
+                            <apex:actionFunction name="filldocByBase" action="{!FillKnowledgeBaseDoclist}" reRender="panelknowledge" immediate="true"/>
+                            <apex:actionFunction name="filldocRecent" action="{!FillRecentDoclist}" reRender="panelknowledge" immediate="true"/>
+                            <apex:actionFunction name="filldocPopular" action="{!FillPopularDoclist}" reRender="panelknowledge" immediate="true"/>
+                            <apex:actionFunction name="ShowHideArchive1" action="{!ShowHideArchiveData}" oncomplete="enableSearch();" status="loadStatus" reRender="panelknowledge,panelMarketing,panelTechnical,panelProcessDoc" immediate="true">
+                                <apex:param assignTo="{!isIncludeArchive}" name="a" value=""/>
+                            </apex:actionFunction>
+                            <apex:actionFunction name="MoveToPage" action="{!SetPagingForKnowledgeBase}" reRender="panelknowledge" immediate="true">
+                                <apex:param assignTo="{!strClickedKnowledge}" name="b" value=""/>
+                            </apex:actionFunction>
+                            <table width="100%">
+                                <tr widht="100%">
+                                    <td colspan="2"><b>{!$Label.ContentKnowledgeBaseTab}</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">{!$Label.ContentKnowledgeBaseHeading}</td>
+                                </tr>
+                                <tr><td>&nbsp;</td></tr>
+                                <tr>
+                                    <td width="55%">   
+                                        <apex:inputCheckbox title="{!$Label.ContentIncludeArchiveHelpText}" onchange="ShowHideArchive();" selected="{!isIncludeArchive}" id="chkArchive"/>                                 
+                                        <span id='helpbtnID' class="helpButton">                                    
+                                            <img class="helpOrb" onmouseout="Hidehelp();" onmouseover="Showhelp();" title="" alt="" src="/s.gif"/>
+                                            <div id='divHelpText' style="display:none;width:150px;height:30px;zindex:2;position:absolute;"><table style="font-weight:bold;BORDER: #FFA602 1px solid;width:100%;height:100%;background-color:#FEFDBA;"><tr><td>{!$Label.ContentIncludeArchiveHelpText}</td></tr></table></div>
+                                            <script type="text/javascript">
+                                                function Showhelp(){
+                                                    document.getElementById('divHelpText').style.display='block';                                        
+                                                }
+                                                function Hidehelp(){                                       
+                                                    document.getElementById('divHelpText').style.display='none';                                        
+                                                }
+                                            </script>
+                                        </span>
+                                        <b>{!$Label.ContentIncludeArchive}</b>
+                                    </td>
+                                    <td>
+                                        <apex:commandButton value="{!$Label.ContentIndexButton}" onclick="filldocByBase();return false;"/>
+                                        <apex:commandButton value="{!$Label.ContentButtonRecent}" onclick="filldocRecent();return false;"/>                                     
+                                        <apex:commandButton value="{!$Label.ContentButtonPopular}" onclick="filldocPopular();return false;"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" style="border-top:2px solid yellow;border-bottom:2px solid yellow;">
+                                        <table width="100%">
+                                            <tr width="100%"><td width="100%"><b>{!$Label.ContentFind}</b>&nbsp;
+                                            <apex:image url="{!$Resource.SearchImage}"/>
+                                            <apex:inputtext style="margin-left:18px;" value="{!SearchStringKnowledge}"/></td></tr>
+                                            <tr><td>
+                                                <b>{!$Label.ContentCategoryLabel}</b>&nbsp;
+                                                <!--<apex:inputField value="{!objContent.Category_US__c}" rendered="{!isUSUser}"/>
+                                                <apex:inputField value="{!objContent.Category_EU__c}" rendered="{!NOT(isUSUser)}"/>-->
+                                                <apex:selectList size="1" value="{!selCategory}">
+                                                    <apex:selectOptions value="{!lstCategory}">
+                                                    </apex:selectOptions>
+                                                </apex:selectList>                                               
+                                            </td></tr>
+                                            <tr><td><apex:commandButton id="btnSearch" value="{!$Label.ContentSearchButton}" onclick="filldocBySearch();return false;"/>
+                                                    <!--<apex:commandButton id="btnAdvSearch" value="{!$Label.ContentAdvanceSearch}" action="{!doAdvanceSearch}"/>-->
+                                                <font color="Red" size="2px;" weight="bold" style="margin-left:190px;"><apex:actionStatus id="loadStatus" startText="Loading..."></apex:actionStatus></font>
+                                            </td></tr>
+                                        </table>
+                                    </td>
+                                    <!--<td style="border-top:2px solid yellow;border-bottom:2px solid yellow;margin-top:5px;" align="right"></td>-->
+                                </tr>                            
+                            </table>  
+                            <apex:outputPanel id="panelknowledge">
+                                <table width="100%"> 
+                                    <tr  width="100%">                                
+                                        <td><b>{!paginglabelKnowledge}</b></td>
+                                        <td align="right">
+                                            <table>
+                                                <tr>
+                                                    <td><apex:commandLink style="display:{!isFirstKnowledge};" value="{!$Label.FirstLabel}" onclick="MoveToSelPage('First');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isPreKnowledge};" value="{!$Label.PreviousLabel}" onclick="MoveToSelPage('Pre');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isOneKnowledge};" value="1" onclick="MoveToSelPage('1');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isSecondKnowledge};" value="2" onclick="MoveToSelPage('2');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isThirdKnowledge};" value="3" onclick="MoveToSelPage('3');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isNextKnowledge};" value="{!$Label.NextLabel}" onclick="MoveToSelPage('Next');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!islastKnowledge};" value="{!$Label.LastLabel}" onclick="MoveToSelPage('Last');return false;"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>                                
+                                    </tr>                    
+                                </table>                            
+                               <apex:pageBlockSection columns="1">                              
+                                    <apex:pageBlockTable value="{!pageLstKnowledge}" var="docs"> 
+                                        <apex:column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+                                            <apex:outputLink value="/{!docs.Id}/e?retURL=/apex/DocumentLibrary?retSubTab=KnowledgeBase" style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!docs.Id}');">[Delete]</a>&nbsp;                                   
+                                        </apex:column>
+                                        <!--  <apex:column headerValue="{!$Label.ContentHeaderCategory}" value="{!docs.Category__c}"/>-->
+                                        <apex:column >         
+                                             <apex:facet name="header">              
+                                                <apex:commandLink reRender="panelknowledge" status="loadStatus" action="{!FillKnowledgeDoclistBySearch}" value="{!$Label.ContentHeaderCategory} {!IF(sortValueKnowledge=='Category__c',IF(sortDirectionKnowledge='ASC','▼','▲'),'')}">             
+                                                    <apex:param value="Category__c" name="Category" assignTo="{!sortValueKnowledge}" ></apex:param>  
+                                                    <apex:param value="true" name="sortCall" assignTo="{!isSortCall}" ></apex:param>                    
+                                                </apex:commandLink>         
+                                             </apex:facet>            
+                                             <apex:outputField value="{!docs.Category__c}" />
+                                        </apex:column> 
+                                        <apex:column headerValue="{!$Label.ContentHeaderTitle}">
+                                            <!--
+                                            <a target="_top" href="{!docs.Content_Location__c}&sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}">{!docs.Title__c}</a>
+                                            -->
+                                            <a target="_top" onclick="trackEvent('ContentLibrary', 'Download', '{!docs.Category__c}/{!docs.Title__c}')" href="/apex/ContentDetailPage?cid={!docs.Id}&docurl={!URLENCODE(docs.Content_Location__c)}">{!docs.Title__c}</a>
+                                            
+                                        </apex:column>
+                                        
+                                        <apex:column headerValue="{!$Label.ContentHeaderPublishDate}" >
+                                            <apex:outputText value="{0,date,MMMM dd yyyy }">
+                                                <apex:param value="{!docs.Publish_Date__c}"  />
+                                            </apex:outputText>
+                                        </apex:column>
+                                    </apex:pageBlockTable>                              
+                               </apex:pageBlockSection>
+                           </apex:outputPanel>
+                       </apex:tab>
+                       <apex:tab label="{!IF(isUSUser,$Label.ContentProcessDocumentsTab,$Label.ContentDealerDocumentsTab)}" name="ProcessDocuments" id="tabProcessDocuments" style="background-color:white;">
+                            <apex:actionFunction name="fillProcessdoc" action="{!FillProcessDocBySearch}" reRender="panelProcess" />
+                            <apex:actionFunction name="MoveToPageProcess" action="{!SetPagingForProcess}" reRender="panelProcess" immediate="true">
+                                <apex:param assignTo="{!strClickedProcess}" name="d" value=""/>
+                            </apex:actionFunction>
+                            <table width="100%">
+                                <tr width="100%">
+                                    <td colspan="2"><b>{!$Label.ContentProcessDocumentsTab}</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">{!$Label.ContentProcessDocTabHeader}</td>
+                                </tr>
+                                <tr><td align="right"></td></tr>
+                                <tr style="height:40px;">
+                                    <td style="border-top:2px solid yellow;border-bottom:2px solid yellow;">
+                                        <b>{!$Label.ContentFind}</b>&nbsp;
+                                        <apex:image url="{!$Resource.SearchImage}"/>
+                                        <apex:inputtext value="{!SearchStringProcess}"/>
+                                        <apex:commandButton value="{!$Label.ContentSearchButton}" onclick="fillProcessdoc();return false;"/>&nbsp;&nbsp;
+                                        <font color="Red" size="2px;" weight="bold" ><apex:actionStatus id="loadStatus1" startText="Loading..."></apex:actionStatus></font>
+                                    </td>
+                                    <td style="border-top:2px solid yellow;border-bottom:2px solid yellow;margin-top:5px;" align="right">
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                            <apex:outputPanel id="panelProcess">
+                                <table width="100%"> 
+                                    <tr  width="100%">                                
+                                        <td><b>{!paginglabelProcess}</b></td>
+                                        <td align="right">
+                                            <table>
+                                                <tr>
+                                                    <td><apex:commandLink style="display:{!isFirstProcess};" value="First" onclick="MoveToPageProcess('First');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isPreProcess};" value="Pre" onclick="MoveToPageProcess('Pre');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isOneProcess};" value="1" onclick="MoveToPageProcess('1');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isSecondProcess};" value="2" onclick="MoveToPageProcess('2');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isThirdProcess};" value="3" onclick="MoveToPageProcess('3');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isNextProcess};" value="Next" onclick="MoveToPageProcess('Next');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!islastProcess};" value="Last" onclick="MoveToPageProcess('Last');return false;"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>                                
+                                    </tr>                    
+                                </table>                            
+                               <apex:pageBlockSection columns="1">                              
+                                    <apex:pageBlockTable value="{!pageLstProcess}" var="docs"> 
+                                        <apex:column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+                                            <apex:outputLink value="/{!docs.Id}/e?retURL=/apex/DocumentLibrary?retSubTab=KnowledgeBase" style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!docs.Id}');">[Delete]</a>&nbsp;                                   
+                                        </apex:column>
+                                        
+                                        <!-- <apex:column headerValue="{!$Label.ContentHeaderCategory}" value="{!docs.Category__c}"/>-->
+                                        <apex:column >         
+                                             <apex:facet name="header">              
+                                                <apex:commandLink status="loadStatus1" reRender="panelProcess" action="{!FillProcessDocBySearch}" value="{!$Label.ContentHeaderCategory} {!IF(sortValueProcess=='Category__c',IF(sortDirectionProcess='ASC','▼','▲'),'')}">             
+                                                    <apex:param value="Category__c" name="Category1" assignTo="{!sortValueProcess}" ></apex:param>  
+                                                    <apex:param value="true" name="sortCall" assignTo="{!isSortCall}" ></apex:param>                    
+                                                </apex:commandLink>         
+                                             </apex:facet>            
+                                             <apex:outputField value="{!docs.Category__c}" />
+                                        </apex:column> 
+                                        
+                                        <apex:column headerValue="{!$Label.ContentHeaderTitle}">
+                                            <!--
+                                            <a target="_top" href="{!docs.Content_Location__c}&sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}">{!docs.Title__c}</a>
+                                            -->
+                                            <a target="_top" onclick="trackEvent('ContentLibrary', 'Download', '{!docs.Category__c}/{!docs.Title__c}')" href="/apex/ContentDetailPage?cid={!docs.Id}&docurl={!URLENCODE(docs.Content_Location__c)}">{!docs.Title__c}</a>
+                                            
+                                        </apex:column>
+                                        <apex:column headerValue="{!$Label.ContentHeaderVersion}" value="v. {!docs.Version_Number__c}"/>
+                                         
+                                        <apex:column headerValue="{!$Label.ContentHeaderPublishDate}" >
+                                            <apex:outputText value="{0,date,MMMM dd yyyy }">
+                                                <apex:param value="{!docs.Publish_Date__c}"  />
+                                            </apex:outputText>
+                                        </apex:column>
+                                    </apex:pageBlockTable>                              
+                               </apex:pageBlockSection>
+                           </apex:outputPanel>
+                       </apex:tab>
+                       <apex:tab label="{!$Label.ContentMarketingBulletinsTab}" name="MarketingBulletins" id="tabMarketingBulletins" style="background-color:white;">
+                            <apex:actionFunction name="fillMarketingdoc" action="{!FillMarketingDocBySearch}" reRender="panelMarketing" />
+                            <apex:actionFunction name="MoveToPageMarketing" action="{!SetPagingForMarketing}" reRender="panelMarketing" immediate="true">
+                                <apex:param assignTo="{!strClickedMarketing}" name="c" value=""/>
+                            </apex:actionFunction>
+                            <table width="100%">
+                                <tr widht="100%">
+                                    <td colspan="2"><b>{!$Label.ContentMarketingBulletinsTab}</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">{!$Label.ContentMarketingTabHeader}</td>
+                                </tr>
+                                <tr><td align="right"></td></tr>
+                                <tr style="height:40px;">
+                                    <td style="border-top:2px solid yellow;border-bottom:2px solid yellow;">
+                                        <b>{!$Label.ContentFind}</b>&nbsp;
+                                        <apex:image url="{!$Resource.SearchImage}"/>
+                                        <apex:inputtext value="{!SearchStringMarketing}"/>
+                                        <apex:commandButton value="{!$Label.ContentSearchButton}" onclick="fillMarketingdoc();return false;"/>
+                                        &nbsp;&nbsp;
+                                        <font color="Red" size="2px;" weight="bold" ><apex:actionStatus id="loadStatus2" startText="Loading..."></apex:actionStatus></font>
+                                    </td>
+                                    <td style="border-top:2px solid yellow;border-bottom:2px solid yellow;margin-top:5px;" align="right"></td>
+                                </tr>
+                            </table>
+                            <apex:outputPanel id="panelMarketing">
+                                <table width="100%"> 
+                                    <tr  width="100%">                                
+                                        <td><b>{!paginglabelMarketing}</b></td>
+                                        <td align="right">
+                                            <table>
+                                                <tr>
+                                                    <td><apex:commandLink style="display:{!isFirstMarketing};" value="First" onclick="MoveToPageMarketing('First');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isPreMarketing};" value="Pre" onclick="MoveToPageMarketing('Pre');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isOneMarketing};" value="1" onclick="MoveToPageMarketing('1');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isSecondMarketing};" value="2" onclick="MoveToPageMarketing('2');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isThirdMarketing};" value="3" onclick="MoveToPageMarketing('3');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isNextMarketing};" value="Next" onclick="MoveToPageMarketing('Next');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!islastMarketing};" value="Last" onclick="MoveToPageMarketing('Last');return false;"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>                                
+                                    </tr>                    
+                                </table>                            
+                               <apex:pageBlockSection columns="1">                              
+                                    <apex:pageBlockTable value="{!pageLstMarketing}" var="docs"> 
+                                        <apex:column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+                                            <apex:outputLink value="/{!docs.Id}/e?retURL=/apex/DocumentLibrary?retSubTab=KnowledgeBase" style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!docs.Id}');">[Delete]</a>&nbsp;                                   
+                                        </apex:column>
+                                        <!-- <apex:column headerValue="{!$Label.ContentHeaderCategory}" value="{!docs.Category__c}"/>-->
+                                        <apex:column >         
+                                             <apex:facet name="header">              
+                                                <apex:commandLink status="loadStatus2" reRender="panelMarketing" action="{!FillMarketingDocBySearch}" value="{!$Label.ContentHeaderCategory} {!IF(sortValueMarketing=='Category__c',IF(sortDirectionMarketing='ASC','▼','▲'),'')}">             
+                                                    <apex:param value="Category__c" name="Category2" assignTo="{!sortValueMarketing}" ></apex:param>  
+                                                    <apex:param value="true" name="sortCall" assignTo="{!isSortCall}" ></apex:param>                    
+                                                </apex:commandLink>         
+                                             </apex:facet>            
+                                             <apex:outputField value="{!docs.Category__c}" />
+                                        </apex:column> 
+                                        <apex:column headerValue="{!$Label.ContentHeaderTitle}">
+                                            <!--
+                                            <a target="_top" href="{!docs.Content_Location__c}&sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}">{!docs.Title__c}</a>
+                                            -->
+                                            <a target="_top" onclick="trackEvent('ContentLibrary', 'Download', '{!docs.Category__c}/{!docs.Title__c}')" href="/apex/ContentDetailPage?cid={!docs.Id}&docurl={!URLENCODE(docs.Content_Location__c)}">{!docs.Title__c}</a>
+                                            
+                                        </apex:column>
+                                       
+                                        <apex:column headerValue="{!$Label.ContentHeaderPublishDate}" >
+                                            <apex:outputText value="{0,date,MMMM dd yyyy }">
+                                                <apex:param value="{!docs.Publish_Date__c}"  />
+                                            </apex:outputText>
+                                        </apex:column>
+                                    </apex:pageBlockTable>                              
+                               </apex:pageBlockSection>
+                           </apex:outputPanel>
+                       </apex:tab>
+                       <apex:tab label="{!IF(isUSUser,$Label.ContentTechnicalNotificationsTab,$Label.ContentTechnicalBulletinsTab)}" name="TechnicalNotifications" id="tabTechnicalNotifications" style="background-color:white;">
+                            <apex:actionFunction name="fillTechnicaldoc" action="{!FillTechnicalDocBySearch}" reRender="panelTechnical" />
+                            <apex:actionFunction name="MoveToPageTechnical" action="{!SetPagingForTechnical}" reRender="panelTechnical" immediate="true">
+                                <apex:param assignTo="{!strClickedTechnical}" name="d" value=""/>
+                            </apex:actionFunction>
+                            <table width="100%">
+                                <tr widht="100%">
+                                    <td colspan="2"><b>{!$Label.ContentTechnicalNotificationsTab}</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">{!$Label.ContentTechnicalTabHeader}</td>
+                                </tr>
+                                <tr><td align="right"></td></tr>
+                                <tr style="height:40px;">
+                                    <td style="border-top:2px solid yellow;border-bottom:2px solid yellow;">
+                                        <b>{!$Label.ContentFind}</b>&nbsp;
+                                        <apex:image url="{!$Resource.SearchImage}"/>
+                                        <apex:inputtext value="{!SearchStringTechnical}"/>
+                                        <apex:commandButton value="{!$Label.ContentSearchButton}" onclick="fillTechnicaldoc();return false;"/>
+                                        &nbsp;&nbsp;
+                                        <font color="Red" size="2px;" weight="bold" ><apex:actionStatus id="loadStatus3" startText="Loading..."></apex:actionStatus></font>
+                                    </td>
+                                    <td style="border-top:2px solid yellow;border-bottom:2px solid yellow;margin-top:5px;" align="right"></td>
+                                </tr>
+                            </table>
+                            <apex:outputPanel id="panelTechnical">
+                                <table width="100%"> 
+                                    <tr  width="100%">                                
+                                        <td><b>{!paginglabelTechnical}</b></td>
+                                        <td align="right">
+                                            <table>
+                                                <tr> 
+                                                    <td><apex:commandLink style="display:{!isFirstTechnical};" value="First" onclick="MoveToPageTechnical('First');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isPreTechnical};" value="Pre" onclick="MoveToPageTechnical('Pre');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isOneTechnical};" value="1" onclick="MoveToPageTechnical('1');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isSecondTechnical};" value="2" onclick="MoveToPageTechnical('2');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isThirdTechnical};" value="3" onclick="MoveToPageTechnical('3');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!isNextTechnical};" value="Next" onclick="MoveToPageTechnical('Next');return false;"/></td>
+                                                    <td><apex:commandLink style="display:{!islastTechnical};" value="Last" onclick="MoveToPageTechnical('Last');return false;"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>                                
+                                    </tr>                    
+                                </table>                            
+                               <apex:pageBlockSection columns="1">                              
+                                    <apex:pageBlockTable value="{!pageLstTechnical}" var="docs"> 
+                                        <apex:column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+                                            <apex:outputLink value="/{!docs.Id}/e?retURL=/apex/DocumentLibrary?retSubTab=KnowledgeBase" style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!docs.Id}');">[Delete]</a>&nbsp;                                   
+                                        </apex:column>
+                                        <!-- <apex:column headerValue="{!$Label.ContentHeaderCategory}" value="{!docs.Category__c}"/>-->
+                                        <apex:column >         
+                                             <apex:facet name="header">              
+                                                <apex:commandLink status="loadStatus3" reRender="panelTechnical" action="{!FillTechnicalDocBySearch}" value="{!$Label.ContentHeaderCategory} {!IF(sortValueTechnical=='Category__c',IF(sortDirectionTechnical='ASC','▼','▲'),'')}">             
+                                                    <apex:param value="Category__c" name="Category3" assignTo="{!sortValueTechnical}" ></apex:param>  
+                                                    <apex:param value="true" name="sortCall" assignTo="{!isSortCall}" ></apex:param>                    
+                                                </apex:commandLink>         
+                                             </apex:facet>            
+                                             <apex:outputField value="{!docs.Category__c}" />
+                                        </apex:column> 
+                                        <apex:column headerValue="{!$Label.ContentHeaderTitle}">
+                                            <!--
+                                            <a target="_top" href="{!docs.Content_Location__c}&sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}">{!docs.Title__c}</a>
+                                            -->
+                                            <a target="_top" onclick="trackEvent('ContentLibrary', 'Download', '{!docs.Category__c}/{!docs.Title__c}')" href="/apex/ContentDetailPage?cid={!docs.Id}&docurl={!URLENCODE(docs.Content_Location__c)}">{!docs.Title__c}</a>
+                                            
+                                        </apex:column>
+                                        
+                                        <apex:column headerValue="{!$Label.ContentHeaderPublishDate}" >
+                                            <apex:outputText value="{0,date,MMMM dd yyyy }">
+                                                <apex:param value="{!docs.Publish_Date__c}"  />
+                                            </apex:outputText>
+                                        </apex:column>
+                                    </apex:pageBlockTable>                              
+                               </apex:pageBlockSection>
+                           </apex:outputPanel>
+                       </apex:tab>
+                  </apex:tabPanel>
+                  
+                          
+         
+     </apex:form>
+ </apex:pageBlock>  
+</apex:page>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>OWNER</field>
+    </columns>
+    <columns>
+        <field>CREATED</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>CLOSED_DATE</field>
+    </columns>
+    <columns>
+        <field>CLOSED</field>
+    </columns>
+    <columns>
+        <field>STATUS</field>
+    </columns>
+    <columns>
+        <field>Case.Region__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>All cases currently owned by TSE (for bonus)</description>
+    <filter>
+        <booleanFilter>(1 OR 2) AND (3 OR 4) AND 5 AND (6 OR 7)</booleanFilter>
+        <criteriaItems>
+            <column>Account.Theater__c</column>
+            <operator>equals</operator>
+            <value>Europe</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.Region__c</column>
+            <operator>equals</operator>
+            <value>SPBE,SPDE,SPES,SPFR,SPGB,SPIT,SPNL,SPSW,SPTN</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CLOSED_DATEONLY</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CLOSED_DATEONLY</column>
+            <operator>greaterOrEqual</operator>
+            <value>1/1/2017 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Case.Case_Tech_Support</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OWNER</column>
+            <operator>equals</operator>
+            <value>Artur Danisz,Marco Cillepi,Roberto Trama,Alicja Madej,David Dabrowa,Mansour Belhadj,Gianluca Lauritano,Monika Rajca,Alexander Czamberg,Michal Rajca,Miranda Stel</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CREATED</column>
+            <operator>equals</operator>
+            <value>Artur Danisz,Marco Cillepi,Roberto Trama,Alicja Madej,David Dabrowa,Mansour Belhadj,Gianluca Lauritano,Monika Rajca,Alexander Czamberg,Michal Rajca,Miranda Stel</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>DR_TSE:FB_Cases_Owned</name>
+    <params>
+        <name>units</name>
+        <value>d</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>CREATED_DATE</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATEONLY</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

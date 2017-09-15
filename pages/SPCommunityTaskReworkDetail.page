@@ -1,0 +1,19 @@
+<apex:page showHeader="false" sidebar="false" standardController="Task_Rework_Request__c">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Residential Projects" />
+    <div style="max-width: 1200px; margin: auto;">
+        <apex:detail subject="{!Task_Rework_Request__c.Id}" inlineEdit="true" relatedListHover="false" showChatter="true" />
+        <c:AttachmentUploadComponent parentId="{!Task_Rework_Request__c.Id}"/>
+        <c:NotesTable parentAtt="{!Task_Rework_Request__c.Id}" />
+    </div>
+    <script>
+    window.onload = function() {
+        UserRedirect();
+    }
+    </script>
+    <c:SPCommunityAppResources_JS />
+</apex:page>

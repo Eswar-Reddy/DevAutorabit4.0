@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CHILD_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_$Item__c.Display_Name__c</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3 AND (4 OR 5)</booleanFilter>
+        <criteriaItems>
+            <column>Price_List_Item__c.Effective_Start_Date__c</column>
+            <operator>lessThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Price_List_Item__c.Effective_End_Date__c</column>
+            <operator>greaterThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_NAME</column>
+            <operator>equals</operator>
+            <value>Inverter Model Price List</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_$Item__c.Product_Type__c</column>
+            <operator>contains</operator>
+            <value>INVERTER</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_$Item__c.Description__c</column>
+            <operator>contains</operator>
+            <value>sunverge</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Price_List_Item__c.Type_3_Criteria__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>IMPL_display name</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntityCustomEntity$Price_List__c$Price_List_Item__c@Price_List_Item__c.Item_ID__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

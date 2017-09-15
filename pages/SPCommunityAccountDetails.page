@@ -1,0 +1,78 @@
+<apex:page showHeader="false" sidebar="false" standardController="Account">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <body class="detail-container">
+        <apex:detail subject="{!Account.Id}" inlineEdit="true" relatedListHover="false" showChatter="true" />
+        <div id="relatedComponents">
+        <c:AttachmentUploadComponent parentId="{!Account.Id}"/>
+        <c:NotesTable parentAtt="{!Account.Id}" />
+        </div>
+        <div id="ContactRolesComponent">
+        <c:AccountContactRoles parentAtt="{!Account.Id}" />
+        </div>
+    </body>
+    <c:SPCommunityAppResources_JS />
+    
+    <!--Script to hide Create Design button if the Partner User is not an Aurora Design Licensee-->
+    <script src="/soap/ajax/37.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/37.0/apex.js" type="text/javascript"></script>
+    <script>
+    sforce.connection.sessionId = "{!$Api.Session_ID}";
+    window.onload = function() {
+        var usrId='{!$User.Id}';
+        
+        var queryResult1 = sforce.connection.query('SELECT ContactId,Contact.AccountId from User WHERE id =\''+usrId+'\'');
+        var records1 = queryResult1.getArray('records');
+        var userAcc = records1[0].Contact.AccountId;
+        if(userAcc == '{!Account.Id}'){
+            var ComponentContainer = document.getElementById('relatedComponents');
+            ComponentContainer.style.display = "none";
+        }else{
+            var ContactRolesContainer = document.getElementById('ContactRolesComponent');
+            ContactRolesContainer.style.display = "none";
+        }
+        
+        var queryResult = sforce.connection.query('select Name,Business_Function__c from User where  Id =\''+usrId+'\'');
+        var records = queryResult.getArray('records');
+        console.log('{!$Label.Production_Org_Id}');
+        console.log('{!$Organization.Id}');
+        if('{!$Label.Production_Org_Id}'!='{!$Organization.Id}'){ 
+            console.log("Inside Org Id");
+            
+        }
+        var usr = records[0];
+        console.log('usr----->'+usr);
+        var usrBF = usr.Business_Function__c;
+        
+        hideButtonsBF('request_design',usrBF,'Request Design');
+        hideButtonsBF('electric_usage_input',usrBF,'Create Equinox Quote');
+        hideButtonsBF('create_design',usrBF,'Aurora Design Licensee');
+        UserRedirect();
+        
+        
+        function hideButtonsBF(buttonName,usrBF,BF){
+            var x = document.getElementsByName(buttonName);
+            var i;
+            for (i = 0; i < x.length; i++){
+                if (x[i].type == "button"){
+                    x[i].style.display="none";
+                }
+            }
+            if(usrBF!=null && usrBF.includes(BF)){
+                for (i = 0; i < x.length; i++){
+                    if (x[i].type == "button"){
+                        x[i].style.display="inline";
+                    }
+                } 
+            }
+        }
+        
+ }
+    </script>
+    
+    <!--End of Script-->
+</apex:page>

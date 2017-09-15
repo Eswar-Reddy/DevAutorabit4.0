@@ -1,0 +1,78 @@
+<!--
+Modification:
+    13-Jun-2014 : Birlasoft: Formatting of Monthly_Payment_Base_Year_1__c currency field on Quote
+-->
+<apex:page id="pg" standardController="Opportunity" extensions="CreditCheckController" action="{!redirect}">
+    <br/>
+    <style>
+    .ui-state-active{    
+        background-color: #ebfdff !important;
+        font-weight: bold !important;  
+    }
+    .ui-state-active-selected{    
+        background-color: #BEBDB0 !important;
+        font-weight: bold !important;  
+    }    
+    </style>    
+    <apex:form id="frm">
+        <apex:pageMessages id="pgMsgs"/>
+        <script>
+            function actFuncCall(ele, eleVal){ actFunc1(ele, document.getElementById(eleVal.id).checked); }
+        </script>
+        <apex:actionFunction action="{!ChangeSelection}" id="actFunc1" name="actFunc1" status="processStatus" reRender="oPnl">
+            <apex:param name="param1" assignTo="{!propSelectedRecord}" value=""/>
+            <apex:param name="param2" assignTo="{!propValue}" value=""/>        
+        </apex:actionfunction>
+        
+        <apex:pageBlock id="pb" title="Quotes for Credit Check">
+            <apex:outputPanel id="oPnl">
+                <apex:pageBlockTable id="pbt" value="{!propQuotes}" var="q">
+
+                     <apex:column width="3%" id="col1" styleClass="{!IF(q.propSelected, 'ui-state-active-selected', IF(q.propCanBeSubmittedForCreditCheck, 'ui-state-active', ''))}">
+                         <apex:inputCheckbox id="inpCB" value="{!q.propSelected}" onclick="actFuncCall('{!q.propQuote.Id}', this);" disabled="{!NOT(q.propCanBeSubmittedForCreditCheck)}" rendered="{!q.propCanBeSubmittedForCreditCheck}" />
+                         <apex:image style="padding-top:2px;padding-left:3px" height="14" width="14" url="{!$Resource.Credit_Check_Barred}" rendered="{!NOT(q.propCanBeSubmittedForCreditCheck)}" title="{!q.propMsg}"/>
+                     </apex:column>                    
+                     <apex:column headerValue="{!$ObjectType.Quote.fields.QuoteNumber.label}" styleClass="{!IF(q.propSelected, 'ui-state-active-selected', IF(q.propCanBeSubmittedForCreditCheck, 'ui-state-active', ''))}">
+                         <apex:outputLink value="/{!q.propQuote.Id}" target="_self" title="Quote# {!q.propQuote.QuoteNumber}">{!q.propQuote.QuoteNumber}</apex:outputLink>
+                     </apex:column>
+                     <apex:column headerValue="System Price" styleClass="{!IF(q.propSelected, 'ui-state-active-selected', IF(q.propCanBeSubmittedForCreditCheck, 'ui-state-active', ''))}">  <!-- {!$ObjectType.Quote.fields.System_Cost__c.label} -->
+                         <apex:outputText value="{!q.propQuote.System_Price__c}"/>
+                     </apex:column>
+                     <apex:column headerValue="Monthly Payment" styleClass="{!IF(q.propSelected, 'ui-state-active-selected', IF(q.propCanBeSubmittedForCreditCheck, 'ui-state-active', ''))}"> <!-- {!$ObjectType.Quote.fields.RoundOff_First_Monthly_Payment_Base_Amo__c.label} -->
+                         <!-- <apex:outputField value="{!q.propQuote.RoundOff_First_Monthly_Payment_Base_Amo__c}"/> -->
+                         <!-- <apex:outputText value="{!q.propQuote.CurrencyISOCode q.propQuote.Monthly_Payment_Base_Year_1__c}"/> -->
+                    <!--Formatting for Currency Field Monthly_Payment_Base_Year_1__c on Quote -->
+                    <apex:outputText value="{0} {1, number, ###,###,###,##0.00}">
+                        <apex:param value="{!q.propQuote.CurrencyISOCode}"/>
+                        <apex:param value="{!q.propQuote.Monthly_Payment_Base_Year_1__c}"/>
+                    </apex:outputtext>
+                     </apex:column>
+                     <apex:column headerValue="System Size" styleClass="{!IF(q.propSelected, 'ui-state-active-selected', IF(q.propCanBeSubmittedForCreditCheck, 'ui-state-active', ''))}"> <!-- {!$ObjectType.Quote.fields.Maximum_Rated_Capacity__c.label} -->
+                         <!--<apex:outputField value="{!q.propQuote.Maximum_Rated_Capacity__c}"/>-->
+                         <apex:outputField value="{!q.propQuote.Maximum_Rated_Capacity_DC__c}"/>                 
+                     </apex:column>  
+                     <apex:column headerValue="{!$ObjectType.Quote.fields.Term_Years__c.label}" styleClass="{!IF(q.propSelected, 'ui-state-active-selected', IF(q.propCanBeSubmittedForCreditCheck, 'ui-state-active', ''))}">
+                         <apex:outputField value="{!q.propQuote.Term_Years__c}"/>
+                        <!-- <apex:outputField value="{!q.propQuote.Loan_Term__c}"/>   -->              
+                     </apex:column>                                                                  
+                </apex:pageBlockTable>
+            </apex:outputPanel>
+            <apex:pageBlockButtons id="pbb" location="bottom">
+                <apex:actionStatus id="processStatus">
+                    <apex:facet name="stop">
+                        <apex:outputPanel >
+                            <apex:commandButton action="{!SubmitToLoanPath}" value="Submit for Credit Check" status="processStatus" reRender="frm"/>
+                            <input type="button" value="Cancel" onClick="window.location.href='/{!Opportunity.AccountId}';" class="btn"/>
+                        </apex:outputPanel>
+                    </apex:facet>
+                    <apex:facet name="start">
+                        <apex:outputPanel >
+                            <apex:commandButton value="Processing..." disabled="true" style="font-weight:bold;color:black !important"/>
+                            <apex:commandButton value="Processing..." disabled="true" style="font-weight:bold;color:black !important" />
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>            
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

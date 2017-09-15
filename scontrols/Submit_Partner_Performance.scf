@@ -1,0 +1,33 @@
+<html>
+<head>
+<script src="/soap/ajax/12.0/connection.js">
+</script>
+<script>
+var validationStatus = "{!PartnerPerformance__c.Validation_Status__c}";
+
+ 
+
+if (validationStatus=="Data Entry Complete"){ 
+
+  var performance = new sforce.SObject("PartnerPerformance__c");
+  performance.Submit_Status__c= "Submitted";
+  performance.Id = "{!PartnerPerformance__c.Id}";
+
+  sforce.connection.update([performance]);
+ 
+  this.parent.location.href="{!URLFOR( $Action.PartnerPerformance__c.View,   PartnerPerformance__c.Id  )}";
+
+}else{
+
+  alert("Only a Partner Performance record with a Validation Status of Data Entry Complete can be submitted."); 
+  this.parent.location.href="{!URLFOR( $Action.PartnerPerformance__c.View,   PartnerPerformance__c.Id  )}";
+}
+
+
+ 
+
+</script>
+</head>
+<body>
+</body>
+</html>

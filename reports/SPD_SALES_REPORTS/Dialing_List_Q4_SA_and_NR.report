@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>OWNER</field>
+    </columns>
+    <columns>
+        <field>LEAD_ID</field>
+    </columns>
+    <columns>
+        <field>FIRST_NAME</field>
+    </columns>
+    <columns>
+        <field>LAST_NAME</field>
+    </columns>
+    <columns>
+        <field>TITLE</field>
+    </columns>
+    <columns>
+        <field>COMPANY</field>
+    </columns>
+    <columns>
+        <field>LEAD_SOURCE</field>
+    </columns>
+    <columns>
+        <field>Lead.Solar_Advisor_Notes_EC__c</field>
+    </columns>
+    <columns>
+        <field>RATING</field>
+    </columns>
+    <columns>
+        <field>STREET</field>
+    </columns>
+    <columns>
+        <field>EMAIL</field>
+    </columns>
+    <columns>
+        <field>Lead.Lead_Qualification_Notes__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>((((((((1 OR 2) AND 3) AND 4) AND 5)) AND 6) AND 7)) AND 8</booleanFilter>
+        <criteriaItems>
+            <column>STATUS</column>
+            <operator>equals</operator>
+            <value>Sales Accepted</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Reason__c</column>
+            <operator>equals</operator>
+            <value>Lost - No Response</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OWNER</column>
+            <operator>equals</operator>
+            <value>Solar Advisors SPD</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>RATING</column>
+            <operator>notEqual</operator>
+            <value>C</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Dealer_Locator_Selection__c</column>
+            <operator>equals</operator>
+            <value>SunPower DIrect (SPD)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Solar_Advisor_Notes_EC__c</column>
+            <operator>notContain</operator>
+            <value>,Shade,DQ,Shading,Disqualified,wrong number,disconnected,Do Not Call,Spanish,DNC,SPD,Solar Technologies,Wood Shake</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Lead_Qualification_Notes__c</column>
+            <operator>notContain</operator>
+            <value>RAW</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Last_Campaign_Name__c</column>
+            <operator>notContain</operator>
+            <value>VIP,Friends</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Dialing List Q4 - SA and NR</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>LeadList</reportType>
+    <scope>org</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CURFY</interval>
+    </timeFrameFilter>
+</Report>

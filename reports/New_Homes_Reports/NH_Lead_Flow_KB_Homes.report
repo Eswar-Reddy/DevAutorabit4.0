@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Lead$Name</field>
+    </columns>
+    <columns>
+        <field>Lead$Owner</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Builder_Name__c</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Region__c</field>
+    </columns>
+    <columns>
+        <field>Lead$IsConverted</field>
+    </columns>
+    <columns>
+        <field>Lead$Appointment_Date__c</field>
+    </columns>
+    <columns>
+        <field>Lead$Status</field>
+    </columns>
+    <columns>
+        <field>Lead$Reason__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Lead$Dealer_Locator_Selection__c</column>
+            <operator>equals</operator>
+            <value>SunPower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Reason__c</column>
+            <operator>notContain</operator>
+            <value>test,duplicate</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.CampaignMembers.CampaignMembers$Name</column>
+            <operator>notContain</operator>
+            <value>test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.CampaignMembers*Campaign$NH_Community__c.Builder_Name__c</column>
+            <operator>equals</operator>
+            <value>KB Home</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NH Lead Flow - KB Homes</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_or_without_Campaign_and_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$CreatedDate</dateColumn>
+        <interval>INTERVAL_CURFY</interval>
+    </timeFrameFilter>
+</Report>

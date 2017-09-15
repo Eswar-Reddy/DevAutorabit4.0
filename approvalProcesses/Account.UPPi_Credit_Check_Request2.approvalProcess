@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>BarrySerafino</submitter>
+        <type>group</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>U_C_and_RLC_and_Off_Grid</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>vickie.dudley@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>First Credit Approval if Theater is Asia Pacific</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Theater__c</field>
+                <operation>equals</operation>
+                <value>Asia Pacific</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>First Credit Approval &amp; Theater is Asia Pacific</label>
+        <name>First_Credit_Approval_Theater_is_Asia_Pacific</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joanne.endow@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Final Credit Approval &amp; Theater is APAC above 500,000</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Requested_Credit_Amount__c</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Account.Theater__c</field>
+                <operation>equals</operation>
+                <value>Asia Pacific</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Final Credit Approval &amp; Theater is APAC above 500,000</label>
+        <name>Final_Credit_Approval_Theater_is_APAC_above_500_000</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>UPPi Credit Check Request2</description>
+    <emailTemplate>Account/Credit_Check_Request_Account</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Account.Credit_Check_Required__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.RecordType</field>
+            <operation>equals</operation>
+            <value>Standard,Infrastructure Account</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.Theater__c</field>
+            <operation>equals</operation>
+            <value>Asia Pacific</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.Requested_Credit_Amount__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Credit_Check_Approved_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Credit_Check_Rejected_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>UPPi Credit Check Request2</label>
+    <recallActions>
+        <action>
+            <name>Credit_Check_Recalled_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

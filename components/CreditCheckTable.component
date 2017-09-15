@@ -1,0 +1,38 @@
+<apex:component controller="CreditCheckTable">
+    <apex:attribute name="parentAtt" description="The Id of record to pull the Notes from" type="Id" required="true" assignTo="{!objectParentId}"/>
+
+<!-- <body class="detail-container"> -->
+<div class="sunpower-style container-fluid" style="margin-top: 1rem; margin-left:10px; max-width: 1180px;">
+    <div class="row">
+        <div class="col-xs-11 col-md-11">
+            <H5>Credit Check Applications</H5>
+        </div>
+    
+    </div>
+    <div class="row">
+        <table class="table " style="font-size:.75rem;" id="tableId">
+            <thead>
+                <th>Credit Check Application Name</th>
+                <th>Application Type</th>
+                <th>Credit Bereau</th>
+                <th>Credit Check Submission Date</th>
+                <th>Status</th>
+                <th>Credit Check Approval Date</th>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!CreditCheck}" var="cc" >
+                    <tr>
+                        <td><a href="/{!cc.Id}">{!cc.Name}</a></td>
+                        <td>{!cc.Application_Type__c}</td>
+                        <td>{!cc.Credit_Beureu__c}</td>
+                        <td>{!cc.Credit_Check_Submission_Date__c}</td>
+                        <td>{!cc.Status__c}</td>
+                        <td>{!cc.Credit_Check_Approval_Date__c}</td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- </body> -->
+</apex:component>

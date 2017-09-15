@@ -1,0 +1,340 @@
+<apex:page showHeader="false" sidebar="false" controller="ProjectDashboardController" standardStylesheets="true">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.11/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css" />
+    <apex:stylesheet value="{!URLFOR($Resource.ProjectDashboard, 'app/css/project-dashboard.css')}" />
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:outputPanel >
+        <div id="firstContainer">
+            <header>
+                <h5>Residential Project Management</h5>
+                <h1>Project Dashboard</h1>
+            </header>
+            <div class="divA">
+                <apex:form id="pendingApproval">
+                    <i id="myTasksToggle" class="toggle-button fa fa-minus-circle" />
+                    <h2 class="pageBlockTitle">My Tasks</h2>
+                   <!--  <apex:actionFunction name="runUserSearchFunction" action="{!searchForUserById}" rerender="myTasksPageBlock">
+                        <apex:param name="userSearchId" value="" />
+                    </apex:actionFunction> -->
+                    <apex:pageBlock id="myTasksPageBlock" title="" mode="maindetail">
+                        <div id="myTasksTableWrapper">
+                            <div id="myTasksFilter">
+                                <div class="form-group">
+                                    <label>SLA Status</label>
+                                    <apex:selectList id="taskSLAStatus" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.slaStatus}" />
+                                    </apex:selectList>
+                                </div>
+                                 <div class="form-group">
+                                    <label>Task Status</label>
+                                    <apex:selectList id="taskStatus" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.taskStatus}" />
+                                    </apex:selectList>
+                                </div>
+                                 <div class="form-group">
+                                    <label>Priority</label>
+                                    <apex:selectList id="taskPriority" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.taskPriority}" />
+                                    </apex:selectList>
+                                </div>
+                                <div class="form-group">
+                                    <label>Community</label>
+                                    <apex:selectList id="taskCommunity" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.taskCommunities}" />
+                                    </apex:selectList>
+                                </div>
+                                <div class="form-group">
+                                    <label>User Search</label>
+                                    <apex:inputText id="userSearch" value="{!userNameParameter}" />
+                                    <apex:inputHidden id="userSearchId" value="{!selectedUser}" />
+                                    <apex:outputText value="" rendered="{!userNameParameter != NULL}">
+                                    <i id="clearMyTasksUserFilter" class="pointer fa fa-times"></i>
+                                    </apex:outputText>
+                                </div>
+                            </div>
+                            <apex:pageBlockTable value="{!myTasksList}" id="myTasksTable" var="myTasks">
+                                <apex:column headerValue="Is Overdue" value="{!myTasks.slaStatusOverdue}" styleClass="{!IF(myTasks.isOverdue,'notOverdue','overdue')}">
+                                </apex:column>
+                                <apex:column headerValue="Community" value="{!myTasks.community}"/>
+                                <apex:column headerValue="SLA Status">
+                                    <apex:outputLink value="/{!myTasks.ptId}" target="_blank" rendered="{!myTasks.sla != NULL}" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}"><span class="status-badge"></span></apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}">
+                                    <apex:commandLink action="{!displayTaskFiles}" styleClass="sidebar-display" status="loadingIndicator">
+                                        <apex:param name="taskId" assignTo="{!taskId}" value="{!myTasks.ptId}" /> <i class="fa fa-angle-right fa-lg icon-circle"></i>
+                                    </apex:commandLink>
+                                </apex:column>
+                                <apex:column headerValue="Task Name" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}">
+                                    <apex:outputLink value="/{!myTasks.ptId}" target="_blank">{!myTasks.taskName}</apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="Project Name" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}">
+                                    <apex:outputLink value="/{!myTasks.projId}" target="_blank">{!myTasks.projName}</apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="Task Status" value="{!myTasks.ptStatus}" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}"></apex:column>
+                                <apex:column headerValue="Priority" value="{!myTasks.priority}" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}" />
+                                <apex:column headerValue="SLA" value="{!myTasks.sla}" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}" />
+                                <apex:column headerValue="SLA Days Aging" styleClass="{!IF(!myTasks.isOverdue,'notOverdue','overdue')}">
+                                    <apex:outputText rendered="{!myTasks.sla != NULL}" value="{!myTasks.slaAging}" />
+                                </apex:column>
+                            </apex:pageBlockTable>
+                        </div>
+                    </apex:pageBlock>
+                    <i id="myProjectsToggle" class="toggle-button fa fa-minus-circle" />
+                    <h2 class="pageBlockTitle">My Projects</h2>
+                    <apex:pageBlock title="" mode="maindetail">
+                        <div id="myProjectsTableWrapper">
+                            <div id="myProjectsFilter">
+
+                                <div class="form-group">
+                                    <label>SLA Status</label>
+                                    <apex:selectList id="projectSLAStatus" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.slaStatus}" />
+                                    </apex:selectList>
+                                </div>
+                                <div class="form-group">
+                                    <label>Project Status</label>
+                                    <apex:selectList id="projectStatusSelect" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.projectStatus}" />
+                                    </apex:selectList>
+                                </div>
+                                <!-- <div class="form-group">
+                                <label>Team Member</label>
+                                <apex:selectList id="projectTeamMemberSelect" size="1" required="false">
+                                    <apex:selectOptions value="{!selectListOptions.teamMember}" />
+                                </apex:selectList>
+                            </div> -->
+                                <div class="form-group">
+                                    <label>Priority</label>
+                                    <apex:selectList id="projectPrioritySelect" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.priority}" />
+                                    </apex:selectList>
+                                </div>
+                                <div class="form-group">
+                                    <label>Milestone</label>
+                                    <apex:selectList id="projectMilestoneSelect" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.milestones}" />
+                                    </apex:selectList>
+                                </div>
+                                <div class="form-group">
+                                    <label>Community</label>
+                                    <apex:selectList id="projectCommunitySelect" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.communities}" />
+                                    </apex:selectList>
+                                </div>
+                                <div class="form-group">
+                                    <label>Alliance Partner</label>
+                                    <apex:selectList id="projectInstallationPartnerSelect" size="1" required="false">
+                                        <apex:selectOptions value="{!selectListOptions.installPartner}" />
+                                    </apex:selectList>
+<!--                                  <select id="projectInstallationPartnerSelect">
+                                        <option value=""></option>
+                                    </select>
+-->                                    
+                                </div>
+                                <div class="form-group" style="margin-right: 0px;">
+                                    <label>Project Start Date Range</label>
+                                    <input type="text" id="minTaskStartDate" name="minTaskStartDate" placeholder="Project Start Date" />
+                                </div>
+                                 <div class="form-group" style="margin-right: 3px;">
+                                    <label></label>
+                                    <span>-</span>
+                                </div>
+                                <div class="form-group">
+                                    <label></label>
+                                    <input type="text" id="maxTaskStartDate" name="minTaskStartDate" placeholder="Project Start Date" />
+                                </div>
+<!--
+                                <div class="form-group">
+                                    <label>Partner Account Search</label>
+                                    <apex:inputText id="partnerSearch" value="{!partnerAccountParameter}" />
+                                    <apex:inputHidden id="partnerSearchId" value="{!selectedPartnerAccount}" />
+                                    <apex:outputText value="" rendered="{!partnerAccountParameter != NULL}">
+                                    <i id="clearMyProjectsPartnerFilter" class="pointer fa fa-times"></i>
+                                    </apex:outputText>
+                                </div>
+-->                                
+                            </div>
+                            <apex:pageBlockTable value="{!myProjectsList}" id="myProjectsTable" styleClass="myProjectsTableClass" title="My Projects" var="myProject">
+                                
+                                <apex:column headerValue="Installation Partner" value="{!myProject.rpInstallation}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}" />
+                                <apex:column headerValue="Task Status" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputText value="{!IF(myProject.hasTask, myProject.ptStatus, '')}" />
+                                </apex:column>
+                                <apex:column headerValue="Project Start Date" value="{!myProject.rpStartDate}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                </apex:column>
+                                <apex:column headerValue="Team Members" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:dataList value="{!myProject.users}" var="c">{!c}</apex:dataList>
+                                </apex:column>
+                                <apex:column headerValue="Is Overdue" value="{!myProject.slaStatusOverdue}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                </apex:column>
+                                <apex:column headerValue="Community" value="{!myProject.Community}"/>
+
+                                <apex:column headerValue="SLA Status">
+                                    <apex:outputLink value="/{!myProject.rpId}" target="_blank" rendered="{!IF(myProject.hasTask,IF(myProject.ptSLA != NULL, true, false),
+false)}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}"><span class="status-badge"></span></apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="Days Aging" value="{!myProject.rpDaysAging}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}" />
+                                <apex:column headerValue="" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:commandLink action="{!displayProjectFiles}" styleClass="sidebar-display" status="loadingIndicator">
+                                        <apex:param name="projectId" assignTo="{!projectId}" value="{!myProject.rpId}" />
+                                        <i class="fa fa-angle-right fa-lg icon-circle"></i>
+                                    </apex:commandLink>
+                                </apex:column>
+                                <apex:column headerValue="Project Name" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputLink value="/{!myProject.rpId}" target="_blank">{!myProject.rpName}</apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="Project Number" value="{!myProject.rpNumber}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}" />
+                                <apex:column headerValue="City" value="{!myProject.location}">
+                                </apex:column>
+                                <apex:column headerValue="Project Status" value="{!myProject.rpStatus}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}" />
+                                <apex:column headerValue="Priority" value="{!myProject.rpPriority}" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}" />
+                                <apex:column headerValue="Milestone" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputText value="{!IF(myProject.hasTask, myProject.ptMilestone, '')}" />
+                                </apex:column>
+                                <apex:column headerValue="" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:commandLink rendered="{!myProject.hasTask}" action="{!displayTaskFiles}" styleClass="sidebar-display" status="loadingIndicator">
+                                        <apex:param name="projectId" assignTo="{!taskId}" value="{!myProject.ptId}" />
+                                        <i class="fa fa-angle-right fa-lg icon-circle"></i>
+                                    </apex:commandLink>
+                                </apex:column>
+                                <apex:column headerValue="Task Name" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputLink rendered="{!myProject.hasTask}" value="/{!myProject.ptId}" target="_blank">
+                                        {!myProject.currentTaskName}
+                                    </apex:outputLink>
+                                </apex:column>
+                                <apex:column headerValue="Task Owner" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputText value="{!IF(myProject.hasTask, myProject.ptOwner, '')}" />
+                                </apex:column>
+                                <apex:column headerValue="SLA" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputText value="{!IF(myProject.hasTask, myProject.ptSLA, '')}" />
+                                </apex:column>
+                                <apex:column headerValue="SLA Days Aging" styleClass="{!IF(myProject.healthy,'notOverdue','overdue')}">
+                                    <apex:outputText rendered="{!IF(myProject.hasTask,
+IF(myProject.ptSLA != NULL, true, false),
+false)}" value="{!IF(myProject.hasTask,
+myProject.ptSLAAging,
+'')}" />
+                                </apex:column>
+                            </apex:pageBlockTable>
+                        </div>
+                    </apex:pageBlock>
+                </apex:form>
+            </div>
+            <div class="divB">
+                <header>
+                    <div id="closeSideBar">
+                        <i class="fa fa-times fa-lg close"></i>
+                    </div>
+                    <div class="loading-indicator">
+                        <apex:actionStatus id="loadingIndicator">
+                            <apex:facet name="start">
+                                <i class="fa fa-cog fa-spin fa-3x fa-fw margin-bottom"></i>
+                                <span>Loading...</span>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    </div>
+                    <h5><apex:outputLabel value="{!IF(chatterDocObject.isTask, 'TASK NAME', 'PROJECT NAME')}"></apex:outputLabel></h5>
+                    <h1><apex:outputLabel value="{!chatterDocObject.name}"></apex:outputLabel></h1>
+                </header>
+                <!-- Side bar tabs ul -->
+                <ul class="tab">
+                    <li><a href="#" class="tablinks active" onclick="SideBar.openSidebarTab(event, 'ChatterTab')"><i class="fa fa-comments fa-sm"></i> Chatter</a></li>
+                    <li><a href="#" class="tablinks" onclick="SideBar.openSidebarTab(event, 'DocumentsTab')"><i class="fa fa-file-text fa-sm"></i> Documents</a></li>
+                </ul>
+                <!-- End sidebar tabs ul -->
+                <!-- Tab Content -->
+                <div id="ChatterTab" class="tabcontent" style="display: block;">
+                    <!-- Chatter Feed -->
+                    <div id="chatterSection">
+                        <chatter:feed entityId="{!chatterDocObject.taskProjectId}" id="chatter" feedItemType="TextPost" showpublisher="True" rendered="{!showChatter}"></chatter:feed>
+                    </div>
+                    <!-- /Chatter Feed -->
+                </div>
+                <div id="DocumentsTab" class="tabcontent">
+                    <!-- Project/Task Files -->
+                    <div id="filesSection">
+                        <apex:outputPanel rendered="{!chatterDocObject.isTask}">
+                            <apex:pageBlock id="taskFilesSubmitted" title="Submitted Task Documents" mode="maindetail">
+                                <apex:pageBlockTable value="{!chatterDocObject.taskSubmittedFiles}" id="taskFilesSubmittedTable" var="f">
+                                    <apex:column headerValue="Name" value="{!f.fileName}" />
+                                    <apex:column headerValue="View">
+                                        <apex:outputLink value="/{!f.fileId}" target="_blank">
+                                            <i class="fa fa-external-link fa-lg"></i>
+                                        </apex:outputLink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:pageBlock id="taskFilesUnsubmitted" title="Unsubmitted Task Documents" mode="maindetail">
+                                <apex:pageBlockTable value="{!chatterDocObject.taskUnsubmittedFiles}" id="taskFilesUnsubmittedTable" var="f">
+                                    <apex:column headerValue="Name" value="{!f.fileName}" />
+                                    <apex:column headerValue="View">
+                                        <apex:outputLink value="/{!f.fileId}" target="_blank">
+                                            <i class="fa fa-external-link fa-lg"></i>
+                                        </apex:outputLink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:pageBlock id="taskFilesSection" title="All Task Files" mode="maindetail">
+                                <apex:pageBlockTable value="{!chatterDocObject.taskFiles}" id="taskFilesTable" var="taskDocs">
+                                    <apex:column headerValue="Name" value="{!taskDocs.fileName}" />
+                                    <apex:column headerValue="View">
+                                        <apex:outputLink value="/{!taskDocs.fileId}" target="_blank">
+                                            <i class="fa fa-external-link fa-lg"></i>
+                                        </apex:outputLink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!chatterDocObject.isProject}">
+                            <apex:pageBlock id="filesSubmitted" title="Submitted Project Documents" mode="maindetail">
+                                <apex:pageBlockTable value="{!chatterDocObject.projectSubmittedFiles}" id="filesSubmittedTable" var="f">
+                                    <apex:column headerValue="Name" value="{!f.fileName}" />
+                                    <apex:column headerValue="View">
+                                        <apex:outputLink value="/{!f.fileId}" target="_blank">
+                                            <i class="fa fa-external-link fa-lg"></i>
+                                        </apex:outputLink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:pageBlock id="filesUnsubmitted" title="Unsubmitted Project Documents" mode="maindetail">
+                                <apex:pageBlockTable value="{!chatterDocObject.projectUnsubmittedFiles}" id="filesUnsubmittedTable" var="f">
+                                    <apex:column headerValue="Name" value="{!f.fileName}" />
+                                    <apex:column headerValue="View">
+                                        <apex:outputLink value="/{!f.fileId}" target="_blank">
+                                            <i class="fa fa-external-link fa-lg"></i>
+                                        </apex:outputLink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            <apex:pageBlock id="projectFiles" title="All Project Files" mode="maindetail">
+                                <apex:pageBlockTable value="{!chatterDocObject.projectFiles}" id="filesTable" var="projDocs">
+                                    <apex:column headerValue="Name" value="{!projDocs.fileName}" />
+                                    <apex:column headerValue="View">
+                                        <apex:outputLink value="/{!projDocs.fileId}" target="_blank">
+                                            <i class="fa fa-external-link fa-lg"></i>
+                                        </apex:outputLink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                    </div>
+                </div>
+                <!-- End Tab Content -->
+            </div>
+        </div>
+    </apex:outputPanel>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></apex:includeScript>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></apex:includeScript>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.11/js/jquery.dataTables.min.js"></apex:includeScript>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></apex:includeScript>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></apex:includeScript>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.1/js.cookie.min.js"></apex:includeScript>
+    <script src="{!URLFOR($Resource.ProjectDashboard, 'app/js/project-dashboard.js')}" />
+    <script src="{!URLFOR($Resource.ProjectDashboard, 'app/js/project-dashboard.hideshowtables.js')}" />
+    <script src="{!URLFOR($Resource.ProjectDashboard, 'app/js/project-dashboard.sidebar.js')}" />
+    <script src="{!URLFOR($Resource.ProjectDashboard, 'app/js/project-dashboard.usersearch.js')}" />
+    <script src="{!URLFOR($Resource.ProjectDashboard, 'app/js/project-dashboard.datatable.js')}" />
+    <script src="{!URLFOR($Resource.ProjectDashboard, 'app/js/project-dashboard.partnersearch.js')}" />
+</apex:page>

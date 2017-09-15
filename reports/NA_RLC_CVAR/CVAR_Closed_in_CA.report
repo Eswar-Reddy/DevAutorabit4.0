@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Account</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Facility_City1__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Facility_Zip1__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Delivery_Date__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$System_Size_KwP__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 and 2) AND 3</booleanFilter>
+        <criteriaItems>
+            <column>Opportunity$RecordType</column>
+            <operator>equals</operator>
+            <value>Opportunity.Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Opportunity_Status__c</column>
+            <operator>equals</operator>
+            <value>Closed Won</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Facility_State1__c</column>
+            <operator>equals</operator>
+            <value>CA</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>CVAR Closed in CA</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Partner_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$Delivery_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

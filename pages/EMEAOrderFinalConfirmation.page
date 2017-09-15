@@ -1,0 +1,367 @@
+<!--
+* OrderFinalConfirmation - Order Submission page for cash based ordering system 
+* SFDC Release - https://na29.salesforce.com/a5B34000000xp2Y
+* Pivotal Tracker Updates:
+* ID #114709951 - Add Contact Phone to the Order Submission Screen - 3/18/16
+* ID #114754041 - Print Order - 3/18/16 
+* ID #121852503 - Remove Ok to Ship  - 6/23/2016
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+-->
+
+<apex:page standardController="Purchase_Order__c" extensions="EMEAAlaCarteController" docType="html-5.0" title="Submit" cache="true">
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    
+    <style>
+        .row-centered {
+            text-align:center;
+        }
+        .bs .label {
+            font-size: .90em;            
+        }
+        
+        .bs .body {
+            font-size: .90em;
+        }
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+            font-size: .90em;
+        }
+        
+    </style>
+    
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 80%" id="thecontainer">
+            
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+            
+            <ol class="breadcrumb" style="margin-bottom:0px;">
+                <li><a href="#" onclick="toOrderType();">{!$Label.Home}</a></li>
+                <li><a href="#" onclick="toSystemConfig();">{!$Label.Configure}</a></li>
+                <li><a href="#" onclick="toOpportunity();">{!$Label.Opportunity}</a></li>
+                <li><a href="#" onclick="toShipping();">{!$Label.POWizardShippingLabel}</a></li>
+                <li style="color: #f7921e;">{!$Label.Finalize}</li>
+            </ol>
+            
+            <div class="panel panel-primary" >
+                <div class="panel-heading">
+                    <h4>{!$Label.Order_Submission}</h4>
+                </div>             
+                <div class="panel-body" >
+                    <apex:form >
+                        <h4>{!$Label.Order_Information}</h4>
+                        <hr/>
+                        <div class="form-horizontal" id="printableArea">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="oppOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</label>
+                                                    <apex:outputText styleClass="col-sm-8" id="partnerNameOutput" value="{!currentUser.Contact.Account.Name}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="oppOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</label>
+                                                    <apex:outputText styleClass="col-sm-8" id="oppOuput" value="{!opp.Name}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="billaddressdiv" class="col-sm-4" style="padding-top:8px;">{!$Label.POWizardBillToAddress}</label>
+                                                    <div id="billaddressdiv" class="col-sm-8">
+                                                        <apex:outputField styleClass="form-control" value="{!bts.Address1__c}"/><br/>
+                                                        <apex:outputField styleClass="form-control" value="{!bts.City__c}" />,&nbsp; 
+                                                        <apex:outputField styleClass="form-control" value="{!bts.State__c}" />&nbsp;&nbsp;  
+                                                        <apex:outputField styleClass="form-control" value="{!bts.Zip__c}" />
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="orderNameOutputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Name.Label}</label>
+                                                    <div class="col-sm-8" id="orderNameOutputDiv">
+                                                        <apex:outputField styleClass="form-control" style="width:50%" id="orderNameOutput" value="{!purchaseOrder.Name}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="taxableBoxDiv" class="col-sm-12">{!$Label.ApplicableTaxes}</label>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            
+                            <h4>{!$Label.POWizardShippingInfoTitle}</h4>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="rqdelOutputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}</label>
+                                                    <div id="rqdelOutputDiv" class="col-sm-8">
+                                                        <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+                                                        <apex:param value="{!purchaseOrder.Requested_Delivery_Date__c}" />
+                                                    </apex:outputText>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shipToAddressOutput" class="col-sm-4">{!$Label.POWizardShipToAddress}</label>
+                                                    <apex:outputText styleClass="col-sm-8" id="shipToAddressOutput" value="{!sts.Address__c}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shippingContactOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Contact__c.Label}</label>
+                                                    <apex:outputText id="shippingContactOutput" styleClass="col-sm-8" value="{!shipContact.Name}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="alternateContactOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Alternate_Contact__c.Label}</label>
+                                                    <apex:outputText styleClass="col-sm-8" id="alternateContactOutput" value="{!purchaseOrder.Alternate_Contact__c}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--This row was created per specification of Pivitol Tracker ID# ###114709951 Add Contact Phone to the Order Submission Screen-->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shipContactPhone" class="col-sm-4">{!$ObjectType.Lead.Fields.Phone.Label}</label>
+                                                    <apex:outputText id="shipContactPhone" styleClass="col-sm-8" value="{!shipContact.Phone}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="alternateContactPhoneDiv" class="col-sm-4" style="padding-top:8px;">{!$ObjectType.Purchase_Order__c.Fields.Alternate_Contact_Phone__c.Label}</label>
+                                            <div class="col-sm-8" id="alternateContactPhoneDiv">
+                                                <apex:outputField styleClass="form-control" id="alternateContactPhoneOutput" value="{!purchaseOrder.Alternate_Contact_Phone__c}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="specialInstructionsDiv" class="col-sm-4" style="padding-top:8px;">{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}</label>
+                                            <div class="col-sm-8" id="specialInstructionsDiv">
+                                                <apex:outputField styleClass="form-control" id="specialInstructionsOutput" value="{!purchaseOrder.Special_Instructions__c}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <label for="commercialdiv" style="padding-top:8px;">{!$ObjectType.Purchase_Order__c.Fields.Commercial_Order__c.Label}</label>
+                                                <img height="14" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="popover" data-placement="auto" data-trigger="hover" title="{!$Label.EMEACommercialTooltip}" style="Margin-Bottom:5px;"/>
+                                            </div>
+                                            <div class="col-sm-8" id="commercialdiv">
+                                                <apex:inputField id="commercialOutput" value="{!purchaseOrder.Commercial_Order__c}" style="Margin-Top:10px"/>                                              
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div><br/>
+                            <!--pricing details-->
+                            
+                            <h4>{!$Label.POWOrderItems}</h4>
+                            <hr/>
+                            <div id="ignorePDF">
+                                <div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                                    <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>{!$Label.Calculating_Price}</span>
+                                </div>
+                            </div>
+                            <div id="tableSection" style="display: none">
+                                <apex:outputPanel id="theTablePanel" >
+                                    <apex:dataTable value="{!returnLines}" var="line" id="theTable" rowClasses="odd,even" styleClass="table" rendered="{!returnLines.size != 0 && returnLines != null}" columns="9">
+                                        <apex:column width="60%">
+                                            <apex:facet name="header">{!$Label.Description}</apex:facet>
+                                            <apex:outputText value="{!line.item_description}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                                            <apex:outputText value="{!line.ordered_quantity}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.POWizardUnitPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                            <apex:outputText value="{!line.internal_unit_priceFORMATTED}"/>
+                                        </apex:column>                          
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.POWizardExtendedPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                            <apex:outputText value="{!line.extended_list_priceFORMATTED}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.Line_Type}</apex:facet>
+                                            <apex:outputText value="{!line.product_line_type}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.Discount}</apex:facet>
+                                            <apex:outputText value="{!line.discount_percent}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.Discount_Total} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                            <apex:outputText value="{!line.extended_priceFORMATTED}"/>
+                                        </apex:column>
+                                    </apex:dataTable>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <blockquote class="blockquote-reverse">
+                                                <apex:outputText rendered="{!totalPriceFormatted != null && totalPriceFormatted != ''}" value="{!$Label.Total_Price}: {!totalPriceFormatted} ({!currentUser.CurrencyISOCode})"/>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                    
+                                </apex:outputPanel>
+                            </div>
+                            <!--end pricing details-->
+                            
+                            
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4>{!$Label.POWizardTnCSale}</h4>
+                                </div>
+                            </div><br/>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {!$Label.POWizardTnCSaleOnOrderAcceptance}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    {!$Label.POWizardTnCSaleCopy}&nbsp;
+                                    <a target="_BLANK" href="/servlet/servlet.FileDownload?file={!TOCDocId}">{!$Label.POWizardTnCSale}</a>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1em;">
+                                <div class="col-sm-12">
+                                    <apex:inputCheckbox id="idTnC" value="{!purchaseOrder.Accept_Terms__c}"/>
+                                    <label>{!$Label.POWizardTnCSaleAgreement}</label>
+                                </div>
+                            </div>
+                        </div><!--end panel-->
+                        <div class="row row-centered">
+                            <apex:inputHidden id="pdfId" value="{!PDFAttachmentId}"/> 
+                            <apex:commandlink styleClass="btn btn-primary" value="{!$Label.Generate_PDF}" action="{!doDocGenCallout}" reRender="pdfId" oncomplete="window.open('/servlet/servlet.FileDownload?file={!PDFAttachmentId}')" target="_blank"/>&nbsp;&nbsp;
+                            <apex:commandButton styleClass="btn btn-primary" action="{!ToShipping}" value="{!$Label.Back}"/> &nbsp;&nbsp;
+                            <apex:commandButton styleClass="btn btn-primary" action="{!submitOrder}" status="doSubmit" reRender="errorMsgs" value="{!$Label.Submit}" onclick="okToLeave = true;"/>
+                        </div>
+                        <apex:actionFunction name="doCallout" action="{!doCallout}" reRender="theTablePanel" oncomplete="afterCallout();"/>
+                        <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+                        <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+                        <apex:actionFunction name="toShipping" action="{!ToShipping}"/>
+                        <apex:actionFunction name="toSystemConfig" action="{!ToSystemsConfig}"/>
+                    </apex:form>
+                </div>
+            </div>
+        </div><!--end container-->
+    </div>
+    <script type="text/javascript">
+        var okToLeave = false;
+
+        window.onbeforeunload = function(){
+            if(!okToLeave){
+                return '{!$Label.Cash_Orders_Navigation_Warning}';
+            }
+        }
+
+        function toggleSpinner(showSpinner){
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+
+        function afterCallout(){
+            toggleSpinner(false);
+            $('#tableSection').show();
+        }
+
+
+        $(document).ready(function() {
+            console.log('READY');
+            //Do callout again
+            toggleSpinner(true);
+            doCallout();
+        });
+
+    </script>
+</apex:page>

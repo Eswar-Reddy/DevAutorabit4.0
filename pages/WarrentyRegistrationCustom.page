@@ -1,0 +1,50 @@
+<apex:page standardController="Warranty_Registration__c" extensions="WarrentyRegistrationCustom" action="{!OnInit}" id="pg">
+    <apex:form id="frm">
+    
+        <apex:actionFunction action="{!CheckSize}" name="actFuncSC" reRender="oPnl1,cmdBtnCS" id="actFuncSC" status="myStatus">
+            <apex:param assignTo="{!propSelUnsel}" value="" id="prm0" name="prm0"/>
+            <apex:param assignTo="{!propWRId}" value="" id="prm1" name="prm1"/>
+            <apex:param assignTo="{!propAttId}" value="" id="prm2" name="prm2"/>                        
+        </apex:actionFunction>
+    <apex:outputPanel id="oPnl1">  
+        <apex:pageMessage id="pgM" rendered="{!propTotal > 3140000}" summary="Error:{!propTotalSize}. Max allowed attachment size is 3.0 MB, deselect some of the attachement." severity="warning" strength="3" />
+        <apex:pageMessage id="pgMSuccess" rendered="{!porpSucces}" summary="Mail Sent successfully." severity="info" strength="3" />
+        <apex:pageBlock id="pB" title="Warrenty Docs for email">
+            <apex:pageBlockButtons id="pBB" location="top">
+                <apex:commandButton id="cmdBtnCS" action="{!ContinueWithSend}" value="Continue & Email" disabled="{!OR(propTotal > 3140000, propTotal=0, porpSucces)}"/>
+                <apex:commandButton id="cmdBtnCR" action="{!CancelandReturn}" value="Cancel & Return"/>
+                <apex:actionStatus id="myStatus">                            
+                   <apex:facet name="start"><apex:image value="{!$Resource.Loading}" style="float:right;"/></apex:facet>
+                </apex:actionStatus>                
+                <apex:outputLabel id="oLbl" value="{!propTotalSize}" style="color:#CD0000;float:right;" rendered="{!propTotal <= 3140000}"  />
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable id="pBTbl" value="{!propLstWR}" var="xwr">
+                <apex:column id="c1">
+                    <apex:inputCheckBox id="inChkB" value="{!xwr.propSelected}" onclick="actFuncSC(this.checked, '{!xwr.propWR.Id}', '{!xwr.propAttach.Id}');" disabled="{!porpSucces}" />                       
+                </apex:column>
+                <apex:column id="c2" headerValue="Attachement Name">
+                    <apex:outputLink id="oLnkAN" value="{!URLFOR($Action.Attachment.Download, xwr.propAttach.id)}" target="_blank">{!xwr.propAttach.name}</apex:outputLink>
+                </apex:column>  
+                <apex:column id="c3" headerValue="Attachement Size">
+                    <apex:outputText id="oTxtAS" value="{!ROUND(((xwr.propAttach.BodyLength/1024)/1024),2)} MB" />
+                </apex:column> 
+                <apex:column id="c4" headerValue="Content Type">
+                    <apex:outputText id="oTxtCT" value="{!xwr.propAttach.ContentType}" />
+                </apex:column>                             
+                <apex:column id="c5" headerValue="Warranty Number">
+                    <apex:outputField id="oFldWN" value="{!xwr.propWR.Warranty_Number__c}"/>
+                </apex:column>                
+                <apex:column id="c6" headerValue="Warranty Status">
+                    <apex:outputField id="oFldS" value="{!xwr.propWR.Status__c}"/>
+                </apex:column>
+                <apex:column id="c7" headerValue="Opportunity">
+                    <apex:outputField id="oFldWO" value="{!xwr.propWR.Warranty_Opportunity__c}"/>
+                </apex:column>
+                <apex:column id="c8" headerValue="Account Email">
+                    <apex:outputField id="oFldCAE" value="{!xwr.propWR.Customer_Account_Email__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>         
+        </apex:pageBlock>
+    </apex:outputPanel>          
+    </apex:form>
+</apex:page>

@@ -1,0 +1,126 @@
+<!--
+===============
+CHANGE HISTORY:
+===============
+
+version: KCM_06292016
+author: Kane Chelster Macaspac
+last modified date/time: 06/30/2016 2:09PM MNL
+details:
+1. in reference to case 00741608, with the help of Crystal, corrected issue where user is getting an error
+   "Remoting does not support serializing system.dmlexception" when saving a new shipping site record in the
+   portal when the address is from the East Coast (NY, NJ, etc).
+2. please use the version name above to search this document for the specific lines of codes that are part of this change.
+-->
+
+<apex:component controller="ShippingSiteComponentController" layout="block">
+    <!-- TODO: Remove some stuff in center property of mapOptions for now involving controller variable.  Only dealt with partner account country domain.  Possibly pass in as attribute -->
+    <apex:attribute name="componentName"
+    type="String"
+    assignTo="{!Key}"
+    description="The key given to this component so the page can easily get access to it" />
+
+    <apex:attribute name="controllerForPage"
+      type="PageControllerBase"
+      assignTo="{!pageController}"
+      required="true"
+      description="The controller for the page." />
+
+    <style type="text/css">
+
+    </style>
+
+    <script type="text/javascript">
+        var shipToSite = {};
+
+        function setNewStreet(e){
+            shipToSite.Address1__c = e.value;
+        }
+        function setNewStreet2(e){
+            shipToSite.Address2__c = e.value;
+        }
+        function setNewCity(e){
+            shipToSite.City__c = e.value;
+        }
+        function setNewState(e){
+            shipToSite.State__c = e.value;
+        }
+        function setNewCountry(e){
+            shipToSite.Country__c = e.value;
+        }
+        function setNewZip(e){
+            shipToSite.Zip__c = e.value;
+        }
+    </script>
+    <div class="container container-responsive">
+    <div class="row">
+        <div class="col-sm-12">
+            <apex:form >
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label  class="col-sm-2 control-label">{!$ObjectType.Ship_to_Site__c.Fields.Address1__c.Label}</label>
+                            <div class="col-sm-10">
+                                <input id="streetId" type="text" class="form-control" style="width: 300px;" value="{!componentSite.Address1__c}" maxlength="35" onchange="setNewStreet(this);"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:1em;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{!$ObjectType.Ship_to_Site__c.Fields.Address2__c.Label}</label>
+                            <div class="col-sm-10">
+                                <input id="streetId" type="text" class="form-control" style="width: 300px;" value="{!componentSite.Address2__c}" maxlength="35" onchange="setNewStreet2(this);"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:1em;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{!$ObjectType.Lead.Fields.PostalCode.Label}</label>
+                            <div class="col-sm-10">
+                                <input id="zip1Id" type="text" class="form-control" style="width: 300px;" value="{!componentSite.Zip__c}" onchange="setNewZip(this);"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:1em;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{!$ObjectType.Lead.Fields.City.Label}</label>
+                            <div class="col-sm-10">
+                                <input id="cityId" type="text" class="form-control" style="width: 300px;" value="{!componentSite.City__c}" onchange="setNewCity(this);"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:1em;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{!$ObjectType.Lead.Fields.State.Label}</label>
+                            <div class="col-sm-10">
+                                <input id="stateId" type="text" class="form-control" style="width: 300px;" value="{!componentSite.State__c}" onchange="setNewState(this);"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:1em;">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{!$ObjectType.Lead.Fields.Country.Label}</label>
+                            <div class="col-sm-10">
+                                <apex:selectList id="countryId" styleClass="form-control" style="width: 300px;" value="{!componentSite.Country__c}" multiselect="false" size="1" onchange="setNewCountry(this);">
+                                    <apex:selectOptions value="{!countryCodes}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <apex:actionFunction name="saveInComponent" action="{!compControllerTest2}" reRender=""/>
+            </apex:form>
+        </div>
+    </div>
+    </div>
+</apex:component>

@@ -1,0 +1,29 @@
+<messaging:emailTemplate subject="Resource Quote Approval Requested - {!relatedTo.Name}" recipientType="User" relatedToType="Quote">
+<messaging:htmlEmailBody >
+ <table width="100%" border="0">
+      <tr style="background-color:black;">
+        <td>
+          <img src="https://login.salesforce.com/servlet/servlet.ImageServer?id=01580000001Jww7&oid=00D80000000ZF1L" style="width:100%;" /> 
+        </td>
+      </tr>
+    </table><br></br> 
+The following Quote has been submitted for Approval to Resource. Please click the link below to review the Quote.
+ <br></br>
+<a href="https://login.salesforce.com/{!relatedTo.Id}">{!relatedTo.Id}</a> 
+ <br></br> <br></br> 
+
+Deal Information
+ <br></br>
+ 
+Quote Owner: {!relatedTo.CreatedBy.Name}
+  <br></br>
+Opportunity Number: {!relatedTo.Opportunity_Number__c}
+  <br></br>
+Opportunity Name:{!relatedTo.Opportunity.Name}
+  <br></br>
+Number of Sites: {!relatedTo.Number_of_Sites__c}
+  <br></br>
+Amount: {!relatedTo.TotalPrice}
+ <br></br>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

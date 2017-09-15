@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Document_Submitted__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Response_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>To Monitor Lease with NO Date Delivered information by Install Invoice received starting 1/8/13</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Pending,Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>equals</operator>
+            <value>Installation Invoice</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Date_Delivered__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Install Inv Rec, No Delivered Date</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Account.Lease_Payments__r.Invoice_Documents__r$Response_Date__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Account.Lease_Payments__r.Invoice_Documents__r$Document_Submitted__c</dateColumn>
+        <endDate>2020-03-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-01-07</startDate>
+    </timeFrameFilter>
+</Report>

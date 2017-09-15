@@ -1,0 +1,59 @@
+<apex:page standardController="Lead" >
+<link href="https://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" /> 
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script> 
+
+<div style="height:7px"><a href="#" id="redirectTo" target="_blank">Go to GoogleMap</a></div><br/>
+<div id="map_canvas" style="width: 600px; height: 400px;">{!Lead.Facility_Address__c}</div> 
+
+
+
+
+<script type="text/javascript">  
+  var address = prepareAddress();
+  var redirectMap = 'http://maps.google.com/maps?t=h&daddr=' + address; 
+  var geocoder;
+  var map;
+  
+  initialize();
+    
+  function initialize() {  
+    document.getElementById("redirectTo").href = redirectMap ;
+    geocoder = new google.maps.Geocoder();  
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var myOptions = {
+     zoom: 16,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.HYBRID
+    }
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);    
+    codeAddress();
+  }
+    
+  function codeAddress() {   
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+            map: map, 
+            position: results[0].geometry.location
+        });
+      } else {
+        document.getElementById("map_canvas").innerHTML = "Geocode was not successful for the following reason: " + status;
+      }
+    });
+  }
+    
+  function prepareAddress(){ 
+    var location = "";
+    location += document.getElementById("map_canvas").innerHTML.replace(/\n/g,' ');
+    location += location == "" ? "" : ","; 
+    location += "{!Lead.Facility_City__c}" == null || "{!Lead.Facility_City__c}" == "" ? "" : "{!Lead.Facility_City__c}" + ", ";
+    location += "{!Lead.Facility_State__c}" == null || "{!Lead.Facility_State__c}" == "" ? "" : "{!Lead.Facility_State__c}" + ", ";    
+    location += "{!Lead.Theater__c}" == null || "{!Lead.Theater__c}" == "" ? "" : "{!Lead.Theater__c}" + ", ";    
+    location = location.substr(0,location.length - 2);
+    document.getElementById("map_canvas").innerHTML = "";
+    return location;
+  }
+  
+</script> 
+</apex:page>

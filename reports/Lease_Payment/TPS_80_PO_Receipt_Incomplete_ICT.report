@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Dealer_Fee_PO__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Attachment_Link__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Id</field>
+    </columns>
+    <currency>USD</currency>
+    <description>TPS Approved 80% package for RR</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Pending Transfer,Duplicate,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination,Contract Pending,Pending Buyout,Buyout,Deceased HO,Separation of Lesse</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Partner_Account__c</column>
+            <operator>notContain</operator>
+            <value>gabi solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$RecordType</column>
+            <operator>equals</operator>
+            <value>LeasePayment__c.TPS</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>contains</operator>
+            <value>Invoice</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Notes_to_Dealer__c</column>
+            <operator>equals</operator>
+            <value>Forwarded to AP</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>TPS - 80% PO Receipt - Incomplete - ICT</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$Workers_Comp_Exp__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

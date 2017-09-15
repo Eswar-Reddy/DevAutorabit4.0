@@ -1,0 +1,178 @@
+<apex:page controller="CancellationHandler" standardStylesheets="false" sidebar="{!IF(isInternal, TRUE, FALSE)}" showHeader="{!IF(isInternal, TRUE, FALSE)}" docType="html-5.0">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <apex:stylesheet value="{!URLFOR($Resource.SPStyleGuide, 'css/sunpower-styleguide.css')}" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    <style type="text/css">
+        .greybutton{
+            background-color:gray !important;
+        }
+        label.spLabel{
+            font-size:medium;
+            color:black;
+            margin-right:10px;
+            width:200px; !important
+        }
+        .selectStyles{
+            border: 1px solid #e5e5e5;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            height:45px;
+        }
+        .has-Error{
+            box-shadow: 0 0 8px red;
+        }
+        .asterisk{
+            color:#ef373e;
+            opacity:0.6;
+            margin-left:3px;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+        var isOther = false;
+        j$ = jQuery.noConflict();
+        j$(document).ready(function(){
+            var notSelected = false;
+
+            j$('input[id*=submitButton]').attr('disabled', 'true').addClass('greybutton');
+
+            j$('select.required').blur(function() {
+                var value = j$.trim(j$(this).val());
+
+                if(value.length>0) {
+                    j$(this).removeClass('has-Error');
+                } else {
+                    j$(this).addClass('has-Error');
+                }
+            });
+
+            j$('select.required').change(function() {
+                isOther = false;
+                notSelected = false;
+
+                j$('select.required').each(function() {
+                    var value = j$(this).val();
+                    if(!value) {
+                        notSelected = true;
+                    } else if(value == 'Other') {
+                        isOther = true;
+                        if(!j$('#notesAsterisk').length) {
+                            j$('#noteLabel').append('<span id="notesAsterisk" class="asterisk"><i class="fa fa-asterisk" aria-hidden="true"></i></span>');
+                        }
+                        noNote();
+                    } else {
+                        j$('#notesAsterisk').remove();
+                        j$('#noteContainer').removeClass('has-Error');
+                    }
+                });
+                setSubmit(notSelected);
+            });
+
+            // check note value
+            j$('input[id=note]').on('input', function() {
+                var value = j$.trim(j$(this).val());
+                document.getElementById('{!$Component.frm:hiddenNote}').value = value;
+                if(isOther) {
+                    if(value.length < 4) {
+                        setSubmit(true);
+                        j$('#noteContainer').addClass('has-Error');
+                    } else {
+                        j$('#noteContainer').removeClass('has-Error');
+                        if(!notSelected) setSubmit(notSelected);
+                    }
+                }
+            });
+        });
+
+        function noNote() {
+            var result = false;
+            // check the value of the notes field
+            var value = j$.trim(j$('#note').val());
+            if(value.length < 4) {
+                result = true;
+                j$('#noteContainer').addClass('has-Error');
+            } else j$('#noteContainer').removeClass('has-Error');
+            return result;
+        }
+
+        function setSubmit(value) {
+            if(value || isOther && noNote()) {
+                j$('input[id*=submitButton]').attr('disabled', 'true').addClass('greybutton');
+            } else {
+                j$('input[id*=submitButton]').removeAttr('disabled').removeClass('greybutton');
+            }
+        }
+    </script>
+    <c:CommunitiesMainNavComponent activeTab="Accounts" rendered="{!!isInternal}"/>
+    <div class="sunpower-style container" style="max-width: 1200px;margin-left:30px; margin-right:30px;margin-top:30px">
+        <div  class="external-border">
+            <h1 class="custom-h2" >Cancellation Request</h1>
+            <apex:outputPanel rendered="{!showError}">
+                <div class="alert alert--danger">
+                    <span>{!miscErrorMsg}</span>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!showPage}">
+                <div class = "alert alert--info alert-dev align-text-center"  >
+                    <span>
+                        <p>Proceeding will Trigger the following actions:</p>
+                        <ul >
+                            <p>- Cancellation Contract will be generated</p>
+                            <p>- Material Order will be cancelled</p>
+                            <p>- Project will be cancelled</p>
+                        </ul>
+                        <p>
+                            If you are ready to continue, select a cancellation reason and click the Submit Cancellation button
+                        </p>
+                    </span>
+                </div>
+                <div style="">
+                    <apex:form rendered="true" id="frm">
+                        <div id="cancellation-section" style="margin-top:30px">
+                            <apex:outputPanel rendered="{!isInternal && nocStatic == FALSE}">
+                                <div class="form-group">
+                                    <label class="spLabel" style="width:200px; font-size:normal;">Cancellation Type <span class="asterisk"><i class="fa fa-asterisk " aria-hidden="true"></i></span></label>
+                                    <apex:inputField id="cType" value="{!newAgg.Change_Order_Type__c}" rendered="{!isInternal && nocStatic == FALSE}" styleClass="required cs-skin-border selectStyles" style="max-width: 50%;" />
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!isInternal && nocStatic == TRUE}">
+                                <div class="form-group">
+                                    <label class="spLabel" style="width:200px; font-size:normal;">Cancellation Type</label>
+                                    <div class="input-container input-container--icon icon-right">
+                                        <!-- If Cancellation Agreement already exists for this Opportunity, Notice of Cancellation is the only option -->
+                                        <apex:outputField id="cTypeNOC" value="{!newAgg.Change_Order_Type__c}" rendered="{!isInternal && nocStatic == TRUE}" style="max-width: 50%;" styleClass="select-dropdown cs-skin-border" />
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <div class="form-group">
+                                <label class="spLabel" style="width:200px; font-size:normal;">
+                                    Cancellation Justification
+                                    <span class="asterisk"><i class="fa fa-asterisk " ></i></span>
+                                </label>
+                                <apex:inputField id="justification" value="{!newAgg.Cancellation_Reason__c}" styleClass="required cs-skin-border selectStyles" style="max-width: 50%;"/>
+                            </div>
+                            <div class="form-group">
+                                <label id="noteLabel" class="spLabel" style="width:200px; font-size:normal;">
+                                    Explanation
+                                </label>
+                                <div id="noteContainer" class="input-container">
+                                    <apex:inputHidden id="hiddenNote" value="{!newAgg.Notes__c}"/>
+                                    <input type="textarea" rows="3" id="note" style="width: 100%; border: 1px solid #e5e5e5;"/>
+                                </div>
+                            </div>
+                            <div class="proceed-section" style="float:right;margin-top:15px">
+                                <apex:commandLink action="{!cancel}" styleClass="secondary-link" style="margin-right:15px;" value="Cancel" id="cancel" />
+                                <apex:commandButton action="{!applyCancellation}" title="Submit Cancellation" id="submitButton" value="Submit Cancellation" styleClass="btn btn-primary btn--small greyButton"/>
+                            </div>
+                        </div>
+                    </apex:form>
+                </div>
+            </apex:outputPanel>
+        </div>
+    </div>
+    <!-- Keep at bottom of page -->
+    <script type="text/javascript" src="{!URLFOR($Resource.SPStyleGuide, 'javascripts/main.bundle.js')}"></script>
+</apex:page>

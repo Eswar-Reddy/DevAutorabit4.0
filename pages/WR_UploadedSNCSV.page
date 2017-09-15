@@ -1,0 +1,22 @@
+<apex:page cache="true" controller="WarrantyRegistrationController" contentType="text/csv#Warranty Serial Numbers.csv" language="en-US" >{!$Label.Sr_No},{!$Label.Status}
+<apex:repeat value="{!InvalidSerials}" var="snInnerList">
+<apex:repeat value="{!snInnerList}" var="snSet">
+{!snSet},{!$Label.Invalid}
+</apex:repeat>
+</apex:repeat>
+<apex:repeat value="{!productsPaginator.AllStagingRecords}" var="stagingRecords" >
+<apex:repeat value="{!stagingRecords}" var="snStatus">
+<apex:variable rendered="{!If(snStatus.IsDrafted__c,true,false)}" value="any" var="any">
+{!snStatus.WR_FDS_Product__r.Serial_Number__c},{!$Label.Draft_TO} {!snStatus.Customer_Name__c}
+</apex:variable>
+<apex:variable rendered="{!If(snStatus.isManuallyRegistered__c,true,false)}" value="any" var="any">
+{!snStatus.WR_FDS_Product__r.Serial_Number__c},{!$Label.Converted_to_Asset_Manually}
+</apex:variable>
+<apex:variable rendered="{!If(snStatus.isRegistered__c,true,false)}" value="any" var="any">
+{!snStatus.WR_FDS_Product__r.Serial_Number__c},{!$Label.Registered_To} {!snStatus.Customer_Name__c}
+</apex:variable>
+<apex:variable rendered="{!Not If(snStatus.IsDrafted__c || snStatus.isRegistered__c || snStatus.isManuallyRegistered__c,true,false)}" value="any" var="any">
+{!snStatus.WR_FDS_Product__r.Serial_Number__c},{!$Label.Valid}
+</apex:variable>
+</apex:repeat> </apex:repeat> 
+</apex:page>

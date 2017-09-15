@@ -1,0 +1,297 @@
+<apex:page id="page1" standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false" id="page1">
+
+<apex:form id="form1">
+<c:PartnerAppHeader2 id="header" isCommercial="{!isCommercial}" pageNumber="2"/>
+<apex:pageMessages />
+<apex:pageBlock id="pgbl2">
+ <apex:pageBlockButtons >
+   <apex:commandButton value="Back" action="{!step1}"/>
+   <apex:commandButton value="Submit" action="{!step3}"/>
+   <apex:commandButton value="Cancel" action="{!cancelPartner}"/>
+ </apex:pageBlockButtons>
+ 
+          <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="3">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Products</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;" align="left" colspan="3">Please indicate your direct from manufacturer and/or distributor relationships and credit terms you have available</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="50%">Manufacturer or Distributor</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Product Type (Brands)</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Credit Line Available</td>
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manufacturer_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Product_Type_1__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Manufacturer_1_Credit_Line__c}"/></td>
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manufacturer_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Product_Type_2__c}"/></td>
+
+                <td> <apex:inputField style="width:98%" value="{!partnerApp.Manufacturer_2_Credit_Line__c}"/> </td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manufacturer_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Product_Type_3__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Manufacturer_3_Credit_Line__c}"/></td>
+
+            </tr>
+
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>    
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>    
+
+        </table>
+        
+        
+        
+     <table width="100%" style="background-color:#FBB917" border="0" cellspacing="3px" cellpadding="0" >
+          <tr>
+              <td width="100%" align="left" style="padding-left:10px" height="23px"><font color="#000000" size="2"><B>Potential Client Base / Existing Commercial Customer Base</B></font>
+              </td> 
+          </tr>
+      </table>
+    <apex:pageBlockSection columns="1" id="pbs2">
+        <apex:outputPanel >Please indicate your estimated customer base from existing clients, referrals, etc.</apex:outputPanel>
+        <apex:outputPanel ><apex:inputField value="{!partnerApp.Commercial_Customer_Base__c}"/></apex:outputPanel>
+
+    </apex:pageBlockSection>
+
+        <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>    
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Insurance</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Insurance Type</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Carrier</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Coverage</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Policy Number</td>
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_1__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_1__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_1__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_2__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_2__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_3__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_3__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_4__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_4__c}"/> </td>
+
+            </tr>
+
+            <tr>                
+
+                <td style="white-space:nowrap;padding:5px;" align="left" colspan="4">Does the company have existing/pending claims, liability, court-cases, litigation?&nbsp;&nbsp;<apex:inputfield value="{!partnerApp.Existing_Pending_Litigation__c}"/></td>
+            </tr>
+
+            <tr>                
+
+                <td style="white-space:nowrap;padding:5px;" align="left" valign="top">If Yes please specify:</td>
+                <td style="padding:5px;" align="right" colspan="3"><apex:inputField style="width:85%" value="{!partnerApp.Existing_Pending_Litigation_Specify__c}"/></td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+             <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+        </table>
+
+        <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Marketing / Lead Generation</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Please indicate your most used lead generation sources and the percent of your business each accounts for</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td colspan="3" style="white-space:nowrap;padding-left:7px;" align="left">Marketing Source</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">% of Business</td>                
+
+            </tr> 
+
+            <tr>
+
+                <td colspan="3"><apex:inputField style="width:100%" value="{!partnerApp.Marketing_Source_1__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Marketing_Source_1_Percent__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td colspan="3"><apex:inputField style="width:100%" value="{!partnerApp.Marketing_Source_2__c}"/></td>
+
+                <td><apex:inputField style="width:98%" value="{!partnerApp.Marketing_Source_2_Percent__c}"/></td>
+
+            </tr>
+
+            <tr>                
+
+                <td style="white-space:nowrap;padding:5px;" align="left" colspan="3">Are you listed through the Better Business Bureau or other consumer reporting agency?</td>
+
+                <td style="padding:5px;" align="left"><apex:inputCheckbox value="{!partnerApp.Consumer_Reporting_Agency__c}"/></td>            
+
+            </tr>
+
+             <tr>                
+
+                <td style="white-space:nowrap;padding-left:5px;" align="left" width="40%">Are you a member of local business organizations?</td>
+
+                <td align="left" width="10%"><apex:inputCheckbox value="{!partnerApp.Member_of_Local_Business_Orgs__c}"/></td>
+
+                <td style="white-space:nowrap;padding-left:5px;" align="left" width="10%">If Yes please specify:</td>
+
+                <td align="center" width="40%"> <apex:inputField value="{!partnerApp.Member_of_Local_Business_Orgs_Details__c}" style="width:98%"/> </td>            
+
+            </tr>
+
+        </table>
+
+    <apex:pageblockSection columns="1">
+
+        <table width="100%">        
+
+        <tr style="font-weight:bold;font-size:14px;"><td width="100%" style="padding-top:25px;" align="center">APPLICATION FORM WAIVER</td></tr>        
+
+        <tr>
+
+            <td width="100%" style="padding-top:10px;" >
+                <apex:inputHidden value="{!partnerApp.Company_Name__c}" />   
+                In exchange for the consideration of this application by <input type="text" id ="partnerAppComp" /> (hereinafter called "The Company"), I agree that: 
+                Neither the acception of this application nor the subsequent entry into any type of contractual relationship, either in the role of a SunPower
+                <br/> <br/>
+                Dealer or any other position, shall serve to create an actual or implied Dealer Agreement, or to confer any rights to create a Dealer Agreement with SunPower.
+                <br/> <br/>
+                By submitting this application, I certify that all information herein is true and complete. I authorize SunPower Corporation to retain this                 application, to rely on the foregoing, to check and verify any information contain herein.
+            </td>
+
+        </tr>
+
+        </table>
+
+        <br/><br/>
+        
+    </apex:pageblockSection>
+       <table style="border:black 2px solid" width="100%" height="100px" >
+            <tr>
+
+                <td  style="padding-left:10px;white-space:nowrap;">
+                    I authorize investigation of all statements contained in this application, and hereby release the Company from any liability as a result
+                    of such investigation
+                </td>
+            </tr>
+
+        </table>
+
+    </apex:pageBlock>
+    </apex:form>
+    <script>
+        function removeWarningMsg(){
+               try{
+                    var ctrl = document.getElementById("page1:form1");
+                    var pTags = document.getElementById("page1:form1").getElementsByTagName('div');
+                    for(i=0;pTags != null && i < pTags.length; i++ ){
+                        var pHTML =pTags[i].innerHTML;
+                        if(pHTML != null && pHTML.indexOf('Warning:') >=0){
+                            pTags[i].innerHTML='&nbsp;';
+                            pTags[i].className='&nbsp;';
+                        }   
+                    }
+                                    
+                }catch(e){}
+            }
+            removeWarningMsg();
+            
+      </script>
+    
+</apex:page>

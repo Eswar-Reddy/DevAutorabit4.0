@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$Name</field>
+    </columns>
+    <columns>
+        <field>Lead$Lead_CreatedDate__c</field>
+    </columns>
+    <columns>
+        <field>Lead$Lead_LastModifiedDate__c</field>
+    </columns>
+    <currency>AUD</currency>
+    <description>Shows amount of leads open, qualified, contacted and converted</description>
+    <filter>
+        <criteriaItems>
+            <column>Lead$Owner</column>
+            <operator>equals</operator>
+            <value>,Jaime Robles,Wilf Johnston,Russell Harris</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead$Owner</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead$Status</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead$Business_Unit__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>AU_Lead Management SLA</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_Converted_Lead_Information_Extended__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$CreatedDate</dateColumn>
+        <endDate>2012-12-30</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2012-01-02</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,42 @@
+<apex:component controller="AccountContactRolesTable">
+	<apex:attribute name="parentAtt" description="The Id of the Account to pull the Roles from" type="Id" required="true" assignTo="{!accountId}"/>
+
+<div class="sunpower-style container-fluid" style="margin-top: 1rem; margin-left:10px; max-width: 1180px;">
+	<div class="row">
+        <div class="col-xs-11 col-md-11">
+            <H5>Contact Roles</H5>
+        </div>
+        <div class="col-xs-1 col-md-1">
+	        <a href="/apex/AccountContactRoleNew?accountId={!accountId}" style="float: left; margin-bottom: 1rem;">New Role</a>
+		</div>
+	</div>
+	<div class="row">
+		<table class="table " id="tableId">
+			<thead>
+				<th></th>
+				<th>Contact</th>
+				<th>Account Name</th>
+				<th>Email</th>
+				<th>Phone</th>
+				<th>Role</th>
+				<th>Primary</th>
+			</thead>
+			<tbody>
+				<apex:form >
+				<apex:repeat value="{!roles}" var="role" >
+					<tr>
+						<td><a href="/apex/AccountContactRoleNew?accountId={!accountId}">Edit</a></td>
+						<td><a href="/{!role.ContactId}">{!role.Contact.Name}</a></td>
+						<td><a href="/{!role.Contact.AccountId}">{!role.Contact.Account.Name}</a></td>
+						<td><a href="mailto:{!role.Contact.Email}">{!role.Contact.Email}</a></td>
+						<td>{!role.Contact.Phone}</td>
+						<td>{!role.Role}</td>
+						<td><apex:inputCheckbox value="{!role.IsPrimary}" disabled="true"/></td>
+					</tr>
+				</apex:repeat>
+				</apex:form>
+			</tbody>
+		</table>
+	</div>
+</div>
+</apex:component>

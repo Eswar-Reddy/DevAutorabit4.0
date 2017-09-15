@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <script type="text/javascript">
+     var counter = 0;
+     var arr = [];
+     
+     function setupPage() {
+       try {
+        if("{!User.ContactId}" != "") {
+          addButton();   
+        } 
+       }
+       catch(e) {
+         counter++;
+         if(counter < 4) {
+           window.setTimeout(setupPage,2500);
+         }     
+       }
+     }
+     
+     function addButton() {
+        var topTd = parent.document.getElementById("topButtonRow");
+        var bottomTd = parent.document.getElementById("bottomButtonRow");
+        
+        arr.push(topTd);
+        arr.push(bottomTd);
+        
+        for(i = 0; i < arr.length;i++) {
+          var button = document.createElement("INPUT");
+          button.type = "button";
+          button.className = "btn";
+          button.value = "View Contact";
+          button.onclick = function() {
+                             window.parent.location.href = "/{!User.ContactId}";
+                           };
+          
+          arr[i].appendChild(button);  
+        }
+     }
+  </script>
+</head>
+
+<body onload="setupPage()">
+<!--Please ensure that this scontrol height and width is set to 0px in the Page Layout--->
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Placed_In_Service__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Fee_10_PO_Receipt_Number__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Fee_10_PO_Receipt_Complete__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>PO receipt as part of revenue recognition</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Intrcnct_Pymnt_Apprvd__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Placed_In_Service__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Fee_10_PO_Receipt_Number__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>PIS - No RR reports</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Install_Pymnt_Apprvd__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2012-12-01</startDate>
+    </timeFrameFilter>
+</Report>

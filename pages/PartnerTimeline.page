@@ -1,0 +1,390 @@
+<apex:page controller="PartnerTimelineController" readonly="true">
+    <apex:includeScript value="{!$Resource.jquery_16min}"/>
+    <apex:includeScript value="{!$Resource.tablesorter}"/>
+    <apex:includeScript value="{!$Resource.jqueryBlockUi}"/>
+    <apex:includeScript value="{!$Resource.updatedGoogleAnalyticsJs}"/>
+
+    <script type="text/javascript">
+
+        WebFontConfig = {
+            google: { families: [ 'Open+Sans:400,300,600,700:latin' ] }
+        };
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+
+        var negativeClass = '{!negativeClass}';
+        var partnerTimelineAnalyticsId = '{!ANALYTICS_ID}';
+        ga('create', partnerTimelineAnalyticsId, 'force.com');
+        ga('send', 'pageview');
+
+        function assignNegative() {
+            $(".leasepayments-table tbody td").filter(function() {
+                var value = this.innerHTML;
+                var isNegative = value.indexOf("-") == 0;
+                var isNumber = !isNaN(value);
+                return isNumber && isNegative;
+            }).addClass(negativeClass);
+        }
+
+        function popitup(url) {
+            newwindow=window.open(url,'name','height=750,width=1125');
+            if (window.focus) {newwindow.focus()}
+            return false;
+        }
+
+        function popupUploaderLinks() {
+            $( "a[href^='/apex/InvoiceDocumentUpload']" ).attr('onclick', 'return popitup(this.href);');
+            $( "a[href^='/apex/OriginationDocumentUpload']" ).attr('onclick', 'return popitup(this.href);');
+        }
+
+        function setupTable() {
+            $('.leasepayments-table').tablesorter();
+            assignNegative();
+            popupUploaderLinks();
+            setupGoogleAnalytics();
+            ga('send', 'event', 'timeline', 'click', "{!selectedStage}");
+        }
+
+        function sendToEchosign(echosignUrl, serverUrl, agreementId) {
+            ga('send', 'event', 'link', 'click', 'echosign-link');
+
+            echosignUrl += '&server=' + serverUrl + '&rand=' + Math.random();
+            $('#echosign-img').append('<img src=' + echosignUrl + '>');
+            alert('An email was sent');
+        }
+
+        function setupGoogleAnalytics() {
+            $( "a[href^='/apex/InvoiceDocumentUpload']" ).attr('onclick', "ga('send', 'event', 'link', 'click', 'uploader link')");
+            $( "a[href^='/a20']" ).attr('onclick', "ga('send', 'event', 'link', 'click', 'leasepayment')");
+            $( "attachment-link" ).attr('onclick', "ga('send', 'event', 'link', 'click', 'attachment link')");
+            $( "agreement-link" ).children().attr('onclick', "ga('send', 'event', 'link', 'click', 'agreement-link')");
+        }
+
+    </script>
+
+    <apex:form >
+        <apex:actionFunction rerender="legendPanel,stageDetail" name="assignCellToShow" action="{!assignCellToShow}" oncomplete="setupTable();">
+            <apex:param assignTo="{!selectedStage}" name="stageName" value=""/>
+        </apex:actionFunction>
+    </apex:form>
+    <style type="text/css">
+        table[id*='leasetable'] {
+            padding-top: 25px;
+            min-width: 50% !important;
+            width: auto !important;
+            font-size: 12px !important;
+            font-family: 'Open Sans', sans-serif !important;
+        }
+
+        span .negative {
+            color: red;
+            font-weight: bold;
+        }
+
+        span .green-negative {
+            color: #a9b732;
+            font-weight: bold;
+        }
+
+        .leasepayments-table a {
+            color: blue;
+        }
+
+        .leasepayments-table td, .leasepayments-table th {
+            text-align: left;
+            padding: 10px 20px;
+            white-space: normal;
+        }
+
+        .leasepayments-table th.agreement-column{
+            width: 300px;
+        }
+
+        .leasepayments-table tbody td {
+            text-align: left;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .leasepayments-table th.headerRow {
+            font-size: 12px !important;
+            white-space: normal !important;
+            font-family: 'Open Sans', sans-serif !important;
+            cursor: pointer;
+            max-width: 125px;
+        }
+
+        #stageLabel {
+            font-size: 18px;
+            width: 75%;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .stageDescription {
+            font-size: 14px;
+            font-weight: normal;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #lease-description {
+            width: 1200px
+        }
+        .clear {
+            clear: both;
+        }
+
+        #yellow-sla-box {
+            background-color: #efbc40
+        }
+        #red-sla-box {
+            background-color: #b7202e
+        }
+        #green-sla-box {
+            background-color: #a9b732
+        }
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            float: right;
+        }
+        .legend-text {
+            width: 299px;
+            font-size: 12px;
+            float: left;
+            text-align: right;
+        }
+
+        .legend-item {
+            width: 330px;
+            padding-bottom: 3px;
+        }
+        #legend {
+            float:right;
+            display: inline-table;
+            position: relative;
+            z-index: 1;
+            margin-top: 4%;
+            font-family: 'Open Sans', sans-serif;
+        }
+        #legend-container {
+            width: 1200px;
+        }
+        #chart-header{
+            width: 75%;
+        }
+        #chart-header h1, #chart-header button {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #echosign-img {
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        function LockScreen(str) { 
+        //Fuction : To lock the screen when Javascript execution in process.
+            lock = document.getElementById('LockPane'); 
+            if (lock) 
+                lock.className = 'LockOn'; 
+            lock.innerHTML = str; 
+        }
+        
+        function UnlockLockScreen() 
+        //Fuction : To Unlock the screen when Javascript execution in process.
+        { 
+            lock.className = 'LockOff'; 
+        }
+    </script>
+    <style type="text/css">
+        .LockOff { 
+            display: none; 
+            visibility: hidden; 
+        } 
+        .LockOn { 
+            display: block; 
+            font-weight:bold;
+            font-size:20px;
+            visibility: visible; 
+            position: absolute; 
+            z-index: 999; 
+            top: 0px; 
+            right: 0px; 
+            width: 105%; 
+            height: 105%; 
+            text-align: center;            
+            background-position:center;
+            padding-top: 20%; 
+            filter: alpha(opacity=85); 
+            opacity: 0.75; 
+        } 
+    </style>
+    <apex:pageBlock >
+        <div id="echosign-img"></div>
+        <div id="chart-header">
+            <h1>{!$Label.Partner_Timeline_Label_1}</h1>
+            <button type="button" onclick="location.reload();">{!$Label.Partner_Timeline_Label_2}</button>
+        </div>
+        <apex:outputPanel id="legendPanel">
+        <div id="legend-container">
+            <div id="legend">
+                <apex:outputPanel styleClass="legend-item" layout="block" rendered="{!showRedLegend}">
+                    <div class="legend-text">{!$Label[redLegendCustomLabel]}
+                    </div>
+                    <div id="red-sla-box" class="legend-box"></div>
+                    <div class="clear"></div>
+                </apex:outputPanel>
+                <apex:outputPanel styleClass="legend-item" layout="block" rendered="{!showYellowLegend}">
+                    <div class="legend-text" id="yellow-legend-text">{!$Label[yellowLegendCustomLabel]}
+                    </div>
+                    <div id="yellow-sla-box" class="legend-box"></div>
+                    <div class="clear"></div>
+                </apex:outputPanel>
+                <apex:outputPanel styleClass="legend-item" layout="block" rendered="{!showGreenLegend}">
+                    <div class="legend-text" id="green-legend-text">{!$Label[greenLegendCustomLabel]}
+                    </div>
+                    <div id="green-sla-box" class="legend-box"></div>
+                    <div class="clear"></div>
+                </apex:outputPanel>
+            </div>
+        </div>
+        </apex:outputPanel>
+        <c:ComboChart jsondata="{!JSONData}" title="{!IF(contractTypeParam='Loan',$Label.Partner_Timeline_Label_3_Loan,$Label.Partner_Timeline_Label_3)}" legend="none" width="1200" height="500" is3D="true" isStacked="true" selectListenerBody="assignCellToShow(e);" colors="'#878070', '#221e1f', '#b7202e', '#efbc40', '#a9b732', '#221e1f'"/>
+    </apex:pageBlock>
+
+    <apex:outputPanel id="stageDetail">
+        <apex:pageBlock rendered="{!isStageSelected}">
+            <apex:variable var="leasePaymentsColumn" value="{!LeaseStageColumns[selectedStage]}"/>
+            <div id="lease-description">
+                <h1 id="stageLabel">{!selectedStage} - {!leasePaymentsColumn.leasePayments.size} {!$Label.Partner_Timeline_Label_4}</h1>
+                <br/>
+                <h2 class="stageDescription">{!leaseStageCustomSettingMap[selectedStage].Stage_Description__c} {!leaseStageCustomSettingMap[selectedStage].Stage_Description_2__c}</h2>
+            </div>
+            <apex:pageBlockButtons location="top" rendered="{!leasePaymentsColumn.isPopulated}">
+                <apex:outputPanel id="navButtons">
+                    <apex:form >
+                        <div class="bNext withFilter rolodex" style="white-space: nowrap;">
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('A');">
+                                <span class="listItemPad">A</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('B');">
+                                <span class="listItemPad">B</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('C');">
+                                <span class="listItemPad">C</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('D');">
+                                <span class="listItemPad">D</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('E');">
+                                <span class="listItemPad">E</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('F');">
+                                <span class="listItemPad">F</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('G');">
+                                <span class="listItemPad">G</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('H');">
+                                <span class="listItemPad">H</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('I');">
+                                <span class="listItemPad">I</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('J');">
+                                <span class="listItemPad">J</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('K');">
+                                <span class="listItemPad">K</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('L');">
+                                <span class="listItemPad">L</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('M');">
+                                <span class="listItemPad">M</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('N');">
+                                <span class="listItemPad">N</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('O');">
+                                <span class="listItemPad">O</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('P');">
+                                <span class="listItemPad">P</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('Q');">
+                                <span class="listItemPad">Q</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('R');">
+                                <span class="listItemPad">R</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('S');">
+                                <span class="listItemPad">S</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('T');">
+                                <span class="listItemPad">T</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('U');">
+                                <span class="listItemPad">U</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('V');">
+                                <span class="listItemPad">V</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('W');">
+                                <span class="listItemPad">W</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('X');">
+                                <span class="listItemPad">X</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('Y');">
+                                <span class="listItemPad">Y</span>
+                            </apex:outputLink>
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('Z');">
+                                <span class="listItemPad">Z</span>
+                            </apex:outputLink>
+                            
+                            <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="LockScreen('Loading....'); filterByLeaseName('');">
+                                <span class="listItemPad">{!$Label.All_For_Paging}</span>
+                            </apex:outputLink>
+                        </div>
+                        <apex:commandButton action="{!leaseStage_Beginning}" title="Beginning" value="<<" disabled="{!leaseStage_disablePrevious}" onclick="LockScreen('Loading....');" oncomplete="UnlockLockScreen();" reRender="leasePaymentVar,leasetable,navButtons,lease-page"/>
+                        <apex:commandButton action="{!leaseStage_Previous}" title="Previous" value="<" disabled="{!leaseStage_disablePrevious}" onclick="LockScreen('Loading....');" oncomplete="UnlockLockScreen();" reRender="leasePaymentVar,leasetable,navButtons,lease-page"/>        
+                        <apex:outputText value="{!selectedPages}"/>
+                        <apex:commandButton action="{!leaseStage_Next}" title="Next" value=">" disabled="{!leaseStage_disableNext}" onclick="LockScreen('Loading....');" oncomplete="UnlockLockScreen();" reRender="leasePaymentVar,leasetable,navButtons,lease-page"/>
+                        <apex:commandButton action="{!leaseStage_End}" title="End" value=">>" disabled="{!leaseStage_disableNext}" onclick="LockScreen('Loading....');" oncomplete="UnlockLockScreen();" reRender="leasePaymentVar,leasetable,navButtons,lease-page"/>        
+                        <!-- Spinner -->
+                        <div id="LockPane" style="text-align:center;"> </div>
+                    </apex:form>
+                </apex:outputPanel>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable id="leasetable" styleClass="leasepayments-table" value="{!leasePaymentsColumn.leasePayments}" var="leasePayment" rendered="{!leasePaymentsColumn.isPopulated}" >
+                <apex:repeat value="{!leasePaymentsColumn.leaseFields}" var="field">
+                    <apex:column headerValue="{!field.label}">
+                        <apex:outputText escape="false" value="{!leasePayment[field.fieldPath]}" rendered="{!AND(NOT(field.Type == 'date'), NOT(field.Type == 'currency'))}"/>
+                        <apex:outputField value="{!leasePayment[field.fieldPath]}" rendered="{!(field.Type == 'currency')}"/>
+                        <apex:outputText escape="false" value="{0,date,MM/dd/yyyy}" rendered="{!(field.Type == 'date')}">
+                            <apex:param value="{!leasePayment[field.fieldPath]}"/>
+                        </apex:outputText>
+                    </apex:column>
+                </apex:repeat>
+                <apex:column headerValue="{!$ObjectType.echosign_dev1__SIGN_Agreement__c.fields.echosign_dev1__Document__c.Label}" rendered="{!leasePaymentsColumn.showAgreement}" headerClass="agreement-column">
+                    <apex:variable var="signatureModel" value="{!leasePaymentsColumn.leaseIdToSignature[leasePayment.Id]}"/>
+                    <apex:outputText styleClass="agreement-link" escape="false" value="{!signatureModel.agreement.echosign_dev1__Document__c}" rendered="{!signatureModel.hasAgreement}"/>
+                    <apex:outputPanel rendered="{!signatureModel.hasAttachment}">
+                        <a class="attachment-link" href="/servlet/servlet.FileDownload?file={!signatureModel.attachment.Id}" target="_blank">{!signatureModel.attachment.name}</a>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column headerValue="Send Reminder" rendered="{!leasePaymentsColumn.showSendReminder}">
+                    <apex:variable var="agreementId" value="{!leasePaymentsColumn.leaseIdToSignature[leasePayment.Id].agreement.id}"/>
+                    <apex:variable var="echosignurl" value="{!leasePaymentsColumn.leaseIdToSignature[leasePayment.Id].echosignUrl}"/>
+                    <a class="echosign-link" href="javascript:sendToEchosign('{!JSENCODE(echosignurl)}', '{!$Api.Partner_Server_URL_70}', '{!agreementId}')">Email Waiver</a>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:outputPanel>
+</apex:page>

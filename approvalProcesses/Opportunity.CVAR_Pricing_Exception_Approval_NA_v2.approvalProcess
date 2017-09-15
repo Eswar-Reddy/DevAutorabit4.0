@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <type>adhoc</type>
+            </approver>
+        </assignedApprover>
+        <description>NSD Initial Pricing Approval Step</description>
+        <label>NSD Initial Pricing Approval Step</label>
+        <name>NSD_Initial_Pricing_Approval_Step</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>derek.noble@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>NSD Pricing Approval</description>
+        <label>NSD Pricing Approval</label>
+        <name>NSD_Pricing_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>nam.nguyen@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>GM Pricing Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Price_Concession__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>GM Pricing Approval</label>
+        <name>GM_Pricing_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>CVAR Pricing Exception Approval - NA v2</description>
+    <emailTemplate>Opportunity/CVAR_Pricing_Exception_Approval_Request</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>RLC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.RLC_Type__c</field>
+            <operation>equals</operation>
+            <value>Light Commercial,Residential</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Theater__c</field>
+            <operation>equals</operation>
+            <value>Central America and the Caribbean,North America</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Price_Concession__c</field>
+            <operation>greaterThan</operation>
+            <value>USD 0</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Approved_Alert_NA</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_Approv</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Rejected_Alert_NA</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_Reject</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Submitted_for_Approval_EU</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_In_Rev</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>CVAR Pricing Exception Approval - NA v2</label>
+    <recallActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Recalled_Alert_NA</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_Recall</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

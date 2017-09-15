@@ -1,0 +1,55 @@
+<!-- 
+Related PR:- PR-03088
+-->
+
+<apex:page id="pgManageOpportunityAccess" standardController="Account" extensions="ManageOpportunityAccessController2">
+
+<script>
+  function checkCreate(){    
+    var cre = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:created');    
+    if(cre.value == 'true'){
+      alert('Sharing rules have already been created.');
+      return false;
+    }
+	if(!confirm("Creating opportunity sharing rules may take few minutes. Continue?")){
+	  return false;
+	 }
+    return true;
+  }
+  
+  function checkDelete(){    
+    var del = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:deleted');
+    if(del.value == 'true'){
+      alert('Sharing rules have already been deleted.');
+      return false;
+    }
+	if(!confirm("Deleting opportunity sharing rules may take few minutes. Continue?"))	  
+	  return false;
+    return true;
+  }
+  
+  function done(isAdd){
+  	if(isAdd)
+    	alert('Partner Users will see all opportunities.');
+    else
+    	alert('Partner Users will not see opportunities owned by other Partner Users');
+	var accId = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:accountId');
+    if(accId != null)
+      window.parent.location = '/' + accId.value;
+  }
+</script>
+
+<apex:form id="frmManageOpportunityAccess">
+<apex:outputPanel id="outPanel">
+  <apex:inputHidden id="created" value="{!alreadyCreated}"/>
+  <apex:inputHidden id="deleted" value="{!alreadyDeleted}"/>
+  <apex:inputHidden id="accountId" value="{!accountId}"/>  
+</apex:outputPanel>
+  <table width="100%">
+    <tr>
+      <td><apex:commandLink action="{!addSharingRules}" onclick="if(!checkCreate()) return false;" value="Allow all to see opportunities" onComplete="done(true);" rerender="outPanel"/></td> 
+      <td><apex:commandLink action="{!deleteSharingRules}" onclick="if(!checkDelete()) return false;" value="Restore default opportunity access rules" onComplete="done(false);" rerender="outPanel"/></td>
+    </tr>
+  </table>
+</apex:form>
+</apex:page>

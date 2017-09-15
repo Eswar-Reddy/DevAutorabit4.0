@@ -1,0 +1,42 @@
+<!-- 
+Page                    :   Select_Site
+Related Class           :   Controller_Select_Site 
+Created By              :   Appirio Offshore
+Created On              :   Jan 07, 2010
+Desciption              :   VF page to Select a Site_Information_Form__c from the list.
+ -->
+<apex:page standardController="PSR__c" extensions="Controller_Select_Site" id="pg">
+	<script>
+	//javascript function to assign the id of selected site record to hidden input field.
+	function assignValue(value){
+		if(document.getElementById('pg:frm:hidden') != null && value != null)		
+			document.getElementById('pg:frm:hidden').value = value; 
+	}
+	</script>
+	<apex:pageMessages /> 
+	<apex:form id="frm">
+		<apex:inputHidden value="{!selectedSiteOnPage}" id="hidden" /> 
+		<apex:pageBlock title="Select a Site">
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Cancel" action="{!Cancel}"/>
+				<apex:commandButton value="Return to PSR" action="{!returnToPSR}"/>
+			</apex:pageBlockButtons>
+			
+			<apex:pageBlockTable value="{!listSiteWrapper}" var="item" rendered="{!IF(renderTable == true,true,false)}">
+				<apex:column headerValue="Select">					
+					 <apex:outputpanel rendered="{!IF(item.isSelected == true,true,false)}">							
+						<input type="Radio" name="group" value="{!item.site.id}" CHECKED="true" onclick="javascript:assignValue(this.value)"/>
+					</apex:outputpanel>
+					<apex:outputpanel rendered="{!IF(item.isSelected == false,true,false)}">							
+						<input type="Radio" name="group" value="{!item.site.id}" onclick="javascript:assignValue(this.value)"/>
+					</apex:outputpanel> 
+				</apex:column>
+				<apex:column value="{!item.site.Name}" />
+				<apex:column value="{!item.site.Site_Name__c}" />
+				<apex:column value="{!item.site.Site_City__c}" />
+				<apex:column value="{!item.site.Site_State__c}" />
+				<apex:column value="{!item.site.Site_Country__c}" />   
+			</apex:pageBlockTable>			
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

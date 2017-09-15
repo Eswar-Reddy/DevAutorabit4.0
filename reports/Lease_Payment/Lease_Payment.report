@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Notice_to_Proceed_Sent__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Placed_In_Service__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Duplicate,Expired,Cancellation with RMA,Pending Cancellation,Terminated</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Name__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Lease Payment _Install to NTP</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Notice_to_Proceed_Sent__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Notice_to_Proceed_Sent__c</dateColumn>
+        <interval>INTERVAL_CURPREV1</interval>
+    </timeFrameFilter>
+</Report>

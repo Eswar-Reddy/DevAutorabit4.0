@@ -1,0 +1,596 @@
+<apex:page controller="WarrantyRegistrationPDFController" renderAs="pdf" readOnly="true" showHeader="false" sidebar="false" standardStylesheets="false" cache="false">
+ <apex:stylesheet value="{!$Resource.PDFDocumentStyle_2}" />
+<STYLE type="text/css">
+DIV[class="Part"] {
+ text-align:left;
+ margin-bottom:0px;
+ margin-top:0px;
+ margin-right:0px;
+ text-indent:0px;
+ direction:ltr
+}
+H2 {
+ text-align:justify;
+ margin-bottom:6px;
+ margin-top:0px;
+ margin-right:166px;
+ text-indent:0px;
+ direction:ltr;
+ line-height:24px
+}
+SPAN {
+ font-family:'Futura Std Medium','Futura Std Medium',sans-serif;
+ font-size:16pt;
+ font-style:normal;
+ font-weight:bold
+}
+P {
+ text-align:justify;
+ margin-bottom:27px;
+ margin-top:0px;
+ margin-right:57px;
+ text-indent:0px;
+ direction:ltr;
+ line-height:16px
+}
+DL {
+ text-align:left;
+ margin-bottom:0px;
+ margin-top:0px;
+ margin-right:0px;
+ text-indent:0px;
+ direction:ltr
+}
+LI {
+ list-style-type:none;
+ text-align:justify;
+ margin-bottom:0px;
+ margin-top:0px;
+ margin-right:0px;
+ text-indent:16px;
+ direction:ltr;
+ line-height:16px
+}
+DT {
+ text-align:justify;
+ margin-bottom:0px;
+ margin-top:0px;
+ margin-right:0px;
+ text-indent:16px;
+ direction:ltr
+}
+DD {
+ text-align:justify;
+ margin-bottom:0px;
+ margin-top:0px;
+ margin-right:0px;
+ text-indent:16px;
+ direction:ltr
+}
+IMG {
+ text-align:center;
+ vertical-align:top;
+ margin-bottom:0px;
+ margin-top:0px;
+ margin-right:0px;
+ margin-left:0px;
+ direction:ltr
+}
+.txt {font-family:'sans-serif', 'Futura Std Light'; font-size:6pt; font-style:regular; font-weight:normal; color:#0B0A0A; padding: 0px 0px 0px 3px; }
+</STYLE> 
+ <apex:form >
+
+    <apex:pageBlock >
+        <apex:outputPanel style="font-family:Arial Regular;font-size:11px;">
+            <table width="100%" cellpadding="0px" cellspacing="0px">
+                <tr>
+                    <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="40px" /></td>
+                    <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial;font-size:30px;" >
+                        <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                Warranty Registration Form
+                        </apex:outputPanel>
+                    </td>
+                </tr> 
+                <tr>    <!-- Start 00118327 -->                     
+                    <td colspan="4" align="left">
+                        <apex:outputPanel style="font-family:Arial Regular;">                                
+                             <br></br>  Warranty Number &nbsp;<apex:outputText value="{!warranty.Warranty_Number__c}"/>
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table width="100%" cellpadding="0px" cellspacing="0px" style="font-size:13px">
+                <tr>
+                    <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                        <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">
+                            &nbsp; <b>{!$Label.Customer_Information}</b> 
+                        </div>
+                        <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >                     
+                            <tr>
+                                <td valign="top" width="100%">
+                                    <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Name}" style="text-indent:justify"/><br></br>
+                                    <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingStreet}"/> &nbsp; 
+                                    <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingCity}"/> &nbsp;  
+                                    <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingState}"/> &nbsp; 
+                                    <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingPostalCode}"/><br></br><br></br><br></br>
+                                    <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Email__c}"/>                                       
+                                </td>                              
+                            </tr>
+                        </table> 
+                    </td>
+                    <td style="width: 2%;"></td>
+                    <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                        <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px;; font-size: 16px;">
+                            &nbsp; <b>{!$Label.Partner_Information}</b>
+                        </div>
+                        <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >
+                            <tr>
+                                <td valign="top" width="100%">
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Name}" style="text-indent:justify"/>&nbsp; 
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingStreet}"/>&nbsp;
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingCity}"/>&nbsp;
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingState}"/>&nbsp;  
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingPostalCode}"/><br></br> 
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Phone}"/><br></br> 
+                                    <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Website}"/>                                                                                
+                                </td>                            
+                            </tr>
+                        </table>  
+                    </td> 
+                </tr> 
+            </table>
+            <apex:outputPanel rendered="{!NOT ISNULL(warranty.Delivery_Date__c)}" style="font-size:11px;">
+                {!$Label.Date_Of_Delivery}:&nbsp;
+                <!-- <apex:outputText value="{0,date,MM/dd/yy}"><apex:param value="{!warranty.Delivery_Date__c}" /></apex:outputText> -->
+                <apex:outputField value="{!warranty.Delivery_Date__c}" />
+            </apex:outputPanel>
+            <br/>
+            <br/>
+            <!--Start Product Table -->
+                <apex:outputPanel > 
+                    <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;"> 
+                        &nbsp;&nbsp;<b>Registered Products:</b>
+                        &nbsp;&nbsp;&nbsp; {!sNum}  {!$Label.Total_Number_of_records} 
+                    </div>
+                                
+                    <table cellspacing="0" cellpadding="3" style="border: .06em solid #E9AB17;border-top-color:black;" width="100%" id="tblDetails">     
+                        <tbody>                
+                            <!-- First Page Header Footer Section Starts -->
+                            <tr  style="background: #CCCCCC;line-height: 16px;" width="100%">
+                               <td width="10%" style="border-width: 0.01em;"> </td>
+                               <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                               <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                               <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                            </tr>
+            
+                            <apex:outputPanel id="panelHeaderFooter" styleClass="footer_right" layout="block">                              
+                                <apex:outputPanel layout="none" rendered="true">
+                                    <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                </apex:outputPanel>                                
+                            </apex:outputPanel>
+                            <!--Loop List of List-->
+                            
+                            <apex:repeat value="{!wProductsWrapper}" var="wProduct">
+                                <!--Loop Through Products-->
+                                <apex:repeat value="{!wProduct}" var="Pro">
+                                    
+                                    <apex:outputPanel layout="none" id="OtherPagesHeader" rendered="{!IF(Pro.isPageBrk,true,false)}">
+                                        <table cellspacing="0" cellpadding="0" border="0" width="100%" style="page-break-before: always;background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;">
+                                            <tr style="background: #CCCCCC;border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%">
+                                               <td width="10%" style="border-width: 0.01em;"></td>
+                                               <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                               <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                               <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                            </tr>
+                                        </table><!-- End 00118327 -->
+                                        
+                                        <apex:outputPanel id="panelHeaderFooter" styleClass="footer_right" layout="block">                                          
+                                            <apex:outputPanel layout="none" rendered="true">
+                                                <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                            </apex:outputPanel>                            
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                    
+                                    <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;"> 
+                                        <tr style="background: #F5F5F5; font-size:12px;line-height:20px;" width="100%">
+                                            <td width="10%">&nbsp;<apex:outPutText value="{!Pro.sNo}"/></td>                                            
+                                            <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Product_Name__c}</td>
+                                            <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.product_type__c}</td>
+                                            <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Serial_Number__c}</td>
+                                        </tr>                 
+                                    </table>
+                                </apex:repeat>   
+                            </apex:repeat>  
+                       </tbody> 
+                    </table>  
+                    <br/>
+                    <br/>
+                </apex:outputPanel>  
+            <!--End Product Table --> 
+        </apex:outputPanel>   
+    </apex:pageBlock>
+     
+    <div style="page-break-after:always">&nbsp;</div>
+     
+    <apex:outputPanel id="panelHeaderFooter" styleClass="footer_right" layout="block">
+        <apex:outputPanel style="font-size: 12px; text-align:left;padding-left:10px" layout="block"><br/><br/><br/></apex:outputPanel>
+        <apex:outputPanel style="font-size: 11px; text-align:right">
+            <i>Document #001-72443 Rev.**</i><br/>
+            Page <span class="pageNumber"></span> 
+            of <span class="pageCount"></span> 
+        </apex:outputPanel>
+    </apex:outputPanel>
+
+    <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">
+        <table width="100%" style="font-size:14px;border:0px;" cellspacing="0px" cellpadding="0px">
+            <tr>
+                <td style="background:black;width:10%">
+                    <apex:image url="{!$Resource.ImgSunPower}" height="40px" />
+                </td>
+                <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial;font-size:30px;" >
+                    <apex:outputPanel style="font-family:Arial;font-size:18px;">                                
+                            Warranty Registration Form
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-top:12px;">&nbsp;</td> 
+            </tr>     
+            <tr >               
+                <td height="25" bgcolor="#E9AB17;" colspan="4" style="font-size:15px">&nbsp;&nbsp;Customer Information</td>              
+            </tr>   
+            <tr>
+                <td>&nbsp;</td> 
+            </tr>
+            <tr>
+                <td colspan="4" style="padding-top:10px;">
+                    <apex:outputText value="Name:" style="float:left;padding-right:2px;"/>&nbsp;
+                    <span style="border-bottom:1px solid;width:93%;float:right">{!warranty.Customer_SFDC_ID__r.Name}</span>
+                </td>      
+            </tr> 
+            <tr>
+                <td colspan="4" style="padding-top:10px;">
+                    <apex:outputText value="Address:" style="float:left;padding-right:2px;"/>&nbsp;
+                    <span style="border-bottom:1px solid;width:91.5%;float:right;">{!warranty.Customer_SFDC_ID__r.BillingStreet}&nbsp;</span>
+                </td>
+            </tr> 
+            <tr>
+                <td colspan="2" style="padding-top:10px;" width="27%">
+                    <apex:outputText value="City:" style="float:left;padding-right:4px;" />&nbsp;
+                    <span style="border-bottom:1px solid;float:left;width:85.5%" >{!warranty.Customer_SFDC_ID__r.Billingcity}&nbsp;</span>
+                </td>     
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top:10px;">
+                    <apex:outputText value="Country:" style="float:left;padding-right:2px;" />&nbsp; 
+                    <span style="border-bottom:1px solid;float:left;width:80%" >{!warranty.Customer_SFDC_ID__r.BillingCountry}&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top:10px;">
+                    <apex:outputText value="Post Code:" style="float:left;padding-right:4px;"/>&nbsp; 
+                    <span style="border-bottom:1px solid;width:72%;float:left;">{!warranty.Customer_SFDC_ID__r.BillingPostalCode}&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-top:20px">&nbsp;</td>
+            </tr>
+            <tr >               
+                <td height="25" bgcolor="#E9AB17;" colspan="4" style="font-size:15px;">&nbsp;&nbsp;We care about your opinion</td>              
+            </tr>    
+            <tr>
+                <td colspan="4"> 
+                    <p>Thank you for choosing SunPower. At SunPower, we are committed to providing our customers a first class service.  
+                       Please provide an email address and we will send you a short questionnaire in which you can give us your feedback on the 
+                       quality of service provided by the partner and SunPower.</p>
+                </td>
+            </tr><br />
+            <tr>         
+                <td colspan="4" style="text-align:left;font-size:14px;">
+                    <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+                        Personal data will NOT be disclosed to third parties.
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" />
+                </td>
+                <td colspan="3" style="text-align:justify;font-size:14px">
+                    <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+                        Check this box if you do NOT want to be contacted for Quality Inspections
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" />
+                </td>
+                <td colspan="3" style="text-align:justify;font-size:14px;">
+                    <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+                        Check this box if you do NOT want to be contacted for Customer Satisfaction Surveys
+                    </apex:outputPanel>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" />
+                </td>
+                <td colspan="3" style="text-align:justify;font-size:14px">
+                    <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+                        Check this box if you do NOT want to be contacted with information about SunPower products and services
+                    </apex:outputPanel>
+                </td>
+            </tr><br />
+            <tr>
+                <td colspan="4" style="text-align:justify;font-size:14px;text-indent:18px"> 
+                    <p>I hereby authorise 
+                        <b>SunPower Corporation UK Ltd, Vienna House, International Square,Birmingham International Park, Solihull ,B37 7GN </b>, 
+                        to use my personal data for the purposes indicated above.</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:justify;font-size:14px;"> 
+                    <p>The data you communicated will be stored in the database of 
+                       <b>SunPower Corporation UK Ltd, Vienna House,International Square,Birmingham International Park, Solihull ,B37 7GN </b>, 
+                          which is located in the parent company, 
+                       <b>Sunpower 77 Rio Robles, San Jose, CA 95134,USA</b>.</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:justify;font-size:14px;"> 
+                    <p>Please note that in all countries that are not in the European Economic Area (like the USA), generally different data protection 
+                    standards apply than those that are required by U.K. laws.</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:justify;font-size:14px;"> 
+                    <p>In order to apply your rights to access, correct, delete and appeal your personal data, please address your request in writing to 
+                        <b>SunPower Corporation UK Ltd, Vienna House, International Square,Birmingham International Park, Solihull ,B37 7GN  or write an Email to:   
+                        <a href="mailto:SunPowerUK@sunpowercorp.com">SunPowerUK@sunpowercorp.com</a></b>   
+                        with the subject “Data protection“ and please attach a copy of a document which verifies your identity.</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:justify;font-size:14px;text-indent:18px"> 
+                    <p>I hereby authorise SunPower to use my personal data for the purpose of sending information about 
+                       products or service offers with regard to solar energy systems/photovoltaics by postal or electronic mail or by fax.</p>
+                </td>
+            </tr><br /> <br />     
+            <tr>
+                <td colspan="2" >Date__________________________&nbsp;<input type="text" name="date" /></td>
+                <td colspan="2" >Signature_______________________&nbsp;<input type="text" name="signature" /></td>
+            </tr><br /> <br /><br /><br /> 
+        </table>  
+    </apex:outputPanel>
+      
+
+      
+   <apex:outputPanel style="font-size:12px;font-family:Arial Regular; width:80%;" >
+ 
+        <apex:outputPanel id="panelHeaderFooter1" styleClass="footer_center" layout="block">
+        <!-- COMMENT ORIGINAL apex:image url="{!URLFOR($Resource.PDFDocumentStyle_2_FooterImg1)}" width="1400" height="106" /-->
+        <!--hr width="80%"/>
+        <apex:image url="{!URLFOR($Resource.ImgPdfFooter)}" width="100%" height="100px" /-->
+        </apex:outputPanel> 
+ 
+           <div  style="padding-top:20px; padding-bottom:0.25in;"> 
+        <!--   
+        <c:PDFHeaderFooter type="footer" position="right">            
+           <hr width="80%"/> 
+           <apex:image url="{!$Resource.ImgPdfFooter}" height="100px" width="100%"/>
+        </c:PDFHeaderFooter> 
+        -->
+
+        <c:PDFHeaderFooter type="footer" position="right">               
+           <hr width="80%"/>
+           <apex:image url="{!$Resource.ImgPdfFooter}" height="100px" width="100%"/>
+        </c:PDFHeaderFooter> 
+
+        <c:PDFHeaderFooter type="footer" position="right">            
+           <hr width="80%"/>
+           <apex:image url="{!$Resource.ImgPdfFooter2}" height="100px" width="100%"/>
+        </c:PDFHeaderFooter>        
+           
+<!--== START CHANGE ==-->              
+            <table style="align:center" width="100%">          
+                <!-- tr  ALIGN="center">
+                    <td   ALIGN="center" colspan="4" style="font-size:12px;" width="1000px">
+                        <div style="text-align:center;"><apex:image url="{!$Resource.ImgSunPower}" height="43px" /></div>
+                    </td>
+                </tr> <br / --> 
+                <tr>
+                    <td>
+                        <H2><SPAN style="color:#A6A7A7">SUNPOWER LIMITED PRODUCT AND POWER WARRANTY FOR PV MODULES </SPAN></H2>
+                        <SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">
+                            This Limited Warranty is effective for SunPower photovoltaic modules purchased in Europe and identified by a CE label, 
+                            with SPR  in the product number, and sold after July 1, 2012. 
+                        </SPAN>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            1.&nbsp;LIMITED WARRANTY 
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                                SunPower Corporation UK Limited (“SunPower”) warrants that for 25 years beginning on the Warranty Start Date1 
+                                (the “Warranty Period”), its photovoltaic modules specified above (“PV Module(s)”), 
+                                shall be free from defects in materials and workmanship under normal application, 
+                                installation, use and service conditions, and the power output of the PV Modules will be at least 95% of the Minimum Peak Power2 
+                                rating for the first 5 years, and declining by no more than 0.4% per year for the following 20 years, 
+                                so the power output at the end of the final year of the 25 year warranty period will be at least 87% of the Minimum Peak Power rating.
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">                            
+                                If any PV Module fails to conform to this Limited Warranty and provided that any loss in power is determined by SunPower in its 
+                                sole discretion (without prejudice of customer’s rights under applicable English law as set out in paragraph 6 below) 
+                                not to have resulted from one of the excluded events set forth in Section 3 below, then for the Warranty Period, 
+                                SunPower will repair, replace (new or refurbished) or refund the defective PV Modules as set forth herein. 
+                                SunPower will make all reasonable efforts to repair or replace the PV Module with an electrically and mechanically 
+                                compatible PV Module with an equal or greater power rating. 
+                                If this is not commercially feasible, then SunPower will refund the purchase price of the defective PV Module as paid 
+                                by the customer. The repair, replacement or refund remedy provided herein shall be the sole and exclusive remedy.  
+                                Limited Warranty for any repaired or replaced PV Module shall not extend beyond the Warranty Period.
+                                In the case of a valid claim for PV Modules installed by SunPower, an affiliate of SunPower or an authorized SunPower installer, 
+                                the Limited Warranty covers: 
+                                <ol style="list-style-type:lower-roman;">
+                                    <li><SPAN class="txt"> reasonable and customary transportation costs for return of the PV Modules;</SPAN></li>
+                                    <li><SPAN class="txt"> reshipment of any repaired or replaced PV Modules; and</SPAN></li>
+                                    <li><SPAN class="txt"> costs associated with installation, removal or reinstallation of the PV Modules.</SPAN></li>
+                                </ol>
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!--<br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">-->
+                        
+                    
+                            <!--<br/><br/>
+                            <hr color="Black"/>
+                            <br/>-->
+                            
+                            
+                            <br/>
+                            <hr color="Grey"/>                                                 
+                            
+                        <SPAN class="txt">
+                                <ol style="list-style-type:decimal;">
+                                <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">“Warranty Start Date” is the earlier of (i) date of array interconnection and (ii) 6 months following the date of SunPower delivery. If the delivery date cannot be verified, manufacturing date will be used in its place.</SPAN></li>
+                                <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">“Minimum Peak Power” is defined as Peak Power minus peak power tolerance or the minimum rated power, as shown on the label. Peak Power is defined as the watt peak at Standard Test Conditions, as described in IEC61215, measured per IEC60904, and accounting for tolerances per EN50380. SunPower modules shall, in any event, require a sweep rate of no less than 200ms to ensure an accurate power measurement. SunPower can provide a detailed testing procedure or a list of recognized testing agencies upon request.
+                                </SPAN></li>
+                                </ol>
+                        </SPAN>
+                        <br/><br/><br/><br/>
+                        
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">                      
+                        
+                            2.&nbsp;GENERAL CONDITIONS FOR WARRANTY CLAIMS 
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                                <ol style="list-style-type:lower-latin;">
+                                    <li><SPAN class="txt"> Warranty claims must in all events be filed within the Warranty Period.</SPAN></li>
+                                    <li><SPAN class="txt"> Warranty claims may only be made by, or on the behalf of (i) the original end customer, as named in the certificate of guarantee or invoice, as applicable, and (ii) any subsequent title holder of the PV Modules upon satisfactory proof
+                                    of succession or transfer from the original end customer as named in the certificate of guarantee or invoice, as applicable.</SPAN></li>
+                                    <li><SPAN class="txt"> When PV Modules are used on a mobile platform of any type, such as a vehicle, the Warranty Period shall be limited to 12 years.</SPAN></li>
+                                    <li><SPAN class="txt">In cases of PV Module replacement, any replaced PV Module shall pass into the ownership of SunPower.</SPAN></li>
+                                </ol>
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            3.&nbsp;EXCLUSIONS AND LIMITATIONS 
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                            The Limited Warranty does not apply to any of the following:
+                                <!--ol style="list-style-type:lower-roman;"-->
+                                <ol style="list-style-type:lower-latin;">
+                                    <li><SPAN class="txt">PV Modules subjected to: misuse, abuse, neglect or accident; alteration, improper installation, application or removal (including but not limited to installation, application or removal by any party other than SunPower, a SunPower authorized dealer or technician approved by SunPower in writing); non-observance of the applicable SunPower installation, users and/or maintenance instructions or non-compliance with national and local electric codes; repair or modifications by someone other
+                                    than an approved service technician of SunPower; conditions exceeding the voltage, wind, or snow load specifications; power
+                                    failure surges, lightning, flood, or fire; damage from persons, insects, animals, or industrial chemical exposure; glass breakage
+                                    from impact or other events outside SunPower’s control.</SPAN></li>
+                                    <li><SPAN class="txt">Cosmetic affects stemming from normal wear and tear of PV Module materials or other cosmetic variations which do not cause power output lower than what is guaranteed by the Limited Warranty. Normal wear and tear of PV Module materials can include, but is not limited to, fading of frame color, weathering of glass coatings, and areas of discoloration around or over
+                                    individual solar cells or any part of the PV Module.</SPAN></li>
+                                    <li><SPAN class="txt">PV Modules installed in locations, which in SunPower’s absolute judgment may be subject to direct contact with bodies of salt water.</SPAN></li>
+                                    <li><SPAN class="txt">PV Modules for which the labels containing product type or serial number have been altered, removed or made illegible.</SPAN></li>
+                                    <li><SPAN class="txt">PV Modules which have been moved from their original installation location without the express written approval of SunPower.</SPAN></li>
+                                </ol>
+                            </SPAN>
+
+                            <SPAN class="txt">
+                            
+                                SunPower shall not be held responsible or liable to the customer or any third-party arising out of any non-performance or delay in
+                                performance of any terms and conditions of sale, including this Limited Warranty, due to acts of God, war, riots, strikes, fire, flood or any other cause or circumstance beyond the reasonable control of SunPower.
+                            </SPAN>
+
+                            
+                            <!-- COMMENTED
+                                <br/><br/>
+                                <hr color="Black"/>
+                                <br/>
+                            <SPAN class="txt">
+                                    
+                                    <ol style="list-style-type:decimal;">
+                                    <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">“Warranty Start Date” is the earlier of (i) date of array interconnection and (ii) 6 months following the date of SunPower delivery. If the delivery date cannot be verified, manufacturing date will be used in its place.</SPAN></li>
+                                    <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">“Minimum Peak Power” is defined as Peak Power minus peak power tolerance or the minimum rated power, as shown on the label. Peak Power is defined as the watt peak at Standard Test Conditions, as described in IEC61215, measured per IEC60904, and accounting for tolerances per EN50380. SunPower modules shall, in any event, require a sweep rate of no less than 200ms to ensure an accurate power measurement. SunPower can provide a detailed testing procedure or a list of recognized testing agencies upon request.
+                                    </SPAN></li>
+                                    </ol>
+                                    
+                                SunPower shall not be held responsible or liable to the customer or any third-party arising out of any non-performance or delay in
+                                performance of any terms and conditions of sale, including this Limited Warranty, due to acts of God, war, riots, strikes, fire, flood or any other cause or circumstance beyond the reasonable control of SunPower.
+                            </SPAN>
+                          --COMMENTED-->    
+                        </p>
+                    </td>
+                </tr>
+                <div style="page-break-after:always;" />
+
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            4.&nbsp;LIMITATION OF WARRANTY SCOPE 
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                                SUBJECT TO THE LIMITATIONS UNDER APPLICABLE LAW, THE LIMITED WARRANTY SET FORTH HEREIN IS EXPRESSLY IN LIEU OF AND EXCLUDE ALL OTHER EXPRESS OR IMPLIED WARRANTIES, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY AND OF FITNESS FOR PARTICULAR PURPOSE, USE, OR APPLICATION, AND ALL OTHER OBLIGATIONS OR LIABILITIES ON THE PART OF SUNPOWER, UNLESS SUCH OTHER WARRANTIES, OBLIGATIONS OR LIABILITIES ARE EXPRESSLY AGREED TO IN WRITING, SIGNED AND APPROVED BY SUNPOWER. SAVE FOR LIABILITY FOR ANY DEATH OR PERSONAL INJURY CAUSED BY ITS NEGLIGENCE AND SUBJECT TO THE MANDATORY LIMITATIONS UNDER APPLICABLE LAW, SUNPOWER SHALL HAVE NO RESPONSIBILITY OR LIABILITY WHATSOEVER FOR DAMAGE OR INJURY TO PERSONS OR PROPERTY OR FOR OTHER LOSS OR INJURY RESULTING FROM ANY CAUSE WHATSOEVER ARISING OUT OF OR RELATED TO THE PV MODULES, INCLUDING, WITHOUT LIMITATION, ANY DEFECTS IN THE PV MODULE, OR FROM USE OR INSTALLATION. UNDER NO CIRCUMSTANCES SHALL SUNPOWER BE LIABLE FOR INCIDENTAL, CONSEQUENTIAL OR SPECIAL DAMAGES, HOWSOEVER CAUSED. LOSS OF USE, LOSS OF PROFITS, LOSS OF PRODUCTION, LOSS OF REVENUES ARE THEREFORE SPECIFICALLY BUT WITHOUT LIMITATION EXCLUDED. SUNPOWER’S AGGREGATE LIABILITY, IF ANY, IN DAMAGES OR OTHERWISE, SHALL NOT EXCEED THE PURCHASE PRICE PAID TO SUNPOWER BY THE CUSTOMER, FOR THE UNIT OF PRODUCT OR SERVICE FURNISHED OR TO BE FURNISHED, AS THE CASE MAY BE, WHICH GAVE RISE TO THE WARRANTY CLAIM. SOME JURISDICTIONS DO NOT ALLOW LIMITATIONS ON IMPLIED WARRANTIES OR THE EXCLUSION OF DAMAGES SO THE ABOVE LIMITATIONS OR EXCLUSIONS MAY NOT APPLY TO YOU.
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">
+                                IF ANY PROVISION OF THIS LIMITED WARRANTY IS HELD UNENFORCEABLE OR ILLEGAL BY A COURT OR OTHER BODY OF COMPETENT JURISDICTION, SUCH PROVISIONS SHALL BE MODIFIED TO THE MINIMUM EXTENT REQUIRED SUCH THAT THE REST OF THIS LIMITED WARRANTY WILL CONTINUE IN FULL FORCE AND EFFECT.
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!--<br/>-->
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            5.&nbsp;OBTAINING WARRANTY PERFORMANCE
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                                If you feel you have a justified claim covered by this Limited Warranty, immediately notify (a) the seller and installer of the PV Modules, or (b) any authorized SunPower installer, or (c) contact SunPower Corporation UK Limited directly at the contacts shown below. Your installer, or SunPower will give advice on handling the claim, which shall include, without limitation, the provision of the warranty card, online warranty registration information, invoice, and/or evidence of the date of delivery of the PV Module, serial number and product number of affected modules, and evidence of claim. The return of any PV Modules will not be accepted unless prior written authorization has been given by SunPower.
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!--<br/>-->
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            6.&nbsp;LEGAL WARRANTY
+                        </DIV>
+                        <p>
+                            <SPAN class="txt">
+                                This Limited Warranty is given additionally to the customer’s rights and guarantees (to the extent applicable) that cannot be waived under applicable English law (including, but not limited to, those rights that cannot be waived under the Unfair Contract Terms Act 1977, the Sale of Goods Act 1979, the Consumer Protection Act 1987, the Unfair Terms in Consumer Contracts Regulations 1999 and the Unfair Trading Regulations 2008).
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+            </table> 
+<!--== END CHANGE ==-->  
+  
+      </div>
+     </apex:outputPanel>
+  </apex:form> 
+</apex:page>

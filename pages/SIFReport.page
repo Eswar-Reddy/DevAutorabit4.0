@@ -1,0 +1,155 @@
+<apex:page Controller="SIFReportController" id="pg">
+    <apex:form rendered="{!NOT(isAllowed)}">
+<apex:outputlabel value="You are not authorized to access this report." style="color:#cc0000;font-weight:Bold;font-weight:24px"/>
+</apex:form>
+    <apex:form rendered="{!isAllowed}" id="frm">
+        <script> 
+function openWindowforEmail(){   
+     window.open('SendEmail', "SendEmailWindow","addressbar=0,location=no, menubar=0,resizable=1,scroll=1,width=620,height=380");   
+}
+function test(to, cc, bcc, subject, body){
+    
+      
+        
+            document.getElementById("pg:frm:pb:touser").value=to;
+            document.getElementById("pg:frm:pb:ccuser").value=cc;
+            document.getElementById("pg:frm:pb:bccuser").value=bcc;
+            document.getElementById("pg:frm:pb:subject").value=subject;
+            document.getElementById("pg:frm:pb:body").value=body;
+            
+   SendMail1();
+   return false;
+   //SendMail1('', '','','','' ); 
+}   
+</script>
+        <apex:pageMessages />
+        <apex:pageBlock id="pb">
+        <apex:actionFunction action="{!exportToPDFAndEmail}" name="SendMail1"/>
+        <apex:inputHidden value="{!sendEmailToUser}" id="touser" />
+        <apex:inputHidden value="{!strEmailDealerCC}" id="ccuser" />
+        <apex:inputHidden value="{!strEmailDealerBcc}" id="bccuser" />
+        <apex:inputHidden value="{!MAIL_SUBJECT}" id="subject" />
+        <apex:inputHidden value="{!strEmailBody}" id="body" />
+            <apex:pageBlockSection title="Report Filters" columns="10">
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.Business_Unit__c.label}"
+                    for="bu" style="font-weight:bold;width:25%" />
+                <apex:selectList value="{!busiUnits}" multiselect="true" size="5"
+                    id="bu">
+                    <apex:selectOptions value="{!listBusiUnits}" />
+                </apex:selectList>
+                <!-- Case#00063588 replaced Region1__c with Country__c -->
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.Country__c.label}"
+                    for="region" style="font-weight:bold;" />
+                <apex:selectList value="{!regions}" multiselect="true" size="5"
+                    id="region">
+                    <apex:selectOptions value="{!listRegion}" />
+                </apex:selectList>
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.Sub_Region__c.label}"
+                    for="subregion" style="font-weight:bold;" />
+                <apex:selectList value="{!subRegions}" multiselect="true" size="5"
+                    id="subregion">
+                    <apex:selectOptions value="{!listSubRegion}" />
+                </apex:selectList>
+                <apex:outputLabel value="{!$ObjectType.Site_Information_Form__c.fields.Site_Status__c.label}"
+                    for="status" style="font-weight:bold;" />
+                <apex:selectList value="{!sitestatus}" multiselect="true" size="5"
+                    id="status">
+                    <apex:selectOptions value="{!listSiteStatus}" />
+                </apex:selectList>
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.stageName.label}"
+                    for="stage" style="font-weight:bold;" />
+                <apex:selectList value="{!salesStages}" multiselect="true" size="5"
+                    id="stage">
+                    <apex:selectOptions value="{!listSalesStage}" />
+                </apex:selectList>
+                <apex:commandButton value="Run" action="{!getData}"
+                    rerender="theReportTable" status="siteStatus" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:outputPanel >
+            <apex:actionStatus startText="Fetching Data. Please Wait...."
+                id="siteStatus"
+                startStyle="color:#cc0000;font-weight:Bold;font-weight:24px" />
+        </apex:outputPanel>
+        <apex:outputPanel id="statusPanel">            
+            <apex:outputText value="{!message2}" Style="color:#cc0000;font-weight:Bold;font-weight:24px"/>
+        </apex:outputPanel>     
+        
+        <apex:outputPanel id="theReportTable">
+            <apex:pageBlock title="SIF Report" rendered="{!show}">
+                <apex:pageBlockButtons >
+                    <apex:commandLink value="Export to Excel"
+                        action="{!exportToExcel}" target="_blank" styleClass="btn"/>
+                    <apex:commandLink value="Export to PDF" action="{!exportToPdf}" target="_blank" styleClass="btn"/>
+                    <apex:commandLink value="Export to PDF and Email" onclick="openWindowforEmail(); return false;" styleClass="btn"/>
+                </apex:pageBlockButtons>
+                <apex:variable var="count" value="{!1}" />
+                <apex:pageBlockTable value="{!listSite}" var="site" border="1">                	
+                    <apex:column >
+                        <apex:facet name="header">S.No.</apex:facet>
+                        <apex:outputText value="{0,number,#####}"  rendered="{!site.show}"><apex:param value="{!count}" /></apex:outputText>                        
+                        <apex:variable var="count" value="{!count+1}" rendered="{!site.show}"/>
+                    </apex:column>                    
+                    <apex:column >
+                        <apex:facet name="header">Sub-Region</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Opportunity_del__r.Sub_Region__c}" rendered="{!site.show}"/>
+                        <b><apex:outputField value="{!site.innerSite.Site_City__c}" rendered="{!NOT(site.show)}"/></b>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Site Name</apex:facet>
+                        <a href="/{!site.innerSite.Id}" target="_blank"><apex:outputField value="{!site.innerSite.Site_Name__c}" rendered="{!site.show}"/></a>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Customer Contact</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Customer_Contact__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Site Status</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Site_Status__c}" rendered="{!site.show}"/>
+                        <apex:outputText value="Summary:" rendered="{!NOT(site.show)}" styleClass="totalRow" />
+                        <apex:facet name="footer"><B>Total:</B></apex:facet>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Land Size<br/>(sq ft/ha)</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Land_size_ha__c}" rendered="{!site.show}"/>
+                        <b><apex:outputField value="{!site.innerSite.Land_size_ha__c}" rendered="{!NOT(site.show)}"/></b>
+                        <apex:facet name="footer"><apex:outputField value="{!sumSiteLand.Land_size_ha__c}"/></apex:facet>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Site City</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Site_City__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Opportunity Name</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Opportunity_del__r.Name}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Sales Stage</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Opportunity_del__r.StageName}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Own/Lease <br/>Site</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Own_Lease_Site__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Signed</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Lease_Expiration_Date__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Expires</apex:facet>
+                        <apex:outputPanel style="color:{!site.innerSite.Cause_of_Shading__c}"> <apex:outputField value="{!site.innerSite.Neighbors_Preemption_Right__c}" rendered="{!site.show}"/> </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Notary Option<br/>Signed On</apex:facet>
+                        <apex:outputPanel style="color:{!site.innerSite.Comment_Box__c};"> <apex:outputField value="{!site.innerSite.Notary_Option_Signed_On__c}" rendered="{!site.show}"/> </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Price per HA</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Price_per_Acre__c}" rendered="{!site.show}"/>                      
+                    </apex:column>                    
+                </apex:pageBlockTable>
+                <apex:outputLabel value="{!message}" />
+            </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

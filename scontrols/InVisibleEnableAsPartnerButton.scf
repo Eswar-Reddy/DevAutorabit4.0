@@ -1,0 +1,37 @@
+<html>
+<script src="/soap/ajax/10.0/connection.js"></script>
+<script>
+window.afterload = disabledBtn();
+function disabledBtn(){ 
+	var enableBtnColection = window.parent.document.getElementsByName("prm");
+	var enableBtnComponent;
+	if(enableBtnColection!= null && enableBtnColection.length>0){
+		enableBtnComponent = enableBtnColection[0];
+	}
+	var accRecordTypeResult = sforce.connection.query("select name,Id,RecordType.Name from Account where Id = '{!Account.Id}'");
+	var accList = accRecordTypeResult.getArray('records');
+	if(accList.length>0){
+		var acc = accList[0];
+		if(acc.RecordType.Name=='Residential Customer'){
+			if(enableBtnComponent!=null && enableBtnComponent.value=="Enable As Partner"){
+				enableBtnComponent.style.display = 'none';
+			}
+			return;
+		}else{
+			var queryResult = sforce.connection.query("select name,Id from Profile where Id='{!$User.ProfileId}'"); 
+			var profileList= queryResult.getArray('records'); 
+			if(profileList.length>0){ 
+				if(profileList[0].Name =='System Administrator' || profileList[0].Name =='SunPower Partner Ambassador'){
+					return;
+				}else{
+                                     if(enableBtnComponent!=null && enableBtnComponent.value=="Enable As Partner"){
+						enableBtnComponent.style.display = 'none';
+                                     }
+                                     return;
+                               }
+			}
+		}
+	}
+}
+</script>
+</html>

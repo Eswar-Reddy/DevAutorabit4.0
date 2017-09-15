@@ -1,0 +1,36 @@
+<apex:page controller="Case360ViewChronController" tabStyle="Case" sidebar="false" showHeader="false">
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_11_3)}"/>
+    <apex:includeScript value="/support/console/36.0/integration.js"/>
+    <apex:includeScript value="{!$Resource.Case360View}"/>
+    <apex:pagemessages ></apex:pagemessages>
+    <apex:form >
+        <apex:outputPanel layout="block" style="margin-left:600px;width:60%;height:30px;font-size:16px">
+            <a class="categoricalView" href="#" id="{!parentCase.Id}">Switch to Categorical View</a>
+        </apex:outputPanel>
+        <apex:pageBlock title="Case 360 View Chronological">
+            <apex:pageBlockTable value="{!wrapper360List}" var="W">
+                <apex:column headerValue="Date" value="{!W.dtTmFormat}"/>
+                <apex:column headerValue="Type" value="{!W.type}"/>
+                <apex:column headerValue="Details">
+                    <apex:repeat value="{!W.fwList}" var="F">
+                        <b><apex:outputLabel value="{!F.label}"/>&nbsp;:</b>&nbsp;&nbsp;
+                        <apex:outputPanel rendered="{!ISBLANK(F.attrHref)}">
+                            <apex:outputField value="{!W.sobj[F.name]}"/><br/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(ISBLANK(F.attrHref))}">
+                            <a class="{!F.attrClass}" href="/{!W.sobj[F.attrHref]}" id="{!W.sobj[F.attrId]}">{!W.sobj[F.name]}</a><br/>
+                        </apex:outputPanel>
+                    </apex:repeat>                
+                </apex:column>
+                <apex:column headerValue="CreatedBy" value="{!W.createdBy}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:pageBlock title="Debug" rendered="false">
+        <apex:pageBlockTable value="{!objectName_qryWrpr_map}" var="M">
+            <apex:column headerValue="Object" value="{!M}"/>
+            <apex:column headerValue="Query" value="{!objectName_qryWrpr_map[M].queryStr}"/>
+            <apex:column headerValue="Rows" value="{!objectName_qryWrpr_map[M].querySize}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

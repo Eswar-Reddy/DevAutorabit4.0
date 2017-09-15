@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$Lead_CreatedDate__c</field>
+    </columns>
+    <columns>
+        <field>Lead$Id</field>
+    </columns>
+    <columns>
+        <field>Lead$FirstName</field>
+    </columns>
+    <columns>
+        <field>Lead$LastName</field>
+    </columns>
+    <columns>
+        <field>Lead$Street</field>
+    </columns>
+    <columns>
+        <field>Lead$City</field>
+    </columns>
+    <columns>
+        <field>Lead$State</field>
+    </columns>
+    <columns>
+        <field>Lead$PostalCode</field>
+    </columns>
+    <columns>
+        <field>Lead$LeadSource</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers$Parent</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Merkle DMP</description>
+    <filter>
+        <criteriaItems>
+            <column>Lead$Theater__c</column>
+            <operator>equals</operator>
+            <value>North America,Central America and the Caribbean</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$RecordType</column>
+            <operator>equals</operator>
+            <value>Lead.Residential</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$FirstName</column>
+            <operator>notContain</operator>
+            <value>test,Test,TEST,delete,spwr</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$LastName</column>
+            <operator>notContain</operator>
+            <value>test,Test,TEST,delete,spwr</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Description</column>
+            <operator>notEqual</operator>
+            <value>TEST,Test,TEST- pao,Test Account,test only,Testing,Testing it through,spwr</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.CampaignMembers.CampaignMembers$Name</column>
+            <operator>notEqual</operator>
+            <value>John Doe</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Leads File</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_or_without_Campaign_and_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Lead$Lead_CreatedDate__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Lead$Lead_CreatedDate__c</dateColumn>
+        <endDate>2016-12-01</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2016-10-26</startDate>
+    </timeFrameFilter>
+</Report>

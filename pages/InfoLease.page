@@ -1,0 +1,40 @@
+<!--  CreatedBy        :Vishal Gupta
+      Purpose          :This page will provide a link to the agent to get to the 
+                         infolease webapp from SFDC and will do audit for the console APP also . 
+      Modified By      :
+      Modified Purpose : 
+-->
+
+<apex:page controller="UpdateConsoleLog" action="{!InsertIntoConsoleLog}">
+<!--
+<script type='text/javascript'>
+window.onload=new function() {InsertIntoConsoleLog();}
+</script>  
+<apex:includeScript value="/support/console/22.0/integration.js"/> -->
+<apex:form >
+    <apex:actionPoller action="{!UpdateTimeInAppTracker}" interval="60"/>    
+    <!-- EAL_03172016: removed hardcoded url links; Case 00677780 - Revise list of WebApps and make it configurable -->
+    <apex:repeat value="{!serviceConsoleUrlAndDetails}" var="consoleSection" id="Section_repeat">    
+        <apex:pageBlock tabStyle="Account">
+            <apex:pageBlockSection title="{!consoleSection}" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:repeat value="{!serviceConsoleUrlAndDetails[consoleSection]}" var="consoleURL" id="Url_Links_repeat">
+                        <apex:outputLink onclick="javascript:window.open('{!consoleURL.URL__c}');" title="{!consoleURL.Title__c}">
+                            {!consoleURL.Label__c}
+                        </apex:outputlink>
+                        <br/>
+                        <br/>
+                    </apex:repeat>
+                </apex:pageBlockSectionItem>
+           </apex:pageBlockSection>
+        </apex:pageblock>
+    </apex:repeat>
+</apex:form>
+
+<!--
+<apex:commandButton onclick="javascript:sforce.console.openPrimaryTab(null, 'https://sunpowerbillpaycsr.osgview.com/', true, 
+               'Info Lease');" title="Go To Info Lease" value="Info Lease"/>
+
+<apex:actionFunction name="InsertIntoConsoleLog" action="{!InsertIntoConsoleLog}" id="AFun1"  />
+-->
+</apex:page>

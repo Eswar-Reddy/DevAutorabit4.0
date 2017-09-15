@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account$Id</field>
+    </columns>
+    <columns>
+        <field>Account$Owner</field>
+    </columns>
+    <columns>
+        <field>Account$Opportunity_Recipient__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>NA Partner w/o Active Res Opp Recipient Primary or Null</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND 5 AND (3 or 4)</booleanFilter>
+        <criteriaItems>
+            <column>Account$RecordType</column>
+            <operator>equals</operator>
+            <value>Account.Partner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Account_Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Opportunity_Recipient__c.IsActive</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Additional_Opportunity_Email_Recipient__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Theater__c</column>
+            <operator>equals</operator>
+            <value>North America</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NA Partner w/o Active Res Opp Rcp or nul</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_w_or_w_o_contact_roles__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$Accepting_Phase_I_Valid_Until__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,60 @@
+<apex:page controller="DesignToolsController" showHeader="true" tabStyle="SunPower_Design__c">
+<!--
+  Financial Tools - implementation for the Financial Tools tab
+      Provides access to SunPower users and Partner users to the following tools:
+        -Smart Finance
+        -Solar Calculator
+-->
+<script>
+function highlightTab(){
+    var tableId = document.getElementById("tabBar");
+    var rowId  = tableId.tBodies[0].rows[0];
+    var cellIds = rowId.getElementsByTagName('td');
+    for(var i=0;i<cellIds.length;i++){
+        var cellId1 = cellIds[i]; 
+        var DivTag = cellId1.getElementsByTagName('div');
+        var divT = DivTag[0];
+        var aTag = divT.getElementsByTagName('a');
+        var aT = aTag[0];
+        if(aT.href.indexOf('01rT00000004cL9')>0 || aT.href.indexOf('01r8000000095OI')>0){
+            if(cellId1!=null){
+                if(cellId1.getAttribute('className')!='currentTab primaryPalette' || cellId1.getAttribute('class')!='currentTab primaryPalette'){
+                    cellId1.setAttribute('className','currentTab primaryPalette');
+                    cellId1.setAttribute('class','currentTab primaryPalette');
+                }
+            }
+            break;
+        }
+    }
+}
+window.onload = function(){ highlightTab(); };
+</script>
+   <style>
+      .activeTab {background-color: #236FBD; color:white; background-image:none}
+      .inactiveTab { background-color: lightgrey; color:black; background-image:none}
+   </style>
+    <!--Case#00083818- Used {!currentSessionID} to pass same sessionID in all java apps-->
+  <apex:tabPanel switchType="server" selectedTab="Solar Calculator" id="DesignToolsTabPanel">
+      <apex:tab label="{!$Label.DesignTools_SolarCalculator}" name="Solar Calculator" id="tabSolarCalc" rendered="{! SFVisible}">
+          <apex:iframe width="950px" height="1500px" scrolling="auto" id="SCFrame"></apex:iframe>
+         <script>
+            _gaq.push(function() {
+                var iframe = document.getElementById('SCFrame');
+                iframe.src = _gat._getTrackerByName()._getLinkerUrl('{!designToolsBaseURL}/Stringsizer/solarcalc/init.jsf?serverurl={!$Api.Enterprise_Server_URL_160}&sessionid={!currentSessionID}');
+            });         
+         </script>                      
+      </apex:tab>        
+        
+      <apex:tab label="{!$Label.DesignTools_SmartFinance}" name="SmartFinance" id="tabSmartFinance" rendered="{!AND(UserDomain!='rvar-be',UserDomain!='cvar-be',UserDomain!='combo-be',UserDomain!='rvar-uk',UserDomain!='cvar-uk',UserDomain!='combo-uk',SFVisible)}">
+         <apex:stylesheet value="{!URLFOR($Resource.SmartFinance, 'resources/css/portal_style.css')}"/>
+         <apex:stylesheet value="{!URLFOR($Resource.SmartFinance, 'resources/css/sunpower.css')}"/>
+
+         <apex:outputText value="{! TTL}" escape="false" styleClass="data-text-bold-large"></apex:outputText>
+         <br></br>
+         <apex:outputText value="{! BAS}" escape="false" styleClass="data-text"></apex:outputText>
+      </apex:tab>
+      
+      
+   </apex:tabPanel>
+   
+</apex:page>

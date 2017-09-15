@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Activity.Hours_Spent__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>D&amp;E Hours allocation by RegionG&amp;A hours not included</description>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Task.Engineering_EU_Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Opportunity__c</column>
+            <operator>notEqual</operator>
+            <value>429322_Dummy Company- General Tasks</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED_ALIAS</column>
+            <operator>equals</operator>
+            <value>Brodr,croll,moter,pmas,aalva,slieg,cmass,kleon,ycobo,vstei,ccour,kguer,ccand,lmath,bjeul,AGueh,FEsco,HMegd,dserr,Sierr,bvald,saiz,mgonz</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Region__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Package_Type__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>D&amp;E EU/INTL- FP&amp;L per Region</name>
+    <params>
+        <name>closed</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>te</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>ActivityCustomEntity$Design__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Activity.Completed_Date__c</dateColumn>
+        <interval>INTERVAL_LASTMONTH</interval>
+    </timeFrameFilter>
+</Report>

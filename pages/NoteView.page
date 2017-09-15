@@ -1,0 +1,72 @@
+<apex:page standardcontroller="Note" extensions="NoteView" showHeader="false" sidebar="false">
+	<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+	<c:CommunitiesMainNavComponent activeTab=""/>
+
+<body class="detail-container">
+	<div class="sunpower-style container-fluid" style="margin-top: 1rem; max-width: 1200px;">
+		<apex:form >
+			<apex:actionFunction name="deleteAction" action="{!deleteNote}" />
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <H3>Note Detail</H3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label>Note Owner</label>
+	                    <apex:outputLink value="/{!myNote.OwnerId}">
+	                    	{!myNote.Owner.Name}
+	                    </apex:outputLink>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label for="isPrivate">Private</label>
+	                    <apex:inputcheckbox id="isPrivate" value="{!myNote.isPrivate}" disabled="true"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label for="title">Title</label>
+	                    <apex:outputText id="title" value="{!myNote.Title}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label for="body">Body</label>
+	                    <apex:outputText id="body" value="{!myNote.Body}"/><p/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label>Created By</label>
+	                    <apex:outputText value="{!myNote.CreatedBy.Name} {!myNote.CreatedDate}"/><p/>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+	            <div class="col-xs-12 col-md-6">
+	                <a class="btn btn-primary btn--small" onclick="location.href='/apex/NoteNew?parentId={!myNote.ParentId}&existingNoteId={!myNote.Id}'" style="float: left; margin-bottom: 1rem;">Edit</a>
+	            </div>
+	            <div class="col-xs-12 col-md-6">
+	                <a class="btn btn-primary btn--small" onclick="deleteAction();" style="float: left; margin-bottom: 1rem;">Delete</a>
+	            </div>
+	        </div>
+		</apex:form>
+	</div>
+</body>
+<!-- Load JS Scripts Last -->
+<c:SPCommunityAppResources_JS />
+</apex:page>

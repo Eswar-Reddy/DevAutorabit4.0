@@ -1,0 +1,20 @@
+<!-- 
+Page                    :   PerformanceEvalPrevPageCombo
+Created By              :   Appirio Offshore(Neeraj Gupta)
+Created On              :   Jan 4, 2011
+Description             :   Performance Evaluation Previous page for combo dealers.
+--> 
+<apex:page showHeader="{!IF($CurrentPage.Parameters.hideHeader != null, false, true)}">
+	<apex:pagemessages />
+    	<apex:form >
+  			<apex:tabPanel switchType="server" selectedTab="comm">
+	          <apex:tab label="Commercial" name="comm" >
+	              <apex:iframe width="1050px" height="1000px" scrolling="true" src="/apex/PerformanceEvalPreviousComm?year={!$CurrentPage.Parameters.year}&period={!$CurrentPage.Parameters.period}&accId={!$CurrentPage.Parameters.accId}"></apex:iframe>
+	          </apex:tab>
+	          
+	          <apex:tab label="Residential" name="resi">
+	              <apex:iframe width="1050px" height="1000px" scrolling="true" src="/apex/PerformanceEvalPrevious?year={!$CurrentPage.Parameters.year}&period={!$CurrentPage.Parameters.period}&accId={!$CurrentPage.Parameters.accId}"></apex:iframe>
+	          </apex:tab>                
+      		</apex:tabPanel>
+        </apex:form>
+</apex:page>

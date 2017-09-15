@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Residential_Project__c$Project_Number__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Alliance_Partners__r$Role__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Alliance_Partners__r$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Alliance_Partners__r$CreatedBy</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Source for Installation Partner per RPM record</description>
+    <filter>
+        <criteriaItems>
+            <column>Residential_Project__c.Alliance_Partners__r$Role__c</column>
+            <operator>equals</operator>
+            <value>Installation Partner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c$Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Residential_Project__c.Alliance_Partners__r$Partner_Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Residential Projects with Alliance Partn</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Residential_Projects_with_Alliance_Partners__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <sortColumn>Residential_Project__c$Project_Number__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Residential_Project__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

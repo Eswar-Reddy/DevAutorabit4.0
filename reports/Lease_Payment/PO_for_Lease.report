@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Purchase_Order__c$Name</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Lease_Number__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Financier__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>PO number indicating Financier type</description>
+    <filter>
+        <criteriaItems>
+            <column>Purchase_Order__c$Lease__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>PO for Lease</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Purchase_Order_And_Quote_and_Account_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Purchase_Order__c$Quote__c.Lease_doc_Created_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

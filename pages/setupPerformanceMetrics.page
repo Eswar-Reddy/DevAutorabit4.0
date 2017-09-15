@@ -1,0 +1,1422 @@
+<apex:page standardController="Metric_Tier_Relation__c" extensions="SetupPerformanceMetrics">
+<apex:pagemessages ></apex:pagemessages>
+<!-- Done for Case # 00071804
+<apex:form >  -->
+<apex:form rendered="{!IF(performanceMetricList.size > 0 , true,false)}">
+<apex:tabPanel switchType="client" selectedTab="AuthMetrics" id="MasterTabs">  
+   <apex:tab label="{!$Label.Metricsfor} {!tier1Label}" name="AuthMetrics" id="AuthMetricsTab">
+       <apex:pageBlock >
+        <table border="0">
+                <tr>
+                
+                    <td >{!$Label.Theater}</td><td><apex:inputField id="theater" value="{!performanceMetric.Thea__c}" />
+                            <script>document.getElementById('{!$Component.theater}').disabled = true; </script>
+                    </td><td>&nbsp;</td>
+                    <td >{!$Label.Country}</td><td> <apex:inputField id="Country" value="{!performanceMetric.Country__c}" />
+                                           <script>document.getElementById('{!$Component.Country}').disabled = true; </script> 
+                                                </td><td>&nbsp;</td>
+                    <td >{!$Label.Channel}</td><td><apex:inputField id="Channel" value="{!performanceMetric.Channel__c}"  />
+                                          <script>document.getElementById('{!$Component.Channel}').disabled = true; </script>   
+                    </td><td>&nbsp;</td>
+                    </tr><br></br>
+                <tr>
+                    <td>{!$Label.ValidFrom}</td><td>
+                    <apex:inputText id="validFrom" disabled="true" value="{!validFrom}" />
+                    </td><td>&nbsp;</td>
+                    <td>{!$Label.ValidTill}</td><td><apex:inputText disabled="true" id="validTo" value="{!validTo}" />
+                    </td><td>&nbsp;</td>
+                    <td>{!$LAbel.CutODate}</td><td><apex:inputText disabled="true" value="{!cutOffDate}"  id="cutoffdate"/></td> <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+               <tr>
+               <td >{!$Label.PPFlimit}</td>
+               
+               <td >
+                    <apex:outputPanel rendered="{!IF(freezeMetric == false, true,false)}">
+                        <apex:inputText id="PPFundLmt" value="{!pdfTier1}" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(freezeMetric == true, true,false)}">
+                    <apex:outputLabel id="PPFundLmt1" value="{!pdfTier1}"  />
+                    </apex:outputPanel>
+               
+               
+               </td>
+               <!-- Added by Neeraj -->
+               <td></td>
+               <td> <apex:outputPanel rendered="{!IF((performanceMetric.Country__c == 'Germany'), true,false)}">
+               {!$Label.RackingPrice}
+               </apex:outputPanel></td>
+               <td>
+                    <apex:inputText disabled="true" id="rackingPrice" value="{!rackingprice}" rendered="{!IF((performanceMetric.Country__c == 'Germany'), true,false)}" />
+               </td>
+               </tr>
+        </table>   
+    
+    </apex:pageBlock>
+   <apex:tabPanel switchType="client" selectedTab="CustSatisfaction" id="CategoryTabPanel" >
+
+        <apex:tab label="{!$Label.CustSat}" name="CustSatisfaction" id="CustSatisfactionTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <apex:outputPanel rendered="{!IF(theater=='Europe',true,false)}">
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        </apex:outputPanel>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                    </tr>
+             <apex:repeat value="{!customerSatisfactionTier1List}" var="csat">
+             <tr>
+                        <td width="40%"> 
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!csat.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!csat.Metric_Label__c}" />
+                            <span title="{!csat.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!csat.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!csat.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!csat.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit} </apex:outputLink>
+                            </td>
+                        <apex:outputPanel id="Cus_Sat" rendered="{!IF(theater=='Europe',true,false)}">
+                        <td width="10%"><apex:inputCheckbox value="{!csat.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        </apex:outputPanel>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!csat.Metric_Min_Value__c}"  style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((csat.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!csat.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                         <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((csat.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script> 
+                         </td>                  
+                         <td width="10%"><apex:inputField id="BonusRequirement" value="{!csat.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                         <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                         <td width="10%"><apex:inputField id="Incentive" value="{!csat.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                         <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                        <td>{!csat.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!csat.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!csat.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%">
+                            <apex:inputCheckbox id="benifit" value="{!csat.Benefit_Tier__c}" disabled="{!freezeMetric}"  onclick="javascript: InBteir(this)"/>
+                        </td>
+                        
+                    </tr>
+             </apex:repeat>       
+         </font>
+         </table>
+       
+        </apex:pageBlock>
+        </apex:tab>
+        <!-- Start here-->
+        <apex:tab label="{!$Label.Training}" name="Training" id="TrainingTab">
+        
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td> 
+                    </tr>
+             <apex:repeat value="{!trainingTier1List}" var="trn">
+             <tr>
+                        <td width="40%"> 
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!trn.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!trn.Metric_Label__c}" />
+                            <span title="{!trn.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!trn.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!trn.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!trn.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit} </apex:outputLink>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!trn.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((trn.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!trn.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((trn.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="BonusRequirement" value="{!trn.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                         <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                         <td width="10%"><apex:inputField id="Incentive" value="{!trn.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);" /></td>
+                                            <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                        <td> {!trn.Metric_Input_Type__c}</td>
+                        <td width="10%"><apex:inputCheckbox value="{!trn.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!trn.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!trn.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/> </td>
+                    </tr>
+             </apex:repeat>       
+         </font>
+         </table>
+     </apex:pageBlock>
+   </apex:tab>
+   <apex:tab label="{!$Label.PBPlan}" name="PerformanceToBP" id="PerformanceToBPTab">
+        <apex:pageBlock id="pbpList1">
+        <table border="1" CELLPADDING="10" id="ptblsample1">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                        <td width="10%"><b>{!$Label.AllowPartnerupdate}</b></td>                       
+                    </tr>
+             <apex:repeat value="{!performanceToBPTier1List}" var="pbp">
+            <apex:outputPanel rendered="{!IF((pbp.isRSMView__c==false) || (pbp.Metric_Label__c=='Bonus for Meeting 6 Month Revenue Target') || (pbp.Metric_Label__c=='Kw agreed target'),true,false)}">
+             <tr>
+                        <td width="40%"> 
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!pbp.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!pbp.Metric_Label__c}" />
+                            <span title="{!pbp.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!pbp.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!pbp.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!pbp.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        <td width="10%"><apex:inputField id="MMinValue"value="{!pbp.Metric_Min_Value__c}" style="width : 50px"  onkeypress="return blockNonNumbers(this, event, true, true);"/></td>
+                                            <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((pbp.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!pbp.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((pbp.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="BonusRequirement" value="{!pbp.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                         <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                        <td width="10%"><apex:inputField id="Incentive" value="{!pbp.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                                            <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                        </td>
+                        <td> {!pbp.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!pbp.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Manual_Partner__c}" disabled="{!freezeMetric}"/></td>
+                    </tr>
+                </apex:outputPanel>     
+             </apex:repeat>       
+         </font>
+         </table>
+        
+        </apex:pageBlock>
+        </apex:tab>         
+        <apex:tab label="{!$Label.AllSS}" name="AllSPWR" id="AllSPWRTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                    </tr>
+             <apex:repeat value="{!spwrSolutionTier1List}" var="spwr">
+             <tr>
+                        <td width="40%"> 
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!spwr.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!spwr.Metric_Label__c}" />
+                            <span title="{!spwr.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!spwr.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!spwr.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!spwr.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        <td width="10%"><apex:inputCheckbox value="{!spwr.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!spwr.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((spwr.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!spwr.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((spwr.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="BonusRequirement" value="{!spwr.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                            <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                         <td width="10%"><apex:inputField id="Incentive" value="{!spwr.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                             <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                         </td>
+                        <td> {!spwr.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!spwr.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!spwr.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!spwr.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                    </tr>
+             </apex:repeat>       
+         </font>
+         </table>
+
+        </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="{!$Label.Co_Marketing}" name="Marketing" id="MarketingTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10" id="tblSample">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="15%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                        <apex:outputPanel rendered="{!IF(theater=='North America',true,false)}">
+                            <td width="10%"><b>{!$Label.AllowPartnerupdate}</b></td>
+                        </apex:outputPanel>
+                        <td width="15%"><b>Accept Attachment</b></td>                    
+                    </tr>
+             <apex:repeat value="{!marketingTier1List}" var="market">
+             <!-- Check for RSM(hemant) -->
+             <apex:outputPanel rendered="{!IF(market.isRSMView__c == false,true,false)}">
+             <tr>
+                        <apex:outputPanel rendered="{!IF(market.Market_Add_Row__c==false,true,false)}">
+                        <td width="30%">
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!market.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!market.Metric_Label__c}" />
+                            <span title="{!market.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!market.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!market.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!market.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IF(market.Market_Add_Row__c==true,true,false)}">
+                        <td width="40%"><apex:inputField value="{!market.Metric_Description__c}"/></td>
+                        </apex:outputPanel>                        
+                        <td width="10%"><apex:inputCheckbox value="{!market.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        
+                        <td width="10%"><apex:inputField id="BonusRequirement" value="{!market.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                            <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                        </td>
+                        
+                        <td width="10%"><apex:inputField id="Incentive" value="{!market.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                                <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                        </td>
+                        <td> {!market.Metric_Input_Type__c}  </td>
+                        <td width="10%"><apex:inputCheckbox value="{!market.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!market.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!market.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                        <apex:outputPanel rendered="{!IF(theater=='North America',true,false)}">
+                        <td width="10%"><apex:inputCheckbox value="{!market.Manual_Partner__c}" disabled="{!freezeMetric}"/></td>
+                        </apex:outputPanel>
+                         <td width="10%"><apex:inputCheckbox value="{!market.Accept_Attachment__c}" disabled="{!freezeMetric}"/></td>
+                    </tr>
+                    </apex:outputPanel>
+             </apex:repeat>       
+         </font>
+         </table>
+        </apex:pageBlock>
+        <apex:outputPanel rendered="{!marketAddRow}">
+        <table>
+        <tr>
+         <td width="100%">
+         <p align="center">
+            <input type="button" value="{!$label.AddRow}" onclick="addRowToTable('tier1','tblSample','mark');" class="btn"/>
+            <apex:commandButton value="{!$Label.Save}" action="{!saveMarketingObj}"/>
+
+         </p>
+            </td>
+         </tr>
+        </table>
+        </apex:outputPanel>
+        </apex:tab>
+        <!-- End here-->
+        </apex:tabPanel>
+        </apex:tab>
+        <!-- main tab 2-->
+        <apex:tab label="{!$Label.Metricsfor} {!tier2Label}" name="PremMetrics" id="PremMetricsTab">
+   <apex:pageBlock >
+        <table>
+                <tr>
+                    <td>{!$Label.Theater}</td><td><apex:inputText id="theater1" value="{!performanceMetric.Thea__c}" disabled="true"/>
+                        <!--<script>document.getElementById('{!$Component.theater1}').disabled = true; </script>-->
+                    </td><td>&nbsp;</td>
+                    <td>{!$Label.Country}</td><td> <apex:inputText id="country1" value="{!performanceMetric.Country__c}" disabled="true"/>
+                             <!-- <script>document.getElementById('{!$Component.country1}').disabled =true; </script>-->
+                    </td><td>&nbsp;</td>
+                    <td>{!$Label.Channel}</td><td><apex:inputText id="Channel1" value="{!performanceMetric.Channel__c}" disabled="true" />
+                            <!-- <script>document.getElementById('{!$Component.Channel1}').disabled =true; </script>-->
+                    </td><td>&nbsp;</td>
+                    </tr><br></br>
+                <tr>
+                    <td>{!$Label.ValidFrom}</td><td><apex:inputText disabled="true" id="validFrom" value="{!validFrom}" />
+                    </td><td>&nbsp;</td>
+                    <td>{!$Label.ValidTill}</td><td><apex:inputText disabled="true" id="validTo" value="{!validTo}" />
+                    </td><td>&nbsp;</td>
+                    <td>{!$Label.CutODate}</td><td><apex:inputText disabled="true" id="cutOffDate" value="{!cutOffDate}" />
+                    </td> <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                </tr>
+
+               <tr>
+               <td>{!$Label.PPFlimit}</td>
+               <td>
+                    <apex:outputPanel rendered="{!IF(freezeMetric == false, true,false)}">
+                        <apex:inputText id="PPFundLmt" value="{!pdfTier2}" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(freezeMetric == false, false,true)}">
+                            <apex:outputLabel id="PPFundLmt1" value="{!pdfTier2}"/>
+                    </apex:outputPanel>
+               </td><td>&nbsp;</td>
+                <td> <apex:outputPanel rendered="{!IF((performanceMetric.Country__c == 'Germany'), true,false)}">
+               {!$Label.RackingPrice}
+               </apex:outputPanel></td>
+               <td>
+               <apex:inputText disabled="true" id="rackingPrice" value="{!rackingprice}" rendered="{!IF((performanceMetric.Country__c == 'Germany'), true,false)}" />
+               </td>
+               </tr>
+        </table>   
+    
+    </apex:pageBlock>
+   <apex:tabPanel switchType="client" selectedTab="CustSatisfactionP" id="CategoryPTabPanel" >
+
+        <apex:tab label="{!$Label.CustSat}" name="CustSatisfactionP" id="CustSatisfactionPTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <apex:outputPanel rendered="{!IF(theater=='Europe',true,false)}">
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        </apex:outputPanel>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                    </tr>
+             <apex:repeat value="{!customerSatisfactionTier2List}" var="csat">
+             <tr>
+                        <td width="40%">
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!csat.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!csat.Metric_Label__c}" />                        
+                            <span title="{!csat.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!csat.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!csat.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!csat.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        <apex:outputPanel rendered="{!IF(theater=='Europe',true,false)}">
+                        <td width="10%"><apex:inputCheckbox value="{!csat.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        </apex:outputPanel>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!csat.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((csat.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script></td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!csat.Metric_Max_Value__c}" style="width : 50px"  onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((csat.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="BonusRequirement" value="{!csat.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                            <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                         <td width="10%"><apex:inputField id="Incentive" value="{!csat.Incentive_Amount__c}"  style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                             <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                         </td>
+                        <td> {!csat.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!csat.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!csat.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!csat.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                    </tr>
+             </apex:repeat>       
+         </font>
+         </table>
+
+        </apex:pageBlock>
+        </apex:tab>
+        
+        <apex:tab label="{!$Label.Training}" name="TrainingP" id="TrainingPTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                    </tr>
+             <apex:repeat value="{!trainingTier2List}" var="trn">
+             <tr>
+                        <td width="40%">
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!trn.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!trn.Metric_Label__c}" />                                                
+                            <span title="{!trn.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!trn.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!trn.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!trn.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!trn.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((trn.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!trn.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((trn.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script></td>
+                         <td width="10%"><apex:inputField id="BonusRequirement" value="{!trn.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                            <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                         <td width="10%"><apex:inputField id="Incentive" value="{!trn.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                             <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                         </td>
+                        <td> {!trn.Metric_Input_Type__c}</td>
+                        <td width="10%"><apex:inputCheckbox value="{!trn.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!trn.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit"  value="{!trn.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                    </tr>
+             </apex:repeat>       
+         </font>
+         </table>
+        </apex:pageBlock>
+        </apex:tab>
+        
+        <apex:tab label="{!$Label.PBPlan}" name="PerformanceToBPP" id="PerformanceToBPPTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10" id="ptblSample2">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                        <td width="10%"><b>{!$Label.AllowPartnerupdate}</b></td>                       
+                    </tr>
+             <apex:repeat value="{!performanceToBPTier2List}" var="pbp">
+             <apex:outputPanel rendered="{!IF((pbp.isRSMView__c==false) || (pbp.Metric_Label__c=='Bonus for Meeting 6 Month Revenue Target') || (pbp.Metric_Label__c=='Kw agreed target'),true,false)}">
+             <tr>
+                        <td width="40%"> 
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!pbp.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!pbp.Metric_Label__c}" />                                                
+                            <span title="{!pbp.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!pbp.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!pbp.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!pbp.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!pbp.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((pbp.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!pbp.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((pbp.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                         <td width="10%"><apex:inputField id="BonusRequirement" value="{!pbp.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                            <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                        
+                        <td width="10%"><apex:inputField id="Incentive" value="{!pbp.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                        </td>
+                        <td> {!pbp.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!pbp.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!pbp.Manual_Partner__c}" disabled="{!freezeMetric}"/></td>
+                    </tr>
+                  </apex:outputPanel>  
+             </apex:repeat>       
+         </font>
+         </table>
+        </apex:pageBlock>
+        </apex:tab>
+        
+        <apex:tab label="{!$Label.AllSS}" name="AllSPWRP" id="AllSPWRPTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="25%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        <td width="10%"><b>{!$Label.MinVal}</b></td>
+                        <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                        <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                    </tr>
+             <apex:repeat value="{!spwrSolutionTier2List}" var="spwr">
+             <tr>
+                        <td width="40%">
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!spwr.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!spwr.Metric_Label__c}" />                                                 
+                            <span title="{!spwr.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!spwr.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!spwr.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!spwr.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        <td width="10%"><apex:inputCheckbox value="{!spwr.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        <td width="10%"><apex:inputField id="MMinValue" value="{!spwr.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((spwr.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                        <td width="10%"><apex:inputField id="MMaxValue" value="{!spwr.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((spwr.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                        </td>
+                         <td width="10%"><apex:inputField id="BonusRequirement" value="{!spwr.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                            <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                         </td>
+                        
+                         <td width="10%"><apex:inputField id="Incentive" value="{!spwr.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                             <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                         </td>
+                        <td> {!spwr.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!spwr.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!spwr.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!spwr.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                    </tr>
+             </apex:repeat>       
+         </font>
+         </table>
+
+        </apex:pageBlock>
+        </apex:tab>
+        
+        <apex:tab label="{!$Label.Co_Marketing}" name="MarketingP" id="MarketingPTab">
+        <apex:pageBlock >
+        <table border="1" CELLPADDING="10" id="tblSample2">
+         <font face="verdana" size="1">
+         <tr>
+                        <td width="15%"><b>{!$Label.Metric}</b></td>
+                        <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                        <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                        <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                        <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                        <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                        <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                        <apex:outputPanel rendered="{!IF(theater=='North America',true,false)}">
+                            <td width="10%"><b>{!$Label.AllowPartnerupdate}</b></td>
+                        </apex:outputPanel> 
+                        <td width="10%"><b>Accept Attachment</b></td>                      
+                    </tr>
+             <apex:repeat value="{!marketingTier2List}" var="market">
+             <!-- Check for RSM(hemant) -->
+             <apex:outputPanel rendered="{!IF(market.isRSMView__c == false,true,false)}">
+             <tr>
+                        <apex:outputPanel rendered="{!IF(market.Market_Add_Row__c==false,true,false)}">
+                        <td width="30%"> 
+                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!market.Metric_Description__c}" />
+                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!market.Metric_Label__c}" />                                                
+                            <span title="{!market.HelpText__c}" style="font-size:4pt" class="helpButton">
+                             <img title="{!market.HelpText__c}" class="helpOrb"
+                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                             alt="{!market.HelpText__c}"
+                             title="" /> 
+                            </span>
+                            <apex:outputLink value="/{!market.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                        </td>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IF(market.Market_Add_Row__c==true,true,false)}">
+                        <td width="40%"><apex:inputField value="{!market.Metric_Description__c}"/></td>
+                        </apex:outputPanel>                        
+                        <td width="10%"><apex:inputCheckbox value="{!market.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                        <td width="10%"><apex:inputField id="Incentive" value="{!market.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                            <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                        </td>
+                        <td> {!market.Metric_Input_Type__c} </td>
+                        <td width="10%"><apex:inputCheckbox value="{!market.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox value="{!market.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                        <td width="10%"><apex:inputCheckbox id="benifit" value="{!market.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                        <apex:outputPanel rendered="{!IF(theater=='North America',true,false)}">
+                        <td width="10%"><apex:inputCheckbox value="{!market.Manual_Partner__c}" disabled="{!freezeMetric}"/></td>
+                        </apex:outputPanel>
+                        <td width="10%"><apex:inputCheckbox value="{!market.Accept_Attachment__c}" disabled="{!freezeMetric}"/></td>
+                    </tr>
+                    </apex:outputPanel>
+             </apex:repeat>       
+         </font>
+         </table>
+        </apex:pageBlock>
+        <apex:outputPanel rendered="{!marketAddRow}">
+        <table>
+        <tr>
+         <td width="100%">
+         <p align="center">
+            <input type="button" value="{!$label.AddRow}" onclick="addRowToTable('tier2','tblSample2','mark');" class="btn"/>
+            <apex:commandButton value="{!$Label.Save}" action="{!saveMarketingObj}"/>
+
+         </p>
+            </td>
+         </tr>
+        </table>
+        </apex:outputPanel>
+        </apex:tab>
+
+   </apex:tabPanel>    
+   </apex:tab>
+        <!-- main tab 2-->
+        <!--main tab 3-->
+         <apex:tab label="{!$Label.Metricsfor} {!tier3Label}" rendered="{!IF(country!='Germany',true,false)}">
+             <apex:pageBlock >
+                 <table>
+                     <tr>
+                     <td>{!$Label.Theater}</td>
+                     <td>
+                         <apex:inputText id="theater2" value="{!performanceMetric.Thea__c}" disabled="true"/>
+                        <!-- <script>document.getElementById('{!$Component.theater2}').disabled = true;</script>-->
+                     </td><td>&nbsp;</td>
+                     <td>{!$Label.Country}</td>
+                     <td> <apex:inputText id="Country2" value="{!performanceMetric.Country__c}" disabled="true"/>
+                         <!--<script>document.getElementById('{!$Component.Country2}').disabled = true; </script> -->
+                     </td>
+                     <td>&nbsp;</td>
+                     <td>{!$Label.Channel}</td>
+                     <td>
+                         <apex:inputText id="Channel2" value="{!performanceMetric.Channel__c}" disabled="true" />
+                         <!--<script>document.getElementById('{!$Component.Channel2}').disabled = true; </script>-->
+                     </td>
+                     <td>&nbsp;</td>
+                     </tr>
+                     <br></br>
+                     <tr>
+                         <td>{!$Label.ValidFrom}</td><td><apex:inputText disabled="true" id="validFrom" value="{!validFrom}" />
+                         </td><td></td>
+                         <td>{!$Label.ValidTill}</td><td><apex:inputText disabled="true" id="validTo" value="{!validTo}" />
+                         </td><td>&nbsp;</td>
+                         <td>{!$LAbel.CutODate}</td>
+                         <td>
+                             <apex:inputText disabled="true" id="cutOffDate" value="{!cutOffDate}" />
+                         </td>
+                         <td>&nbsp;</td>
+                         <td>&nbsp;</td>
+                         <td>&nbsp;</td>
+                         <td>&nbsp;</td>
+                     </tr>
+                     <tr>
+                       <td>{!$Label.PPFlimit}</td>
+                       <td>
+                            <apex:outputPanel rendered="{!IF(freezeMetric == false, true,false)}">                    
+                                <apex:inputText id="PPFundLmt" value="{!pdfTier3}" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!IF(freezeMetric == false, false,true)}">
+                                <apex:outputLabel id="PPFundLmt1" value="{!pdfTier3}" /> 
+                            </apex:outputPanel>
+                       
+                       </td>
+                        <td> <apex:outputPanel rendered="{!IF((performanceMetric.Country__c == 'Germany'), true,false)}">
+               {!$Label.RackingPrice}
+               </apex:outputPanel></td>
+               <td>
+               <apex:inputText disabled="true" id="rackingPrice" value="{!rackingprice}" rendered="{!IF((performanceMetric.Country__c == 'Germany'), true,false)}" />
+               </td>
+                     </tr>
+                 </table>
+             </apex:pageBlock>
+             <apex:tabPanel switchType="client" selectedTab="CustSatisfactionE" id="CategoryETabPanel" >
+                 <apex:tab label="{!$Label.CustSat}" name="CustSatisfactionE" id="CustSatisfactionETab">
+                     <apex:pageBlock >
+                         <table style="font-face: verdana; font-size: 1 " border="1" CELLPADDING="10">
+                             <tr>
+                                <td width="25%"><b>{!$label.Metric}</b></td>
+                                <apex:outputPanel rendered="{!IF(theater=='Europe',true,false)}">
+                                <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                                </apex:outputPanel>
+                                <td width="10%"><b>{!$Label.MinVal}</b></td>
+                                <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                                <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                                <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                                <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                                <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                                <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                                <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                            </tr>
+                            <apex:repeat value="{!customerSatisfactionTier3List}" var="csat">
+                                 <tr>
+                                     <td width="40%"> 
+                                            <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!csat.Metric_Description__c}" />
+                                            <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!csat.Metric_Label__c}" />                                                             
+                                            <span title="{!csat.HelpText__c}" style="font-size:4pt" class="helpButton">
+                                             <img title="{!csat.HelpText__c}" class="helpOrb"
+                                             style="font-size:4pt; background-position: right top" src="/s.gif"
+                                             alt="{!csat.HelpText__c}"
+                                             title="" /> 
+                                            </span>
+                                    <apex:outputLink value="/{!csat.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>        
+                                    </td>
+                                    <apex:outputPanel rendered="{!IF(theater=='Europe',true,false)}">
+                                        <td width="10%">
+                                            <apex:inputCheckbox value="{!csat.Boolean_Metric_Y_N__c}" disabled="true" />
+                                        </td>
+                                    </apex:outputPanel>
+                                        <td width="10%">
+                                               <apex:inputField onkeypress="javascript: return blockNonNumbers(this, event, true, true);" id="MMinValue" value="{!csat.Metric_Min_Value__c}" style="width : 50px"/>
+                                               <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((csat.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                        </td>
+                                        <td width="10%">
+                                            <apex:inputField id="MMaxValue" value="{!csat.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                            <script>document.getElementById('{!$Component.MMaxValue}').disabled = {!IF((csat.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                        </td>
+                                         <td width="10%"><apex:inputField id="BonusRequirement" value="{!csat.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                                <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                                         </td>
+                        
+                                        <td width="10%">
+                                             <apex:inputField id="Incentive" value="{!csat.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                             <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                                        </td>
+                                        <td> 
+                                            {!csat.Metric_Input_Type__c}
+                                        </td>
+                                        <td width="10%">
+                                            <apex:inputCheckbox value="{!csat.Enter_Tier__c}" disabled="{!freezeMetric}"/>
+                                        </td>
+                                        <td width="10%">
+                                            <apex:inputCheckbox value="{!csat.Stay_Tier__c}" disabled="{!freezeMetric}"/>
+                                        </td>
+                                        <td width="10%">
+                                            <apex:inputCheckbox id="benifit" value="{!csat.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/>
+                                        </td>
+                                 </tr>
+                             </apex:repeat> 
+                         </table>
+                     </apex:pageBlock>
+                 </apex:tab>
+                 <apex:tab label="{!$Label.Training}" name="TrainingE" id="TrainingETab">
+                     <apex:pageBlock >
+                         <table style="font-face: verdana; font-size: 1" border="1" CELLPADDING="10">
+                             <tr>
+                                <td width="25%"><b>{!$label.Metric}</b></td>
+                                <td width="10%"><b>{!$Label.MinVal}</b></td>
+                                <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                                <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                                <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                                <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                                <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                                <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                                <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                            </tr>
+                            <apex:repeat value="{!trainingTier3List}" var="trn">
+                                 <tr>
+                                    <td width="40%"> 
+                                        <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!trn.Metric_Description__c}" />
+                                        <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!trn.Metric_Label__c}" />                                                            
+                                        <span title="{!trn.HelpText__c}" style="font-size:4pt" class="helpButton">
+                                         <img title="{!trn.HelpText__c}" class="helpOrb"
+                                         style="font-size:4pt; background-position: right top" src="/s.gif"
+                                         alt="{!trn.HelpText__c}"
+                                         title="" /> 
+                                        </span>
+                                        <apex:outputLink value="/{!trn.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                                    </td>
+                                    <td width="10%"><apex:inputField id="MMinValue" value="{!trn.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMinValue}').disabled ={!IF((trn.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                    </td>
+                                    <td width="10%"><apex:inputField id="MMaxValue" value="{!trn.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMaxValue}').disabled ={!IF((trn.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                    </td>
+                                     <td width="10%"><apex:inputField id="BonusRequirement" value="{!trn.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                        <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                                     </td>
+                        
+                                     <td width="10%"><apex:inputField id="Incentive" value="{!trn.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                         <script>document.getElementById('{!$Component.Incentive}').disabled ={!IF((freezeMetric==true || true),true,false)}; </script>
+                                     </td>
+                                    <td> {!trn.Metric_Input_Type__c}</td>
+                                    <td width="10%"><apex:inputCheckbox value="{!trn.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox value="{!trn.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox id="benifit" value="{!trn.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                                </tr>
+                             </apex:repeat> 
+                         </table>
+                     </apex:pageBlock>
+                 </apex:tab>
+                 <apex:tab label="{!$Label.PBPlan}" name="PerformanceToBPE" id="PerformanceToBPETab" >
+                    <apex:pageBlock >
+                    <table border="1" CELLPADDING="10" id="ptblSample3">
+                     <font face="verdana" size="1">
+                               <tr>
+                                    <td width="25%"><b>{!$Label.Metric}</b></td>
+                                    <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                                    <td width="10%"><b>{!$Label.MinVal}</b></td>
+                                    <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                                    <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                                    <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                                    <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                                    <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                                    <td width="10%"><b>{!$Label.AllowPartnerupdate}</b></td>                       
+                                </tr>
+                         <apex:repeat value="{!performanceToBPTier3List}" var="pbp">
+                         <apex:outputPanel rendered="{!IF((pbp.isRSMView__c==false) || (pbp.Metric_Label__c=='Bonus for Meeting 6 Month Revenue Target') || (pbp.Metric_Label__c=='Kw agreed target'),true,false)}">
+                         <tr>
+                                    <td width="40%">
+                                        <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!pbp.Metric_Description__c}" />
+                                        <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!pbp.Metric_Label__c}" />                                                            
+                                        <span title="{!pbp.HelpText__c}" style="font-size:4pt" class="helpButton">
+                                         <img title="{!pbp.HelpText__c}" class="helpOrb"
+                                         style="font-size:4pt; background-position: right top" src="/s.gif"
+                                         alt="{!pbp.HelpText__c}"
+                                         title="" /> 
+                                        </span>
+                                        <apex:outputLink value="/{!pbp.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                                    </td>
+                                    <td width="10%"><apex:inputCheckbox value="{!pbp.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                                    <td width="10%"><apex:inputField id="MMinValue" value="{!pbp.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMinValue}').disabled ={!IF((pbp.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                    </td>
+                                    <td width="10%"><apex:inputField id="MMaxValue" value="{!pbp.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMaxValue}').disabled ={!IF((pbp.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                    </td>
+                                     <td width="10%"><apex:inputField id="BonusRequirement" value="{!pbp.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                        <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                                     </td>
+                        
+                                    <td width="10%"><apex:inputField id="Incentive" value="{!pbp.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                            <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                                    </td>
+                                    <td> {!pbp.Metric_Input_Type__c} </td>
+                                    <td width="10%"><apex:inputCheckbox value="{!pbp.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox value="{!pbp.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox id="benifit" value="{!pbp.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                                    <td width="10%"><apex:inputCheckbox value="{!pbp.Manual_Partner__c}" disabled="{!freezeMetric}"/></td>
+            
+                                </tr>
+                              </apex:outputPanel>
+                         </apex:repeat>       
+                     </font>
+                     </table>
+                    </apex:pageBlock>
+                </apex:tab>
+                <apex:tab label="{!$Label.AllSS}" name="AllSPWRE" id="AllSPWRETab">
+                    <apex:pageBlock >
+                    <table border="1" CELLPADDING="10">
+                     <font face="verdana" size="1">
+                                 <tr>
+                                    <td width="25%"><b>{!$Label.Metric}</b></td>
+                                    <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                                    <td width="10%"><b>{!$Label.MinVal}</b></td>
+                                    <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                                    <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                                    <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                                    <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                                    <td width="10%"><b>{!$Label.BenefitT}</b></td>                       
+                                </tr>
+                         <apex:repeat value="{!spwrSolutionTier3List}" var="spwr">
+                         <tr>
+                                    <td width="40%"> 
+                                        <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!spwr.Metric_Description__c}" />
+                                        <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!spwr.Metric_Label__c}" />                                                            
+                                        <span title="{!spwr.HelpText__c}" style="font-size:4pt" class="helpButton">
+                                         <img title="{!spwr.HelpText__c}" class="helpOrb"
+                                         style="font-size:4pt; background-position: right top" src="/s.gif"
+                                         alt="{!spwr.HelpText__c}"
+                                         title="" /> 
+                                        </span>
+                                        <apex:outputLink value="/{!spwr.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                                    </td>
+                                    <td width="10%"><apex:inputCheckbox value="{!spwr.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                                    <td width="10%"><apex:inputField id="MMinValue" value="{!spwr.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMinValue}').disabled = {!IF((spwr.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                    </td>
+                                    <td width="10%"><apex:inputField id="MMaxValue" value="{!spwr.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.MMaxValue}').disabled ={!IF((spwr.Boolean_Metric_Y_N__c==true || freezeMetric==true),true,false)}; </script>
+                                    </td>
+                                     <td width="10%"><apex:inputField id="BonusRequirement" value="{!spwr.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                        <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                                     </td>
+                        
+                                     <apex:outputPanel >
+                                         <td width="10%">
+                                             <apex:inputField id="Incentive" value="{!spwr.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                                 <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF(freezeMetric==true && spwr.Benefit_Tier__c==false || true,true,false) }; </script>
+                                         </td>
+                                     </apex:outputPanel>
+                                    <td> {!spwr.Metric_Input_Type__c} </td>
+                                    <td width="10%"><apex:inputCheckbox value="{!spwr.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox value="{!spwr.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox id="benifit" value="{!spwr.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                                </tr>
+                         </apex:repeat>       
+                     </font>
+                     </table>
+                    </apex:pageBlock>
+                </apex:tab>
+                <apex:tab label="{!$Label.Co_Marketing}" name="MarketingE" id="MarketingETab">
+                    <apex:pageBlock >
+                    <table border="1" CELLPADDING="10" id="tblSample3">
+                     <font face="verdana" size="1">
+                     <tr>
+                                    <td width="15%"><b>{!$Label.Metric}</b></td>
+                                    <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                                    <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                                    <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                                    <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                                    <apex:outputPanel rendered="{!IF(theater=='North America',true,false)}">
+                                        <td width="10%"><b>{!$Label.AllowPartnerupdate}</b></td>
+                                    </apex:outputPanel>
+                                    <td width="10%"><b>Accept Attachment</b></td>                                           
+                                </tr>
+                         <apex:repeat value="{!marketingTier3List}" var="market">
+                         <!-- Check for RSM(hemant) -->
+                         <apex:outputPanel rendered="{!IF(market.isRSMView__c == false,true,false)}">
+                         <tr>
+                                    <apex:outputPanel rendered="{!IF(market.Market_Add_Row__c==false,true,false)}">
+                                    <td width="30%"> 
+                                        <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!market.Metric_Description__c}" />
+                                        <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!market.Metric_Label__c}" />                                                            
+                                        <span title="{!market.HelpText__c}" style="font-size:4pt" class="helpButton">
+                                         <img title="{!market.HelpText__c}" class="helpOrb"
+                                         style="font-size:4pt; background-position: right top" src="/s.gif"
+                                         alt="{!market.HelpText__c}"
+                                         title="" /> 
+                                        </span>
+                                        <apex:outputLink value="/{!market.Id}" id="theLink" target="_blank" rendered="{!IF(freezeMetric==true,false,true)}">{!$Label.Edit}</apex:outputLink>
+                                    </td>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!IF(market.Market_Add_Row__c==true,true,false)}">
+                                    <td width="40%"><apex:inputField value="{!market.Metric_Description__c}"/></td>
+                                    </apex:outputPanel>                        
+                                    <td width="10%"><apex:inputCheckbox value="{!market.Boolean_Metric_Y_N__c}" disabled="true"/></td>
+                                    <td width="10%"><apex:inputField id="Incentive" value="{!market.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                        <script>document.getElementById('{!$Component.Incentive}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>
+                                    </td>
+                                    <td> {!market.Metric_Input_Type__c} </td>
+                                    <td width="10%"><apex:inputCheckbox value="{!market.Enter_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox value="{!market.Stay_Tier__c}" disabled="{!freezeMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox id="benifit" value="{!market.Benefit_Tier__c}" disabled="{!freezeMetric}" onclick="javascript: InBteir(this)"/></td>
+                                    <apex:outputPanel rendered="{!IF(theater=='North America',true,false)}">
+                                    <td width="10%"><apex:inputCheckbox value="{!market.Manual_Partner__c}" disabled="{!freezeMetric}"/></td>
+                                    </apex:outputPanel>
+                                    <td width="10%"><apex:inputCheckbox value="{!market.Accept_Attachment__c}" disabled="{!freezeMetric}"/></td>
+                                </tr>
+                                </apex:outputPanel>
+                         </apex:repeat>       
+                     </font>
+                     </table>
+                    </apex:pageBlock>
+                    <apex:outputPanel rendered="{!marketAddRow}">
+                    <table>
+                    <tr>
+                     <td width="100%">
+                     <p align="center">
+                        <input type="button" value="{!$label.AddRow}" onclick="addRowToTable('tier3','tblSample3','mark');" class="btn"/>
+                        <apex:commandButton value="{!$Label.Save}" action="{!saveMarketingObj}"/>
+                     </p>
+                        </td>
+                     </tr>
+                    </table>
+                    </apex:outputPanel>
+            </apex:tab>
+          </apex:tabPanel>
+         </apex:tab>   
+        <!-- main tab 3-->
+        <!-- main tab 4-->
+            <apex:tab label="{!$Label.ObjRSM}" rendered="{!showAccountView}">
+               <apex:pageBlock >
+                    <table>
+                            <tr>
+                                <td>{!$Label.Theater}</td><td><apex:inputText id="Theater3" value="{!performanceMetric.Thea__c}" disabled="true"/>
+                                <!--<script>document.getElementById('{!$Component.Theater3}').disabled = true; </script>-->
+                                </td><td>&nbsp;</td>
+                                <td>{!$Label.Country}</td><td> <apex:inputText id="Country3" value="{!performanceMetric.Country__c}" disabled="true"/>
+                                    <!--<script>document.getElementById('{!$Component.Country3}').disabled = true; </script>-->
+                                </td><td>&nbsp;</td>
+                                <td>{!$Label.Channel}</td><td><apex:inputText id="Channel3" value="{!performanceMetric.Channel__c}" disabled="true"/>
+                                   <!-- <script>document.getElementById('{!$Component.Channel3}').disabled = true; </script>-->
+                                </td><td>&nbsp;</td>
+                                <td colspan="4" align="right">{!$label.Tier}</td>
+                                <td colspan="3"><apex:selectList value="{!selectedTier}" size="1">
+                                <apex:actionSupport event="onchange" action="{!filterTierDropDown}"/>
+                                   <apex:selectOptions value="{!tiers}"/>
+                                  </apex:selectList></td>
+                                </tr><br></br>
+                            <tr>
+                                <td>{!$Label.ValidFrom}</td><td><apex:inputText disabled="true" id="validFrom" value="{!validFrom}"/>
+                                </td><td>&nbsp;</td>
+                                <td>{!$Label.ValidTill}</td><td><apex:inputText disabled="true" id="validTo" value="{!validTo}"/>
+                                </td><td>&nbsp;</td>
+                                <td>{!$LAbel.CutODate}</td><td><apex:inputText disabled="true" id="cutOffDate" value="{!cutOffDate}"/>
+                                </td> <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                                <td>{!$label.Account}</td>
+                                <td><apex:selectList value="{!accountList}" size="1" >
+                             <apex:actionSupport event="onchange" action="{!showRSMView}" rerender="RSMList" id="AccID"/>
+                                   <apex:selectOptions value="{!accOptionList}"/>
+                                  </apex:selectList></td>
+                            </tr>
+                                <!--rendered="{!showAccountView}"  -->
+                           
+                    </table>   
+                </apex:pageBlock>
+                        <apex:outputPanel id="RSMList">
+                        <apex:pageBlock >
+                        
+                    <table border="1" CELLPADDING="10" id="rsmTbl">
+                     <font face="verdana" size="1">
+                     <tr>
+                                    <td width="25%"><b>{!$Label.Metric}</b></td>
+                                    <td width="10%"><b>{!$Label.Bmetric}</b></td>
+                                    <td width="10%"><b>{!$Label.MinVal}</b></td>
+                                    <td width="10%"><b>{!$Label.MaxVal}</b></td>
+                                    <td width="10%"><b>{!$Label.BonusRequirement}</b></td>
+                                    <td width="10%"><b>{!$Label.Ibamt}</b></td>
+                                    <td width="10%"><b>{!$Label.MetIVal}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqEnter}</b></td>
+                                    <td width="10%"><b>{!$Label.ReqStay}</b></td>
+                                    <td width="10%"><b>{!$Label.BenefitT}</b></td>
+                                </tr>
+                         <apex:repeat value="{!rsmList}" var="rsm">
+                         <tr>
+                                    <td width="40%"> 
+                                        <apex:outputPanel rendered="{!IF(rsm.isLabelEditable==true,true,false)}">
+                                        <apex:inputField id="MetricLabel"  value="{!rsm.metric.Metric_Description__c}"/> 
+                                        <script>document.getElementById('{!$Component.MetricLabel}').disabled = {!freezeRSMMetric}; </script>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!IF(rsm.isLabelEditable==false,true,false)}">
+                                          <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!rsm.meetricTierRel.Metric_Description__c}" />
+                                          <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!rsm.meetricTierRel.Metric_Label__c}" />                                                            
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!IF((rsm.meetricTierRel.Id==null),false,true)}">
+                                        <span title="{!rsm.meetricTierRel.HelpText__c}" style="font-size:4pt" class="helpButton">
+                                         <img title="{!rsm.meetricTierRel.HelpText__c}" class="helpOrb"
+                                         style="font-size:4pt; background-position: right top" src="/s.gif"
+                                         alt="{!rsm.meetricTierRel.HelpText__c}"
+                                         title="" /> 
+                                        </span>
+                                        </apex:outputPanel>
+                                        <apex:outputLink value="/{!rsm.meetricTierRel.Id}" id="theLink" target="_blank" rendered="{!IF((freezeMetric==true || rsm.meetricTierRel.Id==null),false,true)}">{!$Label.Edit}</apex:outputLink>
+                                    </td>
+                                    <td width="10%"><apex:inputCheckbox id="booleanM" value="{!rsm.meetricTierRel.Boolean_Metric_Y_N__c}" disabled="true"/>
+                                    </td>
+                                    <td width="10%"><apex:inputField id="MMinValue" value="{!rsm.metric.Metric_Min_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                    <script>document.getElementById('{!$Component.MMinValue}').disabled ={!IF((rsm.meetricTierRel.Boolean_Metric_Y_N__c==true || freezeRSMMetric==true),true,false)}; </script>
+                                    </td>
+                                    <td width="10%"><apex:inputField id="MMaxValue" value="{!rsm.metric.Metric_Max_Value__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"/>
+                                    <script>document.getElementById('{!$Component.MMaxValue}').disabled =true; </script>
+                                    </td>
+                                    
+                                    <td width="10%"><apex:inputField id="BonusRequirement" value="{!rsm.meetricTierRel.Bonus_Requirement__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);"  />
+                                        <script>document.getElementById('{!$Component.BonusRequirement}').disabled = {!IF((freezeMetric==true || true),true,false)}; </script>    
+                                     </td>
+                                    
+                                    <td width="10%"> <apex:inputField id="Incentive" value="{!rsm.meetricTierRel.Incentive_Amount__c}" style="width : 50px" onkeypress="return blockNonNumbers(this, event, true, true);" />
+                                        <script>document.getElementById('{!$Component.Incentive}').disabled = true; </script>
+                                    </td>
+                                    <td> {!rsm.meetricTierRel.Metric_Input_Type__c} </td>
+                                    <td width="10%"><apex:inputCheckbox value="{!rsm.meetricTierRel.Enter_Tier__c}" disabled="{!freezeRSMMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox value="{!rsm.meetricTierRel.Stay_Tier__c}" disabled="{!freezeRSMMetric}"/></td>
+                                    <td width="10%"><apex:inputCheckbox id="benifit" value="{!rsm.meetricTierRel.Benefit_Tier__c}" disabled="{!freezeRSMMetric}"/></td>
+                                    <script>document.getElementById('{!$Component.benifit}').checked = true; </script>      
+                                </tr>
+                         </apex:repeat>       
+                     </font>
+                     </table>
+                    </apex:pageBlock>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(freezeRSMMetric==true,false,true)}">
+                <table>
+                    <tr>
+                     <td width="100%">
+                     <p align="center">
+                        <!-- input type="button" value="{!$label.AddRow}" onclick="addRowToTable('rsm','rsmTbl','rsm');" class="btn"/-->
+                        <apex:commandButton value="{!$Label.Save} {!$Label.ObjRSM}" action="{!saveRSMRows}"/>
+                        <apex:commandLink action="{!goToperformanceEvalPage}" value="Evaluate Performance"/>
+                     </p>
+                        </td>
+                     </tr>
+                    </table>
+                    </apex:outputPanel>
+               </apex:tab>   
+        <!--main tab 4-->
+        </apex:tabPanel>
+        <table width="100%">
+            <tr><td width="100%" align="center"><apex:commandButton id="mainSave" value="{!$Label.Save}" action="{!saveObj}" rendered="{!IF(freezeMetric==true,false,true)}"/></td></tr>
+            </table>
+            <input type="hidden" name="marketing1rows" id="marketing1rows" value="0"/>
+            <input type="hidden" name="marketing2rows" id="marketing2rows" value="0"/>
+            <input type="hidden" name="marketing3rows" id="marketing3rows" value="0"/>
+            <input type="hidden" name="rsmrows" id="rsmrows" value="0"/>
+        
+       </apex:form>
+ 
+<script>
+function disableSave()
+{
+    alert('HI');
+    document.getElementById('mainSave').disabled='true';
+}
+</script>       
+  <script>
+
+function addRowToTable(tier,id,type)
+{
+var tbl;
+var lastRow;
+var iteration;
+var row;
+
+// left cell
+var label;
+var booleanMetric;
+var incentive;
+var enterTier;
+var stayTier;
+var benefitTier;
+var allowPartner;
+var tbid = id;
+if(tier=='tier1')
+{
+    tbl = document.getElementById(tbid);
+    //'tblSample'
+    lastRow = tbl.rows.length;
+    //alert(lastRow);
+    iteration = lastRow;
+    row = tbl.insertRow(lastRow);
+    if(type=='mark')
+    {
+    document.getElementById('marketing1rows').value=lastRow;
+    label='row1Label';
+    booleanMetric='boolean1Metric';
+    incentive='incentive1';
+    enterTier='enterTier1';
+    stayTier='stayTier1';
+    benefitTier='benefitTier1';
+    allowPartner='allowPartner1';
+    }
+}
+else if(tier=='tier2')
+{
+    tbl = document.getElementById(tbid);
+    lastRow = tbl.rows.length;
+    iteration = lastRow;
+    row = tbl.insertRow(lastRow);
+    if(type=='mark')
+    {
+    document.getElementById('marketing2rows').value=lastRow;
+    label='row2Label';
+    booleanMetric='boolean2Metric';
+    incentive='incentive2';
+    enterTier='enterTier2';
+    stayTier='stayTier2';
+    benefitTier='benefitTier2';
+    allowPartner='allowPartner';
+    }
+}
+else if(tier=='tier3')
+{
+    tbl = document.getElementById(tbid);
+    lastRow = tbl.rows.length;
+    iteration = lastRow;
+    row = tbl.insertRow(lastRow);
+    if(type=='mark')
+    {
+    document.getElementById('marketing3rows').value=lastRow;
+    label='row3Label';
+    booleanMetric='boolean3Metric';
+    incentive='incentive3';
+    enterTier='enterTier3';
+    stayTier='stayTier3';
+    benefitTier='benefitTier3';
+    allowPartner='allowPartner';
+    }
+}
+else if(tier=='rsm')
+{
+    tbl = document.getElementById(tbid);
+    lastRow = tbl.rows.length;
+    iteration = lastRow;
+    row = tbl.insertRow(lastRow);
+    if(type=='rsm')
+    {
+    document.getElementById('rsmrows').value=lastRow;
+    label='row1Labelrsm';
+    booleanMetric='boolean1Metricrsm';
+    incentive='incentive1rsm';
+    enterTier='enterTier1rsm';
+    stayTier='stayTier1rsm';
+    benefitTier='benefitTier1rsm';
+    }
+}  
+
+var cellLeft = row.insertCell(0);
+var el = document.createElement('input');
+el.type = 'text';
+el.name = label + iteration;
+el.id = label + iteration;
+el.size = 40;
+cellLeft.appendChild(el);
+
+// left cell
+var cell1= row.insertCell(1);
+var el1 = document.createElement('input');
+el1.type = 'checkbox';
+el1.checked='checked';
+el1.disabled='true';
+el1.name = booleanMetric + iteration;
+el1.id = booleanMetric + iteration;
+cell1.appendChild(el1);
+
+var cell2 = row.insertCell(2);
+var el2 = document.createElement('input');
+var fieldID = incentive + iteration;
+el2.type = 'text';
+el2.name = incentive + iteration;
+el2.id = incentive + iteration;
+el2.size = 5;
+el2.setAttribute('onkeypress','return blockNonNumbers(this,event, true,true)');
+//el2.disabled='true';
+cell2.appendChild(el2);
+
+var cell3 = row.insertCell(3);
+var textNode = document.createTextNode('Manual');
+cell3.appendChild(textNode);
+
+var cell4= row.insertCell(4);
+var el4 = document.createElement('input');
+el4.type = 'checkbox';
+el4.name = enterTier + iteration;
+el4.id = enterTier + iteration;
+cell4.appendChild(el4);
+
+var cell5= row.insertCell(5);
+var el5 = document.createElement('input');
+el5.type = 'checkbox';
+el5.name = stayTier + iteration;
+el5.id = stayTier + iteration;
+cell5.appendChild(el5);
+
+var cell6= row.insertCell(6);
+var el6 = document.createElement('input');
+el6.type = 'checkbox';
+el6.name = benefitTier + iteration;
+el6.id = benefitTier + iteration;
+//el6.attachEvent('onclick',InBteirJ);
+//el6.onclick=InBteirJ;
+//el6.setAttribute('onClick','InBteirJ(this,incentiveId)');
+cell6.appendChild(el6); 
+  
+  if(tier!='rsm')
+  {
+    var cell7= row.insertCell(7);
+    var el7 = document.createElement('input');
+    el7.type = 'checkbox';
+    el7.name = allowPartner + iteration;
+    el7.id = allowPartner + iteration;
+    cell7.appendChild(el7); 
+  }
+}
+
+function blockNonNumbers(obj, e, allowDecimal, allowNegative)
+{
+//alert('hRRhhiiuj'+obj+'--'+e);
+var key;
+var isCtrl = false;
+var keychar;
+var reg;
+
+if(window.event) {
+key = e.keyCode;
+isCtrl = window.event.ctrlKey
+}
+else if(e.which) {
+key = e.which;
+isCtrl = e.ctrlKey;
+}
+
+if (isNaN(key)) return true;
+
+keychar = String.fromCharCode(key);
+
+// check for backspace or delete, or if Ctrl was pressed
+if (key == 8 || isCtrl)
+{
+return true;
+}
+
+reg = /\d/;
+var isFirstN = allowNegative ? keychar == '-' && obj.value.indexOf('-') == -1 : false;
+var isFirstD = allowDecimal ? keychar == '.' && obj.value.indexOf('.') == -1 : false;
+//alert(isFirstN + "--" +isFirstD + "--" +reg.test(keychar));
+return isFirstN || isFirstD || reg.test(keychar);
+}
+
+function InBteir(obj){
+    var benifitId = new String (obj.id);
+    var componentId = benifitId.substring(0,benifitId.lastIndexOf(':'));
+    if(document.getElementById(benifitId).checked== true){
+        document.getElementById(componentId+':Incentive').disabled=false;
+        //document.getElementById(componentId+':Incentive').value='';
+        try{
+            document.getElementById(componentId+':BonusRequirement').disabled=false;
+            //document.getElementById(componentId+':BonusRequirement').value='';
+        }catch(e){alert(e);}
+    }
+    else{
+        document.getElementById(componentId+':Incentive').disabled=true;
+        try{
+            document.getElementById(componentId+':BonusRequirement').disabled=true;
+            }catch(e){alert(e);}
+    }
+}
+
+function InBteirJ(){
+    var rsmRows=document.getElementById('rsmrows').value;
+    alert(rsmRows);
+    var id='benefitTier1rsm'+rsmRows;
+    var incentiveId='incentive1rsm'+rsmRows;
+    var rsmBenefit=document.getElementById(id);
+    if(rsmBenefit.checked== true){
+        document.getElementById(incentiveId).disabled=false;
+        document.getElementById(incentiveId).value='';
+    }
+    else{
+        document.getElementById(incentiveId).disabled=true;
+    }
+}
+//function test(){
+    //alert('HI');
+//}
+
+</script>     
+ 
+      </apex:page>

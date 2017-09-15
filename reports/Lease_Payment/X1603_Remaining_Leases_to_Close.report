@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Lease__c</column>
+            <operator>equals</operator>
+            <value>131884,162289,166055,167546,182191,183614,188409,20441,23977,24054,24768,25205,25409,258623,260949,26498,26657,25401,14042,164748,249646</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Placed_In_Service__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Termination,Terminated</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Placed_In_Service__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Partner_Account__c.RSM__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>1603 Remaining Leases to Close</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Closing_Request_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

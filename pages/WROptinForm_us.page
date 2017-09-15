@@ -1,0 +1,144 @@
+<apex:page Controller="WarrantyRegistrationPDFController" renderAs="pdf" readOnly="true" showHeader="false" sidebar="false"  standardStylesheets="false">
+    <apex:form > 
+    <head>
+        <apex:stylesheet value="{!$Resource.PDFDocumentStyle_2}" />
+    </head>        
+    <body>
+            <apex:pageBlock >     
+            <apex:outputPanel style="font-family:Arial Regular;font-size:11px;">
+                <table width="100%" cellpadding="0px" cellspacing="0px">
+                    <tr>
+                        <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px" /></td>
+                        <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial Regular;font-size:30px;" >
+                            <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                   WARRANTY REGISTRATION CARD                             
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    <tr>  <!-- Start 00118327 -->                      
+                        <td colspan="4" align="left">
+                            <apex:outputPanel style="font-family:Arial Regular;">                                
+                                  <br></br> Warranty Number &nbsp;<apex:outputText value="{!warranty.Warranty_Number__c}"/>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <apex:outputPanel rendered="{!RIGHT(warranty.Partner_SFDC_ID__r.Country_Domain__c,2) != 'es'}"> <!-- Spain -->
+                    <table  width="100%" cellpadding="0px" cellspacing="0px">
+                        <tr>
+                            <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                                <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top; font-size: 16px;">&nbsp;<b>{!$Label.Customer_Information}</b> </div>
+                                <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >                   
+                                    <tr>
+                                        <td valign="top" width="100%">
+                                            <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Customer_SFDC_ID__r.Name}" style="text-indent:justify;white-space:nowrap;"/></div>
+                                            <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingStreet}" style="white-space:nowrap;"/></div>
+                                            <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingCity}" style="white-space:nowrap;"/>,&nbsp;<apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingState}" style="white-space:nowrap;"/>&nbsp; <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingPostalCode}" style="white-space:nowrap;"/></div> 
+                                             <br/>
+                                            <div style="white-space:nowrap;"><apex:outputLink value="mailto:{!warranty.Customer_SFDC_ID__r.Email__c}">{!warranty.Customer_SFDC_ID__r.Email__c}</apex:outputLink></div>                                    
+                                        </td>
+                                     
+                                </tr>
+                            </table> 
+                        </td>
+                        <td style="width: 2%;"></td>
+                        <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                            <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp; <b>{!$Label.Partner_Information}</b></div>
+                            <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >
+                                <tr>
+                                    <td valign="top" width="100%">
+                                        <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Partner_SFDC_ID__r.Name}" style="text-indent:justify;white-space:nowrap;"/></div> 
+                                        <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingStreet}" style="white-space:nowrap;"/></div>
+                                        <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingCity}" style="white-space:nowrap;"/>,&nbsp;<apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingState}" style="white-space:nowrap;"/> &nbsp;<apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingPostalCode}" style="white-space:nowrap;"/></div>
+                                        <div style="white-space:nowrap;"><apex:outputText value="{!warranty.Partner_SFDC_ID__r.Phone}" style="white-space:nowrap;"/></div>
+                                        <div style="white-space:nowrap;"><apex:outputLink value="{!warranty.Partner_SFDC_ID__r.Website}" style="white-space:nowrap;">{!warranty.Partner_SFDC_ID__r.Website}</apex:outputLink></div>                           
+                                    </td>
+                                     
+                                </tr>
+                            </table>              
+                        </td> 
+                    </tr> 
+                </table>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!NOT ISNULL(warranty.Delivery_Date__c)}">
+                        {!$Label.Date_Of_Delivery}:&nbsp;<!-- <apex:outputText value="{0,date,MM/dd/yy}"><apex:param value="{!warranty.Delivery_Date__c}" /></apex:outputText> -->
+                        <apex:outputField value="{!warranty.Delivery_Date__c}" />
+                </apex:outputPanel>                
+                <br/>
+                <br/>
+                 <!--Start Product Table -->
+                <apex:outputPanel > 
+                    <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;"> &nbsp;&nbsp;<b>{!$Label.Registered_Items}:</b>&nbsp;&nbsp;&nbsp; {!sNum} {!$Label.Total_Number_of_records}  </div>
+                                
+                        <table cellspacing="0" cellpadding="3" style="border: .06em solid #E9AB17;border-top-color:black;" width="100%" id="tblDetails">     
+                             <tbody>         
+                                   
+                                <!-- First Page Header Footer Section Starts -->
+                                <tr  style="background: #CCCCCC;" width="100%">
+                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                </tr>
+                
+                                 <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                                    
+                                    <apex:outputPanel layout="none" rendered="true">
+                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                    </apex:outputPanel>
+                                       
+                                </apex:outputPanel>
+                                <!--Loop List of List-->
+                               
+                                <apex:repeat value="{!wProductsWrapper}" var="wProduct">
+                                    
+                                        
+                                        <!--Loop Through Products-->
+                                        <apex:repeat value="{!wProduct}" var="Pro">
+                                            
+                                            <apex:outputPanel layout="none" id="OtherPagesHeader" rendered="{!IF(Pro.isPageBrk,true,false)}">
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="page-break-before: always;background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 20px;">
+                                                <tr style="background: #CCCCCC;border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%">
+                                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                                </tr>
+                                                </table>  <!-- End 00118327 -->
+                                                <apex:outputPanel id="panelHeaderFooter" 
+                                                    styleClass="footer_right"
+                                                    layout="block">
+                                                    
+                                                    <apex:outputPanel layout="none" rendered="true">
+                                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                                    </apex:outputPanel>
+                                                       
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 20px;"> 
+                                            <tr  style="background: #F5F5F5; border: .06em solid #E9AB17;font-size:12px;line-height:20px;"  width="100%">
+                                                <td width="10%">    
+                                                   &nbsp;<apex:outPutText value="{!Pro.sNo}"/> 
+                                                </td>
+                                                
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Product_Name__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.product_type__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Serial_Number__c}</td>
+                                            </tr>                 
+                                                </table>
+                                            </apex:repeat>   
+                             </apex:repeat>  
+                           </tbody> 
+                        </table>  
+                        <br/>
+                        <br/>
+                </apex:outputPanel>  
+                <!--End Product Table --> 
+                </apex:outputPanel>  
+                </apex:pageBlock>
+       </body>          
+    </apex:form>      
+</apex:page>

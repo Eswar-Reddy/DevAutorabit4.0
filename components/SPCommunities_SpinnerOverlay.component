@@ -1,0 +1,45 @@
+<!-- 
+Component built to disable screen and lock buttons (buttons with class btn per the style guide standards)
+upon submission or other actions that require sccreen lock. Uses html5 modal dialog functionality to prevent default
+Requires: Jquery, SunPower Style Guide, Style Guide Expansion
+TO USE: 
+*To lock screen* onclick="showOverlay()" added to a button click, action function, or other action
+*To unlock screen* oncomplete="hideOverlay()" added to an action function or as an additional function at the end of a JS function
+*Notes: You might need to add the below css directly to your page to disable the click function even on disabled 
+        since the style guide does not include the action, only the look and feel :( 
+ -->
+<apex:component layout="block" >
+
+    <style type="text/css">
+        
+        .sunpower-style .btn.disabled, 
+        .sunpower-style .btn:disabled {
+            pointer-events: none !important;
+        }
+
+    </style>
+
+	<div class="modal" role="dialog" id="blockerOverlay" aria-labeledby="buttonBlockModalLabel" tabindex="-1">
+        <div class="row" style="margin-top: 12rem;">
+            <div id="docListSpinner" class="spinner spinner--center"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    	
+    	function showOverlay() {
+    		$( '#blockerOverlay' ).show();
+    		$( '.btn' ).addClass('disabled');
+    	}
+
+    	function hideOverlay() {
+    		$( '#blockerOverlay' ).hide();
+    		$( '.btn' ).removeClass('disabled');
+    	}
+
+    	$( document ).ready(function() {
+    		$( '#blockerOverlay' ).hide();
+    	})
+    </script>
+
+</apex:component>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$CloseDate</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$IsTask</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Status</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Completed_Date__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Id</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity$PartnerAccount</column>
+            <operator>contains</operator>
+            <value>SunPower Direct</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>equals</operator>
+            <value>Contract Signed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Owner</column>
+            <operator>equals</operator>
+            <value>James Sladeck,David Willis,Tanya Harding,Keith Graves,Colin Keller,Lane Roney,Ron Stecz,Rolando Soto</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Activities$Status</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Completed,On Hold</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>SPD Max Fit Layout</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Activities__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <interval>INTERVAL_LAST7</interval>
+    </timeFrameFilter>
+</Report>

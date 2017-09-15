@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Account__c</field>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>carlo.scapinelli@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>jory.lacaze@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>philippe.querbes@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPI MOU and LOI Approval Step</description>
+        <label>UPPI MOU and LOI Approval Step</label>
+        <name>UPPI_MOU_and_LOI_Approval_Step</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>xPlacer Holder 1</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>xPlacer Holder 1</label>
+        <name>xPlacer_Holder_1</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>xPlacer Holder 2</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>xPlacer Holder 2</label>
+        <name>xPlacer_Holder_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>xPlacer Holder 3</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>xPlacer Holder 3</label>
+        <name>xPlacer_Holder_3</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>UPPI MoU and LOI Approval Process (SOX APPROVAL)</description>
+    <emailTemplate>Opportunity_Role/Genera_Approval_Submitted</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 and 2 and 3 and 4</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>General Approval</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Type_of_Request__c</field>
+            <operation>equals</operation>
+            <value>MoU,LOI</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Contract_Status__c</field>
+            <operation>notEqual</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>UPP Intl,Commercial Intl</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Contract_Status_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Contract_Rejection_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Contract_Approval_Submission_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>UPPI MoU and LOI Approval Process</label>
+    <recallActions>
+        <action>
+            <name>Recall_Contract_Status_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,745 @@
+<apex:page sidebar="true" showHeader="true" StandardController="Account" extensions="MDTF_AccountController" tabStyle="Account">
+<!-- <apex:sectionHeader title="MDTF" subtitle="Detail" />    -->
+
+<apex:pageMessages id="pgMessages"/>
+<!-- Done for Case # 00071201
+<apex:pageBlock id="block1" title="{!Account.Name}">  -->
+<apex:pageBlock id="block1" title="{!Account.Name}" rendered="{!!HasError}">
+  <apex:outputLink value="/{!Account.id}" id="theLink">Account Details</apex:outputLink><br/>
+  Fund ID
+    &nbsp;&nbsp;<apex:outputField value="{!account.ACBParanet_ID__c}" />
+
+  <apex:form id="form1">   
+       <apex:tabPanel switchType="client" id="tabPanel1">
+             <apex:tab label="Fund Summary" name="FundSummary" id="FundSummary" >
+                  <apex:pageBlock id="block5" title="DPFund Summary">
+                        <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!mdtfFundSummary}" var="fs">
+                            
+                            <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!-- <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Name{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Name" name="Name" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Name}" />
+                             </apex:column> -->
+                              <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Fund Period{!IF(sortExpression=='Promotion_Description__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Promotion_Description__c" name="Promotion_Description__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Promotion_Description__c}" />
+                             </apex:column>  
+                             
+                             <!-- Accural -->   
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Accrual{!IF(sortExpression=='Allowance__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Allowance__c" name="Allowance__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Allowance__c}" />
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Starts-->
+                                 <apex:facet name="footer">
+                                    <apex:outputText value="Total Accrual : {!sumOfAccrual}" style="float: left;"/>
+                                 </apex:facet>
+                            	 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Ends-->
+                             </apex:column>            
+                                  
+                                       
+                             <!-- Claimed Amt -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Advertising Claims{!IF(sortExpression=='Claimed_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Claimed_Amt__c" name="Claimed_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Claimed_Amt__c}" />
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Starts-->
+                                 <apex:facet name="footer">
+                                    <apex:outputText value="Total Advertising Claims : {!sumOfAdvertisingClaims}" style="float: left;"/>
+                                 </apex:facet>
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Ends-->
+                             </apex:column> 
+                             
+                             
+                             <!-- SmartStorePurchase-->
+                             <!-- changed SmartStorePurchase to MRC for case #00057301 -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="MRC Purchase{!IF(sortExpression=='Smart_Store_Purchase__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Smart_Store_Purchase__c" name="Smart_Store_Purchase__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Smart_Store_Purchase__c}" />
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Starts-->
+                                 <apex:facet name="footer">
+                                    <apex:outputText value="Total MRC Purchase : {!sumOfMRCPurchase}" style="float: left;"/>
+                                 </apex:facet>
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Ends-->
+                             </apex:column>   
+                             
+                             <!-- LMS SPENT For NA-->
+                               <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="LMS Spent{!IF(sortExpression=='Spent__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Spent__c" name="Spent__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Spent__c}" />
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Starts-->
+                                 <apex:facet name="footer">
+                                    <apex:outputText value="Total LMS Spent : {!sumOfLMSSpent}" style="float: left;"/>
+                                 </apex:facet>
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Ends-->
+                             </apex:column>    
+                             
+                             <!-- Paid For EU-->
+                             <!-- <apex:column rendered="{!isEU}">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Paid{!IF(sortExpression=='Paid',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Paid" name="Paid" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Claim.Paid_Amt__c}" />
+                             </apex:column>
+                              -->
+                             <!-- Approved For EU-->
+                            <!--  <apex:column rendered="{!isEU}">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Approved{!IF(sortExpression=='Approved__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Approved__c" name="Approved__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Approved__c}" />
+                             </apex:column> 
+                              -->
+                             <!-- Available Balance-->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Available Balance{!IF(sortExpression=='Balance__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Balance__c" name="Balance__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Balance__c}" />
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Starts-->
+                                 <apex:facet name="footer">
+                                    <apex:outputText value="Total Available Balance : {!sumOfAvailableBalance}" style="float: left;"/>
+                                 </apex:facet>
+                                 <!--Case 00505731-Pivotal #114607087-Debasish-Sum of balance on Fund Summary tab-Release 45 - 10/05/2016 Ends-->
+                             </apex:column>        
+                             
+                             <!-- Expiry Date for NA -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfFundSummary}" value="Expiry Date{!IF(sortExpression=='Expiration__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Expiration__c" name="Expiration__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!fs.Expiration__c}" />
+                             </apex:column>    
+                                                                                  
+                            </apex:pageBlockTable>
+                        </apex:pageBlockSection>
+                </apex:pageBlock>            
+            </apex:tab>
+             
+            <!-- Done for Case # 00070823  Changing tab label of DPFund from Advertising to Transactions
+            <apex:tab label="Advertising" name="Activities" id="Activities" >
+                <apex:pageBlock id="block3" title="MDTF Advertising Detail"> -->
+            <apex:tab label="Transactions" name="Activities" id="Activities" >
+                <apex:pageBlock id="block3" title="MDTF Transactions Detail">    
+                    <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!mdtfActivities}" var="act">
+                        <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                             <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfActivities}" value="Name{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Name" name="Name" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputField value="{!act.Name}" />
+                             </apex:column> 
+                             
+                             <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfActivities}" value="Promotion{!IF(sortExpression=='Promotion__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Promotion__c" name="Promotion__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputField value="{!act.Promotion__c}" />
+                             </apex:column>
+                             -->
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfActivities}" value="Fund Period{!IF(sortExpression=='Promotion_Description__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Promotion_Description__c" name="Promotion_Description__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputField value="{!act.Promotion_Description__c}" />
+                             </apex:column>       
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfActivities}" value="Description{!IF(sortExpression=='Comment__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Comment__c" name="Comment__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputField value="{!act.Comment__c}" />
+                             </apex:column> 
+                                                                                                                  
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfActivities}"  value="Transaction Date{!IF(sortExpression=='Transaction_Year__c-Transaction_Month__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Transaction_Year__c-Transaction_Month__c" name="a" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputField value="{!act.Transaction_Month__c}" />/
+                                <apex:outputField value="{!act.Transaction_Year__c}" />
+                             </apex:column> 
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfActivities}" value="Sum of Transaction Amt{!IF(sortExpression=='Sum_of_Transaction_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Sum_of_Transaction_Amt__c" name="Sum_of_Transaction_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputField value="{!act.Sum_of_Transaction_Amt__c}" />
+                            </apex:column> 
+                            
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>               
+            </apex:tab>
+            
+            <apex:tab label="Claims" name="Claims" id="Claims" >
+                    <apex:pageBlock id="block4" title="MDTF Claim Detail">
+                        <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!mdtfClaim}" var="clms">
+                        <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                             <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Name{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Name" name="Name" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Name}" />
+                             </apex:column>         
+                               -->                    
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Process Date{!IF(sortExpression=='Process_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Process_Date__c" name="Process_Date__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Process_Date__c}" />
+                             </apex:column>
+                             <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                             <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Pre Approval Number{!IF(sortExpression=='Pre_Approval_Number__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Pre_Approval_Number__c" name="Pre_Approval_Number__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Pre_Approval_Number__c}" />
+                             </apex:column>                             
+                             -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Claimed{!IF(sortExpression=='Claimed_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Claimed_Amt__c" name="Claimed_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Claimed_Amt__c}" />
+                             </apex:column>
+
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Approved{!IF(sortExpression=='Approved_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Approved_Amt__c" name="Approved_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Approved_Amt__c}" />
+                             </apex:column>
+                             
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Paid{!IF(sortExpression=='Paid_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Paid_Amt__c" name="Paid_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Paid_Amt__c}" />
+                             </apex:column> 
+                             
+                             <apex:column >         
+                                 <apex:facet name="header"> 
+                                     <!--Debasish - 09/22/2016 - Pivotal -  #114695501, #114795461 - Case -00505731 -->
+                                    <!--<apex:commandLink action="{!sortMdtfClaim}" value="Reference Number{!IF(sortExpression=='Claim_Number__c',IF(sortDirection='ASC','▼','▲'),'')}">-->                                     
+                                     <apex:commandLink action="{!sortMdtfClaim}" value="Claim Number{!IF(sortExpression=='Claim_Number__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                                        <apex:param value="Claim_Number__c" name="Claim_Number__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <!--Debasish - 09/22/2016 - Pivotal - #115786569 - Case -00505731 -->
+                                 <apex:outputLink value="/{!clms.Id}">{!clms.Claim_Number__c}</apex:outputLink>
+                             </apex:column> 
+                             <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                              <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="From Date{!IF(sortExpression=='Activity_from_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Activity_from_Date__c" name="Activity_from_Date__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Activity_from_Date__c}" />
+                             </apex:column> 
+                             
+                             <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="To Date{!IF(sortExpression=='Activity_to_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Activity_to_Date__c" name="Activity_to_Date__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Activity_to_Date__c}" />
+                             </apex:column>  
+                             -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Description{!IF(sortExpression=='Activity_Description__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Activity_Description__c" name="Activity_Description__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Activity_Description__c}" />
+                             </apex:column>  
+                                                   
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfClaim}" value="Comment{!IF(sortExpression=='Comment__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Comment__c" name="Comment__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!clms.Comment__c}" />
+                             </apex:column>                                                                                                                   
+                            </apex:pageBlockTable>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>            
+            </apex:tab>
+            
+           <!-- <apex:tab label="Prior Approvals" name="PriorApprovals" id="PriorApprovals" rendered="{!isEU}">
+              <apex:pageBlock id="block2" title="Prior Approvals Detail">
+                    <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!mdtfPriorApprovals}" var="pa">
+                        
+                             <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Name{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Name" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputLabel value="{!pa.Name}" />
+                             </apex:column> 
+                             
+                              <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Promotion{!IF(sortExpression=='Promotion__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Promotion__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputLabel value="{!pa.Promotion__c}" />
+                             </apex:column> 
+                             
+                             <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Promotion Year{!IF(sortExpression=='Promotion_Year__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Promotion_Year__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputLabel value="{!pa.Promotion_Year__c}" />
+                             </apex:column> 
+                            
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Fund Period{!IF(sortExpression=='Promotion_Description__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Promotion_Description__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputLabel value="{!pa.Promotion_Description__c}" />
+                             </apex:column> 
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Open{!IF(sortExpression=='Open__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Open__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Open__c}" />
+                             </apex:column> 
+                             
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Media{!IF(sortExpression=='Media__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Media__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Media__c}" />
+                             </apex:column> 
+                             
+                               <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Media Description{!IF(sortExpression=='Media_Description__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Media_Description__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Media_Description__c}" />
+                             </apex:column> 
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Expire Date{!IF(sortExpression=='Expire_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Expire_Date__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Expire_Date__c}" />
+                             </apex:column> 
+                             
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Estimated Cost{!IF(sortExpression=='Estimated_Cost__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Estimated_Cost__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Estimated_Cost__c}" />
+                             </apex:column> 
+                             
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Date To{!IF(sortExpression=='Date_To__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Date_To__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Date_To__c}" />
+                             </apex:column> 
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Date From{!IF(sortExpression=='Date_From__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Date_From__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Date_From__c}" />
+                             </apex:column> 
+                             
+                              <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortPriorApprovals}" value="Balance{!IF(sortExpression=='Balance__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Balance__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>            
+                                <apex:outputfield value="{!pa.Balance__c}" />
+                             </apex:column> 
+                             
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>            
+            </apex:tab>
+             --> 
+            
+            <apex:tab label="Training" name="Training" id="Training">
+                <apex:pageBlock id="block6" title="MDTF Training Details">
+                        <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!mdtfTraining}" var="training">
+                        <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                             <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Name{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Name" name="Name" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Name}" />
+                             </apex:column>         
+                              -->                     
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Process Date{!IF(sortExpression=='Process_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Process_Date__c" name="Process_Date__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Process_Date__c}" />
+                             </apex:column>
+                             <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                             <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Pre Approval Number{!IF(sortExpression=='Pre_Approval_Number__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Pre_Approval_Number__c" name="Pre_Approval_Number__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Pre_Approval_Number__c}" />
+                             </apex:column>                             
+                             -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Claimed{!IF(sortExpression=='Claimed_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Claimed_Amt__c" name="Claimed_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Claimed_Amt__c}" />
+                             </apex:column>
+
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Approved{!IF(sortExpression=='Approved_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Approved_Amt__c" name="Approved_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Approved_Amt__c}" />
+                             </apex:column>
+                             
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Paid{!IF(sortExpression=='Paid_Amt__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Paid_Amt__c" name="Paid_Amt__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Paid_Amt__c}" />
+                             </apex:column> 
+                             
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Reference Number{!IF(sortExpression=='Claim_Number__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Claim_Number__c" name="Claim_Number__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Claim_Number__c}" />
+                             </apex:column> 
+                             <!-- JAJA - MAR-18-2015 - CASE 00481604 -->
+                             <!--
+                              <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="From Date{!IF(sortExpression=='Activity_from_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Activity_from_Date__c" name="Activity_from_Date__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Activity_from_Date__c}" />
+                             </apex:column> 
+                             
+                             <apex:column rendered="false">         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="To Date{!IF(sortExpression=='Activity_to_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Activity_to_Date__c" name="Activity_to_Date__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Activity_to_Date__c}" />
+                             </apex:column>  
+                             -->
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Description{!IF(sortExpression=='Activity_Description__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Activity_Description__c" name="Activity_Description__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Activity_Description__c}" />
+                             </apex:column>  
+                                                   
+                             <apex:column >         
+                                 <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortMdtfTraining}" value="Comment{!IF(sortExpression=='Comment__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Comment__c" name="Comment__c" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                 </apex:facet>            
+                                 <apex:outputField value="{!training.Comment__c}" />
+                             </apex:column>                                                                                                                   
+                            </apex:pageBlockTable>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>   
+             </apex:tab>
+            
+            <apex:tab label="Marketing Resource Center" name="Marketing Resource Center" id="SmartStore" >
+                   <apex:pageBlock id="block7" title="Marketing Resource Center Details">
+                    <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!smartStore}" var="ss">
+                        
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Name{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSortid">             
+                                        <apex:param value="Name" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>  
+                                <a href="/{!ss.id}"> {!ss.Name} </a>                                      
+                             </apex:column>
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Product Name{!IF(sortExpression=='Product_Name__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort">             
+                                        <apex:param value="Product_Name__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Product_Name__c}" />
+                             </apex:column>
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Order Date{!IF(sortExpression=='Order_Date__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort2">             
+                                        <apex:param value="Order_Date__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputField value="{!ss.Order_Date__c}" />
+                             </apex:column>
+                             
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Order No.{!IF(sortExpression=='Order_Number__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort3">             
+                                        <apex:param value="Order_Number__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Order_Number__c}" />
+                             </apex:column>
+                             
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Price{!IF(sortExpression=='Price__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort4">             
+                                        <apex:param value="Price__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Price__c}" />
+                             </apex:column>
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Purchase Type{!IF(sortExpression=='Purchase_Type__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Purchase_Type__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Purchase_Type__c}" />
+                             </apex:column>
+                             
+                              <apex:column rendered="false">         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Ship State{!IF(sortExpression=='Ship_State__c',IF(sortDirection='ASC','▼','▲'),'')}">             
+                                        <apex:param value="Ship_State__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Ship_State__c}" />
+                             </apex:column>
+                             
+                              <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Status{!IF(sortExpression=='Status__c',IF(sortDirection='ASC','▼','▲'),'')}" >             
+                                        <apex:param value="Status__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Status__c}" />
+                             </apex:column>
+                             
+                             <apex:column >         
+                                <apex:facet name="header">              
+                                    <apex:commandLink action="{!sortSmartStore}" value="Tracking Number{!IF(sortExpression=='Tracking_Number__c',IF(sortDirection='ASC','▼','▲'),'')}" >             
+                                        <apex:param value="Tracking_Number__c" name="column" assignTo="{!sortExpression}" ></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!ss.Tracking_Number__c}" />
+                             </apex:column>
+                             
+                        </apex:pageBlockTable>
+                  </apex:pageBlockSection>
+               </apex:pageBlock>
+            </apex:tab>   
+           
+           
+           <!--Case 00505731-Debasish-Release 42-09/22/2016-Starts -->
+         
+           <apex:tab label="Lead Generation Fees" name="Lead Generation Fees" id="LeadGenFee" >
+                   <apex:pageBlock id="block8" title="Lead Generation Fees">
+                    <apex:pageBlockSection columns="1">
+                        <apex:pageBlockTable value="{!mdtfLeadGenFee}" var="lgf">
+                        
+                             <apex:column >         
+                                <apex:facet name="header"> 
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Opportunity Name">             
+                                        <apex:param value="Opportunity_Name__c" name="column"></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>
+                                 
+                                 <!--Debasish - 09/22/2016 - Pivotal - #114606577 - Case -00505731 -->
+                                 <a href="/{!lgf.Opportunity_Id__c}"> {!lgf.Opportunity_Name__c} </a>  
+                                
+                             </apex:column>
+                            
+                            <apex:column >         
+                                <apex:facet name="header">
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Opportunity Created Date">
+                                        <apex:param value="Created_Date__c" name="column"></apex:param>
+                                    </apex:commandLink>
+                                </apex:facet>
+                                    <apex:outputText value="{0,Date,MM'/'dd'/'yyyy}">
+                                        <apex:param value="{!lgf.Created_Date__c}" /> 
+                                    </apex:outputText>
+                            </apex:column>
+                             
+                             <apex:column >         
+                                <apex:facet name="header">
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Campaign Name">             
+                                        <apex:param value="Campaign_Name__c" name="column"></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!lgf.Campaign_Name__c}" />
+                            </apex:column>
+                            
+                            <apex:column >         
+                                <apex:facet name="header">
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Lead Generation Fee">
+                                        <apex:param value="Lead_Generation_Fee__c" name="column"></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!lgf.Lead_Generation_Fee__c}" />
+                            </apex:column>
+                            
+                            <apex:column >         
+                                <apex:facet name="header">
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Lead Handling Fee">
+                                        <apex:param value="Lead_Handling_Fee__c" name="column"></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!lgf.Lead_Handling_Fee__c}" />
+                            </apex:column>
+                                                    
+                            <apex:column >         
+                                <apex:facet name="header">
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Transaction Date">
+                                        <apex:param value="Transaction_Date__c" name="column"></apex:param>
+                                    </apex:commandLink>
+                                </apex:facet>
+                                    <apex:outputText value="{0,Date,MM'/'dd'/'yyyy}">
+                                        <apex:param value="{!lgf.Transaction_Date__c}" /> 
+                                    </apex:outputText>
+                            </apex:column>
+                            
+                            <apex:column >         
+                                <apex:facet name="header">
+                                    <apex:commandLink action="{!sortMdtfLeadGenerationFee}" value="Reference Number">
+                                        <apex:param value="Reference_Number__c" name="column"></apex:param>           
+                                    </apex:commandLink>         
+                                </apex:facet>         
+                                <apex:outputLabel value="{!lgf.Reference_Number__c}" />
+                            </apex:column>
+                      </apex:pageBlockTable>
+                  </apex:pageBlockSection>
+               </apex:pageBlock>
+            </apex:tab>
+<!--Case 00505731-Debasish-Release 42-09/22/2016-Ends -->
+       </apex:tabPanel>     
+ </apex:form>   
+    
+</apex:pageBlock>
+<!--Case 00505731-Pivotal #114607243 - Debasish-Release 45-10/04/2016-Starts -->
+<!--<apex:outputlink target="_blank" value="/apex/MDTF_MultipleTab_Excel?id={!accId}"> <apex:outputText value="Export To Excel" /> </apex:outputlink>-->
+    <a target="_blank" href="/apex/MDTF_MultipleTab_Excel?id={!accId}">Export To Excel</a>
+<!--Case 00505731-Pivotal #114607243 - Debasish-Release 45-10/04/2016-Ends -->
+
+</apex:page>

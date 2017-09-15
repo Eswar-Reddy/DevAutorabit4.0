@@ -1,0 +1,84 @@
+<apex:page showHeader="false" StandardController="Inspection__c" Extensions="InspectionReportNewExtension" sidebar="false" id="pg" >
+
+<script>
+ function AddAttachments(inspectionid) {
+      window.open("AddInspectionAttachment?insid=" + inspectionid, "AddAttachmentfile","menubar=0,resizable=1,scroll=1,width=620,height=300");
+      return false;
+ }
+            
+ function CallOnComplete(v) {
+    if(v == 'true') {
+       alert(' Email has been sent successfully ');
+       window.close();
+    }
+ }
+</script>
+<apex:form id="frm" > 
+     
+    <apex:actionFunction action="{!SendMailtoDealer}" name="SendMail" onComplete="CallOnComplete('{!isClosed}');">
+    </apex:actionFunction>
+    <!-- <apex:actionFunction action="{!AttachFile}" name="Attachfiles" rerender="pgblockImport,pdtattachments">
+    </apex:actionFunction>
+     -->
+     <!--  Call FillAccachName action function from Add Attachment page -->
+    <apex:actionFunction action="{!fillAttachfilelist}" name="FillAccachName" rerender="frmFileinfo">
+    </apex:actionFunction>
+    <apex:pageBlock id="pgblockQuesImg" title="Compose Email" >
+          <apex:pageblockSection id="pgbEmail" columns="2"  >
+          <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email From : " />
+                        <apex:inputtext value="{!currentUserEmail}" id="inputEmailFrom" style="width:190px;" />  <!-- contentType="{!contentTypeFile}" -->
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email To : "  />
+                        <apex:inputtext value="{!sendEmailToUser}" style="width:190px;" id="inputEmailTo"  />  <!-- contentType="{!contentTypeFile}" -->
+            </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            <apex:pageblockSection id="pgbEmailbdy" columns="1" >
+            <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email CC : " />
+                        <apex:inputtext value="{!strEmailDealerCC}" style="width:450px;" id="inputEmailCC" />  <!-- contentType="{!contentTypeFile}" -->
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email Bcc : " />
+                        <apex:inputtext value="{!strEmailDealerBcc}" style="width:450px;" id="inputEmailBcc" />  <!-- contentType="{!contentTypeFile}" -->
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Subject :"/>
+                    <apex:inputtext id="inputSubject" style="width:450px;" value="{!MAIL_SUBJECT}" />
+                </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email Body : " />
+                        <apex:inputTextarea cols="80" rows="10" value="{!strEmailBody}"  id="inputEmailBody">   
+                        </apex:inputTextarea>
+            </apex:pageBlockSectionItem>
+          </apex:pageblockSection>
+          <apex:pageBlockButtons location="bottom" id="importButton">
+            <!--  <input type="button" id="btnSend" value="Send"  onclick="SendMail();"  class="btn"  />-->
+            <apex:commandbutton id="btnSend" value="Send"  onClick="SendMail(); return false;"   />     <!--  action="{!SendMailtoDealer}" -->
+                <input type="button" id="btnCancel" value="Cancel" onclick="window.close();" class="btn" />
+                <apex:commandButton id="btnAddAttachments" onclick="AddAttachments('{!inspectionId}');" value="Add Attachment" />
+           </apex:pageBlockButtons>
+        </apex:pageBlock>
+  </apex:form>
+   
+   <apex:form id="frmFileinfo" rendered="{!isAttached}">
+       <apex:pageBlock id="pgblockSendEmail" title="Attahced files" >
+         <apex:pageBlockTable id="pdtattachments" var="attached" value="{!setattachfiles}" columns="1">
+           <apex:column id="fileName" headerValue="File Name" >
+           {!attached}
+           </apex:column>
+         </apex:pageBlockTable> 
+       </apex:pageBlock>
+   </apex:form>
+<script>
+window.onload=function(){
+    doNothingJS(opener.location);
+}
+</script>
+<apex:form >
+  <apex:actionFunction name="doNothingJS" action="{!AssignParentUrl}" rerender="pgblockQuesImg">
+    <apex:param name="a" value="a" assignTo="{!urlLink}" />
+  </apex:actionFunction>
+</apex:form>
+</apex:page>

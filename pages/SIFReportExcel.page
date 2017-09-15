@@ -1,0 +1,89 @@
+<apex:page Controller="SIFReportController"  contenttype="application/vnd.ms-excel#SIFReport.xls" cache="true">	
+		<apex:pageBlock >
+			<apex:pageBlockSection title="Report Filters" columns="10" collapsible="false">
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.Business_Unit__c.label}"
+                    for="bu" style="font-weight:bold;width:25%" rendered="{!IF(showbusiUnits = '',false,true)}"/>
+                <apex:outputText value="{!showbusiUnits}" id="bu"/> 
+                <!-- Case#00063588 replaced Region1__c with Country__c -->
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.Country__c.label}"
+                    for="region" style="font-weight:bold;"  rendered="{!IF(showregions= '',false,true)}"/>
+                <apex:outputText value="{!showregions}" id="region"/>                   
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.Sub_Region__c.label}"
+                    for="subregion" style="font-weight:bold;"  rendered="{!IF(showsubRegions= '',false,true)}" />
+                <apex:outputText value="{!showsubRegions}" id="subregion"/>                 
+                <apex:outputLabel value="{!$ObjectType.Site_Information_Form__c.fields.Site_Status__c.label}"
+                    for="status" style="font-weight:bold;"   rendered="{!IF(showsitestatus= '',false,true)}"/>                   
+                <apex:outputText value="{!showsitestatus}" id="status"/>                
+                <apex:outputLabel value="{!$ObjectType.opportunity.fields.stageName.label}"
+                    for="stage" style="font-weight:bold;"   rendered="{!IF(showsalesStages= '',false,true)}"/>
+                <apex:outputText value="{!showsalesStages}" id="stage"/>                    
+            </apex:pageBlockSection>
+		</apex:pageBlock>		
+			<apex:pageBlock title="SIF Report">
+			<apex:variable var="count" value="{!1}" />							
+				<apex:pageBlockTable value="{!listSite}" var="site" border="1">
+					<apex:column >
+                        <apex:facet name="header">S.No.</apex:facet>
+                        <apex:outputText value="{0,number,#####}"  rendered="{!site.show}"><apex:param value="{!count}" /></apex:outputText>                        
+                        <apex:variable var="count" value="{!count+1}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Sub-Region</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Opportunity_del__r.Sub_Region__c}" rendered="{!site.show}"/>
+                        <b><apex:outputField value="{!site.innerSite.Site_City__c}" rendered="{!NOT(site.show)}"/></b>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Site Name</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Site_Name__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Customer Contact</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Customer_Contact__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Site Status</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Site_Status__c}" rendered="{!site.show}"/>
+                        <b><apex:outputText value="Summary:" rendered="{!NOT(site.show)}" styleClass="totalRow" /></b>
+                    </apex:column>
+                    <apex:column >
+                    	<apex:facet name="header">Land Size(sq ft/ha)</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Land_size_ha__c}" rendered="{!site.show}"/>
+                        <b><apex:outputField value="{!site.innerSite.Land_size_ha__c}" rendered="{!NOT(site.show)}"/></b>
+                        <apex:facet name="footer"><apex:outputField value="{!sumSiteLand.Land_size_ha__c}"/></apex:facet>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Site City</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Site_City__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Opportunity Name</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Opportunity_del__r.Name}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Sales Stage</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Opportunity_del__r.StageName}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Own/Lease Site</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Own_Lease_Site__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Signed</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Lease_Expiration_Date__c}" rendered="{!site.show}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Expires</apex:facet>
+                        <apex:outputPanel style="color:{!site.innerSite.Cause_of_Shading__c}"> <apex:outputField value="{!site.innerSite.Neighbors_Preemption_Right__c}" rendered="{!site.show}"/> </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Notary OptionSigned On</apex:facet>
+                        <apex:outputPanel style="color:{!site.innerSite.Comment_Box__c};"> <apex:outputField value="{!site.innerSite.Notary_Option_Signed_On__c}" rendered="{!site.show}"/> </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Price per HA</apex:facet>
+                        <apex:outputField value="{!site.innerSite.Price_per_Acre__c}" rendered="{!site.show}"/>
+                    </apex:column>
+				</apex:pageBlockTable>
+				<apex:outputLabel value="{!message}" />
+			</apex:pageBlock>
+</apex:page>

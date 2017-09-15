@@ -1,0 +1,377 @@
+<apex:page tabStyle="Credit_Application__c" title="CREDIT APPLICATION" standardController="Credit_Application__c" extensions="CreditApplicationController" showHeader="false"  id="page1">
+<style>
+ .TD1{
+    color:#333333;
+    font-size:91%;
+    font-weight:bold;
+    text-align:left;
+    padding-left:5px
+ }
+ .TD2{
+    text-align:left;
+ }
+ .TDNormal{
+    color:#333333;
+    font-size:91%;
+    text-align:left;
+    padding-left:5px
+ }
+ .heading{
+    color:#333333;
+    font-size:98%;
+    font-weight:bold;
+    text-align:right;
+    padding-right:5px
+ }
+ .heading2{
+    color:#333333;
+    font-size:100%;
+    font-weight:bold;
+    text-align:ledt;
+    padding-right:5px
+ }
+</style>
+<apex:outputPanel layout="block">
+        <table width="100%" style="background-color:black" border="0" height="70px">
+            <tr>
+                <td colspan="2" align="left" style="padding-left:10px"><font color="#FFFFFF" size="5"><b>CREDIT</b>&nbsp;</font><font color="#FBB917" size="5"><b>APPLICATION</b></font></td>
+            </tr>
+            
+        </table>
+        <table width="100%" style="background-color:#FBB917" border="0">
+            <tr>
+                <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>COMPANY INFORMATION</B></font>
+                </td> 
+                <td width="50%" align="right" style="padding-right:10px"><font color="#000000" size="2"><B>PAGE 2 OF 4</B></font>
+                </td>
+            </tr>
+        </table>
+    </apex:outputPanel> 
+        
+        <apex:form id="form1">
+            <apex:pageMessages id="errorDiv"></apex:pageMessages>
+            <apex:pageBlock >
+                <apex:pageBlockButtons >
+                   <apex:commandButton value="Back" action="{!step1_EU}" />
+                   <apex:commandButton value="Next" action="{!step3_EU}" />
+                   <apex:commandButton value="Cancel" action="{!cancel_EU}" /> 
+                </apex:pageBlockButtons>
+                <apex:outputPanel layout="block">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Legal Company Name:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Legal_Company_Name__c}" id="compName" style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Date of Application:</td>
+                            <td width="30%"><apex:inputField value="{!creditApp.Date_of_Application__c}" id="Application_Date__c" style="width:60%"/></td>                                                                                   
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TDNormal"><B>Dun &amp; Bradstreet Number:</B><br/>For US Customers:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Dun_Bradstreet_Number__c}" id="Dun_Bradstreet_Number__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">&nbsp;</td>
+                            <td width="30%">&nbsp;</td>                                                                                 
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TDNormal"><B>Federal Tax ID:</B><br/>For EU Customers:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Federal_Tax_ID__c}" id="Federal_Tax_ID__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Credit Limit Requested:</td>
+                            <td width="30%"><apex:inputField value="{!creditApp.Credit_Limit_Requested__c}" id="Credit_Limit_Requested__c" style="width:85%"/></td>                                                                                  
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">VAT Number:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.VAT_Number__c}" id="VAT_Number__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Partner Email:</td>
+                            <td width="30%"><apex:inputField value="{!creditApp.Partner_Email__c}" id="Partner_Email__c" style="width:85%"/></td>                                                                                 
+                        </tr>
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:30px;" class="heading">Bill to:</td>
+                            <td width="40%" class="TD2">&nbsp;</td>
+                            <td width="15%" style="padding-left:30px" class="heading">Ship to:</td>
+                            <td width="30%">&nbsp;</td>   
+                            
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Street Address:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Bill_To_Address__c}" id="billStreet"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Street Address:</td>
+                            <td width="30%"><apex:inputField value="{!creditApp.Ship_To_Address__c}" id="shipStreet"   style="width:85%"/></td>                                                                                  
+                        </tr>
+                         <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">City:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Bill_To_City__c}"  id="billCity"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">City:</td>
+                            <td width="30%"><apex:inputField value="{!creditApp.Ship_To_City__c}" id="shipCity"   style="width:85%"/></td>                                                                                   
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">State:</td>
+                            <td width="40%">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        
+                                        <td  class="TD2" width="33%"><apex:inputField value="{!creditApp.Bill_To_State__c}" id="billState"  style="width:80%"/></td>
+                                        <td  style="white-space:nowrap;" class="TD1" width="20%">Zip:</td>
+                                        <td  class="TD2"><apex:inputField value="{!creditApp.Bill_To_Zip__c}" id="billZip"  style="width:68%"/></td>
+                                    </tr>   
+                                    
+                                </table>
+                            </td>
+                            <td width="15%" style="padding-left:5px" class="TD1">State:</td>
+                            <td width="40%">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        
+                                        <td width="33%"><apex:inputField value="{!creditApp.Ship_To_State__c}" id="shipState"   style="width:90%"/></td>                                                                                    
+                                        <td  class="TD1" width="20%">Zip:</td>
+                                        <td ><apex:inputField value="{!creditApp.Ship_To_Zip__c}" id="shipZip"  style="width:68%"/></td>                                                                                                                                     
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Phone Number:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Bill_To_Phone__c}" id="billPhone"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Phone Number:</td>
+                            <td width="30%"><apex:inputField value="{!creditApp.Ship_To_Phone__c}" id="shipPhone" style="width:85%"/></td>                                                                                   
+                        </tr>   
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>                       
+                    </table>    
+                </apex:outputPanel>
+                <apex:outputPanel >
+                     <table width="100%" border="0">        
+                      <tr>
+                            <td colspan="6">&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><apex:outputLabel ><strong>Organizational Information:</strong></apex:outputLabel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">&nbsp;
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td width="12%" style="white-space:nowrap;padding-left:5px;" class="TD1">Organization Type:</td>
+                            <td width="20%" class="TD2"><apex:inputField value="{!creditApp.Organization_Type__c}" id="Organization_Type__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Number of Employees:</td>
+                            <td width="20%"><apex:inputField value="{!creditApp.Number_of_Employees__c}" id="noOFEmp" style="width:50%"/></td>                                                                                  
+                            <td width="10%" style="padding-left:5px" class="TD1">Applicant is a:</td>
+                            <td width="13%"> <apex:inputField value="{!creditApp.Applicant_Type__c}" id="applicant" style="width:85%"/></td>                                                                                    
+                            
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Years in Business:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Years_in_Business__c}" id="Years_in_Business__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Tax Exempt?</td>
+                            <td ><apex:inputField value="{!creditApp.Tax_Exempt__c}" id="Tax_Exempt__c"/></td>                                                                                  
+                            <td  style="white-space:nowrap;padding-right:20px;text-align:right;" valign="top" class="TD1">Of:</td>
+                            <td  class="TD2" valign="top"><apex:inputField value="{!creditApp.Parent_Company_Name__c}" id="Parent_Company_Name__c"  style="width:85%"/></td>                            
+                            
+                        </tr>   
+                        <tr valign="top">
+                            <td  style="white-space:nowrap;padding-left:5px;" valign="top" class="TD1">State of Incorporation:</td>
+                            <td  class="TD2" valign="top"><apex:inputField value="{!creditApp.State_of_Incorporation__c}" id="Incorporation_State__c"  style="width:85%"/></td>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">List D. B. A. (s):</td>
+                            <td rowspan="2" > <apex:inputField value="{!creditApp.List_D_B_A_s__c}" id="DBA_List__c" style="width:85%"/>
+                            </td>  
+                            <td  style="padding-left:5px" class="TD1">&nbsp;</td>
+                            <td > &nbsp;</td>                                                                                   
+                            
+                            
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Date of Incorporation:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Date_of_Incorporation__c}" id="Incorporation_Date__c"  style="width:50%"/></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                         <tr>
+                            <td colspan="6">&nbsp;</td>
+                        </tr>   
+                        <tr>
+                            <td colspan="6">&nbsp;</td>
+                        </tr>
+                      </table>  
+                </apex:outputPanel>
+                <apex:outputPanel >
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                       
+                        <tr>
+                            <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>COMPANY CONTACT INFORMATION</B></font>
+                            </td> 
+                            <td width="50%" align="right" style="padding-right:10px">&nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Accounts Payable:</td>
+                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Accounts_Payable__c}" id="Accounts_Payable__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Phone Number:</td>
+                            <td width="30%" class="TD2"><apex:inputField value="{!creditApp.Accounts_Payable_Phone__c}" id="Accounts_Payable_Phone__c" style="width:85%"/></td>                                                                                 
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">E-Mail Address:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Accounts_Payable_Email__c}" id="Accounts_Payable_Email__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Fax Number:</td>
+                            <td class="TD2"><apex:inputField value="{!creditApp.Accounts_Payable_Fax__c}" id="Account_Payable_Fax__c" style="width:85%"/></td>                                                                                  
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Financial Officer:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Financial_Officer__c}" id="Financial_Officer__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Phone Number:</td>
+                            <td class="TD2"><apex:inputField value="{!creditApp.Financial_Officer_Phone__c}" id="Financial_Officer_Phone__c" style="width:85%"/></td>                                                                                   
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">E-Mail Address:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Financial_Officer_Email__c}" id="Financial_Officer_Email__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Fax Number:</td>
+                            <td class="TD2"><apex:inputField value="{!creditApp.Financial_Office_Fax__c}" id="Financial_Officer_Fax__c" style="width:85%"/></td>                                                                                    
+                        </tr>   
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>                       
+                    </table>
+                </apex:outputPanel>
+               <apex:outputPanel >
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                       
+                        <tr>
+                            <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>TRADE REFERENCE INFORMATION</B></font>
+                            </td> 
+                            <td width="50%" align="right" style="padding-right:10px">&nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><apex:outputLabel value="Trade Reference 1" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Company:</td>
+                            <td width="40%" class="TD2"> <apex:inputField required="true" value="{!creditApp.Trade_Reference_1_Company__c}" id="Reference_1_Company__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Contact & Acct #:</td>
+                            <td  class="TD2" width="30%"><apex:inputField value="{!creditApp.Trade_Reference_1_Contact_Account__c}" id="Reference_1_Contact__c" style="width:85%"/></td>                                                                                 
+                        </tr>     
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Street Address:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Trade_Reference_1_Address__c}" id="Reference_1_StreetAdd__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Phone Number:</td>
+                            <td  class="TD2"><apex:inputField required="true" value="{!creditApp.Trade_Reference_1_Phone__c}" id="Reference_1_Phone__c" style="width:85%"/></td>                                                                                 
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">City:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Trade_Reference_1_City__c}" id="Reference_1_City__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Fax Number:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Trade_Reference_1_Fax__c}" id="Reference_1_Fax__c" style="width:85%"/></td>                                                                                 
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">State:</td>
+                            <td>
+                                <table width="100%" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td  class="TD2" width="33%"><apex:inputField value="{!creditApp.Trade_Reference_1_State__c}" id="Reference_1_State__c" style="width:85%"/></td>                                     
+                                        <td  style="white-space:nowrap;padding-left:5px;" class="TD1" width="20%">Zip</td>
+                                        <td  class="TD2" align="right"> <apex:inputField value="{!creditApp.Trade_Reference_1_Zip__c}" id="Reference_1_Zip__c" style="width:68%"/></td>                                                                                 
+                                    </tr>
+                                </table>
+                            </td>
+
+                            <td  style="padding-left:5px" class="TD1">E-Mail Address:</td>
+                            <td  class="TD2"> <apex:inputField value="{!creditApp.Trade_Reference_1_Email__c}" id="Reference_1_Email__c" style="width:85%"/></td>                                                                                   
+                            
+                            
+                        </tr>
+                        
+                    </table>
+                    <table width="100%">
+                        
+                        <tr>
+                            <td colspan="4"><apex:outputLabel value="Trade Reference 2" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Company:</td>
+                            <td width="40%" class="TD2"> <apex:inputField required="true" value="{!creditApp.Trade_Reference_2_Company__c}" id="Reference_2_Company__c"  style="width:85%"/></td>
+                            <td width="15%" style="padding-left:5px" class="TD1">Contact & Acct #:</td>
+                            <td  class="TD2" width="30%"><apex:inputField value="{!creditApp.Trade_Reference_2_Contact_Account__c}" id="Reference_2_Contact__c" style="width:85%"/></td>                                                                                 
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Street Address:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Trade_Reference_2_Address__c}" id="Reference_2_StreetAdd__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Phone Number:</td>
+                            <td  class="TD2"><apex:inputField required="true" value="{!creditApp.Trade_Reference_2_Phone__c}" id="Reference_2_Phone__c" style="width:85%"/></td>                                                                                 
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">City:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Trade_Reference_2_City__c}" id="Reference_2_City__c"  style="width:85%"/></td>
+                            <td  style="padding-left:5px" class="TD1">Fax Number:</td>
+                            <td  class="TD2"><apex:inputField value="{!creditApp.Trade_Reference_2_Fax__c}" id="Reference_2_Fax__c" style="width:85%"/></td>                                                                                 
+                        </tr>   
+                        <tr>
+                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">State:</td>
+                            <td>
+                                <table width="100%" cellspacing="0" cellpadding="0">   
+                                    <tr>
+                                        <td  class="TD2" width="33%"><apex:inputField value="{!creditApp.Trade_Reference_2_State__c}" id="Reference_2_State__c" style="width:85%"/></td>
+                                        <td  style="white-space:nowrap;padding-left:5px;" class="TD1" width="20%">Zip</td>
+                                        <td  class="TD2" align="right"> <apex:inputField value="{!creditApp.Trade_Reference_2_Zip__c}" id="Reference_2_Zip__c" style="width:68%"/></td>                                                                                 
+                                    </tr>
+                                </table>
+                            </td>
+
+                            <td  style="padding-left:5px" class="TD1">E-Mail Address:</td>
+                            <td  class="TD2"> <apex:inputField value="{!creditApp.Trade_Reference_2_Email__c}" id="Reference_2_Email__c" style="width:85%"/></td>                                                                                   
+                        </tr>
+                       
+                    </table>
+                 </apex:outputPanel>        
+                <br/><br/>
+               <div align="center" style="font-size:11px;">SunPower Corporation | 3939 North First Street | San Jose, CA 95134 | 1.877.SUN.0123 | <a href="www.sunpowercorp.com">www.sunpowercorp.com</a></div>
+            </apex:pageBlock>
+            
+        </apex:form>
+        <script>
+      	function removeWarningMsg(){
+      	       try{
+				    var ctrl = document.getElementById("page1:form1");
+					var pTags = document.getElementById("page1:form1").getElementsByTagName('div');
+					for(i=0;pTags != null && i < pTags.length; i++ ){
+						var pHTML =pTags[i].innerHTML;
+						if(pHTML != null && pHTML.indexOf('Warning') >=0){
+						    pTags[i].innerHTML='&nbsp;';
+							pTags[i].className='&nbsp;';
+						}	
+					}
+									
+				}catch(e){}
+			}
+			removeWarningMsg();
+			
+      </script>
+      </apex:page>

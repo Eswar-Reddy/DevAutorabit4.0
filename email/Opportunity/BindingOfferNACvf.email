@@ -1,0 +1,51 @@
+<messaging:emailTemplate subject="The following Opportunity has reached Firm Offer sales stage" recipientType="User" relatedToType="Opportunity" >
+<!-- Case 00450588 JZ <messaging:emailTemplate subject="The following Opportunity has reached Binding Offer sales stage" recipientType="User" relatedToType="Opportunity" >-->
+<messaging:HTMLEmailBody > <br/>
+Account: {!relatedTo.Account.Name}<br/>
+Business Unit: {!relatedTo.Business_Unit__c}<br/>
+Opportunity: {!relatedTo.Name}<br/>
+Product Type : <apex:repeat var="prd" value="{!relatedTo.OpportunityLineItems}">
+
+<!--<apex:outputtext value="{!prd.Name}" rendered="{!CONTAINS(prd.Product_Family__c,'Mounting System')}"/>-->
+<apex:outputtext value="{!prd.PriceBookEntry.Product2.Name}" rendered="{!CONTAINS(prd.Product_Family__c,'Mounting System')}"/>
+
+</apex:repeat><br/>
+System Size: {!relatedTo.System_SizePV__c}<br/>
+Salesperson: {!relatedTo.Owner.Name}<br/>
+<apex:repeat var="team" value="{!relatedTo.opportunityteammembers}">
+
+<apex:outputtext value="Sales Analyst: {!team.User.Name}" rendered="{!team.TeamMemberRole=='Sales Analyst'}"/>
+<apex:outputtext value="Project Manager: {!team.User.Name}" rendered="{!team.TeamMemberRole=='Project Manager'}"/> <br/>
+
+</apex:repeat>
+
+<apex:outputText value="Close Date: {0,date,yyyy.MM.dd}">
+     <apex:param value="{!relatedTo.CloseDate}" />
+</apex:outputText>
+<br/> <br/>
+ 
+https://login.salesforce.com/{!relatedTo.ID} <br/><br/>
+ 
+Please take the following steps:<br/><br/>
+ 
+Sales Analyst:  <br/><br/>
+
+<!--Case 00450588 JZ  1) Ensure FEL Stage 2 pre-spend process is initiated to complete the site audit during this sales stage<br/><br/>-->
+1) Work with the development engineer to initiate due diligence pre-spend dollars for approval<br/><br/>
+
+2) Be sure to submit the credit check request within the opportunity role<br/><br/>
+
+3) Update the project deal milestone schedule<br/><br/>
+
+Project Manager: <br/><br/>
+
+Please coordinate the setup of the project schedule, risk matrix, estimate and project qualifications<br/><br/>
+
+</messaging:HTMLEmailBody>
+</messaging:emailTemplate>
+
+<!--
+<c:OpportunityTeamMembers thisOppId="006n0000001svDw">
+<apex:param name="thisOppId" value="{!RelatedTo.Id}"/>
+</c:OpportunityTeamMembers>
+-->

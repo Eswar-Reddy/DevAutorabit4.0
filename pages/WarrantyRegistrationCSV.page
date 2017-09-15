@@ -1,0 +1,20 @@
+<apex:page controller="WarrantyRegistrationCSVController" readOnly="true" cache="true" 	contentType="text/csv#{!FileName}" language="en-US">
+Customer Name:,{!warranty.Customer_SFDC_ID__r.Name}
+<!-- Address:
+Mobile No,{!warranty.Customer_SFDC_ID__r.PersonMobilePhone}
+Email,{!warranty.Customer_SFDC_ID__r.Email__c}
+Phone,{!warranty.Customer_SFDC_ID__r.Phone}
+Billing Street,{!warranty.Customer_SFDC_ID__r.BillingStreet}
+Billing City,{!warranty.Customer_SFDC_ID__r.BillingCity}
+Billing State,{!warranty.Customer_SFDC_ID__r.BillingState}
+Postal Code,{!warranty.Customer_SFDC_ID__r.BillingPostalCode}	 -->
+
+{!$Label.Sr_No},{!$Label.Product_Name},{!$Label.Product_Type},{!$Label.Serial_Number}
+	<apex:variable var="serialNo" value="{!1}" />
+	<apex:repeat value="{!thousandBlocks}" var="block">
+    	<apex:repeat value="{!block.wrLines}" var="Pro">
+            {!FLOOR(serialNo)},{!Pro.WR_FDS_Product__r.Product_Name__c},{!Pro.WR_FDS_Product__r.Product_Type__c},{!Pro.WR_FDS_Product__r.Serial_Number__c}
+			<apex:variable var="serialNo" value="{!serialNo+1}" />
+        </apex:repeat>
+	</apex:repeat>
+</apex:page>

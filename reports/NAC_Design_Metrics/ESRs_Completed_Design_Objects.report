@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Design__c.Activities$Acutual_Time_Spent_Hrs__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Subject</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Completed_Date__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$ActivityDate</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Promised_Date__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Request_Category__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Request_Sub_Category__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$CreatedBy</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Owner</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Shows all completed ESRs per project that are associated with Design Objects</description>
+    <filter>
+        <booleanFilter>1 and 2 and (3 or 4)</booleanFilter>
+        <criteriaItems>
+            <column>Design__c.Activities$RecordType</column>
+            <operator>equals</operator>
+            <value>Task.DG_Project_Engineering_Task,Task.Performance_Support,Task.Structural_Support</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Activities$CreatedBy</column>
+            <operator>notEqual</operator>
+            <value>adrian bello</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c$Opportunity__c</column>
+            <operator>contains</operator>
+            <value>hohhot,saihan,helin,wuchuan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c$Opportunity__c</column>
+            <operator>notEqual</operator>
+            <value>313542_A Test Oppty</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>ESRs - Completed(Design Objects)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Designs_with_Activities_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Design__c.Activities$Completed_Date__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

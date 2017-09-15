@@ -1,0 +1,85 @@
+<apex:page controller="BookedOrders" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+    <head>
+        <!-- External Resources -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"/>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular-animate.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular-sanitize.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular-cookies.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.3/ui-bootstrap-tpls.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-spinner/0.6.2/angular-spinner.min.js"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"/>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&v=3.exp&libraries=places&language=en"/>
+
+        <!-- Internal Resources -->
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/app.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/BookedOrdersController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/OrderDetailsController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/SelectModalController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/ShippingAddressController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/ShippingContactController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/ShippingInstructionsController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/emea/BookedOrdersController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/emea/OrderDetailsController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/emea/ShippingAddressController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/controllers/emea/ShippingInstructionsController.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/AddressFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/ContactFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/OrderDetailFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/OrderFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/OrderLineFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/DeliveryDetailsFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/DeliveryDatesFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/emea/AddressFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/emea/OrderDetailFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/emea/OrderFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/factories/emea/OrderLineFactory.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/InitializationService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/OrderDetailService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/OrderService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/ShippingAddressService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/ShippingContactService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/UserService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/UtilityService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'app/services/DeliveryDatesService.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'thirdParty/uuid/angular-uuid.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'thirdParty/pagination/dirPagination.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.InformaticaOracleOrders, 'thirdParty/ng-map/ng-map.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.AngularTranslate, 'angular-translate.min.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.AngularTranslate, 'angular-translate-storage-cookie/angular-translate-storage-cookie.min.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.AngularTranslate, 'angular-translate-storage-local/angular-translate-storage-local.min.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.AngularTranslate, 'angular-translate-loader-static-files/angular-translate-loader-static-files.min.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.AngularTranslate, 'angular-translate-handler-log/angular-translate-handler-log.min.js')}"/>
+        <script type="text/javascript" src="{!URLFOR($Resource.AngularTranslate, 'tmhDynamicLocale.min.js')}"/>
+
+        <!-- Style sheets -->
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.InformaticaOracleOrders, 'app/stylesheets/custom.css')}"/>
+
+        <meta name="app"/>
+
+        <script type="text/javascript">
+            angular.module('ngApp.Constants', []).
+                constant('Environment', {
+                    resourceURL: '{!URLFOR($Resource.InformaticaOracleOrders)}/app',
+                    localizationURL: '{!URLFOR($Resource.AngularLocalization)}/',
+                    locale: '{!locale}',
+                    language: '{!language}',
+                    userType: '{!userType}',
+                    dealerType: '{!dealerType}',
+                    logo: '{!URLFOR($Resource.SunPower_Logo_2015)}',
+                    stsRecordTypeId: '{!stsRecordTypeId}',
+                    operatingUnit: '{!operatingUnit}'
+                }
+            );
+        </script>
+    </head>
+    <body ng-app="ngApp" class="container-fluid">
+        <ui-view></ui-view>
+    </body>
+</apex:page>

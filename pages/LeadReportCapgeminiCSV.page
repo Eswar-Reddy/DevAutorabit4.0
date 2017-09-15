@@ -1,0 +1,13 @@
+<!--
+Name    : LeadReportCapgeminiCSV
+Date    : Mar 18, 2010
+Author  : Aashish Mathur
+Purpose : To generate Lead History Report of Users in CSV format.
+-->
+
+<apex:page controller="LeadReportCapgeminiController" showHeader="false" sidebar="false" cache="true"
+    contenttype="application/vnd.ms-excel#LeadReport.csv">"User Name","User Email","User Company","Lead Name","Lead Owner","Lead CreatedBy"
+<apex:repeat value="{!searchResultList}" var="searchResult">
+"{!searchResult.USER.Name}","{!searchResult.USER.Email}","{!searchResult.USER.CompanyName}","{!searchResult.LEAD.Name}","{!searchResult.LEAD.Owner.Name}","{!searchResult.LEAD.CreatedBy.Name}"
+</apex:repeat>
+</apex:page>

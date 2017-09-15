@@ -1,0 +1,105 @@
+<apex:page controller="DesignToolsController" showHeader="true" tabStyle="SunPower_Design__c">
+<!--
+  Design Tools - implementation for the Design Tools tab
+      Provides access to SunPower users and Partner users to the following tools:
+        -String Sizer
+        -SmartPack (NA version)
+        -SmartPack (EU version w/ integration for SunPower Design)
+        -SunPower Designs
+        -Electronic Catalog
+        -Smart Finance
+        -Solar Calculator
+   9/25/09 - Adding subtab for "SunPower Designs" -
+      A subtab to show the list of all "SunPower Designs" that have been saved by the dealer.
+      Note:  Only dealer partners enabled for Online Ordering will see the "EU SmartPack" and "SunPower Designs"  subtabs
+       TBD- We need to add a variable to the controller to enable/disable access to the EU SmartPack and SunPower Designs
+       
+   11/23/09 - Add check for Online ordering
+      If the partner user does not have access to Online Ordering then they should not 
+      see the EU SmartPack and the SunPower designs tab.  
+-->
+
+  <style>
+    .activeTab {
+      background-color: #236FBD;
+      color:white;
+      background-image:none
+    }
+    .inactiveTab { 
+      background-color: lightgrey;
+      color:black; 
+      background-image:none
+    }
+  </style>
+
+  <apex:includeScript value="{!$Resource.partner_portal_gaq}"/>
+      <apex:iframe src="/apex/APPR_PUB__CustomMessages?tabName=DesignTools" height="200"/>
+    <!--Case#00078464- Replaced {!currentSessionID} by {!$Api.Session_ID} -->
+    <!--Case#00083818- Used {!currentSessionID} to pass same sessionID in all java apps-->
+  <apex:tabPanel switchType="server" selectedTab="SunPower Designs" id="DesignToolsTabPanel">
+  
+      <!--SunPower Designs Tab-->
+      <apex:tab label="{!$Label.DesignTools_SunpowerDesigns}" name="SunPower Designs" id="tabSunPowerDesigns" 
+          rendered="{!OR(AND(UserDomain!='rvar-uk',UserDomain!='cvar-uk',UserDomain!='combo-uk',UserDomain!='rvar-be',UserDomain!='cvar-be',UserDomain!='combo-be', UserDomain!='rvar-au',UserDomain!='combo-au',UserDomain!='cvar-au',isEUPartnerUser, IsUserAuthorizedToOrder),NOT(isPartnerUser),AND(NOT(isEUPartnerUser), IsUserAuthorizedToOrder))}">
+          <apex:ListViews type="SunPower_Design__c" />
+      </apex:tab>    
+      
+      <!--SMS Password Reset Tab-->
+      <apex:tab label="SMS Pwd Reset" name="SMS Pwd Reset" id="tabSMSReset" rendered="{!NOT(isPartnerUser)}">
+        <apex:iframe width="875px" height="800px" scrolling="false" id="SMSframe"></apex:iframe>
+        <script>
+            gaqPush( 'SMSframe', "{!designToolsBaseURL}/Stringsizer/pam/resetPassword.jsf?sessionid={!currentSessionID}&serverurl={!$Api.Enterprise_Server_URL_150}" );
+        </script>                     
+      </apex:tab>
+        
+        <!--PV SIM Tab-->
+        <!-- R.A. - 21.NOVEMBER.2014 - Made the PVSim Tab available to the users with UK and NL Theaters (UK and NL Country Codes) - Case Number 00397931-->
+      <apex:tab label="PVSim" name="pvsim" id="tabPvsim" rendered="{!OR(UserDomain=='rvar-us', UserDomain=='cvar-us', UserDomain=='combo-us', UserDomain=='rvar-uk', UserDomain=='cvar-uk', UserDomain=='combo-uk', UserDomain  == 'rvar-nl', UserDomain  == 'cvar-nl' , UserDomain == 'combo-nl')&& NOT(isTPSUser)}">
+        <iframe src="/apex/PVSIMUserLink_DesignTools?core.apexpages.devmode.url=1" width="100%" frameborder="0" height="35"></iframe>                  
+      </apex:tab>              
+      
+      <!--Design Tools E-Catalog-->
+      <apex:tab label="{!$Label.DesignTools_ElectronicCatalog}" name="ElectronicCatalog" id="tabElectronicCatalog" rendered="{!ECVisible}">
+        <apex:iframe width="1050px" height="3000px" scrolling="false"  id="ECframe"></apex:iframe>
+        <script>
+          gaqPush( 'ECframe', "{!designToolsBaseURL}/DBManagement?sessionid={!currentSessionID}&serverurl={!$Api.Enterprise_Server_URL_150}" );
+        </script>                     
+      </apex:tab>
+      
+      <apex:tab label="Design(BOM) Tool" name="DesignTools" id="tabDesignTools" >
+       <!--<apex:iframe width="875px" height="800px" scrolling="false" id="DTframe"></apex:iframe>
+        <script>
+            gaqPush( 'DTframe', "{!designToolsBOMBaseURL}?baseUrl=https://sunpower--uat.cs27.my.salesforce.com/services/Soap/c/32.0&sessionId={!$Api.Session_ID}" );
+        </script>
+            -->     
+        <a href="{!designToolsBOMBaseURL}?baseUrl=https://sunpower.my.salesforce.com/services/Soap/c/32.0&sessionId={!$Api.Session_ID}" target="_blank"> Click Here </a>
+      </apex:tab>
+      
+    </apex:tabPanel>
+ 
+    <script>
+      function highlightTab(){
+        var tableId = document.getElementById("tabBar");
+        var rowId  = tableId.tBodies[0].rows[0];
+        var cellIds = rowId.getElementsByTagName('td');
+        for(var i=0;i<cellIds.length;i++){
+            var cellId1 = cellIds[i]; 
+            var DivTag = cellId1.getElementsByTagName('div');
+            var divT = DivTag[0];
+            var aTag = divT.getElementsByTagName('a');
+            var aT = aTag[0];
+            if(aT.href.indexOf('01rT00000004boU')>0 || aT.href.indexOf('01r800000008Rtv')>0) {
+                if(cellId1!=null){
+                    if(cellId1.getAttribute('className')!='currentTab primaryPalette' || cellId1.getAttribute('class')!='currentTab primaryPalette'){
+                        cellId1.setAttribute('className','currentTab primaryPalette');
+                        cellId1.setAttribute('class','currentTab primaryPalette');
+                    }
+                }
+                break;
+            }
+        }
+    }
+    
+    window.onload = function(){ highlightTab(); };
+    </script>
+</apex:page>

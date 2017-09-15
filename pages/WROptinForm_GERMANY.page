@@ -1,0 +1,277 @@
+<apex:page controller="WarrantyRegistrationPDFController" renderAs="pdf" readOnly="true" showHeader="false" sidebar="false" standardStylesheets="false"> 
+  
+  
+ <!-- Stylesheets --> 
+ <apex:stylesheet value="{!$Resource.PDFDocumentStyle_2}" />
+  <apex:form >
+  <apex:pageBlock >
+  <apex:outputPanel style="font-family:Arial Regular;font-size:11px;">
+        <table width="100%" cellpadding="0px" cellspacing="0px">
+           <tr>
+                <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px" /></td>
+                <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial Regular;font-size:30px;" >
+                     <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                    GARANTIE-REGISTRIERUNGSKARTE                                
+                     </apex:outputPanel>
+                </td>
+           </tr>
+           <tr>       <!-- Start 00118327 -->                  
+                        <td colspan="4" align="left">
+                            <apex:outputPanel style="font-family:Arial Regular;">                                
+                                  <br></br> Garantie-Nummer &nbsp;<apex:outputText value="{!warranty.Warranty_Number__c}"/>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+        </table>
+    <br/>   
+        <table  width="100%" cellpadding="0px" cellspacing="0px" style="font-size:13px;font-family:Arial Regular;">
+            <tr>
+                <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                    <div style="width: 100%;height:18px; background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp;<b>{!$Label.Customer_Information}</b> </div>                   
+                     <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >                     
+                        <tr>
+                            <td valign="top" width="100%">
+                              <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Name}" style="text-indent:justify"/><br></br>
+                                            <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingStreet}"/> &nbsp; <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingCity}"/> &nbsp;  <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingState}"/> &nbsp; 
+                                             <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingPostalCode}"/> 
+                                             <br></br><br></br>
+                                             <br></br>
+                                             <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Email__c}"/>                                          
+                            </td>
+                           
+                        </tr>
+                    </table> 
+                </td>
+                <td style="width: 2%;"></td>
+                <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                    <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp; <b>{!$Label.Partner_Information}</b></div>
+                     <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >
+                       <tr>
+                            <td valign="top" width="100%">
+                                  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Name}" style="text-indent:justify"/>&nbsp; <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingStreet}"/>   &nbsp;<apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingCity}"/> &nbsp;
+  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingState}"/> &nbsp;  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingPostalCode}"/>                                    <br></br> <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Phone}"/> <br></br> 
+                                        <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Website}"/>                                                                          
+                            </td>
+                          
+                        </tr>
+                    </table> 
+                </td> 
+            </tr> 
+        </table>   
+    <apex:outputPanel rendered="{!NOT ISNULL(warranty.Delivery_Date__c)}" style="font-size:11px;">
+            {!$Label.Date_Of_Delivery}:&nbsp;<!-- <apex:outputText value="{0,date,MM/dd/yy}"><apex:param value="{!warranty.Delivery_Date__c}" /></apex:outputText> -->
+                        <apex:outputField value="{!warranty.Delivery_Date__c}" />
+    </apex:outputPanel>   
+    <br/>
+    <br/>
+     <!--Start Product Table -->
+                <apex:outputPanel > 
+                    <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;"> &nbsp;&nbsp;<b>{!$Label.Registered_Items}:</b>&nbsp;&nbsp;&nbsp; {!sNum} {!$Label.Total_Number_of_records}  </div>
+                                
+                        <table cellspacing="0" cellpadding="3" style="border: .06em solid #E9AB17;border-top-color:black;" width="100%" id="tblDetails">     
+                             <tbody>         
+                                   
+                                <!-- First Page Header Footer Section Starts -->
+                                <tr  style="background: #CCCCCC;" width="100%">
+                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                </tr>
+                
+                                 <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                                    
+                                    <apex:outputPanel layout="none" rendered="true">
+                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                    </apex:outputPanel>
+                                       
+                                </apex:outputPanel>
+                                <!--Loop List of List-->
+                                
+                                <apex:repeat value="{!wProductsWrapper}" var="wProduct">
+                                    
+                                        
+                                        <!--Loop Through Products-->
+                                        <apex:repeat value="{!wProduct}" var="Pro">
+                                            
+                                            <apex:outputPanel layout="none" id="OtherPagesHeader" rendered="{!IF(Pro.isPageBrk,true,false)}">
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="page-break-before: always;background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;">
+                                                <tr style="background: #CCCCCC;border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%">
+                                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                                </tr> <!-- End 00118327 -->
+                                                </table>
+                                                <apex:outputPanel id="panelHeaderFooter" 
+                                                    styleClass="footer_right"
+                                                    layout="block">
+                                                    
+                                                    <apex:outputPanel layout="none" rendered="true">
+                                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                                    </apex:outputPanel>
+                                                       
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;"> 
+                                            <tr  style="background: #F5F5F5; font-size:12px;line-height:20px;"  width="100%">
+                                                <td width="10%">    
+                                                   &nbsp;<apex:outPutText value="{!Pro.sNo}"/> 
+                                                </td>
+                                                
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Product_Name__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.product_type__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Serial_Number__c}</td>
+                                            </tr>                 
+                                                </table>
+                                            </apex:repeat>   
+                             </apex:repeat>  
+                           </tbody> 
+                        </table>  
+                        <br/>
+                        <br/>
+                </apex:outputPanel>  
+                <!--End Product Table --> 
+      </apex:outputPanel>
+      </apex:pageblock>
+      <div style="page-break-after:always">&nbsp;</div>
+      <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                                    
+      <div width="100%" style="border-bottom:1px solid;padding-right:700px;padding-top:20px" />
+          <div style="float:left;width:8%;font-size:12px;line-height:20px;font-family:Arial Regular"> Ort, Datum </div> <div style="float:left;width:45%;font-size:12px;line-height:20px">Unterschrift</div> 
+            <br/>
+          <apex:outputPanel style="font-size: 11px; text-align:right;font-family:Arial Regular"><i>Document #001-59331 Rev.*A</i><br/>Page <span class="pageNumber"></span> of <span class="pageCount"></span> </apex:outputPanel>
+      </apex:outputPanel>
+     <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+         <table width="100%" style="font-size:14px;border:0px;" cellpadding="0px" cellspacing="0px">
+             <tr>
+                 <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px"/>
+                 </td>                   
+                 <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial Regular;font-size:30px;" >
+                        <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                GARANTIE-REGISTRIERUNGSKARTE                               
+                        </apex:outputPanel>
+                 </td>
+            </tr>
+            <tr>
+                <td style="padding-top:10px">&nbsp;</td> 
+            </tr>      
+            <tr >               
+                <td width="100%" height="25" bgcolor="#E9AB17;" colspan="4" style="font-size:15px;font-family:Arial Regular">&nbsp;&nbsp;KUNDENABSCHNITT</td>              
+            </tr>
+            <tr>
+                <td>&nbsp;</td> 
+            </tr>    
+            <tr>
+                <td colspan="4"><apex:outputText value="Name/Vorname:" style="float:left;padding-right:2px;" />&nbsp;<span style="border-bottom:1px solid;float:right;width:85.5%" >{!warranty.Customer_SFDC_ID__r.Name}&nbsp;</span></td>      
+              <!--  <td colspan="2"><apex:outputText value="Vorname:" style="float:left;" />&nbsp;<span style="border-bottom:1px solid;width:84%;float:right;" >{!warranty.Customer_SFDC_ID__r.FirstName}&nbsp;</span></td> -->     
+            </tr>            
+            <tr>
+                <td colspan="4" style="padding-top:10px;">{!warranty.Customer_SFDC_ID__r.Contact_Name__c}</td>
+            </tr>            
+            <tr>     
+                <td colspan="4" style="padding-top:10px;"><apex:outputText value="Adresse:" style="float:left;"/>&nbsp;<span style="border-bottom:1px solid;width:91.9%;float:right;" >{!warranty.Customer_SFDC_ID__r.BillingStreet}&nbsp;</span></td>
+            </tr>                
+            <tr>
+                <td colspan="2" width="45%" style="padding-top:10px;"><apex:outputText value="Stadt:" style="float:left;padding-right:2px;" />&nbsp;<span style="border-bottom:1px solid;float:left;width:83%" >{!warranty.Customer_SFDC_ID__r.Billingcity}&nbsp;</span></td>     
+                <td colspan="2" style="padding-top:10px;"><apex:outputText value="PLZ:" style="float:left;" />&nbsp; <span style="border-bottom:1px solid;float:right;width:90.4%" >{!warranty.Customer_SFDC_ID__r.BillingPostalCode}&nbsp;</span></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top:10px;"><apex:outputText value="Telefon:" style="float:left;padding-right:2px;" />&nbsp;<span style="border-bottom:1px solid;float:left;width:77%" >{!warranty.Customer_SFDC_ID__r.Phone}&nbsp;</span></td>     
+                <td colspan="2" style="padding-top:10px;"><apex:outputText value="E-mail:" style="float:left;" />&nbsp; <span style="border-bottom:1px solid;float:right;width:86.9%" >{!warranty.Customer_SFDC_ID__r.Email__c}&nbsp;</span></td>
+            </tr>                           
+            <tr>
+                <td colspan="4" style="padding-top:15px;"> 
+                    <p style="text-align:justify;font-size:13px;font-family:Arial Regular">Die von Ihnen übermittelten Daten werden in der Datenbank der<b> SunPower GmbH, Schumannstraße 27,
+                    60325 Frankfurt a.M.,</b> welche sich in dem Mutterunternehmen der<b> Sunpower Corporation, in 3939 N. 1st Street,
+                    San Jose, California 95134</b> befindet, gespeichert.
+                   </p>
+               </td>
+            </tr>
+            <tr>    
+                <td colspan="4"><p style="text-align:justify;font-size:13px;font-family:Arial Regular">Sie müssen beachten, dass in allen Ländern, die nicht dem europäischen Wirtschaftsraum angehören (wie die USA), im
+                                    Allgemeinen nicht dieselben Datenschutzbestimmungen gelten, wie sie durch deutsche Vorschriften gewährt werden.
+                                </p> 
+               </td>
+            </tr>
+            <tr>     
+                <td colspan="4"><p style="text-align:justify;font-size:13px;font-family:Arial Regular">Um Ihre Rechte auf Zugang, Richtigstellung, Löschung und Einspruch bezüglich Ihrer persönlichen Daten anzuwenden,
+                                richten Sie bitte Ihre Anfrage schriftlich an die <b>SunPower GmbH, Schumannstraße 27, 60325 Frankfurt a.M.</b> oder
+                                schreiben Sie eine E-mail an: <b>solarde@sunpowercorp.com</b> mit dem Betreff „Datenschutz“ und hängen Sie bitte eine
+                                Kopie eines Dokumentes an, das Ihre Identität verifiziert.</p>
+                </td>
+            </tr>
+            <tr>    
+                <td colspan="4">
+                    <apex:outputPanel style="font-size:12px;font-family:Arial Regular">
+                        <table style="width:100%;cellspacing:0px;cellpadding:0px;border:0px">
+                            <tr>
+                                <td valign="top"><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+                                <td style="font-size:12px;text-align:justify;"> Hiermit autorisiere ich die<b> SunPower GmbH, Schumannstraße 27, 60325 Frankfurt a.M.,</b> meine persönlichen Daten zu verwenden und mit
+                                    mir Kontakt zu halten zwecks der Qualitätssicherung und statistischer Erhebungen.
+                                </td>
+                            </tr>
+                        </table>
+                    </apex:outputPanel>
+               </td> 
+            </tr>     
+            <tr>    
+                <td colspan="4">
+                    <apex:outputPanel style="font-size:12px;font-family:Arial Regular">
+                        <table style="width:100%;cellspacing:0px;cellpadding:0px;border:0px;">
+                            <tr>
+                                <td valign="top"><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+                                <td style="font-size:12px;text-align:justify;"> Hiermit autorisiere ich SunPower, meine persönlichen Daten zwecks Zusendungen von Informationen über Produkte bzw. Serviceangebote
+                                    bezüglich Solarenergiesysteme/Photovoltaikprodukte auf postalischem, auf elektronischem Weg oder per Fax zu nutzen.
+                                </td>
+                            </tr>
+                        </table>
+                    </apex:outputPanel>
+               </td>         
+            </tr>
+            <br />
+            <div style="background: #9ec6de url(https://login.salesforce.com/resource/1397178559000/Menu_BG) repeat-x left top;">&nbsp;&nbsp;Ihre Meinung ist uns wichtig </div>     
+            <tr>
+                <td colspan="4"><p style="text-align:justify;font-size:14px;font-family:Arial Regular">
+                      Bei SunPower sind wir dazu verpflichtet, exzellenten Service bereit zu stellen. Deshalb messen wir die Zufriedenheit
+                      unserer Kunden mit dem Service, den wir anbieten. Wählen Sie das entsprechende Feld und teilen Sie uns Ihre
+                      E-Mail-Adresse mit, damit wir eine kurze Umfrage an Sie senden können, so dass wir Feedback auf unseren
+                      Service und den Service unseres Partners bekommen, den Sie erhalten haben. Vielen Dank, dass Sie sich für die
+                      SunPower entschieden haben. </p>
+                </td>
+            </tr>
+           <tr>
+               <td colspan="4" style="text-align:justify;text-indent:24px">
+                   <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">Qualität ist uns sehr wichtig! Ihre Informationen werden NICHT an Dritte weitergegeben.
+                   </apex:outputPanel>
+               </td>
+           </tr>
+          <tr>
+              <td valign="middle"><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+              <td colspan="3" style="text-align:justify;">
+                  <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">Kreuzen Sie bitte dieses Kästchen an, wenn Sie zukünftig NICHT zu Qualitätskontrollen kontaktiert werden möchten.
+                  </apex:outputPanel>
+              </td>
+          </tr>
+          <tr>
+              <td valign="top"><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+              <td colspan="3" style="text-align:justify;">
+                  <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">Kreuzen Sie bitte dieses Kästchen an, wenn Sie zukünftig NICHT für Kundenzufriedenheits-Befragungen kontaktiert werden möchten.
+                  </apex:outputPanel>
+              </td>
+          </tr>
+          <tr>
+              <td valign="top"><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+              <td colspan="3" style="text-align:justify;">
+                  <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">Kreuzen Sie bitte dieses Kästchen an, wenn Sie zukünftig NICHT über SunPower Produkte und Serviceleistungen informiert werden möchten.
+                  </apex:outputPanel>
+              </td>
+          </tr>  
+     </table>  
+     </apex:outputPanel>
+  </apex:form>
+</apex:page>

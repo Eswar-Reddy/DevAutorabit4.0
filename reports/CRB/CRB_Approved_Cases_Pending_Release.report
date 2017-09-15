@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Case$Subject</field>
+    </columns>
+    <columns>
+        <field>Case$SunPower_Employee__c</field>
+    </columns>
+    <columns>
+        <field>Case$Owner</field>
+    </columns>
+    <columns>
+        <field>Case$Status</field>
+    </columns>
+    <crossFilters>
+        <operation>without</operation>
+        <primaryTableColumn>Case$Id</primaryTableColumn>
+        <relatedTable>CaseReleaseJunction__c</relatedTable>
+        <relatedTableJoinColumn>Related_Cases__c</relatedTableJoinColumn>
+    </crossFilters>
+    <currency>USD</currency>
+    <description>CRB Approved cases pending assignment to a release</description>
+    <filter>
+        <criteriaItems>
+            <column>Case$Type</column>
+            <operator>equals</operator>
+            <value>Change Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$IsClosed</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Non_Technical_Reasons__c</column>
+            <operator>equals</operator>
+            <value>Approved</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>CRB Approved Cases Pending Release</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Case_with_or_without_Release_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Case$Case_CreatedDate__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

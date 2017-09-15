@@ -1,0 +1,22 @@
+<apex:component >
+    <div class="row" style="margin-top: 1rem;">
+        <div class="col-xs-12">
+            <apex:outputPanel rendered="{!$Profile.Name == 'Partner Delegated Administrator' || $Profile.Name == 'Partner Operations' && Not(contains($Label.SOAPIUIenable, $User.Id)) || $Profile.Name == 'Partner Executive' || $Profile.Name == 'SunPower Partner Ambassador'  || $Profile.Name == 'EU Partner Delegated Administrator' || $Profile.Name == 'EU Partner Executive' || $Profile.Name == 'SunPower Order Management'}">
+                <a href="/apex/EditOrderOverride" target="_blank" class="btn btn-primary btn--small" style="float: left;" id="newPOButton">{!$Label.New_Purchase_Order}</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!Contains($Label.SOAPIUIenable, $User.Id) || $Profile.Name == 'Partner Operations' || $Profile.Name == 'Partner Delegated Administrator'  || $Profile.Name == 'Partner Executive' || $Profile.Name == 'SunPower Partner Ambassador'  || $Profile.Name == 'SunPower Order Management'}">
+                <a href="/apex/BookedOrders" target="_blank" class="btn btn-primary btn--small" style="float: left;" id="bookedOrders">{!$Label.BookedOrders}</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!$Profile.Name=='Partner Delegated Administrator' || $Profile.Name== 'Partner Operations' || $Profile.Name=='Partner Executive' || $Profile.Name=='SunPower Order Management'}">
+                <a href="/apex/StatementOfAccount" target="_blank" class="btn btn-primary btn--small" style="float: left;" id="statementOfAccount">{!$Label.StatementofAccount}</a>
+            </apex:outputPanel>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <apex:outputPanel rendered="{!$Profile.Name == 'Partner Delegated Administrator' || $Profile.Name == 'Partner Operations' && Not(contains($Label.SOAPIUIenable, $User.Id)) || $Profile.Name == 'Partner Executive' || $Profile.Name == 'SunPower Partner Ambassador' || $Profile.Name == 'EU Partner Delegated Administrator' || $Profile.Name == 'EU Partner Executive' || $Profile.Name == 'SunPower Order Management'}">
+                <c:DataTable objectType="Purchase_Order__c" objectLabel="Orders" ShowExportButton="false" />
+            </apex:outputPanel>
+        </div>
+    </div>
+</apex:component>

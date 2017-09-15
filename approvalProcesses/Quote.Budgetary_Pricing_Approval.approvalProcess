@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>GlobalSupport</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <type>adhoc</type>
+            </approver>
+        </assignedApprover>
+        <label>Budgetary Pricing Approval</label>
+        <name>Budgetary_Pricing_Approval</name>
+    </approvalStep>
+    <description>Budgetary Pricing Approval Process.</description>
+    <emailTemplate>Quote/U_C_Deal_Sheet</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 2</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Budgetary Pricing</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Quote.RecordType</field>
+            <operation>equals</operation>
+            <value>Proposal Quote</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Budgetary_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Budgetary_Pricing_Approval</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Budgetary_Pricing_Rejection_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Budgetary_Pricing_Rejection_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Budgetary_Pricing_Submission_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Set_Initial_Submitter</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Budgetary Pricing Approval</label>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <currency>USD</currency>
+    <description>Tracks Lease Partner&apos;s Technical Certification such as Associate and Advanced Design and Installation Certification</description>
+    <filter>
+        <criteriaItems>
+            <column>Contact.Terminated__c</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Learning__c.Title__c</column>
+            <operator>equals</operator>
+            <value>Lease Dealer Participation Exam,Residential Associate Design Certification Exam,Residential Associate Installation Certification Exam,Residential Advanced Design Certification Exam,Residential Advanced Installation Certification Exam</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease2_0_Program_Partner__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Learning__c.Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ACCOUNT.NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Learning__c.Title__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Lease Partners - Technical Certification</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>ContactCustomEntity$Learning__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,24 @@
+<apex:page standardController="Global_Dealer_Program__c" extensions="Create_Data_For_New_Period" showHeader="false" sidebar="false">
+  <apex:form >
+  <apex:pageMessages />
+  <apex:pageBlock title="Create Data for New Period" tabStyle="Account">
+  <apex:pageBlockButtons location="bottom">
+     <apex:commandButton action="{!Save}" title="Create New Period" value="Create" />
+      <apex:actionSupport event="Onclick" status="gdpStatus"/>
+      <apex:actionstatus id="gdpStatus" StartText="Processing" startStyle="color:red;font-weight:bold"/>
+       <apex:commandButton action="{!Cancel}"  value="Cancel" />
+   </apex:pageBlockButtons>
+      <apex:pageBlockSection title="Please fill up the form with appropriate details" columns="1">           
+      
+      <apex:inputField label="Performance Year" value="{!prop_GDP.Performance_Year__c}" required="true"/>
+      <apex:inputField label="Current Performance Period Start Date" value="{!prop_GDP.Current_Performance_Period_Start_Date__c}" required="true"/>
+      <apex:inputField label="Current Performance Period End Date" value="{!prop_GDP.Current_Performance_Period_End_Date__c}" required="true"/>
+      <apex:inputField label="First Quarter of Performance Period" value="{!prop_GDP.First_Quarter_of_Performance_Period__c}" required="true"/>
+      <apex:inputField label="Second Quarter of Performance Period" value="{!prop_GDP.Second_Quarter_of_Performance_Period__c}" required="true"/>
+      <apex:inputField label="Performance Period" value="{!prop_GDP.Performance_Period__c}" required="true"/>
+            
+      </apex:pageBlockSection>
+ 
+  </apex:pageBlock>
+  </apex:form>
+</apex:page>

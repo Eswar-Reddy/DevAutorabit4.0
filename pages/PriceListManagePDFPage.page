@@ -1,0 +1,159 @@
+<apex:page standardcontroller="Price_List__c" extensions="PriceListManagePDFController" showHeader="false" sideBar="false" renderAs="pdf">
+<head> 
+    <style type="text/css">  
+        @page  {   
+         /* Landscape orientation */    
+         size:landscape;    
+          }  
+         body {           
+          font-size:8pt;  
+         } 
+    </style> 
+</head>
+    <apex:form >
+        <!-- <apex:actionFunction action="{!filterItemsByDate}"
+                name="filterItemsByDate" reRender="detailPanel,alaCartaPanel,smartPackPanel" status="statusPending">
+        </apex:actionFunction> -->
+        <apex:pageBlock title="{!$Label.PriceListDetailTItle}">         
+            <apex:outputPanel layout="block" style="text-align:center;">   &nbsp;
+                    <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                        startText="{!$Label.POWizardPendingStatusText}" id="statusPending" />
+            </apex:outputPanel>
+            <apex:outputPanel id="detailPanel">
+                <apex:pageBlockSection title="Details" columns="2">
+                    <apex:outputField value="{!priceList.Name}" />
+                    <apex:outputField value="{!priceList.Oracle_Operating_Unit__c}" />
+                    <apex:outputField value="{!priceList.Expedite_Fee__c}" />
+                    <apex:outputField value="{!priceList.Will_Call_Fee__c}" />
+                    <apex:outputField value="{!priceList.Shipping_Codes__c}" />
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="dt1" value="{!$Label.PriceLIstSelectedDate}"></apex:outputLabel>
+                        <apex:outputField value="{!objectForDate.Effective_Start_Date__c}" />
+                    </apex:pageBlockSectionItem>    
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            <apex:outputPanel id="alaCartaPanel">
+                <apex:pageBlockSection title="{!$Label.PriceListAlaCarteItemsTitle}" columns="1">
+                    <apex:outputPanel rendered="{!alaCartaList.size ==0}">
+                        <center><b><I>{!$Label.PriceListNoRecordsFound}</I></b></center>
+                    </apex:outputPanel>
+                    <apex:pageBlockTable rendered="{!alaCartaList.size !=0}" value="{!alaCartaList}" var="alaItem">
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_Description__c.Label}</apex:facet>
+                            {!alaItem.Item_Description__c}  
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_ID__c.Label}</apex:facet>
+                            {!alaItem.Item_ID__r.Name}   
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$Label.PriceListPricingHeading}</apex:facet>
+                            {!alaItem.Pricing_1__c} 
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_Start_Date__c.Label}</apex:facet>
+                            {!alaItem.Effective_Start_Date__c}  
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_End_Date__c.Label}</apex:facet>
+                            {!alaItem.Effective_End_Date__c}    
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            <apex:outputPanel id="smartPackPanel">
+                <apex:pageBlockSection title="{!$Label.PriceListSmartPackItemsTitle}" columns="1">
+                <apex:outputPanel rendered="{!smartPackItems.size == 0}">
+                        <center><b><I>{!$Label.PriceListNoRecordsFound}</I></b></center>
+                </apex:outputPanel>
+                <apex:pageBlockTable rendered="{!smartPackItems.size != 0}" value="{!smartPackItems}" var="smartItem" columns="9" columnsWidth="150px,50px,50px,50px,50px,200px,50px,100px,100px" width="800px">
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_Description__c.Label}</apex:facet>
+                        {!smartItem.Item_Description__c}    
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_ID__c.Label}</apex:facet>
+                        {!smartItem.Item_ID__r.Name} 
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Type_2__c.Label}</apex:facet>
+                        {!smartItem.Type_2__c}  
+                    </apex:column>
+                    <apex:column rendered="{!IF(recType=='EU',true,false)}" >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Type_3_Criteria__c.Label}</apex:facet>
+                        {!smartItem.Type_3_Criteria__c} 
+                    </apex:column>
+                        <apex:column rendered="{!smartItem.Pricing_1__c != null}" >
+                            <apex:facet name="header" ><center>Pricing 1</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+                                    <b>&nbsp; {!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor} <= {!smartItem.Quantity_1__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+                                        <b>{!smartItem.Pricing_1__c}</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column rendered="{!recType == 'EU'}" >
+                            <apex:facet name="header"><center>Pricing 2</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+                                    <b>&nbsp;{!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor} {!smartItem.Quantity_1__c} > {!$Label.PriceListTextAnd} <= {!smartItem.Quantity_2__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+                                        <b>{!smartItem.Pricing_2__c}</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column rendered="{!IF(recType=='EU',false,true)}" >
+                            <apex:facet name="header"><center>Pricing 2</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+                                    <b>&nbsp;{!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor}  > {!smartItem.Quantity_1__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+                                        <b>{!smartItem.Pricing_2__c}</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column rendered="{!IF(recType=='EU',true,false)}" >
+                            <apex:facet name="header"><center>Pricing 3</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+                                    <b>&nbsp;{!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor}  > {!smartItem.Quantity_2__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+                                        <b>{!smartItem.Pricing_3__c}</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_Start_Date__c.Label}</apex:facet>
+                            {!smartItem.Effective_Start_Date__c}    
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_End_Date__c.Label}</apex:facet>
+                            {!smartItem.Effective_End_Date__c}  
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,131 @@
+<!--
+* OrderTypeSelection - Splash page for cash based ordering system 
+* SFDC Release - https://na29.salesforce.com/a5B34000000xp2Y
+* Pivotal Tracker Updates:
+* ID #116005357, #119616037 - SolarEdge Storage availability Hawaii (SFDC) - 6/3/2016 
+* 
+* 
+* 
+* 
+* 
+* 
+-->
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" docType="html-5.0" title="Order Type Selection" cache="true" showHeader="{!IF(isPartnerUser,false,true)}">
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <apex:form >
+        
+        <div class="bs">
+            <div class="container container-fluid" style="width:50%; padding-top:1em;">
+                <div class="panel panel-primary">                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{!$Label.Select_an_Ordering_Experience}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            <apex:outputPanel rendered="{!powerWallPartner}" >
+                                <a href="#" class="list-group-item" onclick="hiddenElement.value = 'Storage Bundle'; toOpportunity();">
+                                    <div class="list-group-item-wrapper">
+                                        <div class="media-left media-middle">
+                                            <img class="media-object" src="{!URLFOR($Resource.Storage_Config_Thumbnail)}" style="width: 64px;height: 64px;"/>
+                                        </div>
+                                        <div class="media-body"> 
+                                            <h4 class="list-group-item-heading">{!$Label.Storage_Panel_Header}</h4>
+                                            <p class="list-group-item-text">{!$Label.Storage_Panel_Description}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </apex:outputPanel>
+                            <a href="#" class="list-group-item" onclick="hiddenElement.value = 'Equinox'; toOpportunity();">
+                                <div class="list-group-item-wrapper">
+                                    <div class="media">
+                                        <div class="media-left media-middle">
+                                            <img class="media-object" src="{!URLFOR($Resource.EquinoxThumbnail)}" style="width: 64px;height: 64px;"/>
+                                        </div>
+                                        <div class="media-body"> 
+                                            <h4 class="media-heading">{!$Label.Equinox}</h4> 
+                                            <p>{!$Label.Equinox_Description}</p>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </a>
+                            <a href="#" class="list-group-item" data-toggle="modal" data-target="#systemsModal" data-backdrop="static">
+                                <div class="list-group-item-wrapper">
+                                    <div class="media">
+                                        <div class="media-left media-middle">
+                                            <img class="media-object" src="{!URLFOR($Resource.Systems_Order_Graphic)}" style="width: 64px;height: 64px;"/>
+                                        </div>
+                                        <div class="media-body"> 
+                                            <h4 class="list-group-item-heading">{!$Label.DesignTools_SmartPack}</h4>
+                                            <p class="list-group-item-text">{!$Label.CompleteSystemSelectionDescription}</p>
+                                        </div>
+                                    </div>  
+                                </div>  
+                            </a>
+                            <a href="#" class="list-group-item" onclick="hiddenElement.value = 'Ala Carte'; toShipping();">
+                                <div class="list-group-item-wrapper">
+                                    <div class="media">
+                                        <div class="media-left media-middle">
+                                            <img class="media-object" src="{!URLFOR($Resource.AlaCarte_Graphic)}" style="width: 64px;height: 64px;"/>
+                                        </div>
+                                        <div class="media-body"> 
+                                            <h4 class="list-group-item-heading">{!$Label.A_La_Carte}</h4>
+                                            <p class="list-group-item-text">{!$Label.AlaCarteSelectionDescription}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <div class="btn-group" style="padding-top: 12px;">
+                                <a style="color: #f7921e;" class="btn btn-default" href="javascript:window.close();" role="button">{!$Label.POWizardCancelBtnLabel}</a>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div><!--end container-->
+            <!-- Modal -->
+            <div class="modal fade" id="systemsModal" tabindex="-1" role="dialog" aria-labelledby="systemsModalLabel" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title" id="systemsModalLabel">{!$Label.DesignTools_SmartPack}</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h4>{!$Label.SystemSizeSelection}</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="color: #f7921e;">{!$Label.POWizardCancelBtnLabel}</button>
+                            <button type="button" class="btn btn-primary" onclick="hiddenElement.value = 'Single System'; toOpportunity();">{!$Label.Single_System}</button>
+                            <button type="button" class="btn btn-primary" onclick="hiddenElement.value = 'Multi-System'; toShipping();">{!$Label.Mulitple_Systems}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--end bs wrapper-->
+        <apex:inputHidden value="{!purchaseOrder.Order_Type__c}" id="hiddenOrderType" />
+        <script type="text/javascript">
+            var hiddenElement = document.getElementById('{!$Component.hiddenOrderType}');
+        </script>
+        <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" status="oppStatus"/>
+        <apex:actionFunction name="toShipping" action="{!ToShipping}" status="shipStatus"/>
+    </apex:form>
+    
+    <script>
+    
+        $( document ).ready(function() {
+            var temp = 0;
+            $('.list-group .list-group-item-wrapper').each(function (index) {
+                if($(this).outerHeight() > temp)
+                {
+                    temp = $(this).outerHeight();
+                }          
+            });
+            $('.list-group .list-group-item-wrapper').css('min-height',temp);
+            
+        });
+    
+    </script>
+</apex:page>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>(WR_FDS_Product__c.Good_SN_In_terms_of_Item_code__c:SUM /  (WR_FDS_Product__c.Good_SN_In_terms_of_Item_code__c:SUM  + WR_FDS_Product__c.Bad_SN_In_terms_of_Item_code__c:SUM ))*100</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA1</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>% Good SN</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>WR_FDS_Product__c.Bad_SN_In_terms_of_Item_code__c:SUM  +  WR_FDS_Product__c.Good_SN_In_terms_of_Item_code__c:SUM</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA2</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Total SN</masterLabel>
+        <scale>0</scale>
+    </aggregates>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>WR_FDS_Product__c.Good_SN_In_terms_of_Item_code__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>WR_FDS_Product__c.Bad_SN_In_terms_of_Item_code__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>EU and NA report to show % kwh data (average - good vs bad SNs in terms of item code)</description>
+    <filter>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <criteriaItems>
+            <column>WR_FDS_Product__c.Theater__c</column>
+            <operator>equals</operator>
+            <value>North America</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>WR_FDS_Product__c.Theater__c</column>
+            <operator>equals</operator>
+            <value>europe</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>WR_FDS_Product__c.Theater__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>EU and NA kWH Data Accuracy Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$WR_FDS_Product__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>WR_FDS_Product__c.LastModifiedDateByCastIron__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

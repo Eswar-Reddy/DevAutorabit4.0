@@ -1,0 +1,145 @@
+<apex:page Controller="RenderACHformAsPdf" renderAs="pdf" applyBodyTag="false">
+    <head>
+        <style> 
+            body { font-family: 'Arial Unicode MS';
+            font-size:0.9em;
+            margin-right: 20px;
+            margin-left: 20px;
+            }
+            
+            hr {
+            border: 0;
+            width: 100%;
+            color: #9cbccd;
+            background-color: #9cbccd;
+            height: 5px;
+            }
+            
+            #bottom{
+            position:fixed; 
+            width:100%; 
+            bottom:0px;
+            text-align: center;
+            
+            }
+            
+            #bottom h3 {
+            color: #5e6367;
+            font-size: 10px;
+            }
+            #j1 {
+            Text-align: jusitfy;
+            }
+            #j2 {
+            Text-align: jusitfy;
+            }
+            
+            .centerHeading {
+            text-align: center;
+            font-size:1.4em; 
+            }
+            
+            .marginLeft{
+            padding-left: 10px;
+            }
+            
+            .spanright{
+            text-align: right;
+            float:right;
+            
+            }
+            
+            .spanfontblue{
+            font-weight: bold !important;
+            font-family: sans-serif;
+            color: black;
+                                   
+            }
+        </style>
+    </head>
+    
+    
+    <body width="100%">
+        <apex:image id="sunPowerLogo" value="{!$Resource.InspectionViewerSunpowerFinal}" width="150px" height="30px"/>
+        <br/>
+        
+        <hr/>
+        <br/>
+        <div id="j1">
+            {!displayTodaysDate}<br/> <br/> 
+            {!contactName},<br/>
+        </div>
+        <br/>
+        <div id ="j2">
+            Good day! <br/><br/>
+            
+            Automatic debit option is a convenient way to pay your SunPower monthly payment for Account Number {!contractNumber}, as it will ensure hassle free on-time payment processing. <br/><br/>
+            
+            We encourage you to take advantage of this automatic debit payment. Please fill out this  <span class="spanfontblue" style="font-weight: bold;">automatic debit form</span> and sign for enrollment. <br/><br/>
+            
+            Thank you for helping SunPower change the way our world is powered. 
+            <br/><br/>
+            Billing Team<br/> 
+            Phone 1-800-786-7693 <br/>
+            Fax   1-512-684-0288
+            <br/><br/>
+        </div>
+        
+        
+        <div id="bottom">
+            
+            <hr/>
+            
+            <h3> <apex:outputText value="{!$Label.Sunpower_Bottom_Authorization_Text}" escape="false" /> </h3>
+            <hr/>
+        </div>
+        <div style="page-break-before:always;"> </div>
+        <div>
+            
+            <apex:image id="sunPowerLogo1" value="{!$Resource.InspectionViewerSunpowerFinal}" width="150px" height="30px"/>
+            <br/>
+            
+            <hr/>
+            <div align="right" >                                                                                                     SunPower Capital LLC <br/>
+                Contract #:{!contractNumber}
+            </div>                                                                                                    
+            <br/>
+            <div class="centerHeading"><b>
+                ACH AUTHORIZATION AGREEMENT </b></div> <br/><br/>
+            
+            I,{!contactName}, intend to facilitate the payments associated with this contract between SunPower and me, I hereby authorize SunPower to initiate debit and credit entries to the checking account indicated below.<br/><br/>
+            
+            I also authorize the financial institution named below to enter such debits or credits to such account. <br/><br/>
+            <div class="marginLeft">
+                Bank Name       : {{*Bankname_es_:signer1:default(“Please enter bank name”)}} <br/><br/>
+                
+                Routing Number  : {{*RoutingNo_es_:signer1:string(char=num, maxlen=9)}} <br/><br/>
+                
+                Account Number  : {{*AccountNo_es_:signer1:string(char=num):mask}} <br/><br/></div>
+            
+            
+            I understand that SunPower will process debit entries to the above referenced account on or after the due date of each monthly payment in an amount equal to my most recent statement, except as expressly agreed to between SunPower and me. <br/><br/>
+            
+            I represent to SunPower that all persons whose signatures are required to withdraw funds from the above referenced account have executed this Authorization Agreement. I also hereby acknowledge that I have retained a copy of this Authorization Agreement for my records. <br/><br/>
+            
+            I hereby acknowledge that SunPower may process debit and credit entries for scheduled payments or any other sum due and payable to SunPower or Customer pursuant to the referenced account between SunPower and me.  I will receive advance notice of any debit that varies from the regularly scheduled payment amount. I also acknowledge that SunPower may assign the account to a third party financing source and that the assignee may then initiate debit and credit entries per this authorization.<br/><br/>
+            
+            I hereby acknowledges that this agreement will not be terminated until the account is paid in or I provides verbal (please contact SunPower at 1-800-786-7693 (1800-SUNPOWER)) or written notification to cancel this authorization agreement and has allowed SunPower a reasonable amount of time to act upon the request. The termination of this authorization agreement does not terminate the fully enforceable account or your obligation to make the required payments.
+            
+            <br/><br/>
+            Customer Signature  : {{*Signature_es_signer1_signature}}
+            <br/><br/>
+            Customer Name   : {!contactName}      <span class="spanright" >   Date   : {{*Date_es_signer1}} </span>
+            
+        </div>
+        <div id="bottom">
+            
+            <hr/>
+            
+            <h3>
+            <apex:outputText value="{!$Label.Sunpower_Bottom_Authorization_Text}" escape="false" /> 
+            </h3>
+            <hr/>
+        </div>     
+    </body>
+</apex:page>

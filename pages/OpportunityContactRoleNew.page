@@ -1,0 +1,90 @@
+<apex:page controller="OpportunityContactRoleNew" showHeader="false" sidebar="false">
+	<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+	<c:CommunitiesMainNavComponent activeTab=""/>
+
+<body class="detail-container">
+	<!-- <div class="sunpower-style container-fluid" style="margin-top: 1rem; max-width: 1200px;"> -->
+		<apex:outputPanel rendered="{!IF(errorMsg!=null,true,false)}">
+			<div class="alert alert--danger">
+				<span>{!errorMsg}</span>
+			</div>
+		</apex:outputPanel>
+		<apex:form >
+			<apex:actionFunction name="saveAction" action="{!submit}" />
+			<apex:actionFunction name="cancelAction" action="{!cancel}" />
+
+			<!-- <apex:dataTable value="{!wrappers}" var="wrap">
+		        <apex:column>
+		            <apex:facet name="header">Primary</apex:facet>
+		            <apex:inputCheckbox value="{!wrap.IsPrimary}"/>
+		        </apex:column>
+		        <apex:column>
+		            <apex:facet name="header">Contact</apex:facet>
+		            <apex:inputField value="{!wrap.ocr.ContactId}"/>
+		        </apex:column>
+		        <apex:column>
+		            <apex:facet name="header">Role</apex:facet>
+		            <apex:selectList value="{!wrap.roleName}" size="1">
+			            <apex:selectOptions value="{!wrap.roleOptions}"/>
+			        </apex:selectList>
+		        </apex:column>
+		    </apex:dataTable> -->
+
+		    <apex:pageBlock title="Contact Roles">
+        		<apex:pageBlockTable value="{!wrappers}" var="wrap" columns="3">
+        			<apex:column >
+			            <apex:facet name="header">Primary</apex:facet>
+			            <apex:inputCheckbox value="{!wrap.IsPrimary}"/>
+			        </apex:column>
+			        <apex:column >
+			            <apex:facet name="header">Contact</apex:facet>
+			            <apex:inputField value="{!wrap.ocr.ContactId}" required="{!IF(wrap.ocr.ContactId!=null, true, false)}"/>
+			        </apex:column>
+			        <apex:column >
+			            <apex:facet name="header">Role</apex:facet>
+			            <apex:selectList value="{!wrap.roleName}" size="1">
+				            <apex:selectOptions value="{!wrap.roleOptions}"/>
+				        </apex:selectList>
+			        </apex:column>
+        		</apex:pageBlockTable>
+        		<apex:pageBlockButtons >
+		            <apex:commandButton action="{!submit}" value="Save" />
+		            <apex:commandButton action="{!cancel}" value="Cancel" />
+		        </apex:pageBlockButtons>
+        	</apex:pageBlock>
+
+			<!-- <table class="table table-responsive">
+				<thead>
+					<th>Primary</th>
+					<th>Contact</th>
+					<th>Role</th>
+				</thead>
+				<tbody>
+					<apex:repeat value="{!wrappers}" var="wrap" >
+		      	    	<tr>
+		      	    		<td width="10%"><apex:inputCheckbox value="{!wrap.IsPrimary}"/></td>
+		      	    		<td width="60%"><apex:inputField value="{!wrap.ocr.ContactId}"/></td>
+		      	    		<td width="30%">
+		      	    			<apex:selectList value="{!wrap.roleName}" size="1">
+						            <apex:selectOptions value="{!wrap.roleOptions}"/>
+						        </apex:selectList>
+		      	    		</td>
+		      	    	</tr>
+		    		</apex:repeat>
+				</tbody>
+			</table> -->
+
+			<!-- <div class="row">
+	            <div class="col-xs-12 col-md-6">
+	                <a class="btn btn-primary btn--small" onclick="saveAction(); return false" style="float: left; margin-bottom: 1rem;">Save</a>
+	            </div>
+	            <div class="col-xs-12 col-md-6">
+	                <a class="btn btn-secondary btn--small" onclick="cancelAction();" style="float: left; margin-bottom: 1rem;">Cancel</a>
+	            </div>
+	        </div> -->
+		</apex:form>
+	<!-- </div> -->
+</body>
+<!-- Load JS Scripts Last -->
+<c:SPCommunityAppResources_JS />
+</apex:page>

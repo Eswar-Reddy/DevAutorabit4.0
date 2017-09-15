@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Expected_Rebate__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_Countersigned__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Q4&apos;14 to date based on the Date Countersigned date</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Cancellation,Pending Termination,Terminated,Buyout</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>notEqual</operator>
+            <value>LeasePayment__c.FR_LeasePayment,LeasePayment__c.AU_Lease_Payment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notContain</operator>
+            <value>test,gabi,wolf</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Site_State_Prov__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Leases &amp; Rebates</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-09-29</startDate>
+    </timeFrameFilter>
+</Report>

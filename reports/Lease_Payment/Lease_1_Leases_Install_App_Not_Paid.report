@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Install_Pymnt_Sent__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Lease_1__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>To monitor Install Invoice under Lease 1.0</description>
+    <filter>
+        <criteriaItems>
+            <column>Account$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>equals</operator>
+            <value>Installation Invoice</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Install_Pymnt_Apprvd__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Install_Pymnt_Sent__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Lease_1__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Lease 1 Leases, Install App Not Paid</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Lease_Payments__r.Invoice_Documents__r$Document_Submitted__c</dateColumn>
+        <endDate>2020-03-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-01-07</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>WR_FDS_Product__c.KW_Shipped__c:SUM</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA1</developerName>
+        <downGroupingContext>WR_FDS_Product__c$Dealer_Name__c</downGroupingContext>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>KW Shipped</masterLabel>
+        <scale>0</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>IF(
+   WR_FDS_Product__c.KW_Shipped__c:SUM != 0,   (WR_FDS_Product__c.KW_Registered__c:SUM  /  WR_FDS_Product__c.KW_Shipped__c:SUM ) *  100,
+0)</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA2</developerName>
+        <downGroupingContext>WR_FDS_Product__c$Dealer_Name__c</downGroupingContext>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>% Registered</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>WR_FDS_Product__c$KW_Registered__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>WR_FDS_Product__c$Theater__c</column>
+            <operator>equals</operator>
+            <value>North America</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>WR_FDS_Product__c$Dealer_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>WR_FDS_Product__c.WR_Line_Items__r$Warranty_Registration__c.Customer_SFDC_ID__c.Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NA KWH Registered per Customer</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>WR_FDS_Product_with_WR_Line_Items__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>WR_FDS_Product__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

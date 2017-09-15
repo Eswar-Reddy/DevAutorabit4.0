@@ -1,0 +1,58 @@
+<apex:page showHeader="false" sidebar="false" controller="MYECController">
+
+<style>
+.imgDiv
+{
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+    width="100%"
+}
+
+h1
+{
+    font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 60px;
+    color: #484848;
+}
+h2
+{
+    font-family: baskerville, palatino, 'palatino linotype', georgia,serif;
+    font-size: 30px;
+    color: #696969;
+    
+}
+
+p
+{
+    font-family: font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+    font-size: 20px;
+}
+
+</style>
+
+<div rendered="{! if(doRender ==  true, true,false)}">
+  <div align="center">
+    <h1 style="text-align:center"> Meet Your Energy Consultant </h1>
+    <br/><br/><br/><br/>
+    <div align="center">
+        <apex:pageBlock >
+          <apex:pageBlockTable value="{!photo}" var="p">
+            <apex:column >
+              <apex:outputField value="{!p.Design_Photo__c}" rendered="{!If(p.Design_Photo__c != null, true, false)}"/>
+            </apex:column>
+            <apex:column style="font-family: baskerville, palatino, 'palatino linotype', georgia,serif; font-size: 30px; color: #696969;" value="{!aboutBio}" rendered="{! If(aboutBio != null && aboutBio != '', true, false)}"/>
+          </apex:pageBlockTable>    
+        </apex:pageBlock>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>        
+    </div>    
+  </div>
+</div>
+<div align="center">
+    <apex:pageBlock rendered="{! If(dontRender == true, true, false)}">
+        <p>We appologize, an unexpected error prevented from loading your consultant's bio.</p>        
+    </apex:pageBlock>
+</div>
+<div class="imgDiv" align="center">
+    <apex:image url="{!$Resource.SunPower_Logo_2014}"/>
+</div>  
+</apex:page>

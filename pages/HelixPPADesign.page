@@ -1,0 +1,1004 @@
+<apex:page controller="HelixPPADesignController" standardStylesheets="false" showHeader="false">
+    <apex:includeScript value="/soap/ajax/34.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/34.0/apex.js"/>
+    <script>
+        sforce.connection.sessionId = '{!$Api.Session_ID}';
+    </script>
+
+    <style>
+        .sunpower-style .table th, .sunpower-style .table td {
+            vertical-align: inherit;
+        }
+    </style>
+    <!-- messages -->
+    <apex:outputPanel id="viewMessages">
+        <apex:outputPanel rendered="{!hasErrorMessages}">
+            <div class="alert alert--danger">
+                {!errorMsg}
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!NOT(ISBLANK(quoteWrpr.nonCompatibleMessage))}">
+            <div class="alert alert--info">
+                <span>{!quoteWrpr.nonCompatibleMessage}</span>
+            </div>
+        </apex:outputPanel>
+    </apex:outputPanel>
+    <div id="designMessages" style="display:none"></div>
+
+    <div id="designDiv">
+    <!-- quote detail -->
+    <div class="lower2">
+        <div class="row">
+            <div class="col-xs-6 col-md-6">
+                <div class="box-row">
+                    <div class="form-group form-group--inline">
+                        <label for="quoteName">Quote Name</label>
+                        <div class="input-container">
+                            <input id="quoteName" type="text" value="{!quoteWrpr.quote.Name}" style="color: #0076be;" />
+                            <div id="quoteNameErrorContainer" class="input__error-messages" style="display:none">
+                                <span id="quoteNameError"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- sites header -->
+    <div>
+        <h4>Designs Per Site</h4>
+        <div class="divider"></div>
+    </div>
+    
+    <apex:repeat value="{!quoteWrpr.siteList}" var="siteWrpr">
+    <!-- sites related list-->
+    <div id="siteId_{!siteWrpr.site.Id}" class="lower1">
+        <!-- site header -->
+        <div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box-row">
+                    <h5>
+                        {!siteWrpr.site.Site_Name__c}
+                        <span class="icon-container" style="margin-left: .5rem;">
+                            <span class="image-icon image-icon-tooltip tooltip" data-tooltip="You can only create quotes for sites<br/> that are in the same state as your account address.<br/>If you have sites in multiple states, <br/>please create an opportunity for each state." data-tooltip-position="top center"></span>
+                        </span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box-row"><div class="sp-blue" style="padding-bottom: .5rem">{!siteWrpr.SiteAddress}</div></div>
+            </div>
+        </div>
+    
+        </div>
+        <!-- design related list --> 
+        <div class="lower2">
+        <table class="table">
+            <thead>
+                <th style="width:5%"></th>
+                <th style="width:10%">Design</th>
+                <th style="width:5%">Level</th>
+                <th style="width:25%">System</th>
+                <th style="width:15%">Module</th>
+                <th style="width:10%">Size (kW)</th>
+                <th style="width:10%">Production</th>
+                <th style="width:15%">Designed By</th>
+                <th style="width:5%"></th>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!siteWrpr.designList}" var="designWrpr">
+                    <tr>
+                        <td>
+                            <i id="selectIcon_{!designWrpr.design.Id}" class="sp-blue fa fa-square-o fa-lg designSelectIcon {!IF(designWrpr.isSelected, 'designSelected', '')}" 
+                                 data-design-originated-by="{!designWrpr.design.Design_Originated_by__c}" data-helix-design-type="{!designWrpr.design.HelixDesignType__c}"
+                                 onclick="onclickSelectIcon(this, '{!designWrpr.design.Design_Originated_by__c}', '{!designWrpr.design.HelixDesignType__c}')"></i>
+                        </td>
+                        <td>{!designWrpr.design.Name}</td>
+                        <td>{!designWrpr.design.Design_Package_Type__c}</td>
+                        <td>
+                            <div id="systemViewDiv_{!designWrpr.design.Id}">
+                                {!designWrpr.design.HelixDesignType__c}
+                            </div>
+                            <div id="systemEditDiv_{!designWrpr.design.Id}" style="display:none">
+                            <div id="systemEditContainer_{!designWrpr.design.Id}" class="input-container input-container--icon icon-right">
+                            <select id="systemSelect_{!designWrpr.design.id}" class="select-dropdown cs-skin-border">
+                                <apex:repeat value="{!designWrpr.systemPicklist.options}" var="O">
+                                    <option value="{!O.value}" >{!O.label}</option>
+                                </apex:repeat>
+                            </select>
+                            <i class="icon icon-chevron-down"></i>
+                            </div>
+                            </div>
+                        </td>
+                        <td id="module_{!designWrpr.design.Id}">{!designWrpr.design.ModuleTypeandWattage__c}</td>
+                        <td id="sizeKW_{!designWrpr.design.Id}" style="text-align:right;">
+                            <apex:outputText value="{0,number,###,###.00}">
+                                <apex:param value="{!designWrpr.sizeKW}" />
+                            </apex:outputText>
+                        </td>
+                        <td id="production_{!designWrpr.design.Id}" style="text-align:right;">{!designWrpr.productionFormatted}</td>
+                        <td>{!designWrpr.designedBy}</td>
+                        <td>
+                            <div id="designSaveLink_{!designWrpr.design.Id}" style="display:none">
+                                <a href="#" onclick="updateDesign('{!designWrpr.design.Id}'); return false;">Save</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="saveDesignErrorRow_{!designWrpr.design.id}" style="display:none">
+                        <!-- design save error message -->
+                        <td colspan="9">
+                            <div class="alert alert--danger" id="saveDesignError_{!designWrpr.design.id}"></div>
+                        </td>
+                    </tr>
+                    <tr id="saveDesignSpinnerRow_{!designWrpr.design.id}" style="display:none">
+                        <!-- design save spinner -->
+                        <td colspan="9">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="spinner spinner--center" style="display:none" id="saveDesignSpinner_{!designWrpr.design.id}"></div>
+                                </div>
+                            </div> 
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+        </div>
+        <div>
+        <apex:outputPanel rendered="{!siteWrpr.designList.size = 0}">
+            <span>No records to display</span>
+            <div style="height:10px"/>
+        </apex:outputPanel>
+        </div>
+    </div>
+    </apex:repeat>
+    <div>
+    <apex:outputPanel rendered="{!quoteWrpr.siteList.size = 0}">
+        <span>No records to display</span>
+    </apex:outputPanel>
+    </div>
+
+    <!-- summary -->
+    <div class="grey-divider" style="margin-top: 3rem;">
+        <h4>Summary</h4>
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-xs-6 col-md-6">
+                <div class="box-row">
+                    <div class="form-group form-group--inline">
+                        <label>Total Number of Sites</label>
+                        <div class="input-container">
+                            <div id="totalNumberOfSites" class="sp-blue large-font"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <div class="box-row">
+                    <div class="form-group form-group--inline">
+                        <label>Total Annual Production (kWh)</label>
+                        <div class="input-container">
+                            <div id="totalAnnualProduction" class="sp-blue large-font"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 1.25rem;">
+            <div class="col-xs-6 col-md-6">
+                <div class="box-row">
+                    <div class="form-group form-group--inline">
+                        <label>Total System Size (kW)</label>
+                        <div class="input-container">
+                            <div id="totalSystemSizekW" class="sp-blue large-font"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <div class="box-row">
+                </div>
+            </div>
+        </div>
+        <div class="lower4" />
+    </div>
+
+    <!-- buttons -->
+    <div class="grey-divider upper2">
+        <div class="row lower2">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div style="float:right;">
+                <input type="button" id="saveAndQuitButton" value="Save & Quit" onclick="onclickSaveAndQuitButton(); return false;"
+                    class="btn btn-secondary right1">
+                </input>
+                <input type="button" id="viewSavingsButton" value="View Savings" onclick="onclickViewSavingsButton(); return false;"
+                    class="btn btn-primary">
+                </input>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- button errors -->
+    <div style="height:10px"></div>
+    <div class="row">
+        <div id="buttonErrors" style="display:none">
+        </div>
+    </div> 
+
+    </div>
+
+    <script>
+        var selectedCount = 0;
+        var selectedSiteList = [];
+        var designList = [];
+        var fieldDependency;
+        var quote = quote || {};
+        
+        function onclickSelectIcon(row, originatedBy, designType) {
+
+            var designId = (row.id).replace('selectIcon_', '');
+            //alert('designId: ' + designId);
+            var design = designList[designId] || {};
+
+            designList[designId] = design;
+            design.Id = designId;
+            design.Design_Originated_by__c = originatedBy;
+            
+            var totalSystemSizekW = parseFloat(replaceAll(($('#totalSystemSizekW').html() || '0'),',', ''), 10);
+            var sizeKW = parseFloat(replaceAll(($('#sizeKW_' + designId).html() || '0'), ',', ''), 10);
+            var totalAnnualProduction = parseFloat(replaceAll(($('#totalAnnualProduction').html() || '0'), ',', ''), 10);
+            var production = parseFloat(replaceAll(($('#production_' + designId).html() || '0'), ',', ''), 10);
+            
+            if ($('#' + row.id).hasClass('fa-check-square')) {
+                $('#' + row.id).removeClass('fa-check-square');
+                $('#' + row.id).addClass('fa-square-o');
+                $('#' + row.id).removeClass('designSelected');
+                design.isSelected = false;
+                selectedCount--;
+                $('#systemSelect_' + designId).val(design.HelixDesignType__c);
+                totalSystemSizekW = totalSystemSizekW - sizeKW;
+                totalAnnualProduction = totalAnnualProduction - production;
+                $('#systemEditDiv_' + designId).hide('fast', function() {
+                    $('#systemViewDiv_' + designId).show('fast', function() {
+                        $('#designSaveLink_' + designId).hide();
+                    });
+                });
+                clearSaveDesignError(design);
+            } else if ($('#' + row.id).hasClass('fa-square-o')) {
+                $('#' + row.id).removeClass('fa-square-o');
+                $('#' + row.id).addClass('fa-check-square');
+                $('#' + row.id).addClass('designSelected');
+                design.isSelected = true;
+                selectedCount++;
+                totalSystemSizekW = totalSystemSizekW + sizeKW;
+                totalAnnualProduction = totalAnnualProduction + production;
+                if (originatedBy == 'Indirect') {
+                    $('#systemViewDiv_' + designId).hide('fast', function() {
+                        $('#systemEditDiv_' + designId).show('fast', function() {
+                            $('#systemEditDiv_' + designId).parent().find('.cs-placeholder').removeClass('cs-selected-option');
+                            $('#systemEditDiv_' + designId).parent().find('li').removeClass('cs-selected' );
+                            if (design && design.HelixDesignType__c) {
+                                designType = design.HelixDesignType__c;
+                            }
+                            $('#systemSelect_' + designId).val(designType);
+                            if(designType && designType != '') {
+                                $('#systemEditDiv_' + designId).parent().find('.cs-placeholder').html(designType);
+                                $('#systemEditDiv_' + designId).parent().find('.cs-placeholder').addClass('cs-selected-option');
+                                $('#systemEditDiv_' + designId).parent().find('li[data-value="' + designType + '"]').addClass('cs-selected' );
+                            }
+
+                        });
+                    });
+                }
+            }
+            
+            var siteId = $(row).closest("div[id*='siteId_']").attr('id').replace('siteId_', '');
+            design.siteId = siteId;
+            
+            selectedSiteList = [];     // truncate list
+            for (var key in designList) {
+                if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                if (designList[key].isSelected === true) {
+                    var site = selectedSiteList[designList[key].siteId] || {};
+                    site.Id = designList[key].siteId;
+                    site.selectedDesigns = site.selectedDesigns || [];
+                    site.selectedDesigns.push(designList[key]);
+                    selectedSiteList[designList[key].siteId] = site;
+                }
+            }
+            var sitesSelectedCount = 0;
+            for (var key in selectedSiteList) {
+                if (key === 'length' || !selectedSiteList.hasOwnProperty(key)) continue;
+                sitesSelectedCount++;
+            }
+            $('#totalNumberOfSites').html(sitesSelectedCount);
+            $('#totalSystemSizekW').html(totalSystemSizekW.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            $('#totalAnnualProduction').html(totalAnnualProduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+            
+            // change a selected design in the design page
+            // then the "View Proposal" button and the Proposal tab must be de-activated
+            // applicable if there is a quote. for new quotes proposal tab and button will remain inactive till calculate savings
+            if (quote.Id) {
+                var isDesignSelectionChanged = false;
+                for (var key in designList) {
+                    if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                    if ((designList[key].isSelected === true && !calculatedDesigns.hasOwnProperty(key)) ||
+                        (designList[key].isSelected === false && calculatedDesigns.hasOwnProperty(key))) {
+                        
+                        isDesignSelectionChanged = true;
+                        break;
+                    }
+                }
+                if (isDesignSelectionChanged === true) {
+                    $('#navItemProposal').addClass('disable-btn');
+                    $('#viewProposalButton').addClass('disabled');
+                } else {
+                    $('#navItemProposal').removeClass('disable-btn');
+                    $('#viewProposalButton').removeClass('disabled');
+                }
+            }
+            
+            refreshAccess();
+        }
+        
+        function onclickViewSavingsButton() {
+            var validation = validateDesignInputs();
+            if (!validation.isValid) {
+                $('#designMessages').html(validation.errorMessage);
+                $('#designMessages').addClass('alert alert--danger');
+                $('#designMessages').show();
+                $('#buttonErrors').html(validation.errorMessage);
+                $('#buttonErrors').addClass('alert alert--danger');
+                $('#buttonErrors').show();
+                return;
+            } else {
+                $('#designMessages').html('');
+                $('#designMessages').removeClass('alert alert--danger');
+                $('#designMessages').hide();
+                $('#buttonErrors').html('');
+                $('#buttonErrors').removeClass('alert alert--danger');
+                $('#buttonErrors').hide();
+            }
+            locker.lockAll('navItemDesign');
+            showSpinner('designTabSpinner');
+            viewSavings();
+        }
+        function onclickSaveAndQuitButton() {
+            // input validations
+            var errorMessage;
+            var quoteName = getValue('quoteName');
+            if (myTrim(quoteName) == '') {
+                errorMessage = 'Quote Name is required';
+                $('#quoteNameError').html(errorMessage);
+                $('#quoteNameErrorContainer').show();
+                $('html, body').animate({
+                    scrollTop: $("#quoteName").offset().top - 50
+                }, 200);
+                return;
+            }
+            
+            locker.lockAll('navItemDesign');
+            showSpinner('designTabSpinner');
+            var options = {};
+            options.saveAndQuit = true;
+            createQuote(options);
+            // no need to unlock. it goes to opportunity page here
+        }
+
+//--------------------------------------------------------
+        function updateDesign(designId) {
+            var design = {};
+            design.Id = designId;
+            
+            // validation. system is required
+            var system = getValue('systemSelect_' + designId);
+
+            if (system == '') {
+                showSaveDesignError(design, 'System is required');
+                return;
+            }
+
+            if(system.indexOf('Helix Roof') > -1) {
+                if(system.indexOf('Dual') > -1) {
+                    design.Technology_System__c = '{!$Label.HelixDualTilt}';
+                }
+                else design.Technology_System__c = '{!$Label.HelixSingleTilt}';
+                system = 'Helix Roof';
+            } else {
+                design.Technology_System__c = '';
+            }
+            // validation. system and module field dependency
+            fieldDependency = fieldDependency || getFieldDependency('Design__c', 'HelixDesignType__c', 'ModuleTypeandWattage__c');
+            if (fieldDependency.isSuccess === false) {
+                showSaveDesignError(design, 'Error while getting field dependency: ' + fieldDependency.errorMessage);
+                return;
+            }
+            var moduleList = fieldDependency.dependentFieldValues[system];
+            var module = $('#module_' + designId).html();
+            var moduleFound = false;
+            var errMsg;
+            if (moduleList) {
+                if (moduleList.length == 0) {
+                    errMsg = system + ' is not compatible with any module';
+                } else {
+                    for (var i=0; i<moduleList.length; i++) {
+                        if (moduleList[i] == module) {
+                            moduleFound = true;
+                            break;
+                        }
+                    }
+                    if (moduleFound === false) {
+                        errMsg = system + ' is only compatible with this type of module: ' + moduleList;
+                    }
+                }
+            } else {
+                errMsg = 'moduleList for ' + system + ': ' + moduleList;
+            }
+            if (errMsg) {
+                showSaveDesignError(design, errMsg);
+                return;
+            }
+            
+            $('#saveDesignSpinnerRow_' + designId).show();
+            showSpinner('saveDesignSpinner_' + designId);
+            design.HelixDesignType__c = system;
+            var request = {};
+            request.design = design;
+            
+            // clear these quote fields if design is saved after calculate savings
+            var quoteFieldToNullList = [];
+            if (calculatedDesigns[design.Id] && calculatedDesigns[design.Id].HelixDesignType__c !== design.HelixDesignType__c) {
+                quoteFieldToNullList.push('Year_1_PPA_Price__c');
+                quoteFieldToNullList.push('Year_1_Savings__c');
+            }
+            request.quote = quote || {};
+            request.quote.Id = request.quote.Id || null;
+            request.quoteFieldToNullList = quoteFieldToNullList;
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPADesignController.updateDesign}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                            if (designList[response.design.Id]) {
+                                designList[response.design.Id].HelixDesignType__c = response.design.HelixDesignType__c;
+                                designList[response.design.Id].Design_Originated_by__c = response.design.Design_Originated_by__c;
+                                refreshProposalAccess(response);
+                            }
+                            clearSaveDesignError(response.design);
+                            refreshDesign(response.design);
+                            refreshAccess();
+                        } else {
+                            showSaveDesignError(design, response.errorMessage);
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        //alert(errMsg);
+                        showSaveDesignError(design, errMsg);
+                    }
+                    $('#saveDesignSpinnerRow_' + designId).hide();
+                    hideSpinner('saveDesignSpinner_' + designId);
+                },
+                { escape: true }
+            );
+        }
+
+        function refreshCalculateSavingsAccess() {
+            var disableAccess = false;
+            var isDesignSelectionChanged = false;
+            var selectedDesigns = 0;
+            var isSeletedDesignChanged = false;
+            
+            // design selection changed. unselected
+            for (var key in oldDesignList) {
+                if (key === 'length' || !oldDesignList.hasOwnProperty(key)) continue;
+                var oldDesign = oldDesignList[key];
+                if (oldDesign.isSelected === true) {
+                    var design = designList[oldDesign.Id];
+                    if (!design || !design.isSelected) {
+                        isDesignSelectionChanged = true;
+                    }
+                }
+            }
+            // design selection changed. selected
+            for (var key in designList) {
+                if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                var design = designList[key];
+                if (design.isSelected === true) {
+                    selectedDesigns++;
+                    var oldDesign = oldDesignList[design.Id];
+                    if (!oldDesign || !oldDesign.isSelected) {
+                        isDesignSelectionChanged = true;
+                    }
+                    if (oldDesign && oldDesign.HelixDesignType__c != design.HelixDesignType__c) {
+                        isSeletedDesignChanged = true;
+                    }
+                }
+            }
+            //console.log('selectedDesigns: ' + selectedDesigns + '/' + 'isDesignSelectionChanged: ' + isDesignSelectionChanged);
+            //console.log('isSeletedDesignChanged: ' + isSeletedDesignChanged + '/' + 'savings.customError: ' + savings.customError);
+            if (selectedDesigns > 0 && (isDesignSelectionChanged === true || isSeletedDesignChanged === true || !savings.customError)) { 
+                $('#calculateSavingsButton').removeClass('disabled');
+            } else {
+                disableCalculateSavingsAccess();
+            }
+        }
+
+        function refreshProposalAccess(response) {
+            var design = designList[response.design.Id];
+            if (design && calculatedDesigns.hasOwnProperty(design.Id)) {
+                var field = calculatedDesigns[design.Id].fields['HelixDesignType__c'];
+                if (field && field.oldValue != design['HelixDesignType__c']) {
+                    $('#navItemProposal').addClass('disable-btn');
+                    $('#viewProposalButton').addClass('disabled');
+                    if (response.quote && response.quote.Id) {
+                        $('#year1Savings').html('');
+                        $('#year1PPAPrice').html('');
+                        $('#ppaOutputDiv').hide();
+                    }
+                }
+            }
+        }
+        
+        function refreshDesign(design) {
+            // no need to refresh other fields. we are changing only this field
+            $('#systemViewDiv_' + design.Id).html(design.HelixDesignType__c || '');
+            $('#designSaveLink_' + design.Id).hide();
+        }
+        function showSaveDesignError(design, errorMessage) {
+            $('#saveDesignErrorRow_' + design.Id).show('fast', function() {
+                $('#saveDesignError_' + design.Id).html(errorMessage);
+            });
+        }
+        function clearSaveDesignError(design) {
+            $('#saveDesignErrorRow_' + design.Id).hide('fast', function() {
+                $('#saveDesignError_' + design.Id).html('');
+            });
+        }
+        function showViewSavingsError(errorMessage) {
+            $('#buttonErrors').addClass('alert alert--danger');
+            $('#buttonErrors').html(errorMessage);
+            $('#buttonErrors').show();
+            $('#designMessages').addClass('alert alert--danger');
+            $('#designMessages').html(errorMessage);
+            $('#designMessages').show();
+        }
+        function clearViewSavingsError(errorMessage) {
+            $('#buttonErrors').removeClass('alert alert--danger');
+            $('#buttonErrors').html('');
+            $('#buttonErrors').hide();
+            $('#designMessages').removeClass('alert alert--danger');
+            $('#designMessages').html('');
+            $('#designMessages').hide();
+        }
+        
+//--------------------------------------------------------
+        function viewDesign() {
+            $('#savingsDiv').hide();
+            $('#proposalDiv').hide();
+            $('#designDiv').show('fast', function() {
+                setActiveTab('Design');
+            });
+        }
+        
+        function validateDesignInputs() {
+            // input validations
+            var isValid = false;
+            var errorMessage;
+            var quoteName = getValue('quoteName');
+            if (myTrim(quoteName) == '') {
+                errorMessage = 'Quote Name is required';
+                $('#quoteNameError').html(errorMessage);
+                $('#quoteNameErrorContainer').show();
+            } else {
+                $('#quoteNameError').html('');
+                $('#quoteNameErrorContainer').hide();
+                var isSelected = false;
+                for (var key in designList) {
+                    if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                    if (designList[key].isSelected === true) {
+                        isSelected = true;
+                        break;
+                    }
+                }
+                if (isSelected === false) {
+                    errorMessage = 'Please select at least one design to proceed.';
+                } else {
+                    for (var key in selectedSiteList) {
+                        if (key === 'length' || !selectedSiteList.hasOwnProperty(key)) continue;
+                        var sumSizeKw = 0;
+                        for (var i=0; i < selectedSiteList[key].selectedDesigns.length; i++) {
+                            var designId = selectedSiteList[key].selectedDesigns[i].Id;
+                            sumSizeKw += parseFloat(replaceAll(($('#sizeKW_' + designId).html() || '0'), ',', ''), 10);
+                        }
+                        if (sumSizeKw < 100) {
+                            errorMessage = 'You must select a minimum system size of 100kW per site to get a PPA quote.'
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!errorMessage) {
+                isValid = true;
+                $('#quoteNameError').html('');
+                $('#quoteNameErrorContainer').hide();
+            }
+            var validation = {};
+            validation.isValid = isValid;
+            validation.errorMessage = errorMessage;
+            return validation;
+        }
+//--------------------------------------------------------
+        function viewSavings() {
+            var options = {};
+            options.saveAndQuit = false;
+            createQuote(options);
+        }
+        
+        function createQuote(options) {
+            var sysSize = $('#totalSystemSizekW').html();
+            var cleanSize = sysSize.replace(/\,/g,'');
+            sysSize = String(cleanSize);
+            var production = $('#totalAnnualProduction').html();
+            var cleanProduction = production.replace(/\,/g,'');
+            production = String(cleanProduction);
+
+            // design page fields
+            quote.Name = $('#quoteName').val();
+            quote.OpportunityId = '{!quoteWrpr.opportunity.Id}';
+            quote.RecordTypeId = '{!quoteWrpr.recordTypeId}';
+            quote.System_Size_kWp__c = sysSize;
+            quote.System_Production_Year_1__c = cleanProduction;
+            quote.Number_of_Sites__c = getDivHtmlAsNumber('totalNumberOfSites');//selectedCount;
+            //console.log('quote',quote);
+            
+            // these blank fields will inactivate proposal tab and view proposal button 
+            //console.log('recalculateSavings: ' + recalculateSavings);
+            var quoteFieldToNullList = [];
+            if (recalculateSavings === true) {
+                quoteFieldToNullList.push('Year_1_PPA_Price__c');
+                quoteFieldToNullList.push('Year_1_Savings__c');
+            }
+            
+            // savings page fields
+            if (quote.Id) {
+                populateQuoteDetails(quote);
+            }
+            
+            var request = {};
+            request.quote = quote;
+            request.quoteFieldToNullList = quoteFieldToNullList;
+            request.bypassValidation = false;
+            if (options.saveAndQuit === true) {
+                request.bypassValidation = true;
+            }
+            
+            // quote design relation
+            var designIdList = [];
+            for (var key in designList) {
+                if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                if (designList[key].isSelected === true) {
+                    designIdList.push(key);
+                }
+            }
+            request.designIdList = designIdList;
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPADesignController.viewSavings}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                            quote.Id = response.quote.Id;    // save quote id to global object to update quote later
+                            if (quote.Id) {
+                                $('#quoteNumberSpan').show();
+                            }
+                            if (options.saveAndQuit === true) {
+                                //KCM: apply new redirection for new UI users; redirect other users to this page otherwise
+                                if({!isNewUIUser}){                                                                   
+                                    window.location.href = "{!newUIPage}";          
+                                } else{
+                                    window.location.href = '/apex/SPCommunityOpportunityDetails?id=' + response.quote.opportunityId;
+                                }
+                                                                                            
+                                return;
+                            } else {
+                                initFieldDetails();
+                                initCalculatedDesigns();
+                                if (recalculateSavings === true) {
+                                    $('#year1Savings').html('');
+                                    $('#year1PPAPrice').html('');
+                                    $('#ppaOutputDiv').hide();
+                                }
+                                
+                                $('#quoteNumber').html(response.quote.QuoteNumber);
+                                $('#designDiv').hide();
+                                $('#proposalDiv').hide();
+                                $('#savingsDiv').show('fast', function() {
+                                    setActiveTab('Savings');
+                                });
+                            }
+                        } else {
+                            showViewSavingsError(response.errorMessage);
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        //alert(errMsg);
+                        showViewSavingsError(errMsg);
+                    }
+                    hideSpinner('designTabSpinner');
+                    hideSpinner('savingsTabSpinner');
+                    locker.unlockAll('navItemDesign');
+                    locker.unlockAll('navItemProposal');
+                    refreshCalculateSavingsAccess();
+                },
+                { escape: true }
+            );
+        }
+
+//--------------------------------------------------------
+        function getFieldDependency(objectName, controllingFieldName, dependentFieldName) {
+            var returnObject = {};
+            returnObject.isSuccess = false;   
+            
+            var descSObj;
+            try {
+                descSObj = sforce.connection.describeSObject(objectName);
+            } catch(err) {
+                returnObject.errorMessage = 'faultcode: ' + err.faultstring + ' faultstring: ' + err.faultstring;
+                // logResult();
+                return returnObject;
+            }
+
+            var descDependentField, descControllingField;
+            for (var i=0; i<descSObj.fields.length; i++) {
+                if (descSObj.fields[i].name == dependentFieldName) {
+                    descDependentField = descSObj.fields[i];
+                } else if (descSObj.fields[i].name == controllingFieldName) {
+                    descControllingField = descSObj.fields[i];
+                }
+            }
+            if (!descDependentField) {
+                returnObject.errorMessage = 'Dependent field: ' + dependentFieldName + ' not found';
+                // logResult();
+                return returnObject;
+            }
+            if (!descControllingField) {
+                returnObject.errorMessage = 'Controlling field: ' + controllingFieldName + ' not found';
+                // logResult();
+                return returnObject;
+            }
+            var dependentOptions = descDependentField.picklistValues;
+            //console.log('dependentOptions: ' + dependentOptions);
+            var controllingOptions = descControllingField.picklistValues;
+            //console.log('controllingOptions: ' + controllingOptions);
+            
+            returnObject.isSuccess = true;
+            returnObject.dependentFieldValues = {};
+            for (var i=0; i<controllingOptions.length; i++) {
+                returnObject.dependentFieldValues[controllingOptions[i].value] = [];
+            }
+            returnObject.controllingFieldValues = {};
+            for (var i=0; i<dependentOptions.length; i++) {
+                returnObject.controllingFieldValues[dependentOptions[i].value] = [];
+            }
+
+            var base64 = new sforce.Base64Binary("");
+            for (var i=0; i<dependentOptions.length; i++) {
+                var fieldValue = dependentOptions[i].value;
+                var validFor = dependentOptions[i].validFor;
+                var validForDecoded = base64.decode(validFor);
+                //console.log('validFor: ' + validFor);
+                for (var j=0; j<controllingOptions.length; j++) {
+                    if (testBit(validForDecoded, j)) {
+                        returnObject.controllingFieldValues[dependentOptions[i].value].push(controllingOptions[j].value);
+                        returnObject.dependentFieldValues[controllingOptions[j].value].push(dependentOptions[i].value);
+                    }
+                }
+            }
+            
+            function testBit(validFor, pos) {
+                var byteToCheck = Math.floor(pos/8);
+                var bit = 7 - (pos % 8);
+                return ((Math.pow(2, bit) & validFor.charCodeAt(byteToCheck)) >> bit) == 1;
+            }
+            
+            function logResult() {
+                console.log('returnObject.isSuccess: ' + returnObject.isSuccess);
+                console.log('returnObject.errorMessage: ' + returnObject.errorMessage);
+                logObject(returnObject.controllingFieldValues);
+                logObject(returnObject.dependentFieldValues);
+            }
+            function logObject(obj) {
+                for (var key in obj) {
+                    if (key === 'length' || !obj.hasOwnProperty(key)) continue;
+                    console.log(key + ' => ' + obj[key]);
+                }
+            }
+            
+            // finally return
+            // logResult();
+            return returnObject;
+        }
+
+//--------------------------------------------------------
+        $(document).ready(function() {
+            // pupulate fields from quote
+            //console.log('has quote id: ' + '{!quoteWrpr.quote.Id}');
+
+            // each design row initialization
+            $('.designSelectIcon').each(function(index, element) {
+                var designId = $(element).attr('id').replace('selectIcon_', '');
+                //console.log('designId: ' + designId + '/' + 'helix-design-type: ' + $(element).data('helix-design-type'));
+                $('#systemSelect_' + designId).val($(element).data('helix-design-type'));
+
+                var design = designList[designId] || {};
+                design.Id = designId;
+                design.HelixDesignType__c = $(element).data('helix-design-type');
+                design.Design_Originated_by__c = $(element).data('design-originated-by');
+                designList[designId] = design;
+
+            });
+
+            // event handlers
+            $('.select-dropdown').on('click', function(event) {
+                //alert($(this).html());
+                var selectId = $(this).children('select').attr('id');
+                //alert('selectId: ' + selectId);
+                var designId = selectId.replace('systemSelect_', '')
+                //console.log('values: ' + myTrim($('#systemViewDiv_' + designId).html()) + ' / ' + myTrim($('#systemSelect_' + designId).val()));
+                if (myTrim($('#systemViewDiv_' + designId).html()) == myTrim($('#systemSelect_' + designId).val())) {
+                    $('#designSaveLink_' + designId).hide();
+                } else {
+                    $('#designSaveLink_' + designId).show();
+                }
+                refreshAccess();
+            });
+            
+            if ('{!quoteWrpr.quote.Id}') {
+                $('#quoteNumberSpan').show();
+                quote.Id = '{!quoteWrpr.quote.Id}';    // otherwise view savings will create a new quote
+                quote.OpportunityId = '{!quoteWrpr.opportunity.Id}';
+                var totalSystemSizekW = 0;
+                var totalAnnualProduction = 0;
+                $('.designSelected').each(function(index, element) {
+                    selectedCount++;
+                    var designId = (this.id).replace('selectIcon_', '');
+                    $(this).addClass('fa-check-square');
+                    var sizeKW = parseFloat(replaceAll(($('#sizeKW_' + designId).html() || '0'), ',', ''), 10);
+                    var production = parseFloat(replaceAll(($('#production_' + designId).html() || '0'), ',', ''), 10);
+                    totalSystemSizekW = totalSystemSizekW + sizeKW;
+                    totalAnnualProduction = totalAnnualProduction + production;
+                    $('#totalSystemSizekW').html(totalSystemSizekW.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    $('#totalAnnualProduction').html(totalAnnualProduction.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                    
+                    var design = designList[designId] || {};
+                    design.Id = designId;
+                    design.isSelected = true;
+                    //design.Design_Originated_by__c = $(element).data('design-originated-by');
+                    var siteId = $(this).closest("div[id*='siteId_']").attr('id').replace('siteId_', '');
+                    design.siteId = siteId;
+                    designList[designId] = design;
+                    
+                });
+                
+                // open system picklist for edit
+                // initiating picklist outside each(). looks like each() is asyncronous
+                for (var i=0, len=$('.designSelected').length; i<len; i++) {
+                    var element = $('.designSelected')[i];
+                    var designId = $(element).attr('id').replace('selectIcon_', '');
+                    //console.log('designId: ' + designId);
+                    if ($(element).data('design-originated-by') == 'Indirect') {
+                        if ($(element).data('helix-design-type')) {
+                            $('#systemViewDiv_' + designId).hide();
+                            $('#systemEditDiv_' + designId).parent().find('.cs-placeholder').html($(element).data('helix-design-type'));
+                            $('#systemEditDiv_' + designId).parent().find('.cs-placeholder').addClass('cs-selected-option');
+                            $('#systemEditDiv_' + designId).parent().find('li[data-value="' + $(element).data('helix-design-type') + '"]').addClass('cs-selected' );
+                            $('#systemSelect_' + designId).val($(element).data('helix-design-type'));
+                            $('#systemEditDiv_' + designId).show();
+                        }
+                    }
+                }
+
+                // display other fields                
+                $('#quoteNumber').html('{!quoteWrpr.quote.QuoteNumber}');
+                $('#totalNumberOfSites').html('{!quoteWrpr.quote.Number_of_Sites__c}'); 
+                $('#annualPPAEscalatorEdit').val(formatPercentByDecimals('{!quoteWrpr.quote.Escalator__c}', 2)); 
+                $('#dealerFeePerWattEdit').val(getFormatedFeePerWatt('{!quoteWrpr.quote.Dealer_Fees__c}')); 
+                $('#dealerFeeDollarValueEdit').val(getFormatedDollarValue('{!quoteWrpr.quote.Total_Dealer_Fee__c}')); 
+                $('#itcIneligibleCostEdit').val(formatDollarsByDecimals('{!quoteWrpr.quote.ITC_Ineligible_Cost__c}', 2)); 
+                $('#creditRatingEdit').val('{!quoteWrpr.quote.Credit_Rating__c}'); 
+                $('#incentiveProgramEdit').val('{!quoteWrpr.quote.Incentives_detail_1__c}'); 
+                $('#incentiveUpfrontValueEdit').val(formatDollarsByDecimals('{!quoteWrpr.quote.Incentives_detail_1_amt__c}', 2)); 
+                $('#incentiveDollarValueEdit').val(formatDollarsByDecimals('{!quoteWrpr.quote.PBI_Amount__c}', 3)); 
+                $('#incentiveTermEdit').val('{!quoteWrpr.quote.PBI_Term__c}'); 
+                $('#utilityCompanyEdit').val('{!quoteWrpr.quote.Utility_Distributor__c}'); 
+                $('#utilityPriceInflationEdit').val(formatPercentByDecimals('{!quoteWrpr.quote.Utility_Bill_Annual_Escalation__c}', 2)); 
+                $('#consumedPrior12MonthsEdit').val('{!quoteWrpr.quote.Annual_Usage__c}'); 
+                $('#billPrior12MonthsEdit').val(formatDollarsByDecimals('{!quoteWrpr.quote.Annual_Bill__c}', 2)); 
+                $('#avoidedCostEdit').val(formatDollarsByDecimals('{!quoteWrpr.quote.Avoided_Cost_of_Power__c}', 3)); 
+                $('#year1Savings').html(formatDollarsByDecimals('{!quoteWrpr.quote.Year_1_Savings__c}', 2)); 
+                $('#year1PPAPrice').html(formatDollarsByDecimals('{!quoteWrpr.quote.Year_1_PPA_Price__c}', 3) + '/kWh'); 
+
+                // set proposal page fields
+                $('#utilityConsPreSolar').html(formatNumber($('#consumedPrior12MonthsEdit').val()) + '&nbsp;kWh');
+                $('#utilityBillPreSolar').html($('#billPrior12MonthsEdit').val());
+                $('#utilityBillPostSolar').html(formatDollarsByDecimals('{!quoteWrpr.utilityBillPostSolar}', 2));
+                $('#avoidedUtilityRate').html($('#avoidedCostEdit').val());
+                $('#pvSystemSize').html($('#totalSystemSizekW').html());
+                $('#ppaRate').html($('#year1PPAPrice').html());
+                $('#ppaEscalator').html($('#annualPPAEscalatorEdit').val());
+                $('#pvProductionYear1').html($('#totalAnnualProduction').html() + '&nbsp;kWh');
+                $('#year1NetSavings').html(formatDollarsByDecimals('{!quoteWrpr.year1NetSavings}', 2));
+                $('#sumNetSavings').html(formatDollarsByDecimals('{!quoteWrpr.sumNetSavings}', 2));
+                $('#npvOfSavings').html(formatDollarsByDecimals('{!quoteWrpr.npvOfSavings}', 2));
+                
+                //show the ppa price panel
+                if('{!quoteWrpr.quote.Year_1_PPA_Price__c}' != '' && '{!quoteWrpr.quote.Year_1_Savings__c}' != '') {
+                    $( "#ppaOutputDiv" ).show();
+                    if(isSavingsPageValid()) {
+                        $( '#viewProposalButton' ).removeClass( 'disabled' );
+                        $( '#navItemProposal' ).removeClass( 'disable-btn' );
+                    }
+                }
+                // this will set selected check in picklist
+                if ('{!quoteWrpr.quote.Credit_Rating__c}') {
+                    $('#creditRatingEdit').parent().find('.cs-placeholder').html('{!quoteWrpr.quote.Credit_Rating__c}');
+                    $('#creditRatingEdit').parent().find('.cs-placeholder').addClass('cs-selected-option');
+                    $('#creditRatingEdit').parent().find('li[data-value="' + '{!quoteWrpr.quote.Credit_Rating__c}' + '"]').addClass('cs-selected' );
+                }
+                
+                // select radio
+                if ( parseFloat('{!quoteWrpr.quote.PBI_Term__c}' || '0', 10) != 0
+                        && parseFloat('{!quoteWrpr.quote.PBI_Amount__c}' || '0', 10) != 0) {
+                    $("#incentiveDollar").prop("checked", true);
+                    /*toggleEnable('ppwClass');*/
+                    $("#incentiveDollar").addClass('fa-check-square');
+                    toggleIcon($("#incentiveDollar"), 'ppwClass');
+                } 
+                if (parseFloat('{!quoteWrpr.quote.Incentives_detail_1_amt__c}' || '0', 10) != 0) {
+                    $("#incentiveUpfront").prop("checked", true);
+                    /*toggleEnable('upfrontRadioClass');*/
+                    $("#incentiveUpfront").addClass('fa-check-square');
+                    toggleIcon($("#incentiveUpfront"), 'upfrontRadioClass');
+                }
+                
+                if ({!quoteWrpr.quote.SREC_Indicator__c}) {
+                    $('#yesSREC').prop("checked", true);
+                    $('#noSREC').prop("checked", false);
+                } else {
+                    $('#yesSREC').prop("checked", false);
+                    $('#noSREC').prop("checked", true);
+                }
+            }
+            resetOldDesignList();
+            refreshAccess();
+
+            if ('{!quoteWrpr.quote.Credit_Rating__c}' != 'Rated Investment Grade') {
+                var avoidedCostOfPower = parseFloat('{!quoteWrpr.quote.Avoided_Cost_of_Power__c}' || 0);
+                var ppaPrice = parseFloat('{!quoteWrpr.quote.Year_1_PPA_Price__c}' || 0);
+                if (avoidedCostOfPower != 0) {
+                    var savingsPercent = (avoidedCostOfPower - ppaPrice) * 100 / avoidedCostOfPower;
+                    console.log('avoidedCostOfPower: ' + avoidedCostOfPower);
+                    console.log('ppaPrice: ' + ppaPrice);
+                    console.log('savingsPercent: ' + savingsPercent);
+                    if (savingsPercent.toFixed(1) < 9.5) {
+                        disableViewProposalAccess();
+                        showCalculateSavingsError('You cannot create a proposal for this quote since it does not generate at least 10% first-year savings.');
+                    }
+                }
+            }
+        });
+    
+    </script>
+
+</apex:page>

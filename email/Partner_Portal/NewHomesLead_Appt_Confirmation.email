@@ -1,0 +1,128 @@
+<messaging:emailTemplate subject="Your Energy Consultation is Set" recipientType="contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+    <style type="text/css">
+    body {
+        background-color: #FFFFFF;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        font-family: Arial, Futura;
+        color: #555555;
+    }
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    table {
+        margin-top: 0pt;
+    }
+    p,table{
+        font-size: 11pt;
+    }
+    a { color:#0070c0; text-decoration:none}
+    a:visited { color:#0070c0; text-decoration:none}
+    a:link { color:#0070c0; text-decoration:none}
+    a:hover { color:#0070c0; text-decoration:none}
+
+    li {
+        line-height:20px;
+        margin-bottom: 10pt;
+        display: list-item;
+        padding-bottom:5px;
+    }
+    
+    </style>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <h1 style="margin-left:80px; margin-top:20px;">YOUR ONLINE ENERGY CONSULTATION IS SET</h1>
+            
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="960px"><img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px" style="padding-left:50px; padding-right:25px; text-decoration:none; outline:none;">
+                    
+                    <p style="margin-top:20px">Hello <font color="#555555">{!relatedTo.Primary_Contact_First_Name__c}</font>,</p>
+                    
+                    <p style="margin-right:20px">Below are the details of your appointment. Your consultation will only take 20-30 minutes. Please review the date and time for accuracy. If you see any issues, please contact me with any changes.</p>
+                    
+                    <!--Table-->
+                    <table width="95%" cellspacing="0" style="border-collapse:collapse;border-style:hidden;border-width:1px;border-color:#FDB723;border-spacing:0;">
+                    <tr>
+                        <td style="background: #FDB723;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                            <span style="font-size:18px;font-weight:bold;"> Appointment Information: </span>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                        <td style="padding-top:20px;padding-left:30px;"> 
+                            
+                                 
+                                    <b>Appointment Date and Time:</b>
+                                    
+                                    <apex:outputText value="{0,date,long}">
+                                        <apex:param value="{!relatedTo.Appointment_Date__c}" />
+                                    </apex:outputText> 
+                                    {!relatedTo.Appointment_Time__c}
+                                      <br/><br/>
+                                      <b>Location:</b> {!relatedTo.Consultation_Type__c}
+                                      <br/><br/>
+                                      <b>Instructions:</b> 
+                                      <br/>
+                                      At the time of your appointment, simply open this link: <apex:outputLink value="{!relatedTo.Owner.Division}">{!relatedTo.Owner.Division}</apex:outputLink><br/><br/> 
+                                      Your Energy Consultant’s presentation will appear on your screen. <br/>
+                                      You will receive a call from your Energy Consultant at this time to go over the presentation.
+                                      <br/><br/>
+                                      <b>You will be meeting with {!relatedTo.Account.Owner.Name}</b>
+                                      <br/>
+                                      <b>Phone:</b> {!relatedTo.Account.Owner.MobilePhone}
+                                      <br/>
+                                      <b>Email:</b> {!relatedTo.Account.Owner.email} 
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                        <td style="padding-top:20px;padding-left:30px;"> 
+                            <br/>
+                            <b>Click <apex:outputLink value="http://sunpower.force.com/DesignSignOff/apex/MeetYourConsultant?id={!relatedTo.Owner.Id}"> here </apex:outputLink> to learn more about your Energy Consultant.</b>
+                        </td>
+                    </tr>
+                    </table>
+                    
+                    
+                    
+                    <p style="margin-top:20px">To ensure the most effective use of your time please try to be at a computer to review the online proposal with your energy consultant.</p>
+                    <p style="margin-top:20px">If you have any questions, please call me at the number below or reply back to this email.</p>
+                    <br/><br/>
+                    <p style="margin-top:20px">Sincerely, </p>
+                    <br/>
+                    <p style="margin-top:20px">
+                        New Home Solar Advisors<br/>
+                        <b>SunPower Corporation</b>
+                        <br/>
+                        <a href="www.sunpower.com">www.sunpower.com</a>
+                    </p>
+                </td>
+            </tr>
+            <!--Footer Wrapper-->
+            <tr>
+                <td  style="color:#b3b3b3; padding-top:20px; padding-left:50px; padding-right:50px; outline:none; margin-bottom:0pt;line-height:normal;margin-left:18pt;margin-right:17pt;font-size:9pt;" align="center">
+                    <!-- <img border="0" beditid="r5sp1" blabel="footerImage" id="r5sp1" src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001lWsb&oid=00D80000000ZF1L"/> -->
+                    2016 SunPower Corporation. All Rights Reserved. 77 Rio Robles, San Jose, California 95134 <br/>
+                    SUNPOWER and the SUNPOWER logo are registered trademarks of SunPower Corporation in the U.S. and other countries.
+                </td>
+            </tr>
+            <!--Footer Wrapper End-->
+        </table>
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

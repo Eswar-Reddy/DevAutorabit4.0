@@ -1,0 +1,49 @@
+<apex:page standardController="Account" extensions="ManageContactRoles">
+  <apex:sectionHeader title="{!$Label.MCR_Heading}" subTitle="{!Account.Name}"></apex:sectionHeader>
+  <apex:pageMessages />
+  <apex:form >
+  <!--START JULY-24-2015 - JZaguirre --> 
+  <apex:pageBlock >      
+  <apex:iframe src="/apex/APPR_PUB__CustomMessages?tabName=ManageContactRoles" height="200" />
+  </apex:pageBlock>
+  <!--END JULY-24-2015 - JZaguirre --> 
+  <apex:pageBlock >
+    <apex:pageBlockButtons >
+      <apex:commandButton value="{!$Label.Add_More_Contact_Roles}" action="{!AddMoreRoles}" />
+      <apex:commandButton value="Save" action="{!SaveRoles}"/>
+      <apex:commandButton value="Cancel" action="{!Cancel}" /> 
+    </apex:pageBlockButtons>
+    
+    <apex:pageBlockTable value="{!AllContactRoles}" var="contactRole">
+      <apex:column headerValue="Primary">
+        <apex:inputField value="{!contactRole.accountContactRole.IsPrimary}" />
+      </apex:column>
+      
+      <apex:column headerValue="Contact">
+        <apex:selectList styleClass="{!IF(
+                                           AND(
+                                             NOT(ISNULL(contactRole.accountContactRole.Role)),
+                                             ISNULL(contactRole.CID)
+                                             ),
+                                           'error','')}" value="{!contactRole.CID}" size="1" multiselect="false">
+          <apex:selectOptions value="{!ContactOptions}" />
+        </apex:selectList>
+        <apex:outputPanel styleClass="errorMsg" layout="block" rendered="{!AND(
+                                             NOT(ISNULL(contactRole.accountContactRole.Role)),
+                                             ISNULL(contactRole.CID)
+                                             )}">
+          <strong>Error:</strong> Please select a Contact
+        </apex:outputPanel>
+      </apex:column>
+
+      <apex:column headerValue="Role">
+        <apex:inputField value="{!contactRole.accountContactRole.Role}" />
+      </apex:column>
+      
+      <apex:column headerValue="Delete">
+        <apex:inputCheckbox value="{!contactRole.IsDeleted}" />
+      </apex:column>
+    </apex:pageBlockTable>    
+  </apex:pageBlock>
+  </apex:form> 
+</apex:page>

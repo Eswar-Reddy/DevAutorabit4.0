@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Activity$ActivityDate</field>
+    </columns>
+    <columns>
+        <field>Activity$Subject</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Activity$Time_Required__c</field>
+    </columns>
+    <columns>
+        <field>Activity$Promised_Date__c</field>
+    </columns>
+    <columns>
+        <field>Activity$Tracking_Date__c</field>
+    </columns>
+    <columns>
+        <field>Activity$Completed_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Summary of tasks assigned to development engineering team</description>
+    <filter>
+        <criteriaItems>
+            <column>Activity$Owner</column>
+            <operator>equals</operator>
+            <value>thang le,murat karakum,william yeager,rich clark,mandeep guragain,bill lou,julia davis</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Activity$Status</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Activity$Owner</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Activity$What</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Development Engineering Tasks Summary</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Task_Assigned__c</reportType>
+    <roleHierarchyFilter>SunpowerCorporation</roleHierarchyFilter>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Activity$CreatedDate</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

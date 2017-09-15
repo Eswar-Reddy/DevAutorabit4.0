@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>COMMENT_CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>CASE_COMMENT_CREATED_BY</field>
+    </columns>
+    <columns>
+        <field>CASE_COMMENT</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Comments for the complaints</description>
+    <filter>
+        <criteriaItems>
+            <column>TYPE</column>
+            <operator>equals</operator>
+            <value>Negative Feedback</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.Region__c</column>
+            <operator>equals</operator>
+            <value>SPBE,SPDE,SPFR,SPIT,SPSW,SPES,SPGB,SPNL</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CASE_NUMBER</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>DR_CSR:CLC_Comments</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>COMMENT_CREATED_DATE</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>COMMENT_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_LAST60</interval>
+    </timeFrameFilter>
+</Report>

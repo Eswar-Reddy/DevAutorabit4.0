@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>jeff.cavros@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>NSD Pricing Approval</description>
+        <label>NSD Pricing Approval</label>
+        <name>NSD_Pricing_Approval</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ken.fong@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>GM Pricing Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Price_Concession__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>GM Pricing Approval</label>
+        <name>GM_Pricing_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mark.babcock@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>VP Pricing Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Price_Concession__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 20,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>VP Pricing Approval</label>
+        <name>VP_Pricing_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>VP Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Price_Concession__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>VP Approval</label>
+        <name>VP_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>CVAR Pricing Exception Approval for NAxx</description>
+    <emailTemplate>Opportunity/CVAR_Pricing_Exception_Approval_Request</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>RLC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.RLC_Type__c</field>
+            <operation>equals</operation>
+            <value>Light Commercial,Residential</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Theater__c</field>
+            <operation>equals</operation>
+            <value>North America</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Price_Concession__c</field>
+            <operation>greaterThan</operation>
+            <value>USD 0</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Approved_Alert_NA</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_Approv</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Rejected_Alert_NA</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_Reject</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Update_Pricing_Exception_Status_In_Rev</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>CVAR Pricing Exception Approval for NAxx</label>
+    <recallActions>
+        <action>
+            <name>CVAR_Pricing_Exception_Recalled_Alert_NA</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Pricing_Exception_Status_Recall</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

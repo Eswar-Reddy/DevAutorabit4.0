@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Quotes$Opportunity_Number__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Quotes$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Opportunity_LastModifiedDate__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>This report will be utilized to determine how many quotes has been generated for AU.</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.Quotes$BillingCountry</column>
+            <operator>equals</operator>
+            <value>Australia</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Country__c</column>
+            <operator>equals</operator>
+            <value>Australia</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Opportunity_Status__c</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <name>AU Opportunities with Quotes</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Quotes__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity.Quotes$Created_Date__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

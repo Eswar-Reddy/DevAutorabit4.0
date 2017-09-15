@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>OPP.CLOSE_DATE</field>
+    </columns>
+    <columns>
+        <field>OPP.NAME</field>
+    </columns>
+    <columns>
+        <field>OPP.STAGE_NAME</field>
+    </columns>
+    <columns>
+        <field>OPP.PROBABILITY</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>OPP.AMOUNT</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.System_SizePV__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.DirectMargin_per__c</field>
+    </columns>
+    <columns>
+        <field>OPP.OWNER_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>1 AND 2</booleanFilter>
+        <criteriaItems>
+            <column>CAMPAIGN.NAME</column>
+            <operator>equals</operator>
+            <value>Project Harvest</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OPP.STAGE_NAME</column>
+            <operator>notContain</operator>
+            <value>07 – Closed Lost</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Project Harvest</name>
+    <params>
+        <name>scopeid</name>
+        <value></value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CampaignInfluence</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>OPP.PROBABILITY</sortColumn>
+    <sortOrder>Desc</sortOrder>
+</Report>

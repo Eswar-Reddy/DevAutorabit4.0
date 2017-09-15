@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Residential_Project__c$Community__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c$Community__c.Builder_Preferred_Roofer__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Residential_Project__c$RecordType</column>
+            <operator>equals</operator>
+            <value>Residential_Project__c.New_Home</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c$Community__c.Community_Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Construction Complete,Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c$Community__c.Installer__c</column>
+            <operator>equals</operator>
+            <value>,gabi solar</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Residential_Project__c$Region__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Residential_Project__c$Community__c.Builder__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Residential_Project__c$Installation_Partner__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Communities to Assign</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_with_Residential_Projects__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Residential_Project__c$Rough_Wire_Promised__c</dateColumn>
+        <interval>INTERVAL_NEXT60</interval>
+    </timeFrameFilter>
+</Report>

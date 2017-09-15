@@ -1,0 +1,200 @@
+<messaging:emailTemplate subject="Lease Document Acknowledgement Letter" recipientType="Contact" relatedToType="Quote">
+
+<messaging:plainTextEmailBody >
+Dear {!relatedTo.Dealer_Name__c},
+
+Attached, please find the Lease Document Acknowledgment letter for your recently generated lease document.  This document contains a summary of your dealer fees as well as documentation required to meet any potential rebate requirements. If the LDA document is required for any rebate requirements, upon countersignature of the lease document, please sign the attached LDA Letter for each rebate reservation request, and submit the fully executed document along with a copy of your signed Dealer Participation Agreement (DPA).  If your reservation request has previously been suspended because of the change from the old DPAA to the new LDA, you must request that it be taken off of suspension now that approved documentation has been provided.  If you have not yet completed a rebate reservation request, simply include the new executed LDA and the DPA with your rebate application packet.
+
+If you notice any discrepancies between the LDA and your expected installation, please contact paymentinquiry@sunpower.com so that we may update the order to the most current configuration.  If there are still revisions being made, it is acceptable to file the current form assuming that your utility provides for an as-built process.
+
+Thank you for your time and continued support in our partnership. 
+
+Regards,
+
+The SunPower Team
+
+</messaging:plainTextEmailBody>
+    
+<messaging:attachment renderAs="PDF" filename="LDA Letter {!relatedTo.Final_Lease_Number__c} .pdf">
+<html>
+<body style="font:12px;">
+
+<img src = "{!$Resource.SunPower_Logo_2015}" /> <br />
+<br />
+<br />
+<br />
+<b> Lease Document Acknowledgement Letter </b>
+<br />
+<br />
+<br />
+
+{!relatedTo.Dealer_Name__c} is to install a {!relatedTo.Maximum_Rated_Capacity__c} watt pv system at the following location :<br /><br />
+
+<table border="0">
+<tr>
+  <td width="300">Dealer Name:</td>
+  <td width="500">{!relatedTo.Dealer_Name__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">Dealer Address:</td>
+  <td width="500">{!relatedTo.Partner_Accounts_dealer_address__c}</td>
+  
+</tr>
+
+<tr>
+  <td width="300">Dealer CSLB #:</td>
+  <td width="500">{!relatedTo.Partner_Accounts_Contractors_License_Num__c} EXPIRY {!relatedTo.Partner_Accounts_Contractors_License_Exp__c}</td>
+  
+</tr>
+<tr>
+  <td width="300"> </td>
+  <td width="500"> </td>
+  
+</tr>
+<tr>
+  <td width="300"> </td>
+  <td width="500"> </td>
+  
+</tr>
+<tr>
+  <td width="300">Homeowner:</td>
+  <td width="500">{!relatedTo.Account__r.name}</td>
+  
+</tr>
+<tr>
+  <td width="300">Site Address:</td>
+  <td width="500">{!relatedTo.Customer_Accounts_Address_for_LDA__c}</td>
+  
+</tr>
+
+<tr>
+  <td width="300"> </td>
+  <td width="500"> </td>
+  
+</tr>
+<tr>
+  <td width="300"><b>Lease Details: </b></td>
+  <td width="500"> </td>
+  
+</tr>
+
+<tr>
+  <td width="300">Lease #:</td>
+  <td width="500">{!relatedTo.Final_Lease_Number__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">Lease Doc Creation Date:</td>
+  <td width="500">{!relatedTo.Document_Created_Date__c}</td>
+  
+</tr>
+<tr>
+  <td width="300"> </td>
+  <td width="500"> </td>
+  
+</tr>
+<tr>
+  <td width="300"><b>System Details</b></td>
+  <td width="500"> </td>
+  
+</tr>
+
+<tr>
+  <td width="300">System Size (watts):</td>
+  <td width="500">{!relatedTo.Maximum_Rated_Capacity_Watts__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">System Price Per Watt:</td>
+  <td width="500">${!relatedTo.System_Price_Per_Watt__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">PV (Type and Quantity):</td>
+  <td width="500">{!relatedTo.Module__c} ({!relatedTo.Module_Quantity__c})</td>
+  
+</tr>
+<tr>
+  <td width="300">Inverter (Type and Quantity):</td>
+  <td width="500">{!relatedTo.Quote_Inverter_Values__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">Racking Type:</td>
+  <td width="500">{!relatedTo.Mounting_Option__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">Monitoring System:</td>
+  <td width="500">{!relatedTo.Monitoring_System_Option__c} -SMS 2.1</td>
+  
+</tr>
+
+<tr>
+  <td width="300"> </td>
+  <td width="500"> </td>
+  
+</tr>
+<tr>
+  <td width="300"><b>Pricing Details</b></td>
+  <td width="500"> </td>
+  
+</tr>
+
+<tr>
+  <td width="300">Effective System Price:</td>
+  <td width="500">${!relatedTo.Roundoff_System_Cost__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">Effective Smart Pack Price:</td>
+  <td width="500">${!relatedTo.Roundoff_Effective_Smart_Pack_Price__c}</td>
+  
+</tr>
+<tr>
+  <td width="300">Total Dealer Fees:</td>
+  <td width="500">${!relatedTo.Roundoff_Dealer_Fees__c}</td>
+  
+</tr>
+<tr>
+  <td width="300"> </td>
+  <td width="500"> </td>
+  
+</tr>
+<tr>
+  <td width="300"><b>Fee Schedule: </b></td>
+  <td width="500"> </td>
+  
+</tr>
+
+<tr>
+  <td width="300">Origination Fee:</td>
+  <td width="500">${!relatedTo.Roundoff_Origination__c}      (Invoiced when install completed)</td>
+  
+</tr>
+<tr>
+  <td width="300">Installation Fee:</td>
+  <td width="500">${!relatedTo.Roundoff_Installation_Fee__c} (Invoiced when install completed)</td>
+  
+</tr>
+<tr>
+  <td width="300">Interconnect Fee:</td>
+  <td width="500">${!relatedTo.Roundoff_Interconnect__c}     (Invoiced when interconnect completed)</td>
+  
+</tr>
+</table>
+
+   
+<br />
+
+<b>Terms:</b>  Per Dealer Participation Agreement SunPower Residential Solar Lease Program <br />
+<br />
+<img src = "{!$Resource.LeaseLetterSignature}" /> <br />
+
+</body>
+</html>
+
+</messaging:attachment> 
+    
+</messaging:emailTemplate>

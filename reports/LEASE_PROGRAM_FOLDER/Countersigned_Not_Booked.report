@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lessee_Email__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Account__c.BillingAddress</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease_Type__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_Countersigned__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$RecordType</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Countersigned Not Booked report</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Name__c</column>
+            <operator>notEqual</operator>
+            <value>Ecosolar Sarl,ENAIRPRO,Gabi Solar,Gabi Solar-TPO FR,ROLE ENERGIES,Suntec Sarl,Test Seller</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Booked_Date__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Expired,Cancelled,Cancellation with RMA,Terminated,Duplicate</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Date_Countersigned__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>notEqual</operator>
+            <value>LeasePayment__c.FR_LeasePayment,LeasePayment__c.AU_Lease_Payment</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Countersigned Not Booked</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Date_Countersigned__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

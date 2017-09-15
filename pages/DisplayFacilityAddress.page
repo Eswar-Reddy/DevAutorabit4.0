@@ -1,0 +1,84 @@
+<apex:page standardController="Opportunity"
+    extensions="DisplayContactsController" tabStyle="Opportunity" showHeader="false" sidebar="false">
+
+    <apex:pageBlock >
+    <apex:outputPanel rendered="{!accountRendered}">
+     <h2><font color="#000000" >Address Information </font></h2>
+        <hr/> 
+        <apex:outputPanel > 
+            <div><b>Address</b></div> 
+        <apex:outputField value="{!account.BillingStreet}"/> &nbsp;
+        <apex:outputField value="{!account.BillingCity}" /> &nbsp;
+        <apex:outputField value="{!account.BillingState}"/> <br />
+        
+        <apex:outputField value="{!account.BillingCountry}"/> &nbsp;
+        <apex:outputField value="{!account.BillingPostalCode}" /> <br/><br/>
+        <b>Phone</b>&nbsp;<apex:outputField value="{!account.Phone}"/>
+        </apex:outputPanel>
+          
+    <br/><br/>
+   
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!isRecordFound}">
+    <h2><font color="#000000" >Contacts</font></h2>
+    <hr/>
+   <apex:pageBlockSection columns="1" >
+       <!--<table width="100%" >
+       <tr width="100%" class="dataRow" >
+                <th width="25%">Contact Name</th>
+                <th width="25%">Title</th>
+                <th width="25%">Email</th>
+                <th width="25%">Phone</th>
+        <tr/>
+        <apex:repeat value="{!contacts}" var="con" 
+            rendered="{!isRecordFound}">
+            <tr width="100%" class="dataRow" >
+                <td width="25%" class="dataCell"><apex:Outputlink value="/{!con.id}" target="_blank" id="lnk">{!con.name}</apex:outputLink></td>
+                <td width="25%" class="dataCell"><apex:outputText value="{!con.title}"></apex:outputText></td>
+                
+                <td width="25%" class="dataCell"><apex:outputText value="{!con.email}"></apex:outputText></td>
+                <td width="25%" class="dataCell"><apex:outputText value="{!con.phone}"></apex:outputText></td>
+            <tr/>
+            
+            <tr>
+            <td><apex:outputText value="{!con.Best_Time_to_Call__c}"></apex:outputText></td>
+            </tr>
+          
+        </apex:repeat>
+       </table> -->
+        <apex:PageBlockTable value="{!contacts}" var="con" width="100%"
+            rendered="{!isRecordFound}">
+            <apex:column headerValue="Contact Name" width="20%"
+                styleClass="dataCell">
+                <apex:Outputlink value="/{!con.id}" target="_blank" id="lnk">{!con.name}</apex:outputLink>
+            </apex:column>
+            <!-- apex:column value="{!con.name}" styleClass="dataCell" headerValue="Contact Name" width="25%" /> -->
+            <apex:column value="{!con.title}" styleClass="dataCell"
+                headerValue="Title" width="20%" />
+            <apex:column value="{!con.email}" styleClass="dataCell"
+                headerValue="Email" width="20%" />
+            <apex:column value="{!con.phone}" styleClass="dataCell"
+                headerValue="Phone" width="20%" />
+            <!-- <apex:column value="{!con.Best_Time_to_Call__c}" styleClass="dataCell"
+                headerValue="Best Time To Call" width="20%" /> -->
+        </apex:PageBlockTable>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+        <table width="100%">
+            <tr>
+                <td><apex:outputPanel rendered="{!IF(isRecordFound,false,true)}"
+                    style="background-color:#F3F3EC;">
+                    <apex:outputLabel >{!labelMessage}</apex:outputLabel>
+                </apex:outputPanel></td>
+            </tr>
+        </table>
+ </apex:pageBlock>
+ <div><iframe id="resizeHack" width="0" height="0"
+            frameborder="no" /></div>
+        <script>
+          document.getElementById("resizeHack").src = "{!URLFOR($SControl.Resize_VF_Iframe)}" +
+                                              "&ifName=" + window.name +
+                                              "&ifHeight=" + document.body.offsetHeight;
+        
+    </script>
+</apex:page>

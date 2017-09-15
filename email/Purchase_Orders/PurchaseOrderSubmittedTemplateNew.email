@@ -1,0 +1,28 @@
+<messaging:emailTemplate subject="DSR: [{!relatedTo.Assigned_DSR__r.name}] {!$Label.TemplatePODealerAccount
+}: [{!relatedTo.Dealer_Account__r.name}] PO#: [{!relatedTo.Name}]" recipientType="User" relatedToType="Purchase_Order__c" language="{!relatedTo.Language__c}">
+<messaging:HTMLEmailBody >
+{!$Label.TemplateTextDear}&nbsp;<apex:outputLabel value="{!IF(relatedTo.Language__c=='de','', IF(relatedTo.Language__c=='fr' ,'',recipient.FirstName+ ',' ))}"/> 
+<br/><br/>
+{!$Label.POWizardInfoMsgForSubmittedOrder}
+<br/><br/>
+{!$Label.TemplatePOErrorText2}<br/>
+{!$Label.TemplatePODealerPO}&nbsp;:&nbsp;{!relatedTo.Name}<br/><br/>
+
+{!$Label.TemplatePOAssignedDSR}&nbsp;:&nbsp;{!relatedTo.Assigned_DSR__r.name}<br/>
+{!$Label.TemplatePODealerAccount
+}&nbsp;:&nbsp;{!relatedTo.Dealer_Account__r.name}<br/>
+{!$Label.TemplatePODealerContactName}&nbsp;:&nbsp;{!relatedTo.Owner.Name}<br/><br/>
+
+{!$Label.TemplatePOSystemSize_kW}&nbsp;:&nbsp;{!relatedTo.System_Size__c}<br/>
+{!$Label.TemplatePOSubTotalbeforetax}&nbsp;:&nbsp;{!relatedTo.Order_Total__c}<br/>
+{!$Label.TemplatePOShippingMethod}&nbsp;:&nbsp;{!relatedTo.Shipping_Method__c}<br/>
+{!$Label.TemplatePORequestedDeliveryDate}&nbsp;:&nbsp;{!relatedTo.Requested_Delivery_Date__c}<br/>
+
+<br/>
+{!$Label.TemplateTextThanks}<br/>
+{!$Label.TemplateTextThanksByDetail}<br/>
+{!$Label.TemplateTextPortalURL}
+<br/><br/>
+(*){!$Label.TemplatePOTermsMessage}
+</messaging:HTMLEmailBody>
+</messaging:emailTemplate>

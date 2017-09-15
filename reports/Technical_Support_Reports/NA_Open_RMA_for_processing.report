@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Primary_PSR__c</field>
+    </columns>
+    <columns>
+        <field>RECORDTYPE</field>
+    </columns>
+    <columns>
+        <field>Case.Vendor__c</field>
+    </columns>
+    <columns>
+        <field>Case.Warranty__c</field>
+    </columns>
+    <columns>
+        <field>Case.Disposition__c</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>Case.RMA_Date__c</field>
+    </columns>
+    <columns>
+        <field>Case.RMA_Days_Opened__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Case.Region__c</column>
+            <operator>equals</operator>
+            <value>SPEB,SPNA</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Theater__c</column>
+            <operator>contains</operator>
+            <value>North America,Middle East and Africa,Central America and the Caribbean</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.RMA_Num__c</column>
+            <operator>lessOrEqual</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.RMA_Status__c</column>
+            <operator>contains</operator>
+            <value>Open</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.RMA_Date__c</column>
+            <operator>greaterThan</operator>
+            <value>1/1/2011 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OWNER</column>
+            <operator>notEqual</operator>
+            <value>Michelle Paraschac</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ACCOUNT.NAME</column>
+            <operator>notEqual</operator>
+            <value>New Homes Customers</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OWNER</column>
+            <operator>notEqual</operator>
+            <value>Heather Horner</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NA Open RMA for processing</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATEONLY</dateColumn>
+        <endDate>2015-10-19</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2008-10-19</startDate>
+    </timeFrameFilter>
+</Report>

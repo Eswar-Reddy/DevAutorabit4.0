@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Funding_Tranche__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$RSM__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$PTO_Ltr_Rcvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Notice_to_Proceed_Sent__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Tracks aging in no. of days Leases with NTP but no PTO received.</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Cancellation,Terminated,Transferred</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$PTO_Ltr_Rcvd__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Dealer_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NTP to PTO Aging Days</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Notice_to_Proceed_Sent__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2010-01-01</startDate>
+    </timeFrameFilter>
+</Report>

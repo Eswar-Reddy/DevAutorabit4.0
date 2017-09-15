@@ -1,0 +1,20 @@
+<apex:page standardController="LeasePayment__c" extensions="FPOOrderLinesExt" sidebar="false" showHeader="false">
+      <apex:pageBlock >
+           <apex:pageBlockTable value="{!lFPOOrderLines}" var="FPO" columns="12">
+               <apex:column >
+                  <apex:facet name="header">FPO Name</apex:facet>
+                  <apex:outputLink Id="theLink" value="/{!FPO.Id}" target="_blank">{!FPO.name}</apex:outputLink>
+                </apex:column>
+                <apex:column value="{!FPO.PO_Creation_Date__c}"/>
+                <apex:column value="{!FPO.PO_Amount__c}"/>
+                <apex:column value="{!FPO.PO_Receipt__c}"/>
+                <apex:column value="{!FPO.Supplier_Invoice__c}"/>
+                <apex:column value="{!FPO.Payment_Amount__c}"/>
+                <apex:column value="{!FPO.Payment_Date__c}"/>
+                <apex:column value="{!FPO.Schedule_Payment_Date__c}"/>
+                <apex:column value="{!FPO.MileStone__c}"/> 
+               <!-- <apex:column value="{!FPO.Vendor__c}"/>
+                   <apex:column value="{!FPO.Vendor_Type__c}"/>  --> 
+           </apex:pageBlockTable> 
+      </apex:pageBlock>  
+</apex:page>

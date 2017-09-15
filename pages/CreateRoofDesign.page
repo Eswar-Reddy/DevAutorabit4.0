@@ -1,0 +1,92 @@
+<!-- Visualforce page to Request Roof Design creation for an Account -->
+<apex:page standardController="Account" showHeader="false" sidebar="false" standardStylesheets="false" extensions="CreateRoofDesignController" action="{!actionRedirect}">
+    <style>
+    .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+        
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;">
+        <div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">
+        <apex:form >
+        <div class="row top1" >
+                <div class="col-xs-12">
+                <apex:outputPanel >
+                    <apex:pagemessages />
+                </apex:outputPanel>                
+                </div>
+        </div>
+          <div class="row top1" style="margin-top:10px;">
+                <div class="col-xs-12">
+                    <a href="/{!acc.id}">
+                        <h5 style="font-size: small;color: #0076be !important;">BACK TO {!acc.name} </h5>
+                    </a>
+                </div>
+            </div>
+            <div class="row top1" >
+                <div class="col-xs-12">
+                    <apex:outputPanel rendered="{!isRequestDesign}">
+                        <span style="display: inline-block;">
+                            <h2>{!$ObjectType.Roof_Design__c.fields.Notes_for_Design_Team__c.label} </h2>
+                        </span>
+                        <apex:outputPanel rendered="{!showExpedited}">
+                            <span style="display: inline-block; float:right;">
+                                <apex:outputPanel rendered="{!isRequestDesign}">
+                                    <span class="icon-container">
+                                        <span class="image-icon image-icon-tooltip tooltip" data-tooltip="Note: Additional fees apply" data-tooltip-position="bottom center"></span>
+                                    </span>
+                                    <apex:inputField value="{!roofDesign.Expedited_Design_Request__c}">Expedite Design Request?</apex:inputField>
+                                </apex:outputPanel>
+                            </span>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div class="row" style="margin-top:5px;">
+                <div class="col-xs-12">
+                   <apex:inputField value="{!roofDesign.Notes_for_Design_Team__c}" required="true" rendered="{!notesRequired && isRequestDesign}"/>
+                   <apex:inputField value="{!roofDesign.Notes_for_Design_Team__c}" rendered="{! !notesRequired && isRequestDesign}"/>
+                    <apex:outputPanel rendered="{!isRequestDesign}">
+                        <div class="row top1" style="margin-top:10px;">
+                            <div class="col-xs-12" style="font-size:90%">
+                                Need more information about Dynamic Design Standards?
+                                <a href="http://spectrum.sunpower.com/portal/content/na/eddietm-dynamic-design-standards" target="_BLANK">Click Here</a>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                    <div class="col-xs-6" style="text-align: right;">
+                        <apex:commandButton styleClass="btn btn-primary btn--normal" value="Request Design" action="{!requestRoofDesign}" rendered="{!isRequestDesign}"/>
+                    </div>
+                    <div class="col-xs-6" style="text-align: left;">
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" value="Cancel" action="{!cancel}" rendered="{!isRequestDesign}"/>
+                    </div>
+            </div>
+            </apex:form>
+        </div>
+        
+     </body>       
+
+
+<c:SPCommunityAppResources_JS />
+</apex:page>

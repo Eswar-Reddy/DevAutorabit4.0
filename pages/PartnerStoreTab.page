@@ -1,0 +1,82 @@
+<!--
+Name    : PartnerStoreTab
+Date    : Mar 09, 2010
+Author  : Aashish Mathur
+Purpose : Check if current user has access to "Partner Store" tab. If yes, show its content else show error message.
+-->
+
+<apex:page controller="PartnerStoreTabController" sidebar="false" showHeader="false">
+  <apex:outputPanel rendered="{!currentUser.Partner_Store_Visible__c}">
+    <script language="text/javascript">
+      function doResize() {
+        var iframe = document.getElementById("itarget");
+        
+        if (iframe) {
+          var height = 600;
+          
+          try {
+            var iFrameDom;
+            // If Navigator type browsers
+            if (iframe.contentDocument && iframe.contentDocument.body.offsetHeight) {
+              iframeDom = iframe.contentWindow.document.documentElement;
+            } else {
+              iframeDom = iframe.Document.body;
+            }
+            
+            height = Math.max(height, iframeDom.scrollHeight);
+          } catch (e) {
+            // Ignore exceptions (common issue is Permission Denied resulting from an attempt to cross domain boundaries)
+          }
+          
+          iframe.height = height;
+        }
+      }
+      
+      function getRecordIds(keyPrefix) {
+        return [];
+      }
+    </script>
+
+<script type="text/javascript">
+try {  
+var _gaq = _gaq || []; 
+_gaq.push(['_setAccount', 'UA-18801462-1']);  
+_gaq.push(['_setSessionCookieTimeout', 5400000]);  
+_gaq.push(['_setDomainName', 'none']);   
+_gaq.push(['_setAllowHash', false]);  
+_gaq.push(['_setAllowLinker' , true]);  
+_gaq.push(['_trackPageview']); 
+} catch(err) {
+}  
+(function() {    
+var ga = document.createElement('script'); 
+ga.type = 'text/javascript'; 
+ga.async = true;    
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';    
+var s = document.getElementsByTagName('script')[0]; 
+s.parentNode.insertBefore(ga, s);  })();    
+</script>   
+    <iframe width="100%" height="1600px" frameborder="0" scrolling="auto" title="Content"
+        src=""
+        name="itarget" id="itarget" />
+         <script>
+            _gaq.push(function() {
+                var iframe = document.getElementById('itarget');
+                var iFrameTracker = _gat._getTrackerByName();
+                iframe.src = iFrameTracker ._getLinkerUrl('{!BASE_URL}/Stringsizer/partnerStore/initPartnerStore.jsf?sessionid={!$API.Session_ID}&serverurl={!$API.Enterprise_Server_URL_160}&profileName={!currentUser.Profile.Name}&userDomain={!currentUser.Country_Domain__c}&redirectURL={!redirectURL}');
+            });         
+            function doResize() {
+                var minWidth = 1000;
+                var iframe = document.getElementById('itarget');
+                iframe.width = Math.max(minWidth, document.body.offsetWidth);
+            }
+            window.onresize = doResize;
+            document.onload = doResize;
+         </script>          
+        
+  </apex:outputPanel>
+  
+  <apex:outputPanel layout="block" rendered="{!NOT(currentUser.Partner_Store_Visible__c)}" style="width:100%; text-align:center; color:red; font-weight:bold;">
+    Access Denied
+  </apex:outputPanel>
+</apex:page>

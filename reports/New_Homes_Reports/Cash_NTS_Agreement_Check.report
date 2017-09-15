@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <block>
+        <blockInfo>
+            <blockId>B1</blockId>
+            <joinTable>Opportunity</joinTable>
+        </blockInfo>
+        <columns>
+            <field>Opportunity$Owner</field>
+        </columns>
+        <columns>
+            <field>Opportunity$Account</field>
+        </columns>
+        <columns>
+            <field>Opportunity$StageName</field>
+        </columns>
+        <columns>
+            <field>Opportunity$Closed_Won_Date__c</field>
+        </columns>
+        <columns>
+            <field>Opportunity.Quotes.Agreements__r$Agreement_Type_2__c</field>
+        </columns>
+        <columns>
+            <field>Opportunity.Quotes.Agreements__r$echosign_dev1__Status__c</field>
+        </columns>
+        <columns>
+            <field>Opportunity$Contract_Type__c</field>
+        </columns>
+        <columns>
+            <field>Opportunity$System_Size_KwP__c</field>
+        </columns>
+        <currency>USD</currency>
+        <filter>
+            <criteriaItems>
+                <column>Opportunity$PartnerAccount</column>
+                <operator>equals</operator>
+                <value>SunPower New Homes</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Opportunity$Name</column>
+                <operator>notContain</operator>
+                <value>Test</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Opportunity.Quotes.Agreements__r$echosign_dev1__Status__c</column>
+                <operator>equals</operator>
+                <value>Signed</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Opportunity$StageName</column>
+                <operator>equals</operator>
+                <value>Verbal Commitment,Contract Signed,Installation Completed</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Opportunity$Contract_Type__c</column>
+                <operator>equals</operator>
+                <value>NH - Cash</value>
+            </criteriaItems>
+        </filter>
+        <format>Summary</format>
+        <name>Opportunities with Quote and Agr block 1</name>
+        <params>
+            <name>co</name>
+            <value>1</value>
+        </params>
+        <reportType>Opportunities_with_Quote_and_Agreements__c</reportType>
+        <scope>organization</scope>
+        <timeFrameFilter>
+            <dateColumn>Opportunity$Closed_Won_Date__c</dateColumn>
+            <interval>INTERVAL_CURRENT</interval>
+        </timeFrameFilter>
+    </block>
+    <block>
+        <blockInfo>
+            <blockId>B0</blockId>
+            <joinTable>fko</joinTable>
+        </blockInfo>
+        <columns>
+            <field>CUST_NAME</field>
+        </columns>
+        <currency>USD</currency>
+        <filter>
+            <criteriaItems>
+                <column>FK_$Account.Partner_Account__c</column>
+                <operator>equals</operator>
+                <value>SunPower New Homes</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>FK_OPP_STAGE_NAME</column>
+                <operator>equals</operator>
+                <value>Contract Signed</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Document__c.Document_Type__c</column>
+                <operator>equals</operator>
+                <value>Signed-NTS</value>
+            </criteriaItems>
+        </filter>
+        <format>Summary</format>
+        <name>Documents with Opportunity block 2</name>
+        <params>
+            <name>co</name>
+            <value>1</value>
+        </params>
+        <reportType>CustomEntity$Document__c@Document__c.Opportunity__c</reportType>
+        <scope>organization</scope>
+        <timeFrameFilter>
+            <dateColumn>FK_$Opportunity.Closed_Won_Date__c</dateColumn>
+            <interval>INTERVAL_CURNEXT1</interval>
+        </timeFrameFilter>
+    </block>
+    <blockInfo>
+        <blockId xsi:nil="true"/>
+        <joinTable>Opportunity</joinTable>
+    </blockInfo>
+    <format>MultiBlock</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Cash NTS Agreement Check</name>
+    <params>
+        <name>lsk</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Quote_and_Agreements__c</reportType>
+    <showDetails>true</showDetails>
+</Report>

@@ -1,0 +1,33 @@
+<apex:page standardController="Account" extensions="TerrirtoryPickListController" id="pg" showHeader="false" sidebar="false" >
+  <script>
+        if('{!closeStatus}' =='close'){
+            self.close();
+        }else if('{!closeStatus}' =='save'){
+            window.parent.opener.location.href= '/'+'{!accid}';
+            self.close();
+        }
+    </script>
+    <apex:form id="frm">
+      
+      <apex:pageBlock id="blk" title="Territory List">
+          <apex:pageBlockSection id="CustomerProjectSection">
+               <apex:pageblockSectionItem id="PMsection">
+                      <apex:outputLabel for="selTerritory">Choose Territory</apex:outputLabel>
+                            <apex:selectList id="selTerritory"  size="1" value="{!acct.Territory__c}">
+                                <apex:selectOptions value="{!TerritoryList}"/>
+                            </apex:selectList>
+                </apex:pageBlockSectionItem>      
+          </apex:pageBlockSection>
+          <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save" onClick="return validate()"/>
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+          </apex:pageBlockButtons>
+
+      </apex:pageBlock>
+    </apex:form>
+    <script>
+    function validate(){
+        return true;        
+    }
+    </script>
+</apex:page>

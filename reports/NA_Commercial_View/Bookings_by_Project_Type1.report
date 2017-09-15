@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Territory</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.OpportunityLineItems$Quantity</field>
+    </columns>
+    <columns>
+        <field>Opportunity$ASP_New_del__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$Amount</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$DirectMargin__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Product_Family__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$PricebookEntry.Product2</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$Product_Family__c</column>
+            <operator>contains</operator>
+            <value>mounting system</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>equals</operator>
+            <value>06 – Closed Won</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>FiscalYear</dateGranularity>
+        <field>Opportunity$CloseDate</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Bookings by Project Type</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Products_and_Schedules_and_Site__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <territoryHierarchyFilter>RC154641</territoryHierarchyFilter>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

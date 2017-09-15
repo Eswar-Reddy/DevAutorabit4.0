@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Design__c.Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Probability__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Site_Audit_Notes__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Site_Information_Form__c.Electric_Meter_Number__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Topo_GPS_Notes__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Geotech_Notes__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Roof_Report_Notes__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Structural_Qualification_Notes__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Design__c.Project_Design</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Americas,NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Opportunity__c</column>
+            <operator>notEqual</operator>
+            <value>378762_Test Oppty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Opportunity_Stage__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>03 – Binding Offer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Not Started,Missing Info,In Progress,Completed,Plan Check,Permit Approval,Construction,Record Drawings,Customer Service,Active,Waiting on someone else,On Hold,De-Activated,Invalid,Awaiting Approval,Correct,Cancelled</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Opportunity_Stage__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_$Site_Information_Form__c.Opportunity_del__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>FEL - Needs Site Audit</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Design__c@Design__c.Site__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_PREVCURFY</interval>
+    </timeFrameFilter>
+</Report>

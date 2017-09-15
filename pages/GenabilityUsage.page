@@ -1,0 +1,454 @@
+<apex:page showHeader="false" id="genpg" sidebar="false" standardStylesheets="false" standardController="Account" extensions="GenabilityUsageController" action="{!checkandCreateAccountinGenability}">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sunpower-style .alert::before {
+            content: " ";
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+            -webkit-box-flex: 0;
+            -ms-flex-positive: 0;
+            flex-grow: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 0;
+            height: 1.8rem;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        //ADD-INS
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60 !important;
+        }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        .alert-success{background-color:#dff0d8;border-color:#d6e9c6;color:#468847;}
+        .alert-success h4{color:#468847;}
+        .alert-danger,.alert-error{background-color:#f2dede;border-color:#eed3d7;color:#b94a48;}
+        .alert-danger h4,.alert-error h4{color:#b94a48;}
+        .alert-info{background-color:#d9edf7;border-color:#bce8f1;color:#3a87ad;}
+        .alert-info h4{color:#3a87ad;}
+        .alert-block{padding-top:14px;padding-bottom:14px;}
+        .alert-block>p,.alert-block>ul{margin-bottom:0;}
+        .alert-block p+p{margin-top:5px;}
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    <script>
+        
+        function radioCheckToggle(radioid){
+            
+            if(radioid=="billRadio"){
+                document.getElementById('billRadio').checked= true;
+                document.getElementById('monthlyRadio').checked= false;
+                //passUsage('BILL');
+                document.getElementById('genpg:genfrm:usageVal').value = 'BILL';
+            }else{
+                document.getElementById('monthlyRadio').checked= true;
+                document.getElementById('billRadio').checked= false;
+                document.getElementById('genpg:genfrm:usageVal').value = 'MONTHLY ENERGY USAGE';
+            }
+            
+        }
+    </script>
+
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <!--<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" />-->
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent rendered="{!IsPartner}" activeTab="Accounts"/>
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;">
+        <div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">
+          <div class="row top2" >
+                <div class="col-xs-12">
+                    <a href="/{!acc.id}">
+                        <h5 style="font-size: small;color: #0076be !important;">BACK TO {!acc.name} </h5>
+                    </a>
+                </div>
+            </div> 
+            <div class="row top1" >
+                <div class="col-xs-12">
+                    <h2>Electric Rate and Energy Usage</h2>
+                </div>
+            </div> 
+            <apex:form id="genfrm">
+                
+                    
+                
+                <div class="row">
+                <apex:outputPanel id="pgMsgsPanel">
+                    <div class="col-xs-12">
+                    <c:pageMessages />
+                    </div>
+                </apex:outputPanel>
+                </div>
+                <div class="row top2">
+                    <div class="col-xs-6" style="text-align: left;">
+                        <h3>Electric Rate</h3>    
+                    </div>
+                    <div class="col-xs-6" style="text-align: right;">
+                        <apex:outputLabel id="editratebnt">
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" value="EDIT ELECTRICITY RATE" id="editRates" action="{!editRates}" rendered="{!!ratesEdited}" reRender="editratebnt,genabilityUR,genabilityPR"/>
+                        </apex:outputLabel>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-xs-5" style="text-align: left;">
+                        <h5>Current Electric Rate</h5>    
+                    </div>
+                    <div class="col-xs-2" style="text-align: center;">
+                        
+                    </div>
+                    <div class="col-xs-5" style="text-align: left;">
+                        <h5>Proposed Electric Rate</h5>
+                    </div>
+                </div>
+                
+                <div class="row top1" id="guDiv">
+                    <div class="col-xs-5" style="text-align: left;">
+                        <div id="elecrateDiv">
+                        <apex:outputPanel id="genabilityUR">
+                            <apex:selectList style="width:100%;" styleClass="selectinline" id="elecrate" size="1" value="{!electricratecurrentselected}" disabled="{!!ratesEdited}" multiselect="false">
+                                <apex:selectOptions value="{!ElectricUsageRate}"/>
+                        </apex:selectList>
+                        </apex:outputPanel>  
+                        </div>    
+                    </div>
+                    <div class="col-xs-2" style="text-align: center;">
+                       <div class="circle"> > </div>
+                    </div>
+                    <div class="col-xs-5" style="text-align: left;">
+                        <div id="proprateDiv">
+                        <apex:outputPanel id="genabilityPR">
+                            <apex:selectList style="width:100%;" styleClass="selectinline" id="prorate" size="1" value="{!electricrateproposedselected}" disabled="{!!ratesEdited}" multiselect="false">
+                                <apex:selectOptions value="{!ElectricPropsedRate}"/>
+                        </apex:selectList>
+                        </apex:outputPanel>    
+                        </div>    
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-xs-5" style="text-align: left;color:#9b9b9b;font-size:.8rem;">
+                        <apex:outputPanel id="currentRateText">{!ElectricUsage.Current_rate_code__c}</apex:outputPanel> 
+                    </div>
+                    <div class="col-xs-2" style="text-align: center;">
+                        
+                    </div>
+                    <div class="col-xs-5" style="text-align: left;color:#9b9b9b;font-size:.8rem;">
+                        <apex:outputPanel id="proposedRateText">{!ElectricUsage.Proposed_rate_code__c}</apex:outputPanel>
+                    </div>
+                </div>
+               
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1.5rem !important;margin-bottom: 1.5rem !important;margin-left: auto;margin-right: auto;" />
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-xs-6" style="text-align: left;">
+                        <h3>Energy Usage</h3>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        Usage numbers may change on the proposal as Genability intelligent energy algorithms translate one year of historical data into a prediction of average future usage using the most current rates. 
+                    </div>
+                </div>     
+                <div class="row" style="margin-top:20px;">
+                    <div class="tabs">
+                        <div class="tabs__header-container">
+                            <apex:inputHidden value="{!usage}" id="usageVal"/>
+                            <ul class="tabs__header">
+                                <li class="tabs__header-item" id="billTab" onclick="radioCheckToggle('billRadio');" data-tab-id="1">
+                                    <span>Bill</span><br/>
+                                    <div class="radio" style="margin-left: 2rem !important;" onclick="radioCheckToggle('billRadio');">
+                                        <label for="billRadio">
+                                            <input type="radio" name="exampleRadios" id="billRadio" value="Bill"/>
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li class="tabs__header-item " id="monthlyTab" onclick="radioCheckToggle('monthlyRadio');" data-tab-id="2">
+                                    <span>Monthly Energy Usage</span>
+                                    <div class="radio" style="margin-left: 2rem !important;" onclick="radioCheckToggle('monthlyRadio');">
+                                        <label for="monthlyRadio">
+                                            <input type="radio" name="exampleRadios" id="monthlyRadio" value="MONTHLY ENERGY USAGE"/>
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                                                   
+                        <!--start tab containers-->
+                        <div class="tabs__content-container" >
+                    
+                            <!--tab1 Helix Roof -->
+                            <div class="tabs__content">
+                                <div id="billTabContainer" class="tabs__content-item tabs__content-item--active" data-tab-content="1">
+                                <apex:outputPanel id="billtab">
+                                    <div class="row top2">
+                                        <div class="col-xs-3" style="text-align:right;">
+                                        My
+                                        </div>
+                                        <div class="col-xs-3" style="text-align:center;">
+                                            <apex:selectList id="Positions" style="width=60%;" value="{!billType}"  size="1">
+                                                <apex:selectoption itemLabel="Average Monthly Bill" itemValue="monthlyAverage"></apex:selectoption>
+                                                <apex:selectoption itemLabel="Total Annual Bill" itemValue="totalYearly"></apex:selectoption>
+                                            </apex:selectList> 
+                                        </div>
+                                        <div class="col-xs-6" style="text-align:left;">
+                                            is &nbsp;&nbsp;<apex:inputText style="height: 90%;" value="{!billAmount}" />
+                                        </div>
+                                    </div>
+                                    <div class="row top2">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            My <font style="color:#0076be;">Total Yearly bill</font> is &nbsp; <font style="color:#0076be;"><apex:outputField value="{!ElectricUsage.Annual_Bill__c}"/></font>.
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                        My <font style="color:#0076be;">Total Annual Usage</font> is &nbsp; <font style="color:#0076be;"><apex:outputField style="color:#0076be;" value="{!ElectricUsage.Annual_Usage__c}"/></font> kilowatt-hours (kWh).
+                                        </div>
+                                    </div>
+                                </apex:outputPanel>    
+                                </div>  
+                            </div>      
+                                    
+                            <div class="tabs__content">
+                                <div id="monthlyTabContainer" class="tabs__content-item" data-tab-content="2">
+                                <apex:outputPanel id="monthlytab">
+                                    <div class="row" style="padding-bottom: 2rem;">
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Jan</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Jan__c}"  label="Jan" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Feb</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Feb__c}"  label="Feb" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Mar</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Mar__c}"  label="Mar" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>  
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Apr</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Apr__c}"  label="Apr" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">May</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_May__c}"  label="May" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Jun</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Jun__c}"  label="Jun" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Jul</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Jul__c}"  label="Jul" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Aug</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Aug__c}"  label="Aug" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Sep</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Sep__c}"  label="Sep" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Oct</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Oct__c}"  label="Oct" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Nov</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Nov__c}"  label="Nov" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>
+<div class="col-xs-1">
+    <div style="width:80%;align:center;border:1px solid #0076be;color:#0076be;">
+        <div style="text-align:center;">Dec</div><br/>
+        <div><apex:inputField style="border:none;text-align:left;width:80%;height:10%;margin:5px;color:#0076be" html-placeholder="   --"  value="{!ElectricUsage.Monthly_Dec__c}"  label="Dec" /></div>
+        <div style="text-align:center;"><font style="font-size:0.7rem;">kWh</font></div>
+    </div>
+</div>            
+                                     </div>
+                                    <div class="row">
+                                        <div class="col-xs-12" style="text-align:center;">
+                                            My <font style="color:#0076be;">Total Annual Usage</font> is &nbsp; <font style="color:#0076be;"><apex:outputField style="color:#0076be;" value="{!ElectricUsage.Annual_Usage__c}"/></font> kilowatt-hours (kWh).
+                                        </div>
+                                    </div>
+                                     </apex:outputPanel>
+
+                                </div>  
+                            </div>
+                        </div>      
+                    </div>
+                </div>
+
+                <div class="row top2">
+                <div class="col-xs-12" style="text-align: right;">
+                <apex:commandButton styleClass="btn btn-primary btn--normal" value="Save" id="saveButton" action="{!saveEU}" reRender="genabilityForm,billtab,monthlytab,editratebnt,genabilityUR,genabilityPR,ratesDisplay,currentRateText,proposedRateText,pgMsgsPanel"/> &nbsp;
+                </div>
+                </div>
+            </apex:form>
+        </div>
+        
+    </body>
+    <script>
+     window.onload = function(){
+        
+            if('{!Usage}'=='BILL'){
+                console.log('{!Usage}'+'---'+document.getElementById('billTab').className+'----'+document.getElementById('billRadio'));  
+                document.getElementById('billTab').className += " tabs__header-item--active";
+                document.getElementById('billRadio').checked= true;
+                document.getElementById('billTabContainer').className += " tabs__content-item--active";
+                document.getElementById('monthlyTabContainer').className= "tabs__content-item";
+            }
+            if('{!Usage}'=='MONTHLY ENERGY USAGE'){
+                console.log('{!Usage}'+'---'+document.getElementById('billTab').className+'----'+document.getElementById('billRadio')); 
+                document.getElementById('monthlyTab').className += " tabs__header-item--active";
+                document.getElementById('monthlyRadio').checked= true;
+                document.getElementById('billTabContainer').className = "tabs__content-item";
+                document.getElementById('monthlyTabContainer').className += " tabs__content-item--active";
+            }
+        };
+    </script>
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+
+</apex:page>

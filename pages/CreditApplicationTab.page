@@ -1,0 +1,52 @@
+<!--
+Name   : CreditApplicationTab
+Author : Aashish Mathur
+Date   : May 04, 2010
+Usage  : Used to list CA to the portal user related to his Account.
+-->
+
+<apex:page controller="CreditApplicationTabController"
+    tabStyle="Credit_Application__c" action="{!redirectInternalUser}">
+    
+    <!-- Done for Case # 00069900
+            Added rendered condition to display CA -->
+    <apex:pageMessages />
+
+    <apex:sectionHeader title="{!$ObjectType.Credit_Application__c.label}"
+        subtitle="{!$Label.Home}" rendered="{!displayCA}"/>
+
+    <apex:form rendered="{!displayCA}">
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!newCreApp}"
+                    value="{!$Label.NewCreditApplication}" />
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockTable value="{!creAppList}" var="creApp"
+                rendered="{!creAppList.size > 0}">
+                <apex:column headerValue="{!$Label.POWizardActionHeading}">
+                    <apex:outputLink value="/{!creApp.Id}/e?retURL={!retURL}">Edit</apex:outputLink>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header">{!$ObjectType.Credit_Application__c.fields.Name.label}</apex:facet>
+                    <a href="/{!creApp.Id}"><apex:outputField value="{!creApp.Name}"/></a>
+                </apex:column>
+
+                <apex:column value="{!creApp.Legal_Company_Name__c}" rendered="{!NOT(isEuPartnerUser)}"/>
+                <apex:column value="{!creApp.Credit_Limit_Requested__c}" rendered="{!isEuPartnerUser}"/>
+
+                <apex:column value="{!creApp.Account__c}" rendered="{!NOT(isEuPartnerUser)}"/>
+                <apex:column value="{!creApp.Date_of_Application__c}" rendered="{!isEuPartnerUser}"/>
+
+                <apex:column value="{!creApp.Date_of_Application__c}"  rendered="{!NOT(isEuPartnerUser)}"/>
+                <apex:column value="{!creApp.Credit_Limit__c}"  rendered="{!isEuPartnerUser}"/>
+
+                <apex:column value="{!creApp.Status__c}" />
+            </apex:pageBlockTable>
+
+            <apex:outputLabel value="{!$Label.NoRecordMessage}"
+                rendered="{!creAppList.size = 0}" />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

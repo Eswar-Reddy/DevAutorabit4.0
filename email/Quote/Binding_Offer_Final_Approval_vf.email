@@ -1,0 +1,41 @@
+<messaging:emailTemplate subject="Binding Offer Approved-{!relatedTo.Name}" recipientType="Contact" relatedToType="Quote">
+<messaging:htmlEmailBody >
+
+The following Binding Offer Pricing has been Approved.
+
+<br/>
+ <br/>
+ <a href="https://login.salesforce.com/{!relatedTo.id}">View Detail</a>
+ <br/>
+Deal Information
+<br/>
+Quote Name: {!relatedTo.Name}
+<br/>
+Quote Owner: {!relatedTo.createdBy.Name}
+<br/>
+Opportunity Number: {!relatedTo.Opportunity_Number__c}
+<br/>
+Opportunity Name: {!relatedTo.Opportunity.Name}
+<br/>
+Amount: {!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.TotalPrice}"/></apex:outputText>
+<br/>
+Cost: {!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.Total_Cost__c}"/></apex:outputText>
+<br/>
+Direct Project Margin: {!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, ,000.00}"><apex:param value="{!relatedTo.Direct_Margin__c}"/></apex:outputText>
+<br/>
+Direct Project Margin %: {!relatedTo.DirectMargin_per__c}
+<br/>
+NPV $/W: {!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, ,0.00}"><apex:param value="{!relatedTo.NPV_W__c}"/></apex:outputText>
+<br/>
+<br/>
+O&amp;M Information
+<br/>
+Total O&amp;M Amount:{!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.Total_O_M_Amount__c}"/></apex:outputText>
+<br/>
+Total O&amp;M Cost:{!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.Total_O_M_Cost__c}"/></apex:outputText> 
+<br/>
+O&amp;M Direct Project Margin:{!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.O_M_Direct_Project_Margin__c}"/></apex:outputText>
+<br/>
+O&amp;M Direct Project Margin%: {!relatedTo.O_M_Direct_Project_Margin1__c} 
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

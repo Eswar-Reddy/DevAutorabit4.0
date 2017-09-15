@@ -1,0 +1,81 @@
+<apex:component controller="RecordTypeController">
+    <style type="text/css">
+        select {
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+            text-align: left;
+            z-index: 100;
+            width: 100%;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background: transparent;
+            color: #5e6367;
+            line-height: 1.5;
+            font-size: 1rem;
+            -webkit-font-smoothing: antialiased;
+            border: 1px solid #e5e5e5;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            padding-right: 3rem;
+            display: block;
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 42px;
+        }
+    </style>
+    <apex:attribute name="objectType" description="The type of record to pull record types for" type="String" required="true" assignTo="{!objectTypeString}"/>
+    <body class="detail-container">
+    <apex:form >
+        <apex:actionFunction name="continueAction" action="{!submit}" />
+        <apex:actionFunction name="cancelAction" action="{!cancel}" />
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="form-group">
+                    <label for="selectListView">Select Record Type</label>
+                    <apex:selectList id="selectListView" value="{!selectedRecordTypeId}" multiselect="false" size="1" styleClass="input-container input-container--icon icon-right">
+                        <apex:selectOptions value="{!recordTypes}"/>
+                    </apex:selectList>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <h5>Available Account Record Types</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Record Type Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!RecordTypeDescriptions}" var="key" >
+                            <apex:repeat value="{!RecordTypeDescriptions[key]}" var="keyvalue" >
+                                <tr>
+                                    <td>{!key}</td>
+                                    <td>{!keyvalue}</td>
+                                </tr>
+                            </apex:repeat>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <a class="btn btn-primary btn--small" onclick="continueAction(); return false" style="float: left; margin-bottom: 1rem;">Continue</a>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <a class="btn btn-secondary btn--small" onclick="cancelAction();" style="float: left; margin-bottom: 1rem;">Cancel</a>
+            </div>
+        </div>
+    </apex:form>
+</body>
+</apex:component>

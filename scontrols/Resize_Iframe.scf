@@ -1,0 +1,25 @@
+// =================================================================
+// Re-size the current iframe to avoid a vertical scrollbar.
+// This function should only be called from a script that is living inside
+// an iframe, such as an inline s-control.
+// =================================================================
+function resizeIframe () {
+  var me = window.name;
+  var height = 0;
+  
+  if (me) {
+    var iframes = parent.document.getElementsByName(me);
+    if (iframes && iframes.length == 1) {
+      height = document.body.offsetHeight;
+      height += 25; // add a few extra pixels, just to make sure the vertical scrollbar goes away
+      if (height > 32768) {
+        // Maximum iframe height is 32768.  Setting any larger value will result in a very large 
+        // parent window height, and still a scrollbar on the iframe itself.  The bottom of the window
+        // will be a huge expanse of blankness. It's pretty ugly.  
+        height = 32768;
+      }
+
+      iframes[0].style.height = height + "px";
+    }
+  }
+}

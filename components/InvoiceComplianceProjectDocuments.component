@@ -1,0 +1,361 @@
+<apex:component controller="InvoiceComplianceProjectDocController" allowDML="true">
+	<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+	<style type="text/css">
+		li {
+			margin-left:0 !important;
+		}
+	</style>
+	<div class="sunpower-style container container-fluid" style="font-size:12px;">
+		<apex:form >
+			<apex:outputPanel rendered="{!showError}">
+				<div class="alert alert--danger" >
+					<span> {!errorMsg}</span>
+					<button type="button" class="alert__close"></button>
+				</div>
+			</apex:outputPanel>
+			<div class="tabs">
+				<div class="tabs__header-container">
+					<ul class="tabs__header">
+						<li class="tabs__header-item{!IF(currTab == 0,' tabs__header-item--active','')}" data-tab-id="1">
+							<span>Project</span>
+						</li>
+						<li class="tabs__header-item{!IF(currTab == 1,' tabs__header-item--active','')}" data-tab-id="2">
+							<span>Origination</span>
+						</li>
+						<li class="tabs__header-item{!IF(currTab == 2,' tabs__header-item--active','')}" data-tab-id="3">
+							<span>Installation</span>
+						</li>
+						<li class="tabs__header-item{!IF(currTab == 3,' tabs__header-item--active','')}" data-tab-id="4">
+							<span>Interconnection</span>
+						</li>
+						<li class="tabs__header-item{!IF(currTab == 4,' tabs__header-item--active','')}" data-tab-id="5">
+							<span>Permit</span>
+						</li>
+					</ul>
+				</div>
+				<div class="tabs__content-container">
+					<div class="tabs__content">
+						<div class="tabs__content-item{!IF(currTab == 0,' tabs__content-item--active','')}" data-tab-content="1">
+							<apex:commandLink styleClass="btn" value="Save Changes" action="{!saveFile}" style="background:LightBlue;padding:4px;font-size:12px;position:absolute;top:5px;left:30rem;">
+								<apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+							</apex:commandLink>
+							<apex:outputPanel style="position: absolute; top: 10px; left: 38rem;" rendered="{!pageSize[0]>rowsOnPage}">
+								Records Found:  <apex:outputText >{!pageSize[0]}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+								<apex:commandLink action="{!prevPage}" value="Previous" rendered="{!pagePtr[0]>1}">
+									<apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[0]==0}">Previous</apex:outputPanel>
+								&nbsp;({!pageptr[0]+1}&nbsp;-&nbsp;{!IF(pageptr[0]+rowsOnPage > pageSize[0],pageSize[0],pagePtr[0]+rowsOnPage)})&nbsp;&nbsp;
+								<apex:commandLink action="{!nextPage}" value="Next" rendered="{!pagePtr[0]+rowsOnPage<pageSize[0]}">
+									<apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[0]+rowsOnPage>=pageSize[0]}">Next</apex:outputPanel>
+							</apex:outputPanel>
+
+							<apex:dataTable value="{!projDocRows}" var="doc" id="documents" styleClass="table table-responsive" cellpadding="10px" rows="{!rowsOnPage}" first="{!pagePtr[0]}">
+
+								<apex:column headerValue="Document" headerClass="underline">
+									<apex:outputLink value="/{!doc.dId}" target="_blank">{!doc.title}</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Filename" headerClass="underline">
+									<apex:outputPanel rendered="{! NOT(ISBLANK(doc.fileUrl))}">
+										<a href="{!doc.fileUrl}" target="_blank">{!doc.docName}</a>
+									</apex:outputPanel>
+								</apex:column>
+
+								<apex:column headerValue="Action" headerClass="underline">
+									<apex:commandLink action="{!deleteDoc}" styleClass="secondary-link" rendered="{!doc.canDelete}" style="float:left;"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+										Delete
+										<apex:param name="deleteDocId" value="{!doc.dId}" assignTo="{!deleteDocId}"/>
+										<apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+									</apex:commandLink>
+									<apex:outputLink value="{!$Page.S3Upload}?Id={!doc.dId}&redirectId={!recordId}" target="_top" rendered="{!ISBLANK(doc.fileUrl)}">
+										Upload File
+									</apex:outputLink>
+								</apex:column>
+
+							</apex:dataTable>
+						</div>
+					</div>
+					<div class="tabs__content">
+						<div class="tabs__content-item{!IF(currTab == 1,' tabs__content-item--active','')}" data-tab-content="2">
+							<apex:commandLink styleClass="btn" value="Save Changes" action="{!saveFile}" style="background:LightBlue;padding:4px;font-size:12px;position:absolute;top:5px;left:30rem;">
+								<apex:param name="currTab" value="1" assignTo="{!currTab}"/>
+							</apex:commandLink>
+							<apex:outputPanel style="position: absolute; top: 10px; left: 38rem;" rendered="{!pageSize[1]>rowsOnPage}">
+								Records Found:  <apex:outputText >{!pageSize[1]}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+								<apex:commandLink action="{!prevPage}" value="Previous" rendered="{!pagePtr[1]>1}">
+									<apex:param name="currTab" value="1" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[1]==0}">Previous</apex:outputPanel>
+								&nbsp;({!pageptr[1]+1}&nbsp;-&nbsp;{!IF(pageptr[1]+rowsOnPage > pageSize[1],pageSize[1],pagePtr[1]+rowsOnPage)})&nbsp;&nbsp;
+								<apex:commandLink action="{!nextPage}" value="Next" rendered="{!pagePtr[1]+rowsOnPage<pageSize[1]}">
+									<apex:param name="currTab" value="1" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[1]+rowsOnPage>=pageSize[1]}">Next</apex:outputPanel>
+							</apex:outputPanel>
+
+							<apex:dataTable value="{!origDocRows}" var="odoc" id="odocuments" styleClass="table table-responsive" cellpadding="10px" rows="{!rowsOnPage}" first="{!pagePtr[1]}">
+
+								<apex:column headerValue="Document" headerClass="underline">
+									<apex:outputLink value="/{!odoc.dId}" target="_blank">{!odoc.title}</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Filename" headerClass="underline">
+									<apex:outputPanel rendered="{! NOT(ISBLANK(odoc.fileUrl))}">
+										<a href="{!odoc.fileUrl}" target="_blank">{!odoc.docName}</a>
+									</apex:outputPanel>
+								</apex:column>
+
+								<apex:column headerValue="Status" headerClass="underline">
+									<apex:outputText value="{!odoc.invDoc.Status__c}" rendered="{!odoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Document Owner" headerClass="underline">
+									<apex:outputText value="{!odoc.invDoc.Document_Owner__c}" rendered="{!odoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Action" headerClass="underline">
+									<apex:commandLink action="{!deleteInvDoc}" styleClass="secondary-link" rendered="{!odoc.canDelete && (partnerRole == null || (partnerRole != null && odoc.invDoc.Document_Owner__c == partnerRole))}" style="float:left;"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+										Delete
+										<apex:param name="deleteDocId" value="{!odoc.dId}" assignTo="{!deleteDocId}"/>
+										<apex:param name="currTab" value="1" assignTo="{!currTab}"/>
+									</apex:commandLink>
+									<apex:outputLink value="{!$Page.S3Upload}?Id={!odoc.dId}&redirectId={!recordId}" target="_top" rendered="{!!odoc.canDelete && (partnerRole == null || (partnerRole != null && odoc.invDoc.Document_Owner__c == partnerRole))}">
+										Upload File
+									</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Date Submitted" headerClass="underline">
+									<apex:outputField value="{!odoc.invDoc.Document_Submitted__c}" rendered="{!odoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Response Date" headerClass="underline">
+									<apex:outputField value="{!odoc.invDoc.Response_Date__c}" rendered="{!odoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Partner Comments" headerClass="underline">
+									<apex:inputText value="{!odoc.invDoc.Partner_Comments__c}" rendered="{!odoc.isComp}" disabled="{!partnerRole != null && odoc.invDoc.Document_Owner__c != partnerRole}" style="position:relative; top:-5px;" maxlength="255"/>
+								</apex:column>
+
+								<apex:column headerValue="Approver Notes" headerClass="underline">
+									<apex:outputText value="{!odoc.invDoc.Notes_to_Partner__c}" rendered="{!odoc.isComp}"/>
+								</apex:column>
+
+							</apex:dataTable>
+						</div>
+					</div>
+					<div class="tabs__content">
+						<div class="tabs__content-item{!IF(currTab == 2,' tabs__content-item--active','')}" data-tab-content="3">
+							  <apex:commandLink styleClass="btn" value="Save Changes" action="{!saveFile}" style="background:LightBlue;padding:4px;font-size:12px;position:absolute;top:5px;left:30rem;">
+								<apex:param name="currTab" value="2" assignTo="{!currTab}"/>
+							</apex:commandLink>
+						  <apex:outputPanel style="position: absolute; top: 10px; left: 38rem;" rendered="{!pageSize[2]>rowsOnPage}">
+								Records Found:  <apex:outputText >{!pageSize[2]}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+								<apex:commandLink action="{!prevPage}" value="Previous" rendered="{!pagePtr[2]>1}">
+									<apex:param name="currTab" value="2" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[2]==0}">Previous</apex:outputPanel>
+								&nbsp;({!pageptr[2]+1}&nbsp;-&nbsp;{!IF(pageptr[2]+rowsOnPage > pageSize[2],pageSize[2],pagePtr[2]+rowsOnPage)})&nbsp;&nbsp;
+								<apex:commandLink action="{!nextPage}" value="Next" rendered="{!pagePtr[2]+rowsOnPage<pageSize[2]}">
+									<apex:param name="currTab" value="2" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[2]+rowsOnPage>=pageSize[2]}">Next</apex:outputPanel>
+							</apex:outputPanel>
+
+							<apex:dataTable value="{!instalDocRows}" var="idoc" id="idocuments" styleClass="table table-responsive" cellpadding="10px"  rows="{!rowsOnPage}" first="{!pagePtr[2]}">
+
+								<apex:column headerValue="Document" headerClass="underline">
+									<apex:outputLink value="/{!idoc.dId}" target="_blank">{!idoc.title}</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Filename" headerClass="underline">
+									<apex:outputPanel rendered="{! NOT(ISBLANK(idoc.fileUrl))}">
+										<a href="{!idoc.fileUrl}" target="_blank">{!idoc.docName}</a>
+									</apex:outputPanel>
+								</apex:column>
+
+								<apex:column headerValue="Status" headerClass="underline">
+									<apex:outputText value="{!idoc.invDoc.Status__c}" rendered="{!idoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Document Owner" headerClass="underline">
+									<apex:outputText value="{!idoc.invDoc.Document_Owner__c}" rendered="{!idoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Action" headerClass="underline">
+									<apex:commandLink action="{!deleteInvDoc}" styleClass="secondary-link" rendered="{!idoc.canDelete && (partnerRole == null || (partnerRole != null && idoc.invDoc.Document_Owner__c == partnerRole))}" style="float:left;"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+										Delete
+										<apex:param name="deleteDocId" value="{!idoc.dId}" assignTo="{!deleteDocId}"/>
+										<apex:param name="currTab" value="2" assignTo="{!currTab}"/>
+									</apex:commandLink>
+									<apex:outputLink value="{!$Page.S3Upload}?Id={!idoc.dId}&redirectId={!recordId}" target="_top" rendered="{!!idoc.canDelete && (partnerRole == null || (partnerRole != null && idoc.invDoc.Document_Owner__c == partnerRole))}">
+										Upload File
+									</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Date Submitted" headerClass="underline">
+									<apex:outputField value="{!idoc.invDoc.Document_Submitted__c}" rendered="{!idoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Response Date" headerClass="underline">
+									<apex:outputField value="{!idoc.invDoc.Response_Date__c}" rendered="{!idoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Partner Comments" headerClass="underline">
+									<apex:inputText value="{!idoc.invDoc.Partner_Comments__c}" rendered="{!idoc.isComp}" disabled="{!partnerRole != null && idoc.invDoc.Document_Owner__c != partnerRole}" style="position:relative; top:-5px;" maxlength="255"/>
+								</apex:column>
+
+								<apex:column headerValue="Approver Notes" headerClass="underline">
+									<apex:outputText value="{!idoc.invDoc.Notes_to_Partner__c}" rendered="{!idoc.isComp}"/>
+								</apex:column>
+
+							</apex:dataTable>
+						</div>
+					</div>
+					<div class="tabs__content">
+						<div class="tabs__content-item{!IF(currTab == 3,' tabs__content-item--active','')}" data-tab-content="4">
+							<apex:commandLink styleClass="btn" value="Save Changes" action="{!saveFile}" style="background:LightBlue;padding:4px;font-size:12px;position:absolute;top:5px;left:30rem;">
+								<apex:param name="currTab" value="3" assignTo="{!currTab}"/>
+							</apex:commandLink>
+							<apex:outputPanel style="position: absolute; top: 10px; left: 38rem;" rendered="{!pageSize[3]>rowsOnPage}">
+								Records Found:  <apex:outputText >{!pageSize[3]}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+								<apex:commandLink action="{!prevPage}" value="Previous" rendered="{!pagePtr[3]>1}">
+									<apex:param name="currTab" value="3" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[3]==0}">Previous</apex:outputPanel>
+								&nbsp;({!pageptr[3]+1}&nbsp;-&nbsp;{!IF(pageptr[3]+rowsOnPage > pageSize[3],pageSize[3],pagePtr[3]+rowsOnPage)})&nbsp;&nbsp;
+								<apex:commandLink action="{!nextPage}" value="Next" rendered="{!pagePtr[3]+rowsOnPage<pageSize[3]}">
+									<apex:param name="currTab" value="3" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[3]+rowsOnPage>=pageSize[3]}">Next</apex:outputPanel>
+							</apex:outputPanel>
+
+							<apex:dataTable value="{!interDocRows}" var="iidoc" id="iidocuments" styleClass="table table-responsive" cellpadding="10px"  rows="{!rowsOnPage}" first="{!pagePtr[3]}">
+
+								<apex:column headerValue="Document" headerClass="underline">
+									<apex:outputLink value="/{!iidoc.dId}" target="_blank">{!iidoc.title}</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Filename" headerClass="underline">
+									<apex:outputPanel rendered="{! NOT(ISBLANK(iidoc.fileUrl))}">
+										<a href="{!iidoc.fileUrl}" target="_blank">{!iidoc.docName}</a>
+									</apex:outputPanel>
+								</apex:column>
+
+								<apex:column headerValue="Status" headerClass="underline">
+									<apex:outputText value="{!iidoc.invDoc.Status__c}" rendered="{!iidoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Document Owner" headerClass="underline">
+									<apex:outputText value="{!iidoc.invDoc.Document_Owner__c}" rendered="{!iidoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Action" headerClass="underline">
+									<apex:commandLink action="{!deleteInvDoc}" styleClass="secondary-link" rendered="{!iidoc.canDelete && (partnerRole == null || (partnerRole != null && iidoc.invDoc.Document_Owner__c == partnerRole))}" style="float:left;"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+										Delete
+										<apex:param name="deleteDocId" value="{!iidoc.dId}" assignTo="{!deleteDocId}"/>
+										<apex:param name="currTab" value="3" assignTo="{!currTab}"/>
+									</apex:commandLink>
+									<apex:outputLink value="{!$Page.S3Upload}?Id={!iidoc.dId}&redirectId={!recordId}" target="_top" rendered="{!!iidoc.canDelete && (partnerRole == null || (partnerRole != null && iidoc.invDoc.Document_Owner__c == partnerRole))}">
+										Upload File
+									</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Date Submitted" headerClass="underline">
+									<apex:outputField value="{!iidoc.invDoc.Document_Submitted__c}" rendered="{!iidoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Response Date" headerClass="underline">
+									<apex:outputField value="{!iidoc.invDoc.Response_Date__c}" rendered="{!iidoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Partner Comments" headerClass="underline">
+									<apex:inputText value="{!iidoc.invDoc.Partner_Comments__c}" rendered="{!iidoc.isComp}" disabled="{!partnerRole != null && iidoc.invDoc.Document_Owner__c != partnerRole}" style="position:relative; top:-5px;" maxlength="255"/>
+								</apex:column>
+
+								<apex:column headerValue="Approver Notes" headerClass="underline">
+									<apex:outputText value="{!iidoc.invDoc.Notes_to_Partner__c}" rendered="{!iidoc.isComp}"/>
+								</apex:column>
+
+							</apex:dataTable>
+						</div>
+					</div>
+					<div class="tabs__content">
+						<div class="tabs__content-item{!IF(currTab == 4,' tabs__content-item--active','')}" data-tab-content="5">
+							<apex:commandLink styleClass="btn" value="Save Changes" action="{!saveFile}" style="background:LightBlue;padding:4px;font-size:12px;position:absolute;top:5px;left:30rem;">
+								<apex:param name="currTab" value="4" assignTo="{!currTab}"/>
+							</apex:commandLink>
+							<apex:outputPanel style="position: absolute; top: 10px; left: 38rem;" rendered="{!pageSize[4]>rowsOnPage}">
+								Records Found:  <apex:outputText >{!pageSize[4]}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+								<apex:commandLink action="{!prevPage}" value="Previous" rendered="{!pagePtr[4]>1}">
+									<apex:param name="currTab" value="4" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[4]==0}">Previous</apex:outputPanel>
+								&nbsp;({!pageptr[4]+1}&nbsp;-&nbsp;{!IF(pageptr[4]+rowsOnPage > pageSize[4],pageSize[4],pagePtr[4]+rowsOnPage)})&nbsp;&nbsp;
+								<apex:commandLink action="{!nextPage}" value="Next" rendered="{!pagePtr[4]+rowsOnPage<pageSize[4]}">
+									<apex:param name="currTab" value="4" assignTo="{!currTab}"/>
+								</apex:commandLink>
+								<apex:outputPanel style="color:grey" rendered="{!pagePtr[4]+rowsOnPage>=pageSize[4]}">Next</apex:outputPanel>
+							</apex:outputPanel>
+
+							<apex:dataTable value="{!permitDocRows}" var="prdoc" id="prdocuments" styleClass="table table-responsive" cellpadding="10px"  rows="{!rowsOnPage}" first="{!pagePtr[4]}">
+
+								<apex:column headerValue="Document" headerClass="underline">
+									<apex:outputLink value="/{!prdoc.dId}" target="_blank">{!prdoc.title}</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Filename" headerClass="underline">
+									<apex:outputPanel rendered="{! NOT(ISBLANK(prdoc.fileUrl))}">
+										<a href="{!prdoc.fileUrl}" target="_blank">{!prdoc.docName}</a>
+									</apex:outputPanel>
+								</apex:column>
+
+								<apex:column headerValue="Status" headerClass="underline">
+									<apex:outputText value="{!prdoc.invDoc.Status__c}" rendered="{!prdoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Document Owner" headerClass="underline">
+									<apex:outputText value="{!prdoc.invDoc.Document_Owner__c}" rendered="{!prdoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Action" headerClass="underline">
+									<apex:commandLink action="{!deleteInvDoc}" styleClass="secondary-link" rendered="{!prdoc.canDelete && (partnerRole == null || (partnerRole != null && prdoc.invDoc.Document_Owner__c == partnerRole))}" style="float:left;"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+										Delete
+										<apex:param name="deleteDocId" value="{!prdoc.dId}" assignTo="{!deleteDocId}"/>
+										<apex:param name="currTab" value="4" assignTo="{!currTab}"/>
+									</apex:commandLink>
+									<apex:outputLink value="{!$Page.S3Upload}?Id={!prdoc.dId}&redirectId={!recordId}" target="_top" rendered="{!!prdoc.canDelete && (partnerRole == null || (partnerRole != null && prdoc.invDoc.Document_Owner__c == partnerRole))}">
+										Upload File
+									</apex:outputLink>
+								</apex:column>
+
+								<apex:column headerValue="Date Submitted" headerClass="underline">
+									<apex:outputField value="{!prdoc.invDoc.Document_Submitted__c}" rendered="{!prdoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Response Date" headerClass="underline">
+									<apex:outputField value="{!prdoc.invDoc.Response_Date__c}" rendered="{!prdoc.isComp}"/>
+								</apex:column>
+
+								<apex:column headerValue="Partner Comments" headerClass="underline">
+									<apex:inputText value="{!prdoc.invDoc.Partner_Comments__c}" rendered="{!prdoc.isComp}" disabled="{!partnerRole != null && prdoc.invDoc.Document_Owner__c != partnerRole}" style="position:relative; top:-5px;" maxlength="255"/>
+								</apex:column>
+
+								<apex:column headerValue="Approver Notes" headerClass="underline">
+									<apex:outputText value="{!prdoc.invDoc.Notes_to_Partner__c}" rendered="{!prdoc.isComp}"/>
+								</apex:column>
+
+							</apex:dataTable>
+						</div>
+					</div>
+				</div>
+			</div>
+		</apex:form>
+	</div>
+	<!-- Keep at bottom of page -->
+	<c:SPCommunityAppResources_JS />
+</apex:component>

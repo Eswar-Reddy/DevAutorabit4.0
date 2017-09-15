@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>number</bucketType>
+        <developerName>BucketField_83399106</developerName>
+        <masterLabel>Days since Qualified Date</masterLabel>
+        <nullTreatment>z</nullTreatment>
+        <sourceColumnName>Lead$ConvertedOpportunity.Days_Since_Qualified__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <to>2</to>
+            </sourceValues>
+            <value>Stage New in the last 2 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>2</from>
+                <to>15</to>
+            </sourceValues>
+            <value>Stage New 3-15 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>15</from>
+                <to>30</to>
+            </sourceValues>
+            <value>Stage New 16-30 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>30</from>
+                <to>90</to>
+            </sourceValues>
+            <value>Stage New 30-90 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>90</from>
+            </sourceValues>
+            <value>Stage New 90 days and beyond</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>Lead$ConvertedOpportunity.RSMName__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.PartnerAccount</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.PartnerAccount.Opportunity_Recipient__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.PartnerAccount.Opportunity_Recipient__c.Email</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.StageName</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Opportunity_Contacted_Date_Time__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Opportunity_LastModifiedDate__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.LastModifiedBy</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Opportunity_CreatedDate__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Days_Since_Qualified__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Data for Abandoned Opportunities with Lead Recipient</description>
+    <filter>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.RecordType</column>
+            <operator>equals</operator>
+            <value>Opportunity.Home_Owner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Id</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Theater__c</column>
+            <operator>equals</operator>
+            <value>Central America and the Caribbean,North America</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$FirstName</column>
+            <operator>notContain</operator>
+            <value>Test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Lead_Manufacturer__c</column>
+            <operator>equals</operator>
+            <value>SunPower</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Lead Contact Report - I to C</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_Converted_Lead_Information_Extended__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$ConvertedOpportunity.CreatedDate</dateColumn>
+        <endDate>2013-05-19</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-04-20</startDate>
+    </timeFrameFilter>
+</Report>

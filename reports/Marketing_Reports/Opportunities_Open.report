@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Opportunities$StageName</field>
+    </columns>
+    <columns>
+        <field>Account$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Primary_Contact_First_Name__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Primary_Contact_Last_Name__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Primary_Contact_Email__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Account_Phone__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>SPD Opps that are not yet closed</description>
+    <filter>
+        <criteriaItems>
+            <column>Account$RecordType</column>
+            <operator>equals</operator>
+            <value>Account.Home_Owner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities$RecordType</column>
+            <operator>equals</operator>
+            <value>Opportunity.Home_Owner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities$StageName</column>
+            <operator>notEqual</operator>
+            <value>Contract Signed,Installation Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Partner_Account__c</column>
+            <operator>equals</operator>
+            <value>SunPower Direct (SPD)</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Opportunities (Open)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Account_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Account.Opportunities$StageName</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Account.Opportunities$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

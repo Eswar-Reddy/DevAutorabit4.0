@@ -1,0 +1,671 @@
+<apex:page standardController="Quote" extensions="HelixPPAController" sidebar="false" showHeader="false" standardStylesheets="false">
+    
+    <!--Styles-->
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <apex:stylesheet value="{!URLFOR($Resource.SPStyleGuide, 'css/sunpower-styleguide.css')}" />
+    <apex:stylesheet value="{!$Resource.StyleguideExpansion_CSS}" />
+    <apex:stylesheet value="{!$Resource.HelixPPACustomStyles}" />
+    <!--Scripts-->
+    
+    <!--Custom Styles-->
+    <style>
+
+        .screenCenter {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        /* to disable picklist. disabling container div since select tag disable not working */
+        .disableDiv {
+            background-color: #f5f5f5;
+            border-color: transparent;
+            color: #9b9b9b;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .disable-btn {
+            cursor: default;
+            opacity: .65;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .nav-item.active {
+            pointer-events: none;
+        }
+        .sunpower-style .tooltip-element {
+            z-index: 100;
+        }
+        
+    </style>
+    
+    <body class="sunpower-style container-fluid" style="margin: 1rem; max-width: 1250px; margin-left: auto; margin-right: auto; padding-left: 2rem; padding-right: 2rem;">    
+    <apex:form html-autocomplete="off" id="theForm">
+        <!--Header-->
+        <apex:outputPanel id="navContent">
+            <div id="home" class="sunpower-style">
+                <div class="navigation-header-container lower2">
+                    <div class="navigation-container">
+                        <nav class="navigation">
+                            <div class="nav-heading">
+                                <a href="/apex/chome" class="sunpower-logo show-mobile"></a>
+                                <span class="image-icon image-icon-cancel close-nav"></span>
+                            </div>
+                            <div class="brand-item hidden-mobile hidden-tablet">
+                                <div class="logo-item">
+                                    <a href="/apex/chome" class="sunpower-logo-black"></a>
+                                </div>
+                            </div>
+
+                            <div class="nav-items">
+                                <div class="nav-item active" id="navItemDesign" onclick="onclickDesignTab()">
+                                    <div class="nav-item-title " id="navTitleDesign">
+                                        <div>
+                                            <span class="nav-item-icon icon-shield"></span>
+                                            <a href="#" onclick="onclickDesignTab()">
+                                                <apex:outputText value="Design" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-item" id="navItemSavings" onclick="onclickSavingsTab()">
+                                    <div class="nav-item-title" id="navTitleSavings">
+                                        <div>
+                                            <span class="nav-item-icon icon-shield"></span>
+                                            <a href="#" ><!--onclick="onclickSavingsTab()"-->
+                                                <apex:outputText value="Savings" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-item disable-btn" id="navItemProposal" onclick="viewProposalTab()">
+                                    <div class="nav-item-title" id="navTitleProposal">
+                                        <div>
+                                            <span class="nav-item-icon icon-shield disabled"></span>
+                                            <a href="#" onclick="viewProposalTab()">
+                                                <apex:outputText value="Proposal" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-actions">
+                                <span class="tiny-bold" id="quoteNumberSpan" style="display:none">Quote #&nbsp;</span><span id="quoteNumber" class="sp-blue right1 tiny-bold"></span>
+                                <apex:outputText value="{!opportunity.Name}" styleClass="right1" style="font-size: smaller;" />                                                                                                
+                                <div class="nav-action-icon-separator right1"></div>
+                                <!--x-->
+                                <apex:commandLink action="{!closeDesign}" onclick="if (onclickClosePPA()) {return false;}">
+                                <apex:image value="{!URLFOR($Resource.SPStyleGuide, '/images/icon-cancel-dark.svg')}" styleClass="hand img-sizing"/>
+                                </apex:commandLink>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </apex:outputPanel>
+        <!--End Header-->
+    
+    <!-- header -->
+    <div class="lower2">
+        <h2>Helix Power Purchase Agreement (PPA)</h2>
+    </div>
+
+    <div style="display: none;">
+        <input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" />
+    </div>
+    
+    <div id="designDiv">
+    <apex:include pageName="HelixPPADesign"/>
+    </div>
+    
+    <div id="savingsDiv" style="display:none">
+    <apex:include pageName="HelixPPASavings"/>
+    </div>
+
+    <div id="proposalDiv" style="display:none">
+    <apex:include pageName="HelixPPAProposal"/>
+    </div>
+    
+    <!-- spinners -->
+    <div class="screenCenter">
+    <div class="spinner spinner--center" style="display:none" id="designTabSpinner"></div>
+    </div>
+    <div class="screenCenter">
+    <div class="spinner spinner--center" style="display:none" id="savingsTabSpinner"></div>
+    </div>
+    <div class="screenCenter">
+    <div class="spinner spinner--center" style="display:none" id="proposalTabSpinner"></div>
+    </div>
+    <!-- footer -->
+    <div>
+        <c:SPCommunityFooter />
+    </div>
+    
+    <!-- close model -->
+    <div class="modal fade" id="closePPAModal" tabindex="-1" role="dialog" aria-labelledby="closePPAModalLabel" style="z-index: 100000;">
+        <div class="modal-dialog" role="document" style="margin-top: 12rem; width: 600px;">
+            <div class="modal-content" >
+
+                <div class="modal-header">
+                    <div class="row" style="align-items: baseline;">
+                        <div class="col-xs-11">
+                        </div>
+                        <div class="col-xs-1 close" >                       
+                            <i class="fa fa-times" aria-hidden="true" onclick="$( '.modal' ).hide()" style="float: right;"></i>
+                        </div>
+                    </div>
+                    <div class="row" style="align-items: baseline;">
+                        <div class="col-xs-12">
+                            <h2 style="text-align: center;">Do you want to save your progress?</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body" style="padding-bottom: 3rem;">
+                    <!-- buttons -->
+                    <div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div style="text-align:center;">
+                                <input type="button" id="saveQuoteYesButton" value="Yes" onclick="onclickSaveQuoteYesButton('{!opportunity.Id}'); return false;"
+                                    class="btn btn-primary right1">
+                                </input>
+                                <input type="button" id="saveQuoteNoButton" value="No" onclick="onclickSaveQuoteNoButton('{!opportunity.Id}'); return false;"
+                                    class="btn btn-secondary">
+                                </input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:10px;"></div>
+                    <!-- save cancel ppa spinner -->
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="spinner spinner--center" style="display:none" id="saveCancelPPASpinner"></div>
+                        </div>
+                    </div>
+                    <div style="height:10px;"></div>
+                    <!-- save cancel ppa errors -->
+                    <div class="row">
+                        <div id="saveCancelPPAMessage" style="display:none">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    </apex:form>
+    </body>
+
+    <c:SPCommunityAppResources_JS />
+    
+    <script type="text/javascript">
+    
+//--------------------------------------------------------------------------------------
+// global vars 
+//--------------------------------------------------------------------------------------
+        var oldDesignList = [];
+        var recalculateSavings = false;
+        var fieldDetails = {};
+        var calculatedDesigns = {};
+        var fieldIds = [
+            // design page fields
+            'quoteName',
+            // savings page fields
+            'annualPPAEscalatorEdit',
+            'dealerFeePerWattEdit',
+            'dealerFeeDollarValueEdit',
+            'itcIneligibleCostEdit',
+            'incentiveProgramEdit',
+            'incentiveUpfrontValueEdit',
+            'incentiveDollarValueEdit',
+            'incentiveTermEdit',
+            'utilityCompanyEdit',
+            'utilityPriceInflationEdit',
+            'consumedPrior12MonthsEdit',
+            'billPrior12MonthsEdit',
+            'avoidedCostEdit',
+            'creditRatingEdit'
+        ];
+        
+        function myTrim(x) {
+            return (x === null || typeof(x) === 'undefined') ? '' : x.replace(/^\s+|\s+$/gm,'');
+        }    
+        function replaceAll(str, find, replace) {
+            return str.replace(new RegExp(find, 'g'), replace);
+        }
+        function getValue(inputId) {
+            return $('[id$="' + inputId + '"]').val();
+        }
+        function disableInput(inputId) {
+            $('[id$="' + inputId + '"]').prop("disabled", true);
+        }
+        function enableInput(inputId) {
+            $('[id$="' + inputId + '"]').prop("disabled", false);
+        }
+        function disableButton(buttonId) {
+            $('[id$="' + buttonId + '"]').prop("disabled", true);
+        }
+        function enableButton(buttonId) {
+            $('[id$="' + buttonId + '"]').prop("disabled", false);
+        }
+        function showSpinner(spinnerId) {
+            $('[id$="' + spinnerId + '"]').show();
+        }
+        function hideSpinner(spinnerId) {
+            $('[id$="' + spinnerId + '"]').hide();
+        }
+        function getFieldValueAsNumber(fieldId) {
+            var value = ($('#' + fieldId).val() || '0').replace(/[^\d.-]/g, '');
+            return value;
+        }
+        function getDivHtmlAsNumber(divId) {
+            return ($('#' + divId).html() || '0').replace(/[^\d.-]/g, '');
+        }
+
+//--------------------------------------------------------
+        function onclickClosePPA() {
+            var saveQuote = false;
+            if (savings && savings.isSaved === false) {
+                saveQuote = true;
+                $('#closePPAModal').show();
+            }
+            return saveQuote;
+        }
+        function onclickSaveQuoteNoButton(opportunityId) {
+            showSpinner('saveCancelPPASpinner');
+            disableButton('saveQuoteYesButton');
+            disableButton('saveQuoteNoButton');
+            //KCM: apply new redirection for new UI users; redirect other users to this page otherwise
+            if({!isNewUIUser}){                               
+                window.location.href = "{!newUIPage}";            
+            } else{
+                window.location = '/apex/SPCommunityOpportunityDetails?id=' + opportunityId;
+            }
+        }
+        function onclickSaveQuoteYesButton(opportunityId) {
+            function showError(errorMessage) {
+                $('#saveCancelPPAMessage').html(errorMessage);
+                $('#saveCancelPPAMessage').addClass('alert alert--danger');
+                $('#saveCancelPPAMessage').show();
+            }
+            function clearError() {
+                $('#saveCancelPPAMessage').html('');
+                $('#saveCancelPPAMessage').removeClass('alert alert--danger');
+                $('#saveCancelPPAMessage').hide();
+            }
+            
+            if (!quote) {
+                // error
+            } else if (!quote.Id) {
+                // error
+            }
+            
+            clearError();
+            showSpinner('saveCancelPPASpinner');
+            disableButton('saveQuoteYesButton');
+            disableButton('saveQuoteNoButton');
+            
+            var request = {};
+            request.quote = quote;
+            populateQuoteDetails(request.quote);
+            request.annualFinancialList = annualFinancialList;
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPAController.savePPA}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                            savings.isSaved = true;
+                            //KCM: apply new redirection for new UI users; redirect other users to this page otherwise
+                            if({!isNewUIUser}){                               
+                                window.location.href = "{!newUIPage}";            
+                            } else{
+                                window.location = '/apex/SPCommunityOpportunityDetails?id=' + opportunityId;
+                            }
+                        } else {
+                            //alert(response.errorMessage);
+                            showError(response.errorMessage);
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        //alert(errMsg);
+                        showError(errMsg);
+                    }
+                    hideSpinner('saveCancelPPASpinner');
+                },
+                { escape: true }
+            );
+            
+        }
+
+        function populateQuoteDetails(quote) {
+            quote.Name = $('#quoteName').val();
+            quote.Sector__c = 'Commercial';
+            quote.QuoteType__c = 'PPA';
+            quote.Number_of_Sites__c = getDivHtmlAsNumber('totalNumberOfSites');
+            quote.Escalator__c = getFieldValueAsNumber('annualPPAEscalatorEdit');
+            quote.Dealer_Fees__c = getFieldValueAsNumber('dealerFeePerWattEdit');
+            quote.Total_Dealer_Fee__c = getFieldValueAsNumber('dealerFeeDollarValueEdit');
+            quote.ITC_Ineligible_Cost__c = getFieldValueAsNumber('itcIneligibleCostEdit');
+            quote.Credit_Rating__c = $('#creditRatingEdit').val();
+            quote.Loan_Term__c = '20';
+            quote.Incentives_detail_1__c = $('#incentiveProgramEdit').val();
+            quote.Incentives_detail_1_amt__c = getFieldValueAsNumber('incentiveUpfrontValueEdit');
+            quote.PBI_Amount__c = getFieldValueAsNumber('incentiveDollarValueEdit');
+            quote.Incentives_detail_1__c = $('#incentiveProgramEdit').val();
+            quote.PBI_Term__c = getFieldValueAsNumber('incentiveTermEdit');
+            quote.Utility_Distributor__c = $('#utilityCompanyEdit').val();
+            if ($('#utilityCompanyEdit').data('utility-code')) {
+                quote.Utility_Rate_Code__c = $('#utilityCompanyEdit').data('utility-code').rate;
+            }
+            quote.Utility_Bill_Annual_Escalation__c = getFieldValueAsNumber('utilityPriceInflationEdit');
+            quote.Annual_Usage__c = getFieldValueAsNumber('consumedPrior12MonthsEdit');
+            quote.Annual_Bill__c = getFieldValueAsNumber('billPrior12MonthsEdit');
+            quote.Avoided_Cost_of_Power__c = getFieldValueAsNumber('avoidedCostEdit');
+            quote.Year_1_Savings__c = getDivHtmlAsNumber('year1Savings');
+            quote.Year_1_PPA_Price__c = getDivHtmlAsNumber('year1PPAPrice');
+            if ($('#yesSREC').is(':checked')) {
+                quote.SREC_Indicator__c = true;
+            } else {
+                quote.SREC_Indicator__c = false;
+            }
+        }
+        
+//--------------------------------------------------------
+        function onclickDesignTab() {
+            viewDesign();
+        }
+        function onclickSavingsTab() {
+            // clear design errors
+            $('#designMessages').html('');
+            $('#designMessages').removeClass('alert alert--danger');
+            $('#designMessages').hide();
+            
+            // validation
+            var validation = validateDesignInputs();
+            if (!validation.isValid) {
+                $('#designMessages').html(validation.errorMessage);
+                $('#designMessages').addClass('alert alert--danger');
+                $('#designMessages').show('fast', function() {setActiveTab('Design');});
+                return false;
+            } else {
+                $('#designMessages').html('');
+                $('#designMessages').removeClass('alert alert--danger');
+                $('#designMessages').hide();
+                locker.lockAll('navItemDesign');
+                locker.lockAll('navItemProposal');
+                $('#savingsTabSpinner').show('fast', function() {
+                    viewSavings();
+                });
+            }
+        }
+        function viewProposalTab() {
+            if (!isSavingsPageValid()) {
+                return;
+            }
+            viewProposal();
+        }
+        function setActiveTab(tabName) {
+            var tabNames = ['Design', 'Savings', 'Proposal'];
+            for (var i=0, len=tabNames.length; i<len; i++) {
+                var element = tabNames[i];
+                if (element == tabName) {
+                    $('#navItem' + element).addClass( 'active' );
+                    $('#navTitle' + element).addClass( 'opened' );
+                } else {
+                    $('#navItem' + element).removeClass( 'active' );
+                    $('#navTitle' + element).removeClass( 'opened' );
+                }
+            }
+        }
+
+//--------------------------------------------------------------------------------------
+// disable fields, buttons, tabs 
+//--------------------------------------------------------------------------------------
+
+        var Locker = function () {
+            var tabs = {};    
+            var tabDesign = {};
+            var tabSavings = {};
+            var tabProposal = {};
+            tabs['navItemDesign'] = tabDesign;
+            tabs['navItemSavings'] = tabSavings;
+            tabs['navItemProposal'] = tabProposal;
+
+            tabDesign.id = 'navItemDesign';
+            tabDesign.items = [];
+            // inputs
+            tabDesign.items.push({element: 'input', id: 'quoteName'});
+            // buttons
+            tabDesign.items.push({element: 'input', id: 'saveAndQuitButton'});
+            tabDesign.items.push({element: 'input', id: 'viewSavingsButton'});
+            
+            tabSavings.id = 'navItemSavings';
+            tabSavings.items = [];
+            // inputs
+            tabSavings.items.push({element: 'input', id: 'annualPPAEscalatorEdit'});
+            tabSavings.items.push({element: 'input', id: 'dealerFeePerWattEdit'});
+            tabSavings.items.push({element: 'input', id: 'dealerFeeDollarValueEdit'});
+            tabSavings.items.push({element: 'input', id: 'itcIneligibleCostEdit'});
+            tabSavings.items.push({element: 'input', id: 'incentiveProgramEdit'});
+            tabSavings.items.push({element: 'input', id: 'incentiveUpfrontValueEdit'});
+            tabSavings.items.push({element: 'input', id: 'incentiveDollarValueEdit'});
+            tabSavings.items.push({element: 'input', id: 'incentiveTermEdit'});
+            tabSavings.items.push({element: 'input', id: 'utilityCompanyEdit'});
+            tabSavings.items.push({element: 'input', id: 'utilityPriceInflationEdit'});
+            tabSavings.items.push({element: 'input', id: 'consumedPrior12MonthsEdit'});
+            tabSavings.items.push({element: 'input', id: 'billPrior12MonthsEdit'});
+            tabSavings.items.push({element: 'input', id: 'avoidedCostEdit'});
+            // picklist
+            tabSavings.items.push({element: 'select', id: 'creditRatingEdit'});
+            // radio buttons
+            tabSavings.items.push({element: 'input', id: 'incentiveUpfront'});
+            tabSavings.items.push({element: 'input', id: 'incentiveDollar'});
+            // buttons
+            tabSavings.items.push({element: 'input', id: 'calculateSavingsButton'});
+            tabSavings.items.push({element: 'input', id: 'backSavingsButton'});
+            tabSavings.items.push({element: 'input', id: 'viewProposalButton'});
+
+            tabProposal.id = 'navItemProposal';
+            tabProposal.items = [];
+            // buttons
+            tabProposal.items.push({element: 'input', id: 'downloadProposalButton'});
+            tabProposal.items.push({element: 'input', id: 'downloadTermSheetButton'});
+            tabProposal.items.push({element: 'input', id: 'backProposalButton'});
+            tabProposal.items.push({element: 'input', id: 'saveProposalButton'});
+        
+            return {    
+                lockAll: function(tabId) {
+                    if (tabs[tabId]) {
+                        if (tabs[tabId].items) {
+                            for (var i=0; i<tabs[tabId].items.length; i++) {
+                                var item = tabs[tabId].items[i];
+                                if (item.id) {
+                                    if (item.element == 'input') {
+                                        // save current state to enable again
+                                        item.isDisabled = $('#' + item.id).prop('disabled');
+                                        disableInput(item.id);
+                                    } else if (item.element == 'select') {
+                                        $('#' + item.id + 'Div').addClass('disableDiv');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (tabId == 'navItemDesign') {
+                        // lock system picklist of each design row
+                        $('div[id^="systemEditDiv_"]').each(function() {
+                            $(this).addClass('disableDiv');
+                        }); 
+                    }
+                },
+                unlockAll: function(tabId) {
+                    if (tabs[tabId]) {
+                        if (tabs[tabId].items) {
+                            for (var i=0; i<tabs[tabId].items.length; i++) {
+                                var item = tabs[tabId].items[i];
+                                if (item.id) {
+                                    if (item.element == 'input') {
+                                        // enable only if previously enabled 
+                                        if (item.isDisabled === false) {
+                                            enableInput(item.id);
+                                        }
+                                    } else if (item.element == 'select') {
+                                        $('#' + item.id + 'Div').removeClass('disableDiv');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (tabId == 'navItemDesign') {
+                        // lock system picklist of each design row
+                        $('div[id^="systemEditDiv_"]').each(function() {
+                            $(this).removeClass('disableDiv');
+                        }); 
+                    }
+                }
+            };
+        };
+        var locker = Locker();
+        
+        function initFieldDetails() {
+            fieldDetails = {};
+            for (var i=0, len=fieldIds.length; i<len; i++) {
+                var fieldId = fieldIds[i];
+                fieldDetails[fieldId] = fieldDetails[fieldId] || {};
+                fieldDetails[fieldId].oldValue = $('#' + fieldId).val();
+                //console.log('fieldDetails[fieldId].oldValue: ' + fieldDetails[fieldId].oldValue);
+            }
+        }
+        
+        function initCalculatedDesigns() {
+            calculatedDesigns = {};
+            for (var i=0, len=$('.designSelected').length; i<len; i++) {
+                var element = $('.designSelected')[i];
+                var designId = $(element).attr('id').replace('selectIcon_', '');
+                var design = {};
+                design.Id = designId;
+                
+                calculatedDesigns[designId] = design;
+                calculatedDesigns[designId].fields = calculatedDesigns[designId].fields || {};
+                var field = {};
+                field.name = 'HelixDesignType__c';
+                field.oldValue = $(element).data('helix-design-type');
+                calculatedDesigns[designId].fields[field.name] = field;      
+            }
+        }
+        
+        function refreshAccess() {
+            var selectedDesigns = 0;
+            var isDesignChanged = false;
+            for (var key in designList) {  
+                if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+
+                var design = designList[key];      
+                var designId = design.Id;
+                //console.log('design.Design_Originated_by__c: ' + design.Design_Originated_by__c);
+                //console.log(myTrim($('#systemViewDiv_' + designId).html()) + '/' + myTrim($('#systemSelect_' + designId).val()));
+                if (design.isSelected === true) {
+                    selectedDesigns++;
+                    if (design.Design_Originated_by__c == 'Indirect') {
+                        if (myTrim($('#systemViewDiv_' + designId).html()) == myTrim($('#systemSelect_' + designId).val())) {
+                        
+                        } else {
+                            isDesignChanged = true;
+                        }
+                    }
+                }
+            }
+            //console.log('selectedDesigns: ' + selectedDesigns + '/' + 'isDesignChanged: ' + isDesignChanged);
+            if (selectedDesigns == 0) {
+                // disable tab and button
+                $('#navItemSavings').addClass('disable-btn');
+                $('#viewSavingsButton').addClass('disabled');
+            } else if (isDesignChanged === true) {
+                // disable tab and button
+                $('#navItemSavings').addClass('disable-btn');
+                $('#viewSavingsButton').addClass('disabled');
+            } else {
+                // enable tab and button
+                $('#navItemSavings').removeClass('disable-btn');
+                $('#viewSavingsButton').removeClass('disabled');
+            }
+        }
+        
+        $( document ).ready(function() {
+            //strip off click
+            var domEl = document.getElementsByTagName('body')[0];
+            $(domEl).find('.nav-item').off('click');
+
+            // initially open design tab
+            $('#navItemDesign').addClass( 'active' );
+            $('#navTitleDesign').addClass( 'opened' );
+            
+            // when field values or designs changes disable proposal tab and force recalculation of savings
+            initFieldDetails();
+            initCalculatedDesigns();
+            
+            var sameInputValues = true;
+            var samePicklistValues = true;
+
+            $.each(fieldIds, function(index, fieldId) {
+                $('#' + fieldId).blur(function () {
+                    sameInputValues = true;
+                    fieldDetails[fieldId].newValue = $(this).val();
+                    (function() {
+                    $.each(fieldDetails, function(key, value) {
+                        //console.log('value.oldValue: ' + value.oldValue + '/' + 'value.newValue: ' + value.newValue);
+                        if (fieldId == 'dealerFeePerWattEdit' && key == 'dealerFeeDollarValueEdit') {
+                            value.newValue = $('#dealerFeeDollarValueEdit').val();
+                        }
+                        if (value.hasOwnProperty('newValue') && value.oldValue !== value.newValue) {
+                            sameInputValues = false;
+                            return false;
+                        }
+                    });
+                    })();
+
+                    if (sameInputValues === false || samePicklistValues === false) {
+                        $('#navItemProposal').addClass('disable-btn');
+                        $('#viewProposalButton').addClass('disabled');
+                        recalculateSavings = true;
+                    } else {
+                        $('#navItemProposal').removeClass('disable-btn');
+                        $('#viewProposalButton').removeClass('disabled');
+                        recalculateSavings = false;
+                    }
+        
+                });
+            }); 
+            
+            $('#creditRatingEdit').parent().find('li').click(function() {
+                samePicklistValues = true;
+                var selectedValue = $(this).find('span').html();
+                if (fieldDetails['creditRatingEdit'] && fieldDetails['creditRatingEdit'].oldValue !== selectedValue) {
+                    samePicklistValues = false;
+                }
+                if (sameInputValues === false || samePicklistValues === false) {
+                    $('#navItemProposal').addClass('disable-btn');
+                    $('#viewProposalButton').addClass('disabled');
+                    recalculateSavings = true;
+                } else {
+                    $('#navItemProposal').removeClass('disable-btn');
+                    $('#viewProposalButton').removeClass('disabled');
+                    recalculateSavings = false;
+                }
+            });
+            
+        });
+        
+    </script>
+
+</apex:page>

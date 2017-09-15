@@ -1,0 +1,41 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerAppsRejection" tabStyle="Partner_Application__c">
+  <apex:form >
+        <apex:pageBlock title="Choose a reason for rejection">   
+          
+           <apex:pageBlockSection columns="1" title="Information">   
+             <apex:outputPanel style="margin-left:40%;">
+              <apex:actionStatus startText="Please Wait..." stopText="" startStyle="color:Red;" id="loading"/> 
+             </apex:outputPanel>                                           
+            <apex:inputField required="true" value="{!PartApps.Reason__c}"/> 
+            <apex:inputField value="{!PartApps.Details__c}"/>      
+           </apex:pageBlockSection>                          
+              
+            <apex:pageBlockSection title="Select Email Template to send Rejection Notification">  
+            <table class="detailList" cellpadding="0" cellspacing="0" width="20%">           
+            <tr>
+             <td class="labelCol first " align="Right" nowrap="1">Email Template</td>
+             <td class="data2Col first" > 
+                <apex:selectList value="{!selectedTamplate}" size="1" style="width:220px;" >
+                 <apex:selectOptions value="{!Tamplate}"/>
+                </apex:selectList> 
+              </td>
+             </tr>
+            </table>
+            </apex:pageBlockSection>      
+                            
+           <apex:pageBlockButtons location="bottom">
+             <apex:commandButton value="Save" action="{!save}" oncomplete="reloadPage()" status="loading"/>
+             <apex:commandButton value="Cancel" onclick="reloadPage();return false;"/>
+           </apex:pageBlockButtons>
+                
+
+         </apex:pageBlock>
+  </apex:form>  
+ 
+<script>
+function reloadPage()
+{  
+  window.location.href='/{!partApps.Id}';   
+}     
+</script>  
+</apex:page>

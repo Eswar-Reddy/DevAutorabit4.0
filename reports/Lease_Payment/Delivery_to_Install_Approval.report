@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description># of days from Delivery to Install Package Completion - Old DPA Pre 2/4/2013</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Date_Delivered__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Install_Pymnt_Apprvd__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Pre 2/4/2013-#Days Del to Inst Complete</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Date_Delivered__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Delivered__c</dateColumn>
+        <endDate>2013-02-03</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-01-01</startDate>
+    </timeFrameFilter>
+</Report>

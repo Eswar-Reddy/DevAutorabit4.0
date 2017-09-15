@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Chk_Status_updated_field</fullName>
+        <description>Toggle Status field once the workflow is fired</description>
+        <field>Status__c</field>
+        <literalValue>1</literalValue>
+        <name>Chk_Status_updated_field</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Execute_2nd_toggle_chkcker</fullName>
+        <description>It will toggle the &quot;Execute_2nd Workflow&quot; field&apos;s value</description>
+        <field>Execute_2nd_Workflow__c</field>
+        <literalValue>1</literalValue>
+        <name>Execute_2nd_toggle_chkcker</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Net_Purchase_Chk1</fullName>
+        <description>Toggle values of NetPurchase Check1</description>
+        <field>NetPurchase_Check1__c</field>
+        <literalValue>1</literalValue>
+        <name>Net Purchase Chk1</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Net_Purchase_Chk2</fullName>
+        <description>Toggle values of &quot;Net Purchase Chk2&quot; field</description>
+        <field>NetPurchase_Check2__c</field>
+        <literalValue>0</literalValue>
+        <name>Net Purchase Chk2</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Quater_NetPurchase_amount</fullName>
+        <field>Quarter_Net_Purchase_Amount__c</field>
+        <formula>QTD_Net_Purchase_Amount__c</formula>
+        <name>Quater NetPurchase amount</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Status_checker</fullName>
+        <description>It will toggle the value of &quot;Status&quot; field on everyday at 23hrs. The purpose of this workflow is to make this operation recurring</description>
+        <field>Status__c</field>
+        <literalValue>0</literalValue>
+        <name>Status_checker</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Toggle_Execute_2nd</fullName>
+        <description>This will toggle Execute_2nd field once the workflow is fired</description>
+        <field>Execute_2nd_Workflow__c</field>
+        <literalValue>0</literalValue>
+        <name>Toggle_Execute_2nd</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_NetPurchase_check1</fullName>
+        <description>Toggle &quot;NetPurchase check1&quot; value</description>
+        <field>NetPurchase_Check1__c</field>
+        <literalValue>0</literalValue>
+        <name>Update NetPurchase check1</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_NetPurchase_check2</fullName>
+        <description>Toggle &quot;NetPurchase check2&quot; value</description>
+        <field>NetPurchase_Check2__c</field>
+        <literalValue>1</literalValue>
+        <name>Update NetPurchase check2</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>Chk_Status_updated</fullName>
+        <actions>
+            <name>Chk_Status_updated_field</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>Toggle_Execute_2nd</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>(1 OR 2 OR 3 OR 4) AND (5 OR 6 OR 7 OR 8  OR 9 OR 10 OR 11 OR 12)</booleanFilter>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Year__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>1900</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Cumulative_kW_for_Commercial_Orders__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Cumulative_kW_for_Residential_Orders__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Cumulative_No_of_Commercial_PV_orders__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Cumulative_No_of_Residential_PV_orders__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Number_of_QTD_Commercial_PV_Order__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Number_of_QTD_Residential_PV_Order__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.QTD_of_Commercial_orders_with_Inverter__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.QTD_of_Residential_SmartPack_orders__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.QTD_kW_for_Residential_Orders__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.QTD_Net_Purchase_Amount__c</field>
+            <operation>greaterOrEqual</operation>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Quarter__c</field>
+            <operation>equals</operation>
+            <value>Q1,Q2,Q3,Q4</value>
+        </criteriaItems>
+        <description>This rule will check the &quot;Status&quot; field of ORD once any record is inserted and/or updated from Cast-Iron.</description>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Quater NetPurchase amount</fullName>
+        <actions>
+            <name>Quater_NetPurchase_amount</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Quarter__c</field>
+            <operation>equals</operation>
+            <value>Q1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Quarter__c</field>
+            <operation>equals</operation>
+            <value>Q3</value>
+        </criteriaItems>
+        <description>This rule is to populate the net purchase amount</description>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Toggle_Status_Control</fullName>
+        <active>true</active>
+        <criteriaItems>
+            <field>order_detail_sunrise2__c.Execute_2nd_Workflow__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <description>It will toggle the value present in the &quot;Status&quot; field. It will fire on every day at 23rd hour.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Execute_2nd_toggle_chkcker</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <actions>
+                <name>Net_Purchase_Chk1</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <actions>
+                <name>Net_Purchase_Chk2</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <actions>
+                <name>Status_checker</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <offsetFromField>order_detail_sunrise2__c.LastModifiedDate</offsetFromField>
+            <timeLength>23</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+</Workflow>

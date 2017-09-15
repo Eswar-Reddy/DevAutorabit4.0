@@ -1,0 +1,34 @@
+<apex:component controller="AgreementEventTable">
+    <apex:attribute name="parentAtt" description="The Id of record to pull the Notes from" type="Id" required="true" assignTo="{!objectParentId}"/>
+
+<!-- <body class="detail-container"> -->
+<div class="sunpower-style container-fluid" style="margin-top: 1rem; margin-left:10px; max-width: 1180px;">
+    <div class="row">
+        <div class="col-xs-11 col-md-11">
+            <H5>Agreement Events</H5>
+        </div>
+        
+    </div>
+    <div class="row">
+        <table class="table " id="tableId">
+            <thead>
+                <th>Date</th>
+                <th>Description</th>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!Events}" var="a">
+                    <tr>
+                        <td>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy hh:mm a}">
+                                <apex:param value="{!a.echosign_dev1__Date__c}" /> 
+                            </apex:outputText>
+                        </td>
+                        <td>{!a.echosign_dev1__Description__c}</td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- </body> -->
+</apex:component>

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chris.obrien@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>AUS/NZ Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Australia,New Zealand</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>AUS/NZ Approval</label>
+        <name>AUS_NZ_Approval</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>arun.kumar@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Initial Binding Offer Approval (India)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>India</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Initial Binding Offer Approval (India)</label>
+        <name>APAC_Initial_Binding_Offer_Approval_India</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>takashi.sugihara@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Initial Binding Offer Approval (Toshiba/Sharp)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Account_Name_text__c</field>
+                <operation>contains</operation>
+                <value>Toshiba,Sharp</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Initial Binding Offer Approval (Toshiba/Sharp)</label>
+        <name>APAC_Initial_Binding_Offer_Approval_Toshiba_Sharp</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>zach.struyk@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Initial Binding Offer Approval (Not India, Sharp, Tosh)</description>
+        <entryCriteria>
+            <booleanFilter>1 and 2</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>Australia,New Zealand,India</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Account_Name_text__c</field>
+                <operation>notContain</operation>
+                <value>Sharp,Toshiba</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Initial Binding Offer Approval (Not India, Sharp, Tosh)</label>
+        <name>APAC_Initial_Binding_Offer_Approval_Not_India_Sharp_Tosh</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Region VP</description>
+        <entryCriteria>
+            <booleanFilter>Not(1 and 2) or 3</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Total_Price__c</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 1,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Total_Price__c</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 15,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Region VP</label>
+        <name>APAC_Region_VP</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>guillaume.dufosse@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Region Sr VP</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 AND 2)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 5,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>20</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Region Sr VP</label>
+        <name>APAC_Region_Sr_VP</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC - Binding Offer Global President</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 and 2) or 3</booleanFilter>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC - Binding Offer Global President</label>
+        <name>APAC_Binding_Offer_Global_President</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Deal Review Committee Approval</description>
+        <entryCriteria>
+            <booleanFilter>2 or (1 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Deal Review Committee Approval</label>
+        <name>Deal_Review_Committee_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>APAC - Binding Offer Aug13 (On Grid)</description>
+    <emailTemplate>Quote/Binding_Offer_Quote_Submission_VF</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>(1 and 2 and 3 and 4)</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Binding Offer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Region1__c</field>
+            <operation>equals</operation>
+            <value>APAC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>BOS+PV,PV Only,BOS Only,EPC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Off_Grid__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Udpat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Rejection_Email_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Binding_Offer_Submission_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>APAC - Binding Offer Aug13 (On Grid)</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

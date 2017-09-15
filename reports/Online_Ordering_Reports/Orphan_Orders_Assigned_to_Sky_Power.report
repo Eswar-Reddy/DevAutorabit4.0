@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>CUST_ID</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c.ORDER_TYPE__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c.COUNTRY__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Orders wrongly assigned to Sky Power Systems</description>
+    <filter>
+        <criteriaItems>
+            <column>oe_order_headers__c.Oracle_Account_Number__c</column>
+            <operator>equals</operator>
+            <value>Sky Power Systems</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c.COUNTRY__c</column>
+            <operator>notContain</operator>
+            <value>US</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c.COUNTRY__c</column>
+            <operator>notContain</operator>
+            <value>FR</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c.COUNTRY__c</column>
+            <operator>notContain</operator>
+            <value>DE</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Orphaned Orders Assigned to Sky Power</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$oe_order_headers__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

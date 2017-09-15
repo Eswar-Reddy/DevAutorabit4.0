@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>PSR__c.Opportunity_Name__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.PSR_Sent__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Proposal_Due__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Design_Complete_Date__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Development_Engineer__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Design_Proposal_Designer__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Opportunity_Stage__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Mounting_System__c</field>
+    </columns>
+    <columns>
+        <field>CUST_OWNER_NAME</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_$Design__c.Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Project Design and Engineering Weekly Report</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3</booleanFilter>
+        <criteriaItems>
+            <column>FK_$Design__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Design__c.Proposal_Design</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>PSR__c.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>DG DE ALs Complete Last 7 Days by Opp</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$PSR__c@PSR__c.Design__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>FK_$Design__c.Date_Design_Completed__c</dateColumn>
+        <interval>INTERVAL_LAST7</interval>
+    </timeFrameFilter>
+</Report>

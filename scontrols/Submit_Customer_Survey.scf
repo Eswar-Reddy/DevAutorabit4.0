@@ -1,0 +1,16 @@
+<html>
+<head>
+<script src="/soap/ajax/8.0/connection.js">
+</script>
+<script>
+var survey = new sforce.SObject("Customer_Survey__c");
+survey.Status__c= "Submitted";
+survey.Id = "{!Customer_Survey__c.Id}";
+sforce.connection.update([survey]);
+this.parent.location.href="{!URLFOR( $Action.Customer_Survey__c.View,  Customer_Survey__c.Id )}"
+
+</script>
+</head>
+<body>
+</body>
+</html>

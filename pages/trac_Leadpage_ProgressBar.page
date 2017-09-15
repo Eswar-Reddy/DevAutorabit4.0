@@ -1,0 +1,124 @@
+<!-- @author:           Traction on Demand 
+     @CreateDate:       July 30, 2014 
+     @Description:      Visualforce Page for Progress Bar
+-->
+
+<apex:page standardController="Lead" >
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"></meta>
+  <title>jQuery UI Progressbar - Custom Label</title>
+  
+  <apex:stylesheet value="{!URLFOR($Resource.trac_Progress_Bar_Images,'jquery-ui.css')}"/>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+  <style>
+  .ui-progressbar {
+    position: relative;
+  }
+  .progress-label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+  div {
+
+    backgroud : white;
+  }
+  .red{
+    background: -moz-linear-gradient(top,  rgba(150,40,30,0) 0%, rgba(150,40,30,0.8) 15%, rgba(150,40,30,1) 19%, rgba(150,40,30,1) 20%, rgba(224,69,42,1) 50%, rgba(150,40,30,1) 80%, rgba(150,40,30,1) 81%, rgba(150,40,30,0.8) 85%, rgba(150,40,30,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(150,40,30,0)), color-stop(15%,rgba(150,40,30,0.8)), color-stop(19%,rgba(150,40,30,1)), color-stop(20%,rgba(150,40,30,1)), color-stop(50%,rgba(224,69,42,1)), color-stop(80%,rgba(150,40,30,1)), color-stop(81%,rgba(150,40,30,1)), color-stop(85%,rgba(150,40,30,0.8)), color-stop(100%,rgba(150,40,30,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(150,40,30,0) 0%,rgba(150,40,30,0.8) 15%,rgba(150,40,30,1) 19%,rgba(150,40,30,1) 20%,rgba(224,69,42,1) 50%,rgba(150,40,30,1) 80%,rgba(150,40,30,1) 81%,rgba(150,40,30,0.8) 85%,rgba(150,40,30,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(150,40,30,0) 0%,rgba(150,40,30,0.8) 15%,rgba(150,40,30,1) 19%,rgba(150,40,30,1) 20%,rgba(224,69,42,1) 50%,rgba(150,40,30,1) 80%,rgba(150,40,30,1) 81%,rgba(150,40,30,0.8) 85%,rgba(150,40,30,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(150,40,30,0) 0%,rgba(150,40,30,0.8) 15%,rgba(150,40,30,1) 19%,rgba(150,40,30,1) 20%,rgba(224,69,42,1) 50%,rgba(150,40,30,1) 80%,rgba(150,40,30,1) 81%,rgba(150,40,30,0.8) 85%,rgba(150,40,30,0) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(150,40,30,0) 0%,rgba(150,40,30,0.8) 15%,rgba(150,40,30,1) 19%,rgba(150,40,30,1) 20%,rgba(224,69,42,1) 50%,rgba(150,40,30,1) 80%,rgba(150,40,30,1) 81%,rgba(150,40,30,0.8) 85%,rgba(150,40,30,0) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0096281e', endColorstr='#0096281e',GradientType=0 ); /* IE6-9 */
+
+  }
+  .green{
+    background: -moz-linear-gradient(top,  rgba(31,155,136,0) 0%, rgba(31,155,136,0.8) 15%, rgba(31,155,136,1) 19%, rgba(31,155,136,1) 20%, rgba(39,206,78,1) 50%, rgba(31,155,136,1) 80%, rgba(31,155,136,1) 81%, rgba(31,155,136,0.8) 85%, rgba(31,155,136,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(31,155,136,0)), color-stop(15%,rgba(31,155,136,0.8)), color-stop(19%,rgba(31,155,136,1)), color-stop(20%,rgba(31,155,136,1)), color-stop(50%,rgba(39,206,78,1)), color-stop(80%,rgba(31,155,136,1)), color-stop(81%,rgba(31,155,136,1)), color-stop(85%,rgba(31,155,136,0.8)), color-stop(100%,rgba(31,155,136,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(31,155,136,0) 0%,rgba(31,155,136,0.8) 15%,rgba(31,155,136,1) 19%,rgba(31,155,136,1) 20%,rgba(39,206,78,1) 50%,rgba(31,155,136,1) 80%,rgba(31,155,136,1) 81%,rgba(31,155,136,0.8) 85%,rgba(31,155,136,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(31,155,136,0) 0%,rgba(31,155,136,0.8) 15%,rgba(31,155,136,1) 19%,rgba(31,155,136,1) 20%,rgba(39,206,78,1) 50%,rgba(31,155,136,1) 80%,rgba(31,155,136,1) 81%,rgba(31,155,136,0.8) 85%,rgba(31,155,136,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(31,155,136,0) 0%,rgba(31,155,136,0.8) 15%,rgba(31,155,136,1) 19%,rgba(31,155,136,1) 20%,rgba(39,206,78,1) 50%,rgba(31,155,136,1) 80%,rgba(31,155,136,1) 81%,rgba(31,155,136,0.8) 85%,rgba(31,155,136,0) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(31,155,136,0) 0%,rgba(31,155,136,0.8) 15%,rgba(31,155,136,1) 19%,rgba(31,155,136,1) 20%,rgba(39,206,78,1) 50%,rgba(31,155,136,1) 80%,rgba(31,155,136,1) 81%,rgba(31,155,136,0.8) 85%,rgba(31,155,136,0) 100%); /* W3C */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#001f9b88', endColorstr='#001f9b88',GradientType=0 ); /* IE6-9 */
+
+  }
+  .blue{
+
+    background: -moz-linear-gradient(top,  rgba(31,141,155,0) 0%, rgba(31,141,155,0.8) 15%, rgba(31,141,155,1) 19%, rgba(31,141,155,1) 20%, rgba(40,176,214,1) 50%, rgba(31,141,155,1) 80%, rgba(31,141,155,1) 81%, rgba(31,141,155,0.8) 85%, rgba(31,141,155,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(31,141,155,0)), color-stop(15%,rgba(31,141,155,0.8)), color-stop(19%,rgba(31,141,155,1)), color-stop(20%,rgba(31,141,155,1)), color-stop(50%,rgba(40,176,214,1)), color-stop(80%,rgba(31,141,155,1)), color-stop(81%,rgba(31,141,155,1)), color-stop(85%,rgba(31,141,155,0.8)), color-stop(100%,rgba(31,141,155,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(31,141,155,0) 0%,rgba(31,141,155,0.8) 15%,rgba(31,141,155,1) 19%,rgba(31,141,155,1) 20%,rgba(40,176,214,1) 50%,rgba(31,141,155,1) 80%,rgba(31,141,155,1) 81%,rgba(31,141,155,0.8) 85%,rgba(31,141,155,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(31,141,155,0) 0%,rgba(31,141,155,0.8) 15%,rgba(31,141,155,1) 19%,rgba(31,141,155,1) 20%,rgba(40,176,214,1) 50%,rgba(31,141,155,1) 80%,rgba(31,141,155,1) 81%,rgba(31,141,155,0.8) 85%,rgba(31,141,155,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(31,141,155,0) 0%,rgba(31,141,155,0.8) 15%,rgba(31,141,155,1) 19%,rgba(31,141,155,1) 20%,rgba(40,176,214,1) 50%,rgba(31,141,155,1) 80%,rgba(31,141,155,1) 81%,rgba(31,141,155,0.8) 85%,rgba(31,141,155,0) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(31,141,155,0) 0%,rgba(31,141,155,0.8) 15%,rgba(31,141,155,1) 19%,rgba(31,141,155,1) 20%,rgba(40,176,214,1) 50%,rgba(31,141,155,1) 80%,rgba(31,141,155,1) 81%,rgba(31,141,155,0.8) 85%,rgba(31,141,155,0) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#001f8d9b', endColorstr='#001f8d9b',GradientType=0 ); /* IE6-9 */
+
+  }
+
+
+  </style>
+  <script>
+  $(function() {
+    var progressbar = $( "#progressbar" ),
+      progressLabel = $( ".progress-label" );
+ 
+    progressbar.progressbar({
+      value: false ,
+      change: function() {
+        progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+      },
+      complete: function() {
+        progressLabel.text({!Lead.Data_Completeness__c} + "%");
+      }
+    });
+ 
+    function progress() {
+      if( {!Lead.Data_Completeness__c} === 0 ) {
+         progressbar.progressbar( "value", 0 );
+       }
+       else{
+        var val = progressbar.progressbar( "value" ) || 0;
+        progressbar.progressbar("value", val + 10 );
+        if(val <= 40) {
+          $(".ui-progressbar-value").addClass("red");
+        }
+        else if(val > 40 && val <= 60 ) {
+          $(".ui-progressbar-value").removeClass("red");
+          $(".ui-progressbar-value").addClass("blue");
+          
+        }
+        else{
+          $(".ui-progressbar-value").removeClass("blue");
+          $(".ui-progressbar-value").addClass("green");
+
+        }
+
+        if ( val < ( {!Lead.Data_Completeness__c} - 10) ) {
+          setTimeout( progress, 80 );
+        }
+       
+       
+      }
+    }
+    
+    setTimeout( progress, 2000 );
+
+    
+  });
+
+  
+  </script>
+</head>
+<body>
+
+<div id="progressbar"><div class="progress-label">Loading...</div></div>
+ 
+</body>
+</html>
+ 
+</apex:page>

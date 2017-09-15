@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Region1__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Business_Unit__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Product_Type__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Product_Family__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Amount.CONVERT</field>
+    </columns>
+    <columns>
+        <field>Opportunity$ExpectedRevenue.CONVERT</field>
+    </columns>
+    <columns>
+        <field>Opportunity$System_SizePV__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$CloseDate</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Probability</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Account</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Pat Product Pipeline Custom Report</description>
+    <filter>
+        <booleanFilter>(1 or 3) AND 2</booleanFilter>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Product_Type__c</column>
+            <operator>equals</operator>
+            <value>Balance of System</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Name</column>
+            <operator>notContain</operator>
+            <value>voltage,services,performance,misc,material,labor,contingency,tax</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$Product_Family_Hidden__c</column>
+            <operator>equals</operator>
+            <value>Balance of System</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Pat Product Pipeline Custom Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Product_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <endDate>2014-12-28</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2012-12-31</startDate>
+    </timeFrameFilter>
+</Report>

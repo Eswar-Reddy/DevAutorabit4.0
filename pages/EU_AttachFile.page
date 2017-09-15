@@ -1,0 +1,30 @@
+<apex:page Controller="AttachFileController" showHeader="false" sidebar="false">
+    <apex:sectionHeader title="Datei anhängen" />
+    <script> 
+          function closeWindow() {
+                var done = "{!closePopup}";
+                if(done.toString() == "true") {
+                    self.parent.opener.reloadList();
+                    self.parent.close();
+                 }   
+            }
+            function closePopUp(){
+               self.parent.close();
+            }
+           closeWindow();
+    </script> 
+    
+     <apex:form >
+        <apex:pageBlock title="HINWEISE">
+            <apex:pageBlockSection columns="1">
+                <apex:outputLabel value="1. Wählen Sie die Datei" />
+                <apex:inputFile style="width:500px" value="{!attach.body}" filename="{!attach.name}"/>   
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1">
+                <apex:outputPanel layout="block">
+                <apex:outputLabel value="2. Klicken Sie auf die Schaltfläche Datei anhängen." />&nbsp;&nbsp;<apex:commandButton value="Abbrechen" onclick="closePopUp();"  />
+                </apex:outputPanel> 
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

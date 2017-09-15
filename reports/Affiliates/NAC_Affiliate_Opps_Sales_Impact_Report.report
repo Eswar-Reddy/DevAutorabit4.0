@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Opportunity_CreatedDate__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$CloseDate</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$Amount</field>
+    </columns>
+    <currency>USD</currency>
+    <description>(for Joe Henri / B.Gates)</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.Opportunity_Roles__r$RecordType</column>
+            <operator>equals</operator>
+            <value>Opportunity_Role__c.Affiliate</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Probability</column>
+            <operator>equals</operator>
+            <value>100</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity.Opportunity_Roles__r$Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NAC Affiliate Opps - Sales Impact Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Opportunity_Role__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <endDate>2011-06-27</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2009-01-01</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,40 @@
+<apex:page controller="ApplyCustomHeaderController" showHeader="False" sidebar="false" standardStylesheets="false">
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="{!activeTab}"/>
+    <apex:form > 
+            <!--Anypage/standard page:: this is usefull for extending charts in CHOME-->
+            <body class="sunpower-style container-fluid" style="margin-top: 1rem; max-width: 1200px;  margin: auto;">
+                <div class="row">
+                    <div class="col-xs-12">
+                                    <apex:outputPanel id="extURL" rendered="{!NOT(isNULL(extURL))}">
+                                        <apex:iframe src="{!extURL}" scrolling="true"  />   
+                                    </apex:outputPanel>
+                                    <apex:outputPanel id="extURLvw" rendered="{!NOT(isNULL(extURLvw))}">
+                                        <apex:iframe src="{!extURLvw}" scrolling="true"  />   
+                                    </apex:outputPanel>
+                                </div>
+                        </div>
+                </body>
+                <script>
+                    window.onload = function() {
+                        var topURL= window.top.location;
+                        var tupURLStr = topURL.toString();
+                        if((tupURLStr.indexOf('/sfc/%23version')!=-1) || (tupURLStr.indexOf('/sfc/#version')!=-1) || (tupURLStr.indexOf('/sfc/%23search')!=-1) || (tupURLStr.indexOf('/sfc/#search')!=-1)){
+                            var frames = document.getElementsByTagName('iframe');
+                            console.log('==frames=='+frames.length);
+                            for (var i = 0; i < frames.length; i++) {
+                                if (frames[i].contentWindow.document.getElementById('container_pageHeader')!=null) {
+                                    frames[i].contentWindow.document.getElementById('container_pageHeader').style.display = 'none';
+                                }                
+                                var recentitems = frames[i].contentWindow.document.getElementsByClassName('sidebarCell');
+                                console.log(recentitems.length);
+                                for (var j = 0; j < recentitems.length; j++) {
+                                    recentitems[j].style.display='none';
+                                }
+                            }
+                        }               
+                    };
+                </script>
+            <c:SPCommunityAppResources_JS />
+        </apex:form>
+</apex:page>

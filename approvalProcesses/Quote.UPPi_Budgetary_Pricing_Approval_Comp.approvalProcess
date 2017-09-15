@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>GlobalSupport</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <type>adhoc</type>
+            </approver>
+        </assignedApprover>
+        <description>Approval Step 1</description>
+        <label>Approval Step 1</label>
+        <name>Approval_Step_1</name>
+        <rejectionActions>
+            <action>
+                <name>Budgetary_Pricing_Rejection_Notification</name>
+                <type>Alert</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>santiago.senn@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step 2 (New Markets)</description>
+        <entryCriteria>
+            <booleanFilter>(1 AND 2) or ( 2 AND 3)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Territory_Text__c</field>
+                <operation>contains</operation>
+                <value>New Market</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.UPP_Market_Type__c</field>
+                <operation>equals</operation>
+                <value>New Market</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Approval Step 2 (New Markets)</label>
+        <name>Approval_Step_2_New_Markets</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>Budgetary_Pricing_Rejection_Notification</name>
+                <type>Alert</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step 3 (Mature Markets)</description>
+        <entryCriteria>
+            <booleanFilter>(1 AND 2) AND (1 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Territory_Text__c</field>
+                <operation>contains</operation>
+                <value>Mature Market</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.UPP_Market_Type__c</field>
+                <operation>equals</operation>
+                <value>Mature Market</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Approval Step 3 (Mature Markets)</label>
+        <name>Approval_Step_3_Mature_Markets</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>Budgetary_Pricing_Rejection_Notification</name>
+                <type>Alert</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <description>UPPi  - Budgetary Pricing Approval (Components)</description>
+    <emailTemplate>Quote/Budgetary_Pricing_Quote_Submission_Email_Template</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>(1 AND 2 AND 3) AND (4 OR 5 OR 6)</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Budgetary Pricing</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Quote.RecordType</field>
+            <operation>equals</operation>
+            <value>Components</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>UPP Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Territory_Text__c</field>
+            <operation>contains</operation>
+            <value>Market</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.UPP_Market_Type__c</field>
+            <operation>equals</operation>
+            <value>New Market</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.UPP_Market_Type__c</field>
+            <operation>equals</operation>
+            <value>Mature Market</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Budgetary_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Budgetary_Pricing_Approval</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Budgetary_Pricing_Rejection_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Budgetary_Pricing_Rejection_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Budgetary_Pricing_Submission_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>UPPi -Budgetary Pricing Approval (Comp)</label>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

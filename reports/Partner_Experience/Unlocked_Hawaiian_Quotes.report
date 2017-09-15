@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Quote.Is_Quote_Locked__c</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Q.CREATED_DATE</column>
+            <operator>greaterThan</operator>
+            <value>3/1/2014 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote.Is_Quote_Locked__c</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>PARTNER_ACCOUNT_NAME</column>
+            <operator>equals</operator>
+            <value>Hawaii PV Partners LLC dba Revolusun,&quot;ProVision Solar, Inc.&quot;,RevoluSun,&quot;Rising Sun, LLC&quot;</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>PARTNER_ACCOUNT_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Unlocked Hawaiian Quotes</name>
+    <params>
+        <name>role_territory</name>
+        <value>role</value>
+    </params>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>QuoteProduct</reportType>
+    <roleHierarchyFilter>SunpowerCorporation</roleHierarchyFilter>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

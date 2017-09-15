@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Purchase_Order__c$Name</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Order_Status__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Sales_Type__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Order_Status_Interface_Message__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Dealer_Account__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$End_Customer_Account__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$PO_Submit_Date__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Oracle_Order_Number__c</field>
+    </columns>
+    <columns>
+        <field>Purchase_Order__c$Primary_PSR_Email__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Purchase_Order__c$CreatedDate</column>
+            <operator>greaterThan</operator>
+            <value>5/28/2012 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Purchase_Order__c$Order_Status__c</column>
+            <operator>equals</operator>
+            <value>Processed,Submitted,In Process,In Progress,Sent to Oracle,Cancelled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Purchase_Order__c$Sales_Type__c</column>
+            <operator>contains</operator>
+            <value>Third Party Owner,Lease,NH Lease</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>SO Processed Last FQ</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Purchase_Order_And_Quote_and_Account_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Purchase_Order__c$PO_Submit_Date__c</dateColumn>
+        <interval>INTERVAL_LASTMONTH</interval>
+    </timeFrameFilter>
+</Report>

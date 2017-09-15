@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Bill_to_Site__r$Oracle_Operating_Unit__c</field>
+    </columns>
+    <columns>
+        <field>Account.Bill_to_Site__r$Dealer_Account__c</field>
+    </columns>
+    <columns>
+        <field>Account.Bill_to_Site__r$Id</field>
+    </columns>
+    <currency>USD</currency>
+    <description>This report is grouped by Bill to Site name. First group shows those Account for which no Bill to Site address exists and hence those Accounts are not authorized to submit an order.</description>
+    <filter>
+        <criteriaItems>
+            <column>Account$RecordType</column>
+            <operator>equals</operator>
+            <value>Account.Partner</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Bill_to_Site__r$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Bill To Site Detail of Partners</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Account_with_Bill_to_Site__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$Authorized_Partner_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

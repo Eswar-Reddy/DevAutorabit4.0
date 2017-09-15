@@ -1,0 +1,131 @@
+<apex:page controller="CreateStandardAccount" showHeader="true" sidebar="true" tabStyle="Partner_Application__c">
+   <apex:form id="form1">
+    <apex:sectionHeader title="Account Information"/>
+    <apex:pageMessages />
+    <apex:pageBlock id="block1">
+        <apex:pageBlockButtons id="blockButton1">
+            <apex:commandButton value="Confirm" action="{!confirm}"/>
+            <apex:commandButton value="Cancel" action="{!cancel}"/>
+        </apex:pageBlockButtons>
+        <apex:outputPanel id="errorPanel" StyleClass="pbError">
+                {!errorMessage}
+         </apex:outputPanel> 
+         <apex:inputCheckbox id="chkCreateAccount"  value="{!isCreateAccount}"/>
+         <apex:outputLabel value="Create an account with the following information"></apex:outputLabel>
+         <br/>
+         <br/>
+        <apex:pageBlockSection id="pageBlockSection1" columns="2">
+             <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="compName" value="Company Name"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Company_Name__c}" id="compName"/>
+             </apex:pageBlockSectionItem>  
+               <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="address" value="Address"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Address__c}" id="address"/>
+             </apex:pageBlockSectionItem>    
+               <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="city" value="City"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.City__c}" id="city"/>
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >      
+                  <apex:outputLabel for="state" value="State"></apex:outputLabel>
+                   <!--<apex:outputLabel value="{!partner.State__c}" id="state"/> -->
+                  <apex:outputLabel value="NA" id="state"/> 
+             </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="country" value="Country"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Bill_To_Country__c}" id="country"/>
+              </apex:pageBlockSectionItem>     
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="zip" value="Zip"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Zip__c}" id="zip"/> 
+             </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="website" value="WebSite"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Website__c}" id="website"/>
+              </apex:pageBlockSectionItem> 
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="phone" value="Phone"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Phone__c}" id="phone"/>
+              </apex:pageBlockSectionItem> 
+               <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="emoployees" value="Employees"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Employees__c}" id="emoployees"/>
+              </apex:pageBlockSectionItem> 
+              
+              <!--//Start for Case#00215703 -Populate Account with RSM,CRSM,AreaSalesManager from Partner Account-->
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="RSM" value="RSM"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.RSM__r.FirstName+' '+partner.RSM__r.LastName}" id="rsm"/>
+              </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="Director of Sales" value="Director of Sales"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Director_of_Sales__r.FirstName+' '+partner.Director_of_Sales__r.LastName}" id="crsm"/>
+              </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="Area_Sales_Manager" value="Area Sales Manager"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Area_Sales_Manager__r.FirstName+' '+partner.Area_Sales_Manager__r.LastName}" id="areaSalesManager"/>
+              </apex:pageBlockSectionItem>
+              <!--//Start for Case#00215703--> 
+                
+        </apex:pageBlockSection>
+        <br/>
+        <apex:inputCheckbox id="chkCreateContact" value="{!isCreateContact}" />
+         <apex:outputLabel value="Create a contact with the following information: "></apex:outputLabel>
+         <br/>
+         <br/>
+         <apex:pageBlockSection > 
+             <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="fname" value="First Name"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.First_Name__c}" id="fname"/>
+             </apex:pageBlockSectionItem>  
+               <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="lname" value="Last Name"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Last_Name__c}" id="lname"/>
+             </apex:pageBlockSectionItem> 
+             <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="title" value="Title"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Title__c}" id="title"/>
+             </apex:pageBlockSectionItem> 
+             <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="address" value="Address"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Address__c}" id="address"/>
+             </apex:pageBlockSectionItem>  
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="city" value="City"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.City__c}" id="city"/>
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >      
+                  <apex:outputLabel for="state" value="State"></apex:outputLabel>
+                 <!-- <apex:outputLabel value="{!partner.State__c}" id="state"/> -->
+                  <apex:outputLabel value="NA" id="state"/>
+             </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="country" value="Country"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Bill_To_Country__c}" id="country"/>
+              </apex:pageBlockSectionItem>     
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="zip" value="Zip"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Zip__c}" id="zip"/> 
+             </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="email" value="Email"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Email__c}" id="email"/>
+              </apex:pageBlockSectionItem> 
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="phone" value="Phone"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Phone__c}" id="phone"/>
+              </apex:pageBlockSectionItem> 
+               <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="fax" value="Fax"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Fax__c}" id="fax"/>
+              </apex:pageBlockSectionItem> 
+              <apex:pageBlockSectionItem >
+                   <apex:outputLabel for="mobile" value="Mobile"></apex:outputLabel>
+                   <apex:outputLabel value="{!partner.Mobile__c}" id="mobile"/>
+              </apex:pageBlockSectionItem> 
+            
+        </apex:pageBlockSection>
+  </apex:pageBlock>
+ </apex:form>           
+</apex:page>

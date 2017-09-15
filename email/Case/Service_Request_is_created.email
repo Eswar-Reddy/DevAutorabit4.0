@@ -1,0 +1,22 @@
+<messaging:emailTemplate subject="SR# {!relatedTo.WorkOrderNumber} is created {!relatedTo.Subject}" relatedToType="WorkOrder">
+<messaging:htmlEmailBody >
+
+<apex:outputPanel rendered="{!LEFT(relatedTo.OwnerId, 3) = '005'}">
+    <b><apex:outputField value="{!relatedTo.Owner.Name}"/>,</b> <br/><br/>
+</apex:outputPanel>
+
+<b><apex:outputField value="{!relatedTo.LastModifiedBy.Name}"/></b> has assigned you the following Service Request: <br/><br/>
+
+<b>Priority:</b>&nbsp;<apex:outputField value="{!relatedTo.Priority}"/> <br/>
+<b>Due Date:</b>&nbsp;<apex:outputField value="{!relatedTo.Requested_Date__c}"/> <br/>
+<b>Service Request#:</b>&nbsp;<apex:outputField value="{!relatedTo.WorkOrderNumber}"/> <br/>
+<b>Service Request Subject:</b>&nbsp;<apex:outputField value="{!relatedTo.Subject}"/> <br/>
+<b>Description:</b>&nbsp;<apex:outputField value="{!relatedTo.Description}"/> <br/><br/>
+
+For more details, click the following link: <br/>
+<apex:outputlink value="{!LEFT($Api.Partner_Server_URL_140,FIND('.com',$Api.Partner_Server_URL_140)+4)+relatedTo.Id}">
+    <apex:outputField value="{!relatedTo.WorkOrderNumber}"/>
+</apex:outputlink>
+
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

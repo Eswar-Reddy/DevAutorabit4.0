@@ -1,0 +1,925 @@
+<!--
+* EMEAOrderShipping - Systems Order shipping information page for cash based ordering system 
+* SFDC Release - https://na29.salesforce.com/a5B34000000xp2Y
+* Pivotal Tracker Updates:
+* #127438787 - EMEA Shipping Page
+* #132991039 - Save shipping options on the Site record during order creation - EMEA - JD - 11/29/16
+* 
+* 
+* 
+* 
+* 
+-->
+
+<apex:page standardController="Purchase_Order__c" extensions="EMEAAlaCarteController" docType="html-5.0" title="Shipping" cache="true">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <link href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <style>
+
+        span.dateFormat {
+            display:none;
+        }
+
+        #conTable tr {
+            cursor: pointer;
+        }
+
+        #siteTable tr {
+            cursor: pointer;
+        }
+
+        .bs a.disabled {
+            pointer-events: none;
+            color:gray; !important
+        }
+
+        .bs .a {
+            cursor: pointer; !important
+        }
+
+        .bs .label {
+            font-size: .90em;
+        }
+
+        .bs .body {
+            font-size: .90em;
+        }
+
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+            font-size: .90em;
+        }
+
+        .nopadding {
+           padding: 0 !important;
+        }
+
+/*        .modal-dialog {
+            position: relative;
+            display: table; //important
+            overflow-y: initial !important;
+            overflow-x: auto;
+        }
+
+        .bs .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }*/
+
+/*        .inputField {
+            width: 82%;
+            height: 30px;
+            padding: 5px 12px;
+            font-size: 14px ;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }*/
+
+        .hiddenDiv {
+            display:none;
+        }
+
+        .bPageFooter {
+            display:none;
+        }
+
+        .noTableFooter {
+            display:none;
+        }
+    </style>
+
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 90%">
+
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+
+            <ol class="breadcrumb" style="margin-bottom:0px;">
+                <li><a href="#" onclick="toOrderType();">{!$Label.Home}</a></li>
+                <li><a href="#" onclick="toConfiguration();">{!$Label.Configure}</a></li>
+                <li><a href="#" onclick="toOpportunity();">{!$Label.Opportunity}</a></li>
+                <li style="color: #f7921e;">{!$Label.POWizardShippingLabel}</li>
+                <li>{!$Label.Finalize}</li>
+            </ol>
+            <apex:form styleClass="form-horizontal">
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>{!$Label.POWizardShippingInfoTitle}</h4>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group" rendered="{!IF(purchaseOrder.Opportunity__c != null, true, false)}">
+                                                    <label for="oppOutputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</label>
+                                                    <div class="col-sm-8" id="oppOutputDiv">
+                                                        <apex:outputText id="oppOuput" value="{!opp.Name}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="poNumberInputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Name.Label}
+                                                        <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                                    </label>
+                                                    <div id="poNumberInputDiv" class="col-sm-8">
+                                                        <apex:inputField id="poNumberInput" styleClass="form-control" value="{!purchaseOrder.Name}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shippingContactDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Contact__c.Label}
+                                                    </label>
+                                                    <div id="shippingContactDiv" class="col-sm-8">
+                                                        <span id="shippingContact"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shipToAddressOutputDiv" class="col-sm-4">{!$Label.POWizardShipToAddress}
+                                                        <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                                    </label>
+                                                    <div id="shipToAddressOutputDiv" class="col-sm-8">
+                                                        <span id="shipToAddressOutput"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <hr/>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6" style="margin-top: .4em !important;">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {!$Label.POWizardShippingContactsTitle}&nbsp;&nbsp;
+                                                <img height="14" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="tooltip" data-placement="bottom" title="{!$Label.Cash_Orders_Contact_Help_Text}"/><!--help text here-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 nopadding " >
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="col-sm-3 nopadding" style="margin-top: .4em !important;">
+                                                        {!$Label.POWizardSelectShipToAddressTitle}
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <div class="input-group" style="width: 100%;" >
+                                                            <select id="shipTypeSelect" class="form-control" style="border-radius: 4px;">
+                                                                <option value="Dealer Warehouse" label="{!$Label.Dealer_Warehouse}"/>
+                                                                <option value="Installation Site" label="{!$Label.Installation_Site}"/>
+                                                                <option value="Opportunity" label="{!$Label.Opportunity}"/>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 nopadding" style="margin-top: .4em !important;" id="newSiteModalDiv">
+                                                        <span class="badge" style="background-color: #f7921e;" role="button" data-toggle="modal" data-target="#shippingSiteModal" data-backdrop="static">{!$Label.New}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:1em;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <input id="conFilter" type="text" class="form-control" placeholder="{!$Label.Filter_Contacts}" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <table class="table table-bordered table-condensed table-hover">
+                                                        <thead>
+                                                            <th>{!$Label.Name}</th>
+                                                            <th>{!$Label.Phone}</th>
+                                                        </thead>
+                                                        <tbody id="conTable">
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                 <div class="row">
+                                                    <div class="col-sm-6 pageinate" style="font-size: .75em;">
+                                                        <a href="#" id="previousPage">&lt;{!$Label.Previous_Page} </a>|<a href="#" id="nextPage"> {!$Label.Next_Page}&gt;</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <input id="siteFilter" type="text" class="form-control" placeholder="{!$Label.Search}" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <table class="table table-bordered table-condensed table-hover">
+                                                <tr>
+                                                    <thead>
+                                                        <th>{!$Label.POWizardShipToAddress}</th>
+                                                        <th>{!$Label.City}</th>
+                                                        <th>{!$Label.State}</th>
+                                                        <th>{!$ObjectType.Lead.Fields.PostalCode.Label}</th>
+                                                    </thead>
+                                                </tr>
+                                                <tr>
+                                                    <tbody id="siteTable">
+
+                                                    </tbody>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6 pageinate" style="font-size: .75em;">
+                                                <a href="#" id="previousPageSite">&lt;{!$Label.Previous_Page} </a>|<a href="#" id="nextPageSite"> {!$Label.Next_Page}&gt;</a>
+                                            </div>
+                                        </div>
+                                    </div><!--end shipping right col-->
+                                </div>
+                            </div>
+                            <apex:outputPanel id="hiddenVars">
+
+                                <apex:inputHidden value="{!purchaseOrder.Ship_to_Site__c}" id="hiddenSiteId"/>
+                                <apex:inputHidden value="{!purchaseOrder.Ship_To_Contact__c}" id="hiddenContactId"/>
+                                <apex:outputText style="display:none" value="{!earliestDate}" id="hiddenLeadTime"/>
+                                <apex:outputText style="display:none" value="{!earliestYear}" id="hiddenEarliestYear"/>
+                                <apex:outputText style="display:none" value="{!earliestMonth}" id="hiddenEarliestMonth"/> 
+                                <apex:outputText style="display:none" value="{!earliestDay}" id="hiddenEarliestDay"/>   
+                                <apex:outputText style="display:none" value="{!exceptionList}" id="hiddenExceptionList"/>
+                                <apex:outputText style="display:none" value="{!language}" id="hiddenLanguage"/>
+                                <script type="text/javascript">
+                                    var languageElement = document.getElementById('{!$Component.hiddenLanguage}');
+                                    var hiddenContactElement = document.getElementById('{!$Component.hiddenContactId}');
+                                    var hiddenSiteElement = document.getElementById('{!$Component.hiddenSiteId}');
+                                    var hiddenLeadTimeElement = document.getElementById('{!$Component.hiddenLeadTime}');
+                                    var hiddenEarliestYearElement = document.getElementById('{!$Component.hiddenEarliestYear}');
+                                    var hiddenEarliestMonthElement = document.getElementById('{!$Component.hiddenEarliestMonth}');
+                                    var hiddenEarliestDayElement = document.getElementById('{!$Component.hiddenEarliestDay}');
+                                    var hiddenExceptionListElement = document.getElementById('{!$Component.hiddenExceptionList}');
+                                    
+                                  $.datepicker.regional["it"] = {
+                                        closeText: "Chiudi",
+                                        prevText: "&#x3C;Prec",
+                                        nextText: "Succ&#x3E;",
+                                        currentText: "Oggi",
+                                        monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
+                                            "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
+                                        monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu",
+                                            "Lug","Ago","Set","Ott","Nov","Dic" ],
+                                        dayNames: [ "Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato" ],
+                                        dayNamesShort: [ "Dom","Lun","Mar","Mer","Gio","Ven","Sab" ],
+                                        dayNamesMin: [ "Do","Lu","Ma","Me","Gi","Ve","Sa" ],
+                                        weekHeader: "Sm",
+                                        dateFormat: "dd/mm/yy",
+                                        firstDay: 1,
+                                        isRTL: false,
+                                        showMonthAfterYear: false,
+                                        yearSuffix: "" };
+
+                              
+                                    $.datepicker.regional['fr'] = {clearText: 'Effacer', clearStatus: '',
+                                        closeText: 'Fermer', closeStatus: 'Fermer sans modifier',
+                                        prevText: '&lt;Préc', prevStatus: 'Voir le mois précédent',
+                                        nextText: 'Suiv&gt;', nextStatus: 'Voir le mois suivant',
+                                        currentText: 'Courant', currentStatus: 'Voir le mois courant',
+                                        monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin',
+                                        'Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+                                        monthNamesShort: ['Jan','Fév','Mar','Avr','Mai','Jun',
+                                        'Jul','Aoû','Sep','Oct','Nov','Déc'],
+                                        monthStatus: 'Voir un autre mois', yearStatus: 'Voir un autre année',
+                                        weekHeader: 'Sm', weekStatus: '',
+                                        dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+                                        dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+                                        dayNamesMin: ['Di','Lu','Ma','Me','Je','Ve','Sa'],
+                                        dayStatus: 'Utiliser DD comme premier jour de la semaine', dateStatus: 'Choisir le DD, MM d',
+                                        dateFormat: 'dd/mm/yy', firstDay: 0, 
+                                        initStatus: 'Choisir la date', isRTL: false};
+                                        
+                                    $.datepicker.regional["de"] = {
+                                        closeText: "Schließen",
+                                        prevText: "&#x3C;Zurück",
+                                        nextText: "Vor&#x3E;",
+                                        currentText: "Heute",
+                                        monthNames: [ "Januar","Februar","März","April","Mai","Juni",
+                                        "Juli","August","September","Oktober","November","Dezember" ],
+                                        monthNamesShort: [ "Jan","Feb","Mär","Apr","Mai","Jun",
+                                        "Jul","Aug","Sep","Okt","Nov","Dez" ],
+                                        dayNames: [ "Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag" ],
+                                        dayNamesShort: [ "So","Mo","Di","Mi","Do","Fr","Sa" ],
+                                        dayNamesMin: [ "So","Mo","Di","Mi","Do","Fr","Sa" ],
+                                        weekHeader: "KW",
+                                        dateFormat: "dd.mm.yy",
+                                        firstDay: 1,
+                                        isRTL: false,
+                                        showMonthAfterYear: false,
+                                        yearSuffix: "" };  
+                                                                                                                                     
+                                    $('[id$=datepicker]').datepicker("disable");                          
+                                    $(function() {
+                                        $('[id$=datepicker]').datepicker("destroy");
+                                        $('[id$=datepicker]').datepicker($.extend({}, $.datepicker.regional[languageElement.innerText], {beforeShowDay: DisableSpecificDates, minDate: new Date(hiddenEarliestYearElement.innerText, hiddenEarliestMonthElement.innerText-1,hiddenEarliestDayElement.innerText), dateFormat: 'dd/mm/yy'}));                                 
+                                        $('[id$=datepicker]').datepicker('refresh');
+                                    }); 
+                                    $('[id$=datepicker]').datepicker("enable");                                       
+                                    
+                                    function DisableSpecificDates(crd) {
+                                        
+                                        var date = new Date(crd);
+                                        var m = ("0" + (date.getMonth() + 1)).slice(-2);
+
+                                        var d = ("0" + date.getDate()).slice(-2);
+                                   
+                                        var y = date.getFullYear(); 
+                                                                                
+                                        var currentdate = y + '-' + m + '-' + d;
+                                        if (hiddenExceptionListElement.innerText.indexOf(currentdate) != -1 ) {
+                                            return [false];
+                                        } 
+                                        var weekenddate = $.datepicker.noWeekends(date);
+                                        return weekenddate; 
+                                        
+                                    };
+                                </script>
+                            </apex:outputPanel>
+                            <apex:actionFunction name="toConfiguration" action="{!ToSystemsConfig}"/>
+                            <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+                            <apex:actionFunction name="doCRDCallout" action="{!doCRDCallout}" status="crdStatus" oncomplete="updateSiteTablePaged" reRender="hiddenVars"/>
+                            <apex:actionFunction name="reRenderScript" reRender="hiddenVars"/>
+                            <apex:actionFunction name="setShippingOptions" action="{!setShippingOptions}" reRender="shippingOptions">
+                                <apex:param id="stsId" name="stsId" value=""/>
+                            </apex:actionFunction>
+                            <apex:actionStatus id="crdStatus" onstart="displayCRD(false)" onstop="displayCRD(true)"/>  
+
+                            
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="crdDateInputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}
+                                                <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                            </label>
+                                            <div id="crdDateInputDiv" class="col-sm-8 hiddenDiv">                                            
+                                                <apex:inputText id="datepicker" styleClass="form-control" value="{!crd}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                      
+                        <hr/>
+                        <apex:outputPanel id="shippingOptions">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="altContact" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Alternate_Contact__c.Label}</label>
+                                                        <div id="altContactInputDiv" class="col-sm-8">
+                                                            <apex:inputField id="altContact" styleClass="form-control" value="{!purchaseOrder.Alternate_Contact__c}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="truckType" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Truck_Type__c.Label}</label>
+                                                        <div class="col-sm-8" id="truckTypeDiv">
+                                                            <apex:inputField id="truckType" styleClass="form-control" value="{!purchaseOrder.Truck_Type__c}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="altContactPhone" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Alternate_Contact_Phone__c.Label}</label>
+                                                        <div id="altContactPhoneInputDiv" class="col-sm-8">
+                                                            <apex:inputField id="altContactPhone" styleClass="form-control" value="{!purchaseOrder.Alternate_Contact_Phone__c}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="Liftgate" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Liftgate__c.Label}</label>
+                                                        <div class="col-sm-8" id="liftgateDiv">
+                                                            <apex:inputField id="Liftgate" styleClass="form-control" value="{!purchaseOrder.Liftgate__c}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label for="palletJack" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Pallet_Jack__c.Label}</label>
+                                                        <div class="col-sm-8" id="palletJackDiv">
+                                                            <apex:inputField id="palletJack" styleClass="form-control" value="{!purchaseOrder.Pallet_Jack__c}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <label for="specialInstructionsInputDiv" class="col-sm-4" style="padding-top:8px;">{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}&nbsp;
+                                        <img height="16" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="tooltip" data-placement="bottom" title="{!$Label.Special_Shipping_Instructions_Help}"/><!--help text here-->
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <apex:inputTextarea html-maxlength="30" rows="3" styleClass="form-control" id="specialInstructionsInput" value="{!purchaseOrder.Special_Instructions__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <br/>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        {!$Label.Contact_PSR}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--end panel-->
+                </div>
+                <div class="row" style="text-align: center;">
+                    <apex:outputPanel id="buttonPanel">
+                        <a href="#" class="btn btn-primary" onclick="toOpportunity();" role="button">{!$Label.POWizardPrevStep}</a>
+                        <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+
+                        <a id="nextStepButton" href="#" class="btn btn-primary disabled" onClick="saveFromShipping();" role="button">{!$Label.POWizardNextStep}</a>
+                        <apex:actionFunction name="saveFromShipping" action="{!saveFromShipping}"/>
+                    </apex:outputPanel>
+                </div>
+                <apex:actionFunction name="saveSite" action="{!callComponent1ControllerMethod}"/>
+            </apex:form>
+        </div><!--end container-->
+
+        <!-- ShippingSiteModal -->
+        <div class="modal fade" id="shippingSiteModal" tabindex="-1" role="dialog" aria-labelledby="shippingSiteModalLabel" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title" id="shippingSiteModalLabel">{!$Label.POWizardNewShipToSite}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <c:EMEAShippingSiteComponent controllerForPage="{!this}" componentName="shippingComponent"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal" style="color: #f7921e; border-color: darkgray;" role="button">{!$Label.Cancel}</a>
+                        <a href="#" class="btn btn-primary" data-dismiss="modal" onClick="save();" role="button">{!$Label.Save}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var accId = '{!opp.AccountId}';
+        var partnerAccId = '{!currentUser.Contact.AccountID}';
+        var consToDisplay = [];
+        var allCons = [];
+        var allSites = [];
+        var sitesToDisplay = [];
+        var filteredSites = [];
+        var selectedConId = '';
+        var consCurrentPage = [];
+        var pageSize = 5;
+        var currentPage = 1;
+        var currentPageSite = 1;
+        var selectedAddress = '';
+        var selectedRecordType = '';
+
+        function save(){
+            shipToSite.Dealer_Account__c = partnerAccId;
+            var recordType = selectedRecordType;
+            if(!recordType) {
+                recordType = 'Dealer Warehouse';
+            }
+            delete shipToSite.RecordType;
+            var record = JSON.stringify(shipToSite);
+            ShippingSiteComponentController.saveShippingSite(record, recordType, function(result, event){
+                if(event.status){
+                    if(result.success){
+                        var newSite = result.payloadMap.savedRecord;
+                        newSite.RecordType = {Name: recordType};
+                        allSites.unshift(newSite);
+                        hiddenSiteElement.value = newSite.Id;
+                        $('#shipTypeSelect').val(recordType);
+                        sitesToDisplay = [];
+                        filteredSites = [];
+                        for (var i = 0; i < allSites.length; i++) {
+                            if(allSites[i].RecordType.Name == recordType){
+                        allSites[i]=replaceUndefinedWithBlankValue(allSites[i]); 
+                                sitesToDisplay.push(allSites[i]);
+                                filteredSites.push(allSites[i]);
+                            }
+                        };
+                        $('#siteFilter').val('');
+                        currentPageSite = 1;
+                        updateSiteTablePaged(sitesToDisplay, recordType, 1); 
+                        reRenderScript();                       
+                        enableNextStep();
+                        doCRDCallout();
+                    }else{
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    alert(event.message);
+                }
+            });
+        }
+        $( document ).ready(function() {
+
+            var x = document.getElementById("orderNameInput");
+            if(hiddenSiteElement.value){
+                reRenderScript();
+                doCRDCallout();
+            }
+            EMEAAlaCarteController.getShippingContacts(function(result, event){
+                if(event.status){
+                    if(result.success){
+                        allCons = result.payloadMap.queriedRecords;
+                        //add opportunity as first in list
+                        if("{!opp.Name}"){
+                            allCons.unshift({Name: "{!opp.Name} (Home Owner)", Phone: "{!opp.Account.Phone}", Id: "{!opp.Primary_Contact__c}"});
+                        }  
+                        for (var i = allCons.length - 1; i >= 0; i--) {
+                            if(hiddenContactElement && hiddenContactElement.value && allCons[i].Id == hiddenContactElement.value){
+                                $('#shippingContact').html(allCons[i].Name);
+                            }
+                         }; 
+                        consToDisplay = result.payloadMap.queriedRecords;
+                        updateConTablePaged(allCons, 1);
+                    }else{
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    alert(event.message);
+                }
+            });
+
+            EMEAAlaCarteController.getDealerWarehouses(accId, function(result, event){
+                if(event.status){
+                    var shipType = $('#shipTypeSelect').val();
+                    if(result.success){
+                        allSites = result.payloadMap.queriedRecords;
+                        for (var i = 0; i < allSites.length; i++) {
+                            if(allSites[i].RecordType.Name == shipType){
+                            allSites[i]=replaceUndefinedWithBlankValue(allSites[i]);
+                                sitesToDisplay.push(allSites[i]);
+                                filteredSites.push(allSites[i]);
+                            }
+                            //Set already existing address
+                            if(hiddenSiteElement && hiddenSiteElement.value && hiddenSiteElement.value == allSites[i].Id){
+                                selectedAddress = allSites[i];
+                                if(allSites[i].Address__c){
+                                allSites[i]=replaceUndefinedWithBlankValue(allSites[i]);
+                                
+                                $('#shipToAddressOutput').html(allSites[i].Address__c);
+                                }else{
+                                    allSites[i]=replaceUndefinedWithBlankValue(allSites[i]); 
+                                    $('#shipToAddressOutput').html(allSites[i].Address1__c+' '+allSites[i].City__c+', '+allSites[i].State__c+' '+allSites[i].Zip__c+' '+allSites[i].Country__c);
+                                }
+                            }
+                        };
+                        updateSiteTablePaged(sitesToDisplay, shipType, 1);
+                    }else{
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    alert(event.message);
+                }
+            });
+
+            $('#conFilter').keyup(function() {
+                filterDisplayedCons(this.value);
+            });
+
+            $('#siteFilter').keyup(function() {
+                filterDisplayedSites(this.value);
+            });
+
+            $('#shipTypeSelect').change(function(){
+                var shipType = $(this).val();
+                selectedRecordType = shipType;
+
+                //PT ID#115992845 - show/hide new site creation if is opportunity
+                if(shipType.toString().indexOf('Opp') > -1) {
+                    $('#newSiteModalDiv').hide();
+                }
+                else {
+                    $('#newSiteModalDiv').show();
+                }
+                sitesToDisplay = [];
+                filteredSites = [];
+                for (var i = 0; i < allSites.length; i++) {
+                    if(allSites[i].RecordType.Name == shipType){
+                allSites[i]=replaceUndefinedWithBlankValue(allSites[i]);
+                        sitesToDisplay.push(allSites[i]);
+                        filteredSites.push(allSites[i]);
+                    }
+                };
+                $('#siteFilter').val('');
+                currentPageSite = 1;
+                updateSiteTablePaged(sitesToDisplay, shipType, 1);
+            });
+
+            $( "#conTable" ).on( "click", "tr", function( event ) {
+                //set controller prop
+                hiddenContactElement.value = this.id;
+                //set page display
+                $('#shippingContact').html(this.getAttribute("name"));
+                //highlight row 
+                $(this).addClass('bg-info').siblings().removeClass('bg-info');
+                enableNextStep();
+            });
+
+            $( "#siteTable" ).on( "click", "tr", function( event ) {
+                //set controller prop
+                hiddenSiteElement.value = this.id;
+                setShippingOptions(this.id);
+                //set page display
+                $('#shipToAddressOutput').html(getSelectedAddress(this.id));
+                //highlight row
+                $(this).addClass('bg-info').siblings().removeClass('bg-info'); 
+                reRenderScript();     
+                enableNextStep();
+                doCRDCallout();               
+            });
+
+            $('#nextPage').click(function(){
+                currentPage++;
+                updateConTablePaged(consToDisplay, currentPage);
+            });
+
+            $('#previousPage').click(function(){
+                currentPage--;
+                updateConTablePaged(consToDisplay, currentPage);
+            });
+
+            $('#nextPageSite').click(function(){
+                currentPageSite++;
+                updateSiteTablePaged(filteredSites, $('#shipTypeSelect').val(), currentPageSite);
+            });
+
+            $('#previousPageSite').click(function(){
+                currentPageSite--;
+                updateSiteTablePaged(filteredSites, $('#shipTypeSelect').val(), currentPageSite);
+            });
+            
+            function updateConTablePaged(cons, pageNumber){
+                if(pageNumber == 1){
+                    $('#previousPage').addClass('disabled');
+                }else {
+                    $('#previousPage').removeClass('disabled');
+                }
+
+                if(pageNumber == Math.ceil(cons.length / pageSize)){
+                    $('#nextPage').addClass('disabled');
+                }else {
+                    $('#nextPage').removeClass('disabled');
+                }
+
+                var newTableString = '';
+                for (var i = pageSize*pageNumber - pageSize; i < pageSize*pageNumber; i++) {
+                    if(cons[i]){
+                        if(cons[i].Id == hiddenContactElement.value){ //already selected contact
+                            newTableString += '<tr class="bg-info" id="'+cons[i].Id+'" name="'+cons[i].Name+'"><td>'+cons[i].Name+"</td><td>"+(cons[i].Phone || '')+"</td></tr>";
+                            //Set page display values (for reloading on error, etc)
+                            $('#shippingContact').html(cons[i].Name);
+                        }else{
+                            newTableString += '<tr id="'+cons[i].Id+'" name="'+cons[i].Name+'"><td>'+cons[i].Name+"</td><td>"+(cons[i].Phone || '')+"</td></tr>"
+                        }
+                    }else{
+                        break;
+                    }
+                };
+                $( "#conTable" ).html(newTableString);
+
+            }
+            
+            function filterDisplayedCons(filter){
+                consToDisplay = [];
+
+                for (var i = 0; i < allCons.length; i++) {
+                    if(allCons[i].Name.toLowerCase().indexOf(filter.toLowerCase()) >= 0){
+                        consToDisplay.push(allCons[i]);
+                    }
+                };
+
+                updateConTablePaged(consToDisplay, 1);
+            }
+
+            function filterDisplayedSites(filter){
+                filteredSites = [];
+
+                for (var i = 0; i < sitesToDisplay.length; i++) {
+                    if(sitesToDisplay[i].Address1__c.toLowerCase().indexOf(filter.toLowerCase()) >= 0){
+                        filteredSites.push(sitesToDisplay[i]);
+                    }
+                };
+
+                updateSiteTablePaged(filteredSites, $('#shipTypeSelect').val(), 1);
+            }
+
+            enableNextStep();
+        });
+
+        function enableNextStep() {
+            if(hiddenSiteElement.value){
+                $('#nextStepButton').removeClass('disabled');
+            }
+        }
+
+        function getSelectedAddress(addressId) {
+            for (var i = allSites.length - 1; i >= 0; i--) {
+                if(allSites[i].Id == addressId) {
+        allSites[i]=replaceUndefinedWithBlankValue(allSites[i]);
+                    if(allSites[i].Address__c) {
+                        return allSites[i].Address__c;
+                    } else {
+                        var ad1 = allSites[i].Address1__c ? allSites[i].Address1__c : '';
+                        var ad2 = allSites[i].Address2__c ? allSites[i].Address2__c : '';
+                        var city = allSites[i].City__c ? allSites[i].City__c : '';
+                        var st = allSites[i].State__c ? allSites[i].State__c : '';
+                        var zip = allSites[i].Zip__c ? allSites[i].Zip__c : '';
+                        var country = allSites[i].Country__c ? allSites[i].Country__c : '';
+
+                        return ad1 +' '+ ad2+' '+ city +', '+ st +'  '+ zip +' '+ country;
+                    }
+                }
+            };
+        }
+
+        function updateSiteTablePaged(siteList, shipType, pageNumber){
+
+            if(pageNumber == 1){
+                $('#previousPageSite').addClass('disabled');
+            }else {
+                $('#previousPageSite').removeClass('disabled');
+            }
+
+            if(pageNumber == Math.ceil(siteList.length / pageSize)){
+                $('#nextPageSite').addClass('disabled');
+            }else {
+                $('#nextPageSite').removeClass('disabled');
+            }
+            var newTableString = '';
+            
+            var numberOnPage = 0;
+            for (var i = pageSize*pageNumber - pageSize; i < pageSize*pageNumber; i++) {
+                if(siteList[i]){
+                    if(siteList[i].Id == hiddenSiteElement.value){ //already selected site
+                siteList[i]=replaceUndefinedWithBlankValue(siteList[i]);
+                        newTableString += '<tr class="bg-info" id="'+siteList[i].Id+'"><td>'+siteList[i].Address1__c+"</td><td>"+siteList[i].City__c+"</td><td>"+siteList[i].State__c+"</td><td>"+siteList[i].Zip__c+"</td></tr>";
+                        //Set page display values (for reloading on error, etc)
+                        $('#shipToAddressOutput').html(getSelectedAddress(siteList[i].Id));
+                    }else{
+                siteList[i]=replaceUndefinedWithBlankValue(siteList[i]);
+                        newTableString += '<tr id="'+siteList[i].Id+'"><td>'+siteList[i].Address1__c+"</td><td>"+siteList[i].City__c+"</td><td>"+siteList[i].State__c+"</td><td>"+siteList[i].Zip__c+"</td></tr>";
+                    }
+                    numberOnPage++;
+                    if(numberOnPage > pageSize){
+                        break;
+                    }
+                }
+            }
+            $('#siteTable').html(newTableString);
+        }
+        function toggleSpinner(showSpinner){
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+        function displayCRD(display){
+            if(display){
+                $('#crdDateInputDiv').removeClass('hiddenDiv'); 
+            }else{
+                $('#crdDateInputDiv').addClass('hiddenDiv'); 
+            }
+        } 
+        
+function replaceUndefinedWithBlankValue(allSitesObject){
+    if(allSitesObject.Address__c){
+        allSitesObject.Address__c=allSitesObject.Address__c.replace(/undefined/g, '');
+            }
+    if(typeof allSitesObject.Address1__c ==='undefined'){
+        allSitesObject.Address1__c='';
+             }
+    if(typeof allSitesObject.City__c === 'undefined'){
+        allSitesObject.City__c='';
+             }
+    if(typeof allSitesObject.State__c === 'undefined'){
+        allSitesObject.State__c='';
+           }
+    if(typeof allSitesObject.Zip__c === 'undefined'){
+        allSitesObject.Zip__c='';
+           }
+    if(typeof allSitesObject.Country__c === 'undefined'){
+        allSitesObject.Country__c='';
+             }
+     if(typeof allSitesObject.Address2__c ==='undefined'){
+        allSitesObject.Address2__c='';
+    }	     
+    return allSitesObject;
+        }
+  
+     
+    </script>
+</apex:page>

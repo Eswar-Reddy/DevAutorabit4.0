@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$PIS_Entry_Date__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Placed_In_Service__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>equals</operator>
+            <value>LeasePayment__c.NH_Lease_Payment,LeasePayment__c.TPS,LeasePayment__c.New_RecordType</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Opportunity__c.StageName</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Opps Stage vs. Lease Payment Status</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

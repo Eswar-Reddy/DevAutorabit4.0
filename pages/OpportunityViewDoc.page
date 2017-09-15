@@ -1,0 +1,3 @@
+<apex:page standardController="Opportunity"  sidebar="false" wizard="false" showHeader="false" rendered="{!OR(Opportunity.Partner_Account_Id__r.BillingCountry='Australia',Opportunity.Partner_Account_Id__r.BillingCountry='United States') }">  
+    <TPSSF:ViewDocumentsComponent controllerType="Opportunity" ClientId="{!IF(CONTAINS($Profile.Name,'Partner'),RIGHT($User.CountryDomainText__c,2),RIGHT(Opportunity.Owner.CountryDomainText__c,2))}"/>
+</apex:page>

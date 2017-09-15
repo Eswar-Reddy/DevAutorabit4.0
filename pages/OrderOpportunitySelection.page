@@ -1,0 +1,217 @@
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" docType="html-5.0" title="Opportunity Selection" cache="true" showHeader="{!IF(isPartnerUser,false,true)}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    
+    <style type="text/css">
+        #oppTable tr {
+            cursor: pointer;
+        }
+
+        a.disabled{ 
+            pointer-events: none;
+            color:gray; !important
+            
+        }
+        .bs .label {
+            font-size: .90em;            
+        }
+        
+        .bs .body {
+            font-size: .90em;
+        }
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+            font-size: .85em;
+        }
+        
+    </style>
+
+    <apex:form >
+
+        <div class="bs">
+            <div class="container container-fluid" style="width:90%">
+                <ol class="breadcrumb" style="margin-bottom: 0px;">
+                    <!-- TODO: implement ability to go forward when other fields are completed on order -->
+                    <li><a href="OrderTypeSelection">{!$Label.Home}</a></li>
+                    <li style="color: #f7921e;">{!$Label.Opportunity}</li>
+                    <li>{!$Label.POWizardShippingLabel}</li>
+                    <li>{!$Label.Configure}</li>
+                    <li>{!$Label.Finalize}</li>
+                </ol>
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{!$Label.POWizardSelectEndCustomerTtitle}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-4 panel-title" style="padding-top:6px;">{!$Label.POWizardCustomerOpportunityHeading}&nbsp;
+                                <img height="14" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="popover" data-placement="auto" data-trigger="hover" title="{!$Label.Opportunity_Help_Text}"/><!--help text here-->
+                            </div>
+                            <div class="col-sm-8">
+                                <input id="oppFilter" type="text" class="form-control" placeholder="{!$Label.Filter_Opportunities}" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Table -->
+                    <div id="ajaxLoading" class="row" style="text-align:center;">
+                        <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>{!$Label.Loading}</span>
+                    </div>
+                    
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>{!$Label.Name}</th>
+                            <th>{!$Label.Stage}</th>
+                            <th>{!$Label.Close_Date}</th>
+                              <th>{!$Label.Amount} ({!currentUser.CurrencyISOCode})</th>
+                          </tr>
+                        </thead>
+                        <tbody id="oppTable">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                       <a href="#" id="previousPage">&lt;{!$Label.Previous_Page} </a>|<a href="#" id="nextPage"> {!$Label.Next_Page}&gt;</a>
+                    </div>
+                </div>
+                <div class="row"  style="text-align:center;">
+                    <a href="#" class="btn btn-primary" onclick="toOrderType();" role="button">{!$Label.POWizardNavPrevious}</a>&nbsp;&nbsp;
+                    
+                    <a href="#" class="btn btn-primary" onclick="toShippingWithoutOpp();" role="button">{!$Label.POWizardNextStep}</a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <!-- <apex:inputHidden value="{!oppId}" id="hiddenVar" /> -->
+        <apex:inputHidden value="{!purchaseOrder.Opportunity__c}" id="hiddenVar" />
+        <script type="text/javascript">
+            var hiddenElement = document.getElementById('{!$Component.hiddenVar}');
+        </script>
+        <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+        <apex:actionFunction name="toShipping" action="{!ToShipping}"/>
+        <apex:actionFunction name="toShippingWithoutOpp" action="{!ToShippingWithoutOpp}"/>
+    </apex:form>
+    <script type="text/javascript">
+        var oppsToDisplay = [];
+        var allOpps = [];
+        var selectedOppId = '';
+        var oppsCurrentPage = [];
+        var pageSize = 10;
+        var currentPage = 1;
+        $( document ).ready(function() {
+            //get all opportunities
+            toggleSpinner(true);
+            OrderAppController.getOpportunities(function(result, event){
+                if(event.status){
+                    if(result.success){
+                        allOpps = result.payloadMap.queriedRecords;
+                        oppsToDisplay = result.payloadMap.queriedRecords;
+                        toggleSpinner(false);
+                        updateOppTablePaged(allOpps, 1);
+                    }else{
+                        toggleSpinner(false);
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    toggleSpinner(false);
+                    alert(event.message);
+                }
+                toggleSpinner(false);
+            });
+
+            $('#oppFilter').keyup(function() {
+                filterDisplayedOpps(this.value);
+            });
+
+            $( "#oppTable" ).on( "click", "tr", function( event ) {
+                //give id to controller
+                hiddenElement.value = this.id;
+                //actionfunction call
+                toShipping();
+            });
+
+            $('#nextPage').click(function(){
+                currentPage++;
+                updateOppTablePaged(oppsToDisplay, currentPage);
+            });
+
+            $('#previousPage').click(function(){
+                currentPage--;
+                updateOppTablePaged(oppsToDisplay, currentPage);
+            });
+
+            function filterDisplayedOpps(filter){
+                oppsToDisplay = [];
+                for (var i = 0; i < allOpps.length; i++) {
+                    if(allOpps[i].Name.toLowerCase().indexOf(filter.toLowerCase()) >= 0){
+                        oppsToDisplay.push(allOpps[i]);
+                    }
+                };
+                updateOppTablePaged(oppsToDisplay, 1);
+            }
+
+            function updateOppTablePaged(opps, pageNumber){
+                if(pageNumber == 1){
+                    $('#previousPage').addClass('disabled');
+                    $('#previousPage').removeAttr('href');
+                }else {
+                    $('#previousPage').removeClass('disabled');
+                    $('#previousPage').attr('href','#');
+                }
+
+                if(pageNumber == Math.ceil(opps.length / pageSize)){
+                    $('#nextPage').addClass('disabled');
+                    $('#nextPage').removeAttr('href');
+                }else {
+                    $('#nextPage').removeClass('disabled');
+                    $('#nextPage').attr('href','#');
+                }
+                $( "#oppTable" ).empty();
+
+                for (var i = pageSize*pageNumber - pageSize; i < pageSize*pageNumber; i++) {
+                    var dateFormatted = normalizeDate(opps[i].CloseDate);
+                    var amtFormatted = normalizeAmount(opps[i].Amount);
+                    $('<tr id="'+opps[i].Id+'"><td>'+opps[i].Name+"</td><td>"+opps[i].StageName+"</td><td>"+dateFormatted+"</td><td>"+amtFormatted+"</td></tr>").appendTo($("#oppTable"));
+                    //$('<tr id="'+opps[i].Id+'"><td>'+opps[i].Name+"</td><td>"+opps[i].StageName+"</td><td>"+opps[i].CloseDate+"</td></tr>").appendTo($("#oppTable"));
+                };
+            }
+        });
+    
+        function toggleSpinner(showSpinner){
+            console.log('toggle: ' + showSpinner);
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+    
+    	function normalizeDate(dateVal){ 
+            var convertedDate = new Date(dateVal); 
+            return convertedDate.toLocaleDateString(); 
+        }
+    
+    	function normalizeAmount(amtVal){
+            //opps[i].Amount.toFixed(2).toLocaleString()
+            var newAmt = '';
+            if(amtVal == null || amtVal == 0) {
+                newAmt = 0;
+                return newAmt.toFixed(2).toLocaleString();
+            }
+             else {
+                newAmt = amtVal.toFixed(2).toLocaleString(); 
+             }
+            return newAmt;
+        }
+        
+    </script>
+</apex:page>

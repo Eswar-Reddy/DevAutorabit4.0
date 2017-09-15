@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Business_Unit__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Cost__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Id</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Opportunities with Old Cost</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$Price_Book_Name__c</column>
+            <operator>contains</operator>
+            <value>General Price Book</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>notEqual</operator>
+            <value>06 – Closed Won,07 – Closed Lost</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Name</column>
+            <operator>contains</operator>
+            <value>Q414,Q115,Q215,Q315,Q415,Q116,Q216,Q316,Q416,Q117,Q217,Q317,Q417,Q118,Q218,Q318,Q418</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Opportunities with Old Cost</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_and_Products__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$X75_Meeting_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

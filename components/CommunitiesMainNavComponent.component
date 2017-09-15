@@ -1,0 +1,173 @@
+<apex:component controller="CommunityNavController">
+    <head>
+        <title>{!$Label.Sunpower_Partner_Portal_Title}</title>
+    </head>
+    <apex:attribute name="activeTab" description="The name of the active tab for this page; Accounts, Opportunities, etc." type="String" required="true" />
+    <apex:outputPanel id="navContent">
+        <div id="home" class="sunpower-style">
+            <div class='navigation-header-container' style="z-index:99999">
+                <header class="hidden-desktop">
+                    <a href="#" class="sunpower-logo-black"></a>
+                    <div class="header-right">
+                        <div class="header-icon show-desktop">
+                            <i class="icon icon-magnifying-glass"></i>
+                        </div>
+                        <button class="menu-button">Menu</button>
+                    </div>
+                </header>
+                <div class="navigation-container">
+                    <nav class="navigation">
+                        <div class="nav-heading">
+                            <a href="/apex/chome" class="sunpower-logo show-mobile"></a>
+                            <span class="image-icon image-icon-cancel close-nav"></span>
+                        </div>
+                        <div class="brand-item hidden-mobile hidden-tablet">
+                            <div class="logo-item">
+                                <a href="/apex/chome" class="sunpower-logo-black"></a>
+                            </div>
+                        </div>
+                        <div id="navigation__search-bar" class="hidden-mobile hidden-tablet">
+                            <form id="search-form" method="get" action="/apex/SPCommunitySearchResults" style="margin-top: auto;">
+                                <div class="form-group">
+                                    <div class="nav-search-input input-container--icon">
+                                        <i class="icon icon-magnifying-glass"></i>
+                                        <input name="searchString" type="text" class="submit_on_enter" placeholder="Search for Accounts, Opportunities, Contacts and Quotes"></input>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="image-icon image-icon-cancel-dark close-search"></div>
+                        </div>
+                        <div class="nav-items">
+                            <div class="nav-search hidden-desktop">
+                                <form id="search-form" method="get" action="/apex/SPCommunitySearchResults" style="margin-top: auto;">
+                                    <div class="input-container input-container--icon icon-left">
+                                        <i class="icon icon-magnifying-glass"></i>
+                                        <input name="searchString" type="text" class="submit_on_enter" placeholder="Search"></input>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="nav-item hidden-desktop">
+                                <div class="nav-item-title">
+                                    <div>
+                                        <div class="nav-item-icon image-icon image-icon-profile-user"></div>
+                                        <a href="#" style="pointer-events: none;">
+                                            <apex:outputText value="{!$User.FirstName} {!$User.LastName}" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <apex:repeat value="{!navObjectList}" var="navObject">
+                                <apex:outputPanel id="myPanel" styleClass="{!activeTab}">
+                                </apex:outputPanel>
+                                <div class="{!IF(activeTab==navObject.tabLabel," nav-item active "
+                                ,"nav-item ")}">
+                                    <div class="nav-item-title" onclick="tabUrl('{!navObject.tabUrl}');">
+                                        <div>
+                                            <span class="nav-item-icon icon-shield"></span>
+                                            <a href="#">
+                                                <apex:outputText value="{!navObject.tabLabel}" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:repeat>
+
+                            <apex:outputPanel rendered="{!navOVerflowObjectList != null && navOverflowObjectList.size > 0}">
+                                <div class="hidden-desktop">
+                                    <apex:repeat value="{!navOverflowObjectList}" var="navOverflowObject">
+                                        <apex:outputPanel styleClass="{!activeTab}" />
+                                        <div class="{!IF(activeTab==navOverflowObject.tabLabel," nav-item active ","nav-item ")}">
+                                            <div class="nav-item-title">
+                                                <div>
+                                                    <span class="nav-item-icon icon-shield"></span>
+                                                    <a href="{!navOverflowObject.tabUrl}">
+                                                        <apex:outputText value="{!navOverflowObject.tabLabel}" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </apex:outputPanel>
+                            
+                            <apex:outputPanel rendered="{!navOVerflowObjectList != null && navOverflowObjectList.size > 0}" style="padding-top: 4px;" onclick="clickMoreTab()" >
+                                <div id="moreTab" class="nav-item hidden-mobile hidden-tablet" onmouseover="activeMore()" onmouseleave="deactiveMore()">
+                                    <div class="nav-item-title">
+                                        <div>
+                                            <span class="nav-item-icon icon-shield"></span>
+                                            <ul class="dropit-menu">
+                                                <li>
+                                                    <a id="moreHref" href="#" style="display: inline-block;">MORE <div style="margin-bottom: 5px;display: inline-block;"><i class="icon icon-chevron-down"></i></div></a>
+                                                    <ul class="main-nav-dropdown">
+                                                        <apex:repeat value="{!navOverflowObjectList}" var="navOverflowObject">
+                                                            <li onclick="tabUrl('{!navOverflowObject.tabUrl}');">
+                                                                <a href="#">
+                                                                    <apex:outputText value="{!navOverflowObject.tabLabel}"/>
+                                                                </a>
+                                                            </li>
+                                                        </apex:repeat>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="nav-actions">
+                            <div class="nav-action-icon-separator"></div>
+                            <div class="nav-action-icon show-search">
+                                <a href="#" class="icon icon-magnifying-glass"></a>
+                            </div>
+                            <div class="nav-action-icon-separator"></div>
+                            <div class="nav-action-icon user-dropdown">
+                                <div class="image-icon image-icon-profile-user-dark"></div>
+                                <ul class="homepage-dropdown">
+                                    <li class="homepage-dropdown-item cursor-none">
+                                        <apex:outputText value="{!$User.FirstName} {!$User.LastName}" />
+                                    </li>
+                                        <li class="{!IF(displayMyAccountLink," homepage-dropdown-item "
+                                ,"hide-li")}">
+                                            <a href="/{!userAccountId}">My Account</a>
+                                        </li>
+                                    <li class="homepage-dropdown-item"><a href="/apex/applycustomheader?eURL=/apex/My_Subscriptions?id={!$User.Id}">My Subscriptions</a></li>
+                                    <li class="homepage-dropdown-item"><a href="/_ui/system/security/ChangePassword?isdtp=vw" target="_blank">Change My Password</a></li>
+                                    <li class="homepage-dropdown-item">
+                                        <apex:outputLink value="/secur/logout.jsp">Logout</apex:outputLink>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </apex:outputPanel>
+    <script type="text/javascript" src="{!URLFOR($Resource.SPCommunityMainNav, 'js/lib/dropit.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.SPCommunityMainNav, 'js/custom/app.js')}"></script>
+    <script type="text/javascript" src="{!URLFOR($Resource.SPCommunityMainNav, 'js/custom/app.navbar.js')}"></script>
+    <script>
+        var ga__userEmail = '{!$User.email}';
+
+        function activeMore(){
+            var tab = document.getElementById("moreTab");
+            tab.classList.add("active");
+        }
+
+        function deactiveMore(){
+            var tab = document.getElementById("moreTab");
+            tab.classList.remove("active");
+        }
+
+        function clickMoreTab(){
+            console.log("In click");
+            $('.dropit-open').addClass('dropit-open').find('.dropit-submenu').show();
+        }
+        
+        function tabUrl(url){
+            console.log('==='+url);
+            window.location.href = url;
+        }
+    </script>
+    <script type="text/javascript" src="{!URLFOR($Resource.updatedGoogleAnalyticsJs)}"></script>
+</apex:component>

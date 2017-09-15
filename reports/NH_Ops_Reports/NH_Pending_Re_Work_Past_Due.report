@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>NH_Community__c$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$SLA_Days_Aging__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c$AHJ__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 AND 2 AND 3) OR (4 AND 5 AND 6)</booleanFilter>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</column>
+            <operator>contains</operator>
+            <value>Apply for Permit,Permit Pickup,Upload</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Pending Rework</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</column>
+            <operator>lessThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</column>
+            <operator>equals</operator>
+            <value>#ApplyForPermitRevision</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Not Started</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</column>
+            <operator>lessThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Assigned_To__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Pending Re-Work - Past Due</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_w_Residential_Proj_w_Proj_Tasks__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

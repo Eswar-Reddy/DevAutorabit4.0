@@ -1,0 +1,207 @@
+<apex:page renderAs="PDF" standardController="Warranty_Registration__c" extensions="GenerateWarranty_CLS" >  
+           
+    <!-- Stylesheets -->
+    <apex:stylesheet value="{!$Resource.SP_PDFDocumentStyle1}" />
+     <apex:stylesheet value="{!$Resource.WarrantyStyle}" />
+    <!-- All Pages Header -->
+    <c:SP_PDFHeaderFooter type="header" position="left">
+    <div><apex:image url="{!$Resource.SunPowerLogo2012}" height="70px" /></div>
+    </c:SP_PDFHeaderFooter>
+    <c:SP_PDFHeaderFooter type="header" position="center">
+         <div style="text-align:center; padding-top:10px; height:60px; width:430px; color:#FFFFFF; background-color:#F8BA16; font:42px arial,sans-serif;">Certificat de garantie</div>
+    </c:SP_PDFHeaderFooter>
+    <br/>
+    <!-- First Pages Footer -->
+    <c:SP_PDFHeaderFooter id="first" position="left" type="footer"  >
+     <div style="font:14.5px arial,sans-serif; color:#F8BA16">Modalités de mise en oeuvre</div>      
+    <table  border="0.25" cellpadding="5" cellspacing="0" width="100%" rules="all" >
+        <tr>
+            <td style="border:2px solid; font:11.5px arial,sans-serif; color:#AEAEAF; line-height:113%; border-top-color:#F8BA16; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF; text-align:justify; ">
+               Si vous estimez disposer d’un juste motif de réclamation qui soit couvert par la présente garantie contractuelle, veuillez en aviser (a) le Vendeur SunPower ou l’installateur agréé des Modules PV en question ; (b) tout autre installateur agrée par SunPower ou (c) directement
+               SunPower France SAS, sis 9-11 Allée de l’Arche 92671 COURBEVOIE CEDEX (courrier électronique (supporttechnique@sunpowercorp.com)).
+
+               Par ailleurs, nous vous remercions de bien vouloir joindre à votre demande un justificatif du certificat de garantie.
+            </td>
+        </tr>
+    </table> 
+    <table border="0"  width="100%" rules="all"  >
+            <tr><td style="border-right-color:white;"></td></tr>
+            <tr>
+                <td width="25%" style="font:10.5px arial,sans-serif; " >
+                    <div style="width:100%; height:3px; background:#ACC957 ;"></div>
+                    SunPower France SAS<br/>
+                    <!--10 Rue de la Paix, Paris, France<br/>-->
+                    Tour Egée,9/11 Allée de l'Arche,92671 Courbevoie Cédex, France<br/>
+                </td>
+                <td style="border-top-color:white;"></td>
+                <td width="25%" style="font:10.5px arial,sans-serif; " valign="top">
+                    <div style="width:100%; height:3px; background:#EB7D11 ;"></div>
+                    SunPower France SAS<br/>
+                    www.SunPowercorp.fr<br/>
+                </td>
+                <td style="border-top-color:white;"></td>
+                <td width="25%" style="font:10.5px arial,sans-serif; "  >
+                    <div style="width:100%; height:3px; background:#505B9F ;"></div>
+                    Tel: 00800-786-76937<br/>
+                    (00800-SUNPOWER)<br/>
+                    supporttechnique@sunpowercorp.com<br/>
+                </td>                                                        
+            </tr>
+        </table>               
+    
+    </c:SP_PDFHeaderFooter>
+    <!-- All Pages Footer -->
+    <c:SP_PDFHeaderFooter type="footer" position="left">           
+        <table border="0"  width="100%" rules="all"  >
+            <tr><td style="border-right-color:white;"></td></tr>
+            <tr>
+                <td width="25%" style="font:10.5px arial,sans-serif; " >
+                    <div style="width:100%; height:3px; background:#ACC957 ;"></div>
+                    SunPower France SAS<br/>
+                    <!--10 Rue de la Paix, Paris, France<br/>-->
+                    Tour Egée,9/11 Allée de l'Arche,92671 Courbevoie Cédex, France<br/>
+                </td>
+                <td style="border-top-color:white;"></td>
+                <td width="25%" style="font:10.5px arial,sans-serif; " valign="top">
+                    <div style="width:100%; height:3px; background:#EB7D11 ;"></div>
+                    SunPower France SAS<br/>
+                    www.SunPowercorp.fr<br/>
+                </td>
+                <td style="border-top-color:white;"></td>
+                <td width="25%" style="font:10.5px arial,sans-serif; "  >
+                    <div style="width:100%; height:3px; background:#505B9F ;"></div>
+                    Tel: 00800-786-76937<br/>
+                    (00800-SUNPOWER)<br/>
+                    supporttechnique@sunpowercorp.com<br/>
+                </td>                                                        
+            </tr>
+        </table>                           
+    </c:SP_PDFHeaderFooter> 
+     
+
+    <div style="font:12px arial,sans-serif; color:#312F32; line-height:125%; " >
+        Chère cliente/Cher client,
+        <br/><br/>
+        Vous venez d'acquérir un système photovoltaïque SunPower, félicitations ! Nous vous remercions d’avoir choisi SunPower pour assurer votre indépendance énergétique et sommes ravis de vous compter parmi nos clients.
+        <br/><br/>
+        Ce certificat de garantie est une preuve écrite de notre engagement à continuer de vous fournir le meilleur service possible. SunPower espère pouvoir vous compter parmi ses clients fidèles pendant de nombreuses années. 
+        <br/><br/>
+        Ce certificat stipule que les produits SunPower répertoriés ci-dessous sont couverts par la Garantie limitée SunPower en vigueur à la Date de prise d'effet de la garantie indiquée sur ce certificat. Pour prendre connaissance des Limites etExclusions des garanties limitées de SunPower, veuillez consulter la section “Support” sur notre site : www.SunPowercorp.fr.
+        <br/><br/>
+        Salutations distinguées,
+        <br/>
+        <apex:image url="{!$Resource.frenchsignature}" height="50" width="60"/>
+        <br/> Bruno Addes<br/>
+        National Sales Director<br/>
+        SunPower France SAS<br/>
+    </div>    
+
+    <br/>
+    <div style="font:16px arial,sans-serif; border-right-color:white; color:#F8BA16" >INFORMATIONS SUR L'INSTALLATION</div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="2" >
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#F8BA16; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Nom du client</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#F8BA16; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{!Warranty_Registration__c.Customer_SFDC_ID__r.Name}" style="padding-left:10px;font:12px arial,sans-serif;border-bottom-color:#FFFFFF; "></apex:outputText>
+            </td>
+        </tr>        
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Adresse du client</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{!Warranty_Registration__c.Customer_SFDC_ID__r.BillingStreet}, {!Warranty_Registration__c.Customer_SFDC_ID__r.BillingCity}, {!Warranty_Registration__c.Customer_SFDC_ID__r.BillingState}, {!Warranty_Registration__c.Customer_SFDC_ID__r.BillingPostalCode}" style="padding-left:10px; font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " >
+                </apex:outputText>
+            </td>
+        </tr>      
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Date de prise d'effet de la garantie</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{0,date,dd/MM/yyyy}" style="padding-left:10px;font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " ><apex:param value="{!Warranty_Registration__c.Delivery_Date__c}" /></apex:outputText>
+           </td>
+        </tr>      
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Numéro d'enregistrement de la garantie</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{!Warranty_Registration__c.Warranty_Number__c}" style="padding-left:10px; font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " />
+            </td>
+        </tr>      
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#808080;" >Installateur</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#808080;" >
+                <apex:outputText value="{!Warranty_Registration__c.Partner_SFDC_ID__r.Name}" style="padding-left:10px;font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " /> 
+            </td>
+        </tr> 
+    </table>
+    <br/>
+    
+    <table width="100%" border="0" cellspacing="0" cellpadding="2" >
+         <tr><td width="100%" style="border:1px solid; font:16px arial,sans-serif; color:#F8BA16;border-top-color:#FFFFFF; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#F8BA16;" >Numéro de série du produit</td> </tr>
+    </table>
+
+    <apex:variable var="firstPageSize" value="{!20}"/>
+    <apex:variable var="nextPageSize" value="{!50}"/>
+    <apex:variable var="LWSize" value="{!lstWrap.size}"/>
+    <apex:variable value="{!1}" var="rowNum"/>
+   <!-- <table BGCOLOR="#505B9F" width="100%" border="0" cellspacing="0" cellpadding="2" >-->
+   
+   <apex:repeat value="{!lstWrap}" var="LW">
+   <apex:outputPanel rendered="{!
+        OR(rowNum=firstPageSize+1, MOD(rowNum-firstPageSize, nextPageSize)=1)}"
+        style="page-break-before:always">
+        <br/><br/>
+        <div style="font:16px arial,sans-serif; border-right-color:white; color:#F8BA16" >INFORMATIONS SUR L'INSTALLATION</div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="2" >
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#F8BA16; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Nom du client</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#F8BA16; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{!Warranty_Registration__c.Customer_SFDC_ID__r.Name}" style="padding-left:10px;font:12px arial,sans-serif;border-bottom-color:#FFFFFF; "></apex:outputText>
+            </td>
+        </tr>        
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Adresse du client</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{!Warranty_Registration__c.Customer_SFDC_ID__r.BillingStreet}, {!Warranty_Registration__c.Customer_SFDC_ID__r.BillingCity}, {!Warranty_Registration__c.Customer_SFDC_ID__r.BillingState}, {!Warranty_Registration__c.Customer_SFDC_ID__r.BillingPostalCode}" style="padding-left:10px; font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " >
+                </apex:outputText>
+            </td>
+        </tr>      
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Date de prise d'effet de la garantie</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{0,date,dd/MM/yyyy}" style="padding-left:10px;font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " ><apex:param value="{!Warranty_Registration__c.Delivery_Date__c}" /></apex:outputText>
+           </td>
+        </tr>      
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >Numéro d'enregistrement de la garantie</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >
+                <apex:outputText value="{!Warranty_Registration__c.Warranty_Number__c}" style="padding-left:10px; font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " />
+            </td>
+        </tr>      
+        <tr>
+            <td width="35%" style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#808080;" >Installateur</td>
+            <td style="padding-left:10px; border:1px solid; font:12px arial,sans-serif; border-top-color:#808080; border-left-color:#F8BA16; border-right-color:#FFFFFF; border-bottom-color:#808080;" >
+                <apex:outputText value="{!Warranty_Registration__c.Partner_SFDC_ID__r.Name}" style="padding-left:10px;font:12px arial,sans-serif;border-bottom-color:#FFFFFF; " /> 
+            </td>
+        </tr> 
+    </table>
+
+    <br/><br/>
+    <table width="100%" border="0" cellspacing="0" cellpadding="2" >
+         <tr><td width="100%" style="border:1px solid; font:16px arial,sans-serif; color:#F8BA16;border-top-color:#FFFFFF; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#F8BA16;" >Numéro de série du produit</td> </tr>
+        </table>
+    </apex:outputPanel>
+   <table width="100%" class = "table1">
+   <tr>
+        <td style="font:10.5px arial,sans-serif;width:100px; padding-left:10px;">{!LW.Col0}</td>
+        <td style="font:10.5px arial,sans-serif;width:100px; padding-left:10px;">{!LW.Col1}</td>
+        <td style="font:10.5px arial,sans-serif;width:100px; padding-left:10px;">{!LW.Col2}</td>
+        <td style="font:10.5px arial,sans-serif;width:100px; padding-left:10px;">{!LW.Col3}</td>
+        <td style="font:10.5px arial,sans-serif;width:100px; padding-left:10px;">{!LW.Col4}</td>
+   </tr>
+    </table>
+    <apex:outputPanel rendered="{!OR((rowNum=LWSize), MOD(rowNum-firstPageSize, nextPageSize)=0)}">
+     <table width="100%" border="0" cellspacing="0" cellpadding="2" >
+         <tr><td width="100%" style="border:1px solid; font:0px arial,sans-serif; color:#FFFFFF;border-top-color:#808080; border-left-color:#FFFFFF; border-right-color:#FFFFFF; border-bottom-color:#FFFFFF;" >List End</td> </tr>
+     </table>  
+    </apex:outputPanel>
+   <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+   </apex:repeat>
+</apex:page>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Notification that Inverter(s) will not be available to meet requested delivery date</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Partner_Template</letterhead>
+    <name>CVAR_Order_Status_(Inverter Delay)</name>
+    <style>freeForm</style>
+    <subject>Sunpower Commercial Order Status Update  - {!Opportunity.Name}</subject>
+    <textOnly>{!Today}
+
+This email is to acknowledge that we have received a Purchase Order for the following system:
+
+PROJECT DETAILS
+
+Opportunity Name:
+
+{!Opportunity.Name}
+
+Quote Number:
+
+{!Opportunity.Quote__c}
+
+SunPower SO Number:
+
+{!Opportunity.Sales_Order_Number__c}
+
+
+
+System Size (kWp):
+
+{!Opportunity.System_Size_KwP__c}
+
+System Type:
+
+{!Opportunity.Mounting_System__c}
+
+PV Type:
+
+{!Opportunity.PV_Type__c}
+
+Inverter(s):
+
+{!Opportunity.Invertor__c}
+
+{!Opportunity.Inverter_2__c}
+
+{!Opportunity.Inverter_3__c}
+
+Utility voltage:
+
+{!Opportunity.Utility_Voltage__c}
+
+SCHEDULE OF PAYMENTS &amp; CREDIT INFORMATION
+
+Order Confirmed:
+
+{!Today}
+
+Contract Price:
+
+{!Opportunity.Amount}
+
+Non-refund. D. P.:
+
+{!Opportunity.X5_Down_Payment__c}
+
+Pre-payment1 :
+
+
+Current Credit Limit:
+
+{!Opportunity.Partner_Account_Credit_Limit__c}
+
+Current Available Credit:
+
+{!Opportunity.Available_Credit__c}
+
+Past Due Balance:
+
+{!Opportunity.Past_Due_Balance__c}
+
+1 Pre-payment amount shown above is based on your current available credit. The required pre-payment will change as your available credit changes. If pre-payment will not be settled by mm/dd/yy, order cancellation penalties will apply.
+
+Once accepted, order cannot be canceled or changed without prior written approval by SunPower.  An order is considered “accepted” after SunPower receives a valid purchase order from the Dealer, SunPower and the Dealer agree to the scheduled delivery date via email confirmations, and the Dealer submits the required 5% non-refundable down payment.
+
+If any of the information listed above appears incorrect, please contact us immediately, especially regarding any special requests for the inverter (ARRA compliant, Grounding, Zone Monitoring Capability).
+
+We will be able to fulfill your request for system delivery within the week of {!Opportunity.Projected_Delivery_Date__c}.
+
+However, due to current ordering lead times for inverters, your system delivery date will occur on {!Opportunity.Delivery_Date__c}.
+
+If your system delivery date can be moved up, or if there are any other changes, we will notify you accordingly.
+
+If this is acceptable, please reply with your approval within 48 hours, otherwise your purchase order is subject to cancellation.
+
+
+Regards,
+
+
+{!User.Name}
+
+Partner Support Representative
+{!User.Username}
+1-800-SUNPOWER</textOnly>
+    <type>html</type>
+</EmailTemplate>

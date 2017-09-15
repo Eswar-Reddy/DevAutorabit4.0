@@ -1,0 +1,1002 @@
+<apex:page standardController="Site_Information_Form__c" extensions="HelixDesignRequestController,HelixDesignRequestUtilities" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&libraries=places&language=en"/>
+
+    <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <apex:stylesheet value="{!$Resource.StyleguideExpansion_CSS}" />
+    
+    <style type="text/css">
+        
+        .pac-container { z-index: 1051; }
+
+        .dateFormat {
+            display: none;
+        }
+
+        .sunpower-style .form-group {
+            align-items: center;
+        }
+
+        
+        .input-container.input-container--icon.pretty-inputs.icon-right.datepicker span {
+            width: 100%;
+        }
+
+        .sunpower-style .input-container--icon {
+            color: #0076be;
+        }
+
+        .sunpower-style .form-group span {
+            color: #0076be;
+        }
+
+        .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }
+
+        .disabled {
+            pointer-events: none;
+        }
+
+        .sunpower-style .radio label span:before, 
+        .sunpower-style .checkbox label span:before {
+            border: 1px solid #999;
+        }
+        .sunpower-style .radio label span, 
+        .sunpower-style .checkbox label span {
+            padding-top: .25rem;
+        }
+
+    </style>
+    
+
+    <div class="sunpower-style container" style="max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <apex:form html-autocomplete="off" >
+            <!--header-->
+            <div class="topper"></div>
+
+            <div class="row" style="margin-bottom: .5rem;">
+                <div class="col-xs-12">
+                    <div class="sunpower-logo-black" ></div>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <h3>Helix Design Request</h3>               
+            </div>
+            <!--end header-->
+
+            <div style="width: 90%; margin-left: auto; margin-right: auto;">
+
+                <c:SPCommunities_SpinnerOverlay />
+
+                <apex:outputPanel rendered="{! !lockInputs}">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="hide-mobile show-desktop" style="width: 100%;">
+                            <ol class="progress">
+                                <li class="progress-active" >General Information</li>
+                                <li class="progress-todo" style="cursor: pointer;" onclick="showOverlay(); navForward()">Product Information</li>
+                                <li class="progress-todo" >Notes and Attachments</li>
+                                <li class="progress-todo" >Submit&nbsp;&nbsp;&nbsp;</li>
+                            </ol>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel rendered="{!lockInputs}">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="hide-mobile show-desktop" style="width: 100%;">
+                            <ol class="progress">
+                                <li class="progress-done" style="cursor:pointer" >General Information</li>
+                                <li class="progress-done" style="cursor:pointer" onclick="navigateFunction('2');">Product Information</li>
+                                <li class="progress-done" style="cursor:pointer" onclick="navigateFunction('3');">Notes and Attachments</li>
+                                <li class="progress-done" style="cursor:pointer" onclick="navigateFunction('4');">Submit&nbsp;&nbsp;&nbsp;</li>
+                            </ol>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:actionFunction name="navigateFunction" action="{!navigate}" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()">
+                    <apex:param name="pageNumber" assignTo="{!pageNo}" value="" />
+                </apex:actionFunction>
+                <apex:actionFunction name="navForward" action="{!savePage1}" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" />
+
+                <!--error panel-->
+                <apex:outputPanel id="mainPanel">
+                    <apex:outputPanel id="errorPanel" rendered="{!page1Errors || saveQuitErrors}">                    
+                        <div class="alert alert--danger">
+                            <span>
+                                <apex:repeat value="{!errorMessages}" var="msg">
+                                    {!msg}<br />
+                                </apex:repeat>
+                            </span>
+                        </div>                                                
+                    </apex:outputPanel>
+                </apex:outputPanel>
+
+                <div class="row">
+                    <div class="col-xs-12 section-header">
+                        <h4>Design Instructions</h4>
+                    </div>
+                </div>
+                
+                <!--Section 1 - Design Instructions -->
+                <div class="row">
+                    <div class="main-content col-xs-12">
+                        <apex:outputPanel rendered="{!NOT(isNull(headlines[1]))}">
+                            <p>
+                                <apex:outputText value="{!headlines[1].APPR_PUB__Long_Description__c}" escape="false" />
+                            </p>
+                        </apex:outputPanel>
+                    </div>
+                </div>
+                <!--end Design Instructions-->
+
+                <div class="row">
+                    <div class="col-xs-12 section-header">
+                        <h4>Dealer Information</h4>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-xs-6"> 
+                        <div class="form-group">
+                            <label>Dealer Name</label>
+                            <apex:inputText value="{!dealerName}" styleClass="input-container pretty-inputs" disabled="true" id="dealerNameInput"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Phone/Mobile</label>
+                            <apex:inputText value="{!contactPhone}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Project Contact Person</label>
+                            <apex:inputText value="{!contactPerson}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <apex:inputText value="{!contactEmail}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 section-header">
+                        <h4>Site Details</h4>
+                    </div>
+                    
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group"> 
+                            <label>Site #</label>
+                            <apex:inputText value="{!objSite.Name}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Street Address</label>
+                            <apex:inputText value="{!objSite.Site_Address__c}" styleClass="input-container pretty-inputs" disabled="{!submittedDesignCount >= 1}" onclick="confirmChangeAddress()" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{!$ObjectType.Site_Information_Form__c.Fields.Site_Name__c.Label}</label>
+                            <apex:inputText value="{!objSite.Site_Name__c}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{!$ObjectType.Lead.Fields.City.Label}</label>
+                            <apex:inputText value="{!objSite.Site_City__c}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>
+                                {!$ObjectType.Site_Information_Form__c.Fields.Nominal_AC_Voltage__c.Label}
+                            </label>
+                            <apex:inputField value="{!objSite.Nominal_AC_Voltage__c}" id="nominalACVolId" styleClass="input-container pretty-inputs" rendered="{! !lockInputs}" onchange="nominalAcVoltageAlert(this.value);"/>
+                            <apex:outputField value="{!objSite.Nominal_AC_Voltage__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}" />
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{!$ObjectType.Lead.Fields.State.Label}</label>
+                            <apex:inputText value="{!objSite.Site_State__c}" styleClass="input-container pretty-inputs" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>
+                                {!$ObjectType.Design__c.Fields.Expected_Installation_Date__c.Label}
+                            </label>
+                             <div class="input-container input-container--icon pretty-inputs icon-right datepicker" style="padding-left: .1rem;">   
+                                 <apex:outputPanel rendered="{! !lockInputs}">
+                                    <apex:inputField id="installDate" html-placeholder="MM / DD / YYYY" value="{!objDesign.Expected_Installation_Date__c}" html-data-min-date="{!DATE(Year(TODAY()),MONTH(TODAY()),DAY(TODAY()))}" html-data-disable-weekends="true"  html-data-format="MM/DD/YYYY"/> 
+                                    <i class="icon icon-calendar"></i>
+                                </apex:outputPanel>
+                                <apex:outputField value="{!objDesign.Expected_Installation_Date__c}" rendered="{!lockInputs}" style="cursor: not-allowed;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>{!$ObjectType.Lead.Fields.PostalCode.Label}</label>
+                            <apex:inputText id="zipcodeId" value="{!objSite.Site_Zip_Postal_Code__c}" styleClass="input-container pretty-inputs" disabled="true" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>ASCE 7-10 Wind Speed (if Special Wind Region)</label>
+                            <apex:inputField value="{!objSite.Design_Wind_Speed_Mph__c}" styleclass="input-container pretty-inputs" rendered="{! !lockInputs}"/>
+                            <apex:outputField value="{!objSite.Design_Wind_Speed_Mph__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}" />
+                        </div>
+                    </div> 
+                </div>          
+                <!--Section 13 - Design ASCE 7-10 Wind Speed :: START -->
+                <div class="row" style="color:#5e6367; margin-bottom: .5rem;">
+                    <div class="main-content col-xs-12">
+                        <apex:outputPanel rendered="{!NOT(isNull(headlines[13]))}">
+                            <p>
+                                <apex:outputText value="{!headlines[13].APPR_PUB__Long_Description__c}" escape="false" />
+                            </p>
+                        </apex:outputPanel>
+                    </div>
+                </div>
+               <!-- ASCE 7-10 Wind Speed :: END -->   
+                
+                
+                <div class="page-header"></div>
+     
+                <!--buttons-->
+                <div class="row" style="text-align: center;">
+                    <div class="col-xs-6" style="text-align: center;">
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" onclick="showOverlay()" action="{!saveANDQuit}" value="Save & Quit" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" rendered="{! !lockInputs}" />
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" onclick="showOverlay()" action="{!returnToOpp}" value="Quit" rendered="{!lockInputs}" />
+                    </div>
+                    <div class="col-xs-6" style="text-align: center;">
+                        <apex:commandButton styleClass="btn btn-primary btn--normal" onclick="showOverlay()" action="{!savePage1}" value="Next" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" rendered="{! (!lockInputs || isRevision)}" />
+                        <apex:commandButton styleClass="btn btn-primary btn--normal" onclick="showOverlay()" action="{!toProductInfo}" value="Next" rendered="{!lockInputs && !isRevision}" />
+                    </div>
+                </div>
+                <!--end buttons-->
+
+            </div>
+
+            <!--footer-->            
+            <div id="home" style="margin-top: .25rem;">
+                <footer>
+                    <div class="footer-content">
+                        <div class="copyright">&copy; SunPower Corporation. All rights reserved.</div>
+                    </div>
+                </footer>
+                <div class="bar"></div>
+            </div>
+            <!--end footer-->
+      
+            <div class="modal fade" id="newSiteModal" tabindex="-1" role="dialog" aria-labelledby="newSiteModalLabel" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" >
+                        <div class="modal-header">                            
+                            <h3>New Site</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" id="errorPanel"> </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" >
+                                        <label>
+                                            <input type="radio" checked="true" class="input-container pretty-inputs" name="geoInputRadioSelector" id="geoStreetRadioId" onclick="toggleInputs(this);" />
+                                            <span class="radio-label">Search by Address</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" >
+                                        <label>
+                                            <input type="radio" class="input-container pretty-inputs" name="geoInputRadioSelector" id="geoCoordRadioId" onclick="toggleInputs(this);"/>
+                                            <span class="radio-label">Search by Coordinates</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="streetAddressInputDiv">
+                                <div class="col-xs-10">
+                                    <div class="form-group">
+                                        <label for="searchTextField" style="text-align: left;">Street Address</label>
+                                        <input id="searchTextField" type="text" class="input-container pretty-inputs" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                    <button type="button" id="addySearchButton" class="btn btn-secondary btn--small ">Go</button>
+                                </div>
+                            </div>
+                            <div class="row" id="coordsInputDiv">
+                                <div class="col-xs-5">
+                                    <div class="form-group">
+                                        <label for="latInput" style="text-align: left;">Latitude</label>
+                                        <input id="latInput" class="input-container pretty-inputs checkable" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <div class="form-group">
+                                        <label for="logInput" style="text-align: left;">Longitude</label>
+                                        <input id="logInput" class="input-container pretty-inputs checkable" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="form-group">
+                                    <label for="geoSearchButton" style="color: transparent;">*</label>
+                                        <button type="button" id="geoSearchButton" class="btn btn-secondary btn--small disabled">Go</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- MAP AND ADDRESS FIELDS -->
+                            <div class="row" id="mapRow">
+                                <div class="col-xs-12">
+                                    <div id="map-canvas" style="width:100%;height:225px"></div>
+                                </div>
+                            </div>
+                            <div id="addressFields">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label for="streetInput" style="text-align: left; width: 100%;">Street Address</label>
+                                            <input id="streetInput" maxlength="60" type="text" class="input-container pretty-inputs checkable" autocomplete="off" />
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="cityInput" style="text-align: left; width: 100%;">City</label>
+                                            <input id="cityInput" maxlength="60" type="text" class="input-container pretty-inputs checkable" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="stateInput" style="text-align: left; width: 100%;">State</label>
+                                            <select id="stateInput" class="input-container pretty-inputs checkable">
+                                                <apex:repeat value="{!stateOptions}" var="sOpt">
+                                                    <option value="{!sOpt.value}" label="{!sOpt.label}" />
+                                                </apex:repeat>
+                                            </select>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="zipInput" style="text-align: left; width: 100%;">Postal Code</label>
+                                            <input id="zipInput" maxlength="5" type="text" class="input-container pretty-inputs checkable" onkeyup="setManualInput()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="countryInput" style="text-align: left; width: 100%;">Country</label>
+                                            <input id="countryInput" maxlength="60" type="text" class="input-container pretty-inputs checkable" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--OTHER FIELDS-->
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="siteNameInput" style="text-align: left; width: 100%;">Site Name</label>
+                                        <input id="siteNameInput" maxlength="60" type="text" class="input-container pretty-inputs checkable" />
+                                    </div>                                
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="voltageInput" style="text-align: left; width: 100%;">Nominal AC Voltage</label>
+                                        <select id="voltageInput" class="input-container pretty-inputs checkable">
+                                            <apex:repeat value="{!voltageOptions}" var="vOpt" >
+                                                <option value="{!vOpt.value}" label="{!vOpt.label}" />
+                                            </apex:repeat>
+                                        </select>
+                                    </div>                                
+                                </div>
+                            </div>
+                            <div class="row">                            
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="windSpeedInput" style="text-align: left; width: 100%;">ASCE 7-10 Wind Speed (if Special Wind Region)</label>
+                                        <input id="windSpeedInput" class="input-container pretty-inputs" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-xs-12" style="color:#5e6367; margin-bottom: .5rem;">
+                                    <apex:outputPanel rendered="{!NOT(isNull(headlines[13]))}">
+                                        <p>
+                                            <apex:outputText value="{!headlines[13].APPR_PUB__Long_Description__c}" escape="false" />
+                                        </p>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <div class="row" style="float: right;">
+                                <a href="#" id="cancelButton" class="btn btn-secondary btn--small" onclick="showOverlay(); redirect(true)" role="button">{!$Label.Cancel}</a>
+                                <a href="#" id="saveButton" class="btn btn-primary btn--small disabled"  onClick="saveSite()" role="button" >{!$Label.Save}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: none;">
+                <input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" />
+            </div>
+           
+            <div class="modal fade" id="nominalVModal" tabindex="-1" role="dialog" aria-labelledby="nominalVModalLabel" >
+                <div class="modal-dialog" role="document" style="margin-top: 12rem;">
+                    <div class="modal-content" >
+                        <div class="modal-body">
+                            <div class="row" style="align-items: baseline;">
+                                <div class="image-icon image-icon-tooltip" style="margin-right: .5rem;"></div>
+                                <h3>Important Information</h3>
+                            </div>
+                            <p style="font-size: smaller;">
+                                <apex:outputText value="{!headlines[18].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[18]))}"/>
+                            </p>
+                            <a href="#" onclick="closeModal();" class="btn btn-secondary btn--small" style="float: right;">Ok</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="addressWarningModal" tabindex="-1" role="dialog" aria-labelledby="addressWarningModalLabel" >
+                <div class="modal-dialog" role="document" style="margin-top: 12rem;">
+                    <div class="modal-content" >
+                        <div class="modal-body">
+                            <div class="row" style="align-items: baseline;">
+                                <div class="image-icon image-icon-tooltip" style="margin-right: .5rem;"></div>
+                                <h3>Important Information</h3>
+                            </div>
+                            <p style="font-size: smaller;">
+                                <apex:outputText value="{!headlines[19].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[19]))}"/>
+                            </p>
+                            <a href="#" onclick="closeModal();" class="btn btn-secondary btn--small" style="float: right;">Ok</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="modal fade" id="revisionSelectModal" tabindex="-1" role="dialog" aria-labelledby="revisionSelectModalLabel" >
+                <div class="modal-dialog" role="document" style="margin-top: 12rem; width: 900px;">
+                    <div class="modal-content" >
+                        <div class="modal-body">
+                            <div class="row" style="align-items: baseline; margin-top: 2rem;">
+                                <div class="col-xs-12">
+                                    <h3>Select Design</h3>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 2rem;">
+                                <div class="col-xs-12">
+                                    <table class="table table-condensed" style="text-align: left;">                                        
+                                        <thead>
+                                            <tr>
+                                                <td width="5%"></td>
+                                                <td width="15%"><h5>Design</h5></td>                                                
+                                                <td width="20%"><h5>Product</h5></td>
+                                                <td width="20%"><h5>Design Level</h5></td>
+                                                <td width="20%"><h5>System Size (kWp)</h5></td>
+                                                <td width="20%"><h5>Designed By</h5></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <apex:repeat value="{!revisableDesigns}" var="rvDes">
+                                                    <tr>
+                                                        <td width="5%">
+                                                            <div class="radio" style="margin-left: 0px;">
+                                                                <label>
+                                                                    <input type="radio" name="revisionSelectionRadios" id="{!rvDes.Id}" onclick="setSelectedRevision(this.id);" />
+                                                                    <span class="radio-label"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td width="15%">{!rvDes.Name}</td>                                                        
+                                                        <td width="20%">{!rvDes.HelixDesignType__c}</td>
+                                                        <td width="20%">{!rvDes.Design_Package_Type__c}</td>
+                                                        <td width="20%">
+                                                            <apex:outputText value="{0, number, ###,###.00}">
+                                                                <apex:param value="{!rvDes.Actual_System_Size__c}" />
+                                                            </apex:outputText>
+                                                        </td>
+                                                        <td width="20%">
+                                                            {!IF(OR(rvDes.Design_Originated_by__c == 'Request', rvDes.Design_Originated_by__c == 'Direct'), 'SunPower', rvDes.Site__r.Opportunity_del__r.Partner_Account_id__r.name)}
+                                                        </td>
+                                                    </tr>
+                                                </apex:repeat>
+                                            </tr>
+                                        </tbody>                                       
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="row" style="float: right;">
+                                    <a href="#" id="cancelButtonRevision" class="btn btn-secondary btn--small" onclick="showOverlay(); redirect(true)" role="button">{!$Label.Cancel}</a>
+                                    <a href="#" id="continueButtonRevision" class="btn btn-primary btn--small disabled"  onClick="redirect(false)" role="button" >Next</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            
+        </apex:form>
+    </div>
+
+    <script>        
+        var map;
+        var geocoder;
+        var lat;
+        var lng;
+        var site = {};
+        var oppId = '';
+        var manualAddress = false;
+        var confirmChange = false;
+        var oneTimeAlertNominalAC = false;
+        var selectedRevisionId;
+        
+        function isInModal(node){
+            while (node != null) {
+                if(node.classList){
+                    for (var i = node.classList.length - 1; i >= 0; i--) {
+                        if(node.classList[i] == 'modal'){
+                            return node;
+                        }
+                    }
+                }
+                node = node.parentNode;
+            }
+            return null;
+        }
+
+        window.onload = function() {
+
+            console.log('REVISION', '{!isRevision}');
+            $( '#coordsInputDiv' ).hide();
+            $( '#addressFields' ).hide();
+            $( '#nominalVModal' ).hide();
+            $( '#addressWarningModal' ).hide();
+            $( '#revisionSelectModal' ).hide();
+
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }          
+            
+            });
+
+            //check if component in a modal with class="modal"
+            var modalNode = isInModal(document.getElementById('map-canvas'));
+            if(modalNode && $){
+                $(modalNode).on('shown.bs.modal', function (e) {
+                    initialize();
+                });
+            }else{
+                initialize();
+            }
+
+            //show modal
+            var oppParam = "opptyId";
+            var designParam = "designId";
+            var designFound = false;
+            var urlString = window.location.search.substring(1);
+            var vars = [];
+            vars = urlString.split("&");
+
+            for(var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == oppParam) {
+                    oppId = pair[1];
+                } else if(pair[0] == designParam) {
+                    designFound = true;
+                }
+            }
+            if(oppId !== '') {
+                $('#newSiteModal').modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: true
+                });
+            }
+            else if(!designFound) {
+                if('{!isRevision}' == 'true') {
+                     $( '#revisionSelectModal' ).show();
+                     oppId = '{!objSite.Opportunity_del__r.Id}';
+                }
+            }
+
+            $( '.checkable' ).change(function() {
+                setManualInput()
+                setEnabled();
+            });
+            $( '.checkable' ).blur(function() {
+                setManualInput();
+                setEnabled();
+            });
+
+            $( '#geoSearchButton' ).click(function() {
+                if( $( '#latInput' ).val() != '' && $( '#logInput' ).val() != '') {
+                    geocoder = new google.maps.Geocoder();
+                    codeLatLng($( '#latInput' ).val(), $( '#logInput' ).val(), 'New Site');
+                }
+            });
+            $( '#addySearchButton' ).click(function() {
+                showNoResults();
+            });
+            $( '#searchTextField' ).keyup(function() {
+                if($( '#searchTextField' ).val() == '') {
+                    $( '#addySearchButton' ).removeClass('disabled');
+                }
+            });
+
+        }
+
+        function confirmChangeAddress() {
+            if(!confirmChange) {
+                $( '#addressWarningModal' ).show();
+                confirmChange = true;
+            }
+        }
+
+        function nominalAcVoltageAlert(nominalACVolt){
+             if(!oneTimeAlertNominalAC && nominalACVolt != '{!$Label.Nominal480ACVoltage}') {
+                $( '#nominalVModal' ).show();
+                oneTimeAlertNominalAC = true;
+             }
+        }
+
+        function closeModal() {
+            $( '#addressWarningModal' ).hide();
+            $( '#nominalVModal' ).hide();   
+        }
+
+        function setSelectedRevision(revisionId) {
+            selectedRevisionId = revisionId;
+            $( '#continueButtonRevision').removeClass('disabled');
+
+        }
+
+        function setEnabled() {
+            //main buttons
+            if( $( '#voltageInput' ).val() != '' && $( '#siteNameInput' ).val() != '' && !jQuery.isEmptyObject(site) 
+                && site.Site_Zip_Postal_Code__c != '' && site.Site_State__c != '' && site.Site_Country__c != ''
+                && site.Site_Address__c != '' && site.Site_City__c != '') {
+                    $( '#saveButton' ).removeClass('disabled');
+            }
+            else {
+                if(! $( '#saveButton' ).hasClass('disabled')) {
+                    $( '#saveButton' ).addClass('disabled');
+                }
+            }
+
+            //geo button
+            if( $( '#latInput' ).val() != '' && $( '#logInput' ).val() != '') {
+                $( '#geoSearchButton' ).removeClass('disabled');
+            }
+             else {
+                if(! $( '#geoSearchButton' ).hasClass('disabled')) {
+                    $( '#geoSearchButton' ).addClass('disabled');
+                }
+            }
+        }
+
+        function setManualInput() {
+            site.Site_Address__c = $( '#streetInput' ).val();
+            site.Site_State__c = $( '#stateInput' ).val();
+            site.Site_Country__c = $( '#countryInput' ).val();
+            site.Site_Zip_Postal_Code__c = $( '#zipInput' ).val();
+            site.Site_City__c = $( '#cityInput' ).val();
+        }
+
+        function redirect(isCancel) {
+            var mainURL = window.location.href;
+            if(isCancel) {                
+                //var newURL = mainURL.substring(0, mainURL.lastIndexOf("/")) + '/' + oppId;   
+                var newURL = "{!redirectURL}"; //kcm   
+            } else {
+                var newURL = mainURL.substring(0, mainURL.lastIndexOf("/")) + '/HelixDesignRequest?siteId={!siteId}&designId=' + selectedRevisionId + '&revision=Y';
+            }
+            window.location.href = newURL;
+        }
+        
+        
+        function saveSite() {
+
+            showOverlay();
+
+            var newSite = {};
+            site.Opportunity_del__c = oppId;
+            site.Nominal_AC_Voltage__c = $( '#voltageInput' ).val();
+            site.Design_Wind_Speed_Mph__c = $( '#windSpeedInput' ).val();
+            site.Site_Name__c = $( '#siteNameInput' ).val();
+
+            if(manualAddress) {
+                site.Site_Address__c = $( '#streetInput' ).val();
+                site.Site_State__c = $( '#stateInput' ).val();
+                site.Site_Country__c = $( '#countryInput' ).val();
+                site.Site_Zip_Postal_Code__c = $( '#zipInput' ).val();
+                site.Site_City__c = $( '#cityInput' ).val();
+            }
+            var jsonSite = JSON.stringify(site);
+            HelixDesignRequestUtilities.createNewSite(jsonSite, function(result, event) {
+                if(event.status) {
+                    if(result.success) {
+                        newSite = result.payloadMap.newsite;
+                        var newParams = 'siteId=' + newSite.Id;
+                        window.location.search = newParams;
+                    }
+                    else {
+                        //error handle for insert fail
+                        $("#errorPanel").html("<div id='errorSpan' class='alert alert--danger'><span>{!$Label.Cash_Orders_General_Exception}</span></div>");
+                        $( '#saveButton' ).addClass('disabled');
+                    }
+                }
+                else {
+                    //error handle for fn fail
+                    $("#errorPanel").html("<div id='errorSpan' class='alert alert--danger'><span>{!$Label.Cash_Orders_General_Exception}</span></div>");
+                    $( '#saveButton' ).addClass('disabled');
+                } 
+            });
+            $( '#blockerOverlay' ).hide();
+        }
+        
+        function initialize() {
+            console.log('INITIALIZE');
+            var myLatlng1 = new google.maps.LatLng(37.405178, -121.946483);
+            var mapOptions = {
+                center: myLatlng1,
+                zoom: 18,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            };
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            var input = document.getElementById('searchTextField');
+
+            var autocomplete = new google.maps.places.Autocomplete(input);            
+            autocomplete.bindTo('bounds', map);
+
+            var infowindow = new google.maps.InfoWindow();
+            var marker = new google.maps.Marker({ map: map });
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function(){
+                infowindow.close();
+                marker.setVisible(false);
+
+                var place = autocomplete.getPlace();
+                
+                if (!place.geometry) { // Inform the user that the place was not found and return.
+                    showNoResults();
+                    return;
+                }
+
+                manualAddress = false;
+                $( '#addySearchButton' ).addClass(' disabled');
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport){
+                    map.fitBounds(place.geometry.viewport);
+                }
+                else{
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(20);  
+                }
+                
+                marker.setIcon(/** @type {google.maps.Icon} */({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true);
+                var locationvalu  = place.formatted_address ;
+                var address = '';
+                
+                if (place.address_components){
+                    address = [(place.address_components[0] && place.address_components[0].short_name || ''),
+                               (place.address_components[1] && place.address_components[1].short_name || ''),
+                               (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
+                }
+
+                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                lat = place.geometry.location.lat();
+                lng = place.geometry.location.lng();
+
+                geocoder = new google.maps.Geocoder();
+                codeLatLng(lat, lng, place.name);
+
+            });
+
+        }//End Func initialize
+
+        function codeLatLng(lat, lng, place){
+
+            var latlng = new google.maps.LatLng(lat, lng);
+            var local;
+            var sublocal;
+            var fullStreet = '';
+
+            geocoder.geocode({'latLng': latlng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK){
+                    if (!Function.prototype.bind && typeof console != 'undefined' && typeof console.log == 'object')
+                        Function.prototype.call.call(console.log, console, Array.prototype.slice.call(results));
+                    if(results[1]){
+                        if(! $( '#coordsInputDiv' ).is(':hidden')) {
+                            var marker = new google.maps.Marker({
+                                position: latlng,
+                                map: map
+                            });
+                            if (results[1].geometry.viewport){
+                                map.fitBounds(results[1].geometry.viewport);
+                            }
+                            else{
+                                map.setCenter(results[1].geometry.location);
+                                map.setZoom(20);  
+                            }
+                            marker.setIcon(/** @type {google.maps.Icon} */({
+                                size: new google.maps.Size(71, 71),
+                                origin: new google.maps.Point(0, 0),
+                                anchor: new google.maps.Point(17, 34),
+                                scaledSize: new google.maps.Size(35, 35)
+                            }));
+                            marker.setPosition(results[1].geometry.location);
+                            marker.setVisible(true);
+                        }
+                        site = {};
+                        for (var i=0; i<results[0].address_components.length; i++){
+                            for (var b = 0; b < results[0].address_components[i].types.length; b++) {
+                                //Street Number
+                                if (results[0].address_components[i].types[b] == "street_number") {
+                                    route = results[0].address_components[i];
+                                    fullStreet = results[0].address_components[i].long_name + fullStreet;
+                                    break;
+                                }
+
+                                //Street
+                                if (results[0].address_components[i].types[b] == "route") {
+                                    route= results[0].address_components[i];
+                                    fullStreet = fullStreet + ' ' + route.long_name;
+                                    site.Site_Address__c = fullStreet;
+                                    $( '#streetInput' ).val(site.Site_Address__c);
+                                    break;
+                                }
+                                // State
+                                if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                                    state= results[0].address_components[i];
+                                    site.Site_State__c = state.short_name;
+                                    $( '#stateInput' ).val(site.Site_State__c);
+                                    break;
+                                }
+                                //Country
+                                if (results[0].address_components[i].types[b] == "country") {
+                                    country= results[0].address_components[i];
+                                    site.Site_Country__c = country.long_name;
+                                    $( '#countryInput' ).val(site.Site_Country__c);
+                                    break;
+                                }
+                                //postal code
+                                if (results[0].address_components[i].types[b] == "postal_code") {
+                                    postal_code= results[0].address_components[i];
+                                    site.Site_Zip_Postal_Code__c = postal_code.long_name;
+                                    $( '#zipInput' ).val(site.Site_Zip_Postal_Code__c);
+                                    break;
+                                }               
+                                //city
+                                if (results[0].address_components[i].types[b] == "locality") {
+                                    locality= results[0].address_components[i];
+                                    local = locality.long_name;
+                                    site.Site_City__c = locality.long_name;
+                                    break;
+                                }
+                                if (results[0].address_components[i].types[b] == "sublocality") {
+                                    sublocality= results[0].address_components[i];
+                                    sublocal = sublocality.long_name;
+                                    break;
+                                }
+                            }
+                        }
+                        if(local == null){
+                            site.Site_City__c = sublocal;
+                        }
+                        $( '#cityInput' ).val(site.Site_City__c);
+                        site.Site_Latitude_Y_coordinate__c = lat;
+                        site.Site_Longitude_X_coordinate__c = lng;
+                        setEnabled();
+
+                    } 
+                    else{
+                        console.log("No results found");
+                        showNoResults();   
+                    }
+                } 
+                else{
+                    console.log("Geocoder failed due to: " + status);
+                    showNoResults();
+                }
+            });
+        }//End Func codeLatLng
+
+        function showNoResults() {
+            $( '#mapRow' ).hide();
+            $( '#streetAddressInputDiv' ).hide();            
+            $( '#coordsInputDiv' ).hide();
+            $( '#addressFields' ).show();
+            $("#errorPanel").html("<div id='errorSpan' class='alert alert--info'><span>Maps can't find a match. Please enter address below.</span></div>");
+            manualAddress = true;
+        }
+
+        function toggleInputs(radio) {
+            if(radio && radio.id && radio.id == 'geoStreetRadioId') {
+                if(! $( '#coordsInputDiv' ).is(':hidden')) {
+                    $( '#coordsInputDiv' ).hide('slow');
+                    $( '#streetAddressInputDiv' ).show('slow');
+                    $( '#addySearchButton' ).show();                     
+                } else {
+                    $( '#streetAddressInputDiv' ).show();
+                    $( '#addySearchButton' ).show();
+                }
+            } else {
+                if(! $( '#streetAddressInputDiv' ).is(':hidden')) {
+                    $( '#streetAddressInputDiv' ).hide('slow');
+                    $( '#coordsInputDiv' ).show('slow');
+                    $( '#geoSearchButton' ).show(); 
+                } else {
+                    $( '#coordsInputDiv' ).show();
+                    $( '#geoSearchButton' ).show(); 
+                }
+            }
+            $("#errorPanel").html("");
+            $( '#mapRow' ).show();
+            $( '#addressFields' ).hide();
+            $( '#latInput' ).val("");
+            $( '#logInput' ).val("");
+            $( '#searchTextField' ).val("");
+            manualAddress = false;
+        }
+
+        function setFocus() {
+            console.log('focusing');
+            window.scrollTo(0, 0);
+            closeModal();
+        }
+    </script>
+
+    <c:SPCommunityAppResources_JS />
+    <script type="text/javascript" src="{!$Resource.StyleguideExpansion_JS}"></script>
+</apex:page>

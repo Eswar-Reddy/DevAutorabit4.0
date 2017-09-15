@@ -1,0 +1,254 @@
+<apex:page showHeader="true" sidebar="false" standardController="Opportunity_Role__c" extensions="OppRoleDocumentUploadController" >
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <apex:stylesheet value="{!URLFOR($Resource.SPStyleGuide, 'css/sunpower-styleguide.css')}" />
+    
+    <style>
+        .bs input[type="file"] {
+            display: block;
+            display: inline-block;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1.42857143;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .bs .toast {
+            width:200px;
+            height:auto;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #383838;
+            color: #F0F0F0;
+            padding:8px;
+            text-align:center;
+            border-radius: 4px;
+            -webkit-box-shadow: 0px 0px 12px -1px rgba(56, 56, 56, 1);
+            -moz-box-shadow: 0px 0px 12px -1px rgba(56, 56, 56, 1);
+            box-shadow: 0px 0px 12px -1px rgba(56, 56, 56, 1);
+        }
+
+    </style>
+
+    <div class="bs">
+        <div class="container container-fluid" style="width:90%">
+
+            <div class="page-header">
+                <table border="0" style="width: 100%; padding-bottom: 14px;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold; font-size: 24px; white-space: nowrap;">
+                                    Manage Documents
+                                </span>
+                            </td>
+                            <td>
+                                <apex:outputPanel rendered="{!dmlSuccess != false}">
+                                    <div id="toast" class="toast" style="display:none;">
+                                        <h6>Save Successful!</h6>
+                                    </div>
+                                </apex:outputPanel>
+                            </td>
+                            <td>
+                                <div>
+                                    <apex:image value="{!$Resource.SP_2014_logo}" height="24px" width="216px" style="float: right"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!isLocked}">
+                <div class="alert alert-warning" role="alert">
+                    <p>This record is currently locked because of an approval request. You will not be able to delete any uploaded documents until the request has been completed.</p>
+                </div>
+            </apex:outputPanel>
+
+            <div id="messages" style="display:none"></div>
+
+            <apex:form id="form">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <apex:dataTable styleClass="table table-hover" value="{!oppRoleDocList}" rowClasses="even, odd" var="doc" headerClass="th" columnClasses="tr" rendered="{!oppRoleDocList != null && oppRoleDocList.size > 0}">
+                            <apex:column value="{!doc.OppRoleDoc['Name']}" width="20%" headerValue="Name" />
+                            <apex:column value="{!doc.OppRoleDoc['Document_Type__c']}" width="8%" headerValue="Document Type" />
+                            <apex:column width="20%" headerValue="Document Record">
+                                <div style="height:30px;">
+                                <a href="/servlet/servlet.FileDownload?file={!doc.att.Id}" class="btn btn-link" style="padding: 0px;" >
+                                    {!doc.att.name}
+                                </a>
+                                </div>
+                                <div class="collapse {!doc.OppRoleDoc['Id']}" id="{!doc.OppRoleDoc['Id']}">
+                                    <apex:repeat value="{!doc.OppRoleDoc.Attachments}" var="attVersion">
+                                        <apex:outputPanel rendered="{!attVersion.Id != doc.mostRecentFileId}">
+                                            <div style="height:30px;">
+                                            <a href="/servlet/servlet.FileDownload?file={!attVersion.Id}" class="btn btn-link" style="padding: 0px;" >
+                                                {!attVersion.name}
+                                            </a>
+                                            </div>
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                </div>
+                            </apex:column>
+                            <apex:column width="7%" headerValue="Number of Attachments">
+                                <apex:outputPanel rendered="{!(doc.versionNo) >= 2}">
+                                    <a href="#" class="btn btn-link" data-toggle="collapse" data-target=".{!doc.OppRoleDoc['Id']}" style="padding: 0px;" >
+                                        {!doc.versionNo}
+                                    </a>
+                                </apex:outputPanel>
+                                <apex:outputText rendered="{!doc.versionNo = 1}" value="{!doc.VersionNo}" style="font-size: 14px;"/>
+                            </apex:column>
+                            <apex:column width="5%">
+                                <apex:outputPanel rendered="{!doc.versionNo >= 1}">
+                                    <apex:outputPanel rendered="{!IF(AND(
+                                                            NOT(doc.oppRoleDoc.Opportunity_Role__r.Status__c = 'Submitted for Firm Offer Approval (PR1)'), 
+                                                            NOT(doc.oppRoleDoc.Opportunity_Role__r.Status__c = 'Submitted for Contract Approval (PR2)'),
+                                                            NOT(doc.oppRoleDoc.Document_Status__c = 'Approved'),
+                                                            NOT(isLocked)
+                                                            ),true,false)}">
+                                        <div style="height:30px;">
+                                            <a href="#" class="btn btn-link" onclick="if(!confirm('Are you sure?')){return false}; deleteAttachment('{!doc.att.Id}', '{!parentRecordId}')">
+                                                <i class="fa fa-trash sp-blue" title="delete"></i>
+                                            </a>
+                                        </div>
+                                    </apex:outputPanel>
+                                    
+                                    <div class="collapse {!doc.OppRoleDoc['Id']}">
+                                        <apex:repeat value="{!doc.OppRoleDoc.Attachments}" var="attVersion">
+                                            <apex:outputPanel rendered="{!attVersion.Id != doc.mostRecentFileId}">
+                                                 <apex:outputPanel rendered="{!IF(AND(
+                                                            NOT(doc.oppRoleDoc.Opportunity_Role__r.Status__c = 'Submitted for Firm Offer Approval (PR1)'), 
+                                                            NOT(doc.oppRoleDoc.Opportunity_Role__r.Status__c = 'Submitted for Contract Approval (PR2)'),
+                                                            NOT(doc.oppRoleDoc.Document_Status__c = 'Approved'),
+                                                            NOT(isLocked)
+                                                            ),true,false)}">
+                                                    <div style="height:30px;">
+                                                        <a href="#" class="btn btn-link" onclick="if(!confirm('Are you sure?')){return false}; deleteAttachment('{!attVersion.Id}', '{!parentRecordId}')">
+                                                            <i class="fa fa-trash sp-blue" title="delete"></i>
+                                                        </a>
+                                                    </div>
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                        </apex:repeat>
+                                    </div>
+                                </apex:outputPanel>        
+                            </apex:column>
+                            <apex:column width="15%" headerValue="Status" value="{!doc.OppRoleDoc['Document_Status__c']}" styleClass="{!IF(doc.OppRoleDoc['Document_Status__c'] == 'Rejected', 'text-danger', IF(doc.OppRoleDoc['Document_Status__c'] == 'Approved', 'text-success', ''))}" />
+                            <apex:column headerValue="Action" width="30%">
+                                <apex:inputFile styleClass="file-input" value="{!doc.att.body}" 
+                                                rendered="{!doc.OppRoleDoc['Document_Status__c'] != 'Approved' 
+                                                          && !Contains(doc.OppRoleDoc['Opportunity_Role__r.Status__c'], 'Submitted for')}" fileName="{!doc.originalFileName}" />
+                            </apex:column>
+                        </apex:dataTable>
+                    </div>
+                </div>
+
+                <apex:outputPanel id="noDocsPanel" rendered="{!oppRoleDocList == null || oppRoleDocList.size < 1}">
+                    <div class="alert alert-warning" role="alert">
+                        <p>There are no documents associated to this record. Click
+                            <apex:commandLink action="{!Cancel}" styleClass="alert-link" value=" here " />
+                            to return.
+                        </p>
+                    </div>
+                </apex:outputPanel>
+
+                <div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                    <span><i class="fa fa-spinner fa-spin" style="font-size:48px"></i>Saving...</span>
+                </div>
+
+
+                <div class="row" style="text-align: center;">
+                    <div class="col-sm-12" >
+                        <apex:commandButton styleClass="btn btn-warning" id="submitButton" 
+                                            action="{!insertAttachments}" value="Save" onclick="disableSubmit();"/>&nbsp;&nbsp;
+                        <apex:commandButton styleClass="btn" style="color: #f7921e; border-color: darkgray;" action="{!Cancel}" immediate="true" value="Back"/>
+                    </div>
+                </div>
+            </apex:form>
+
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+            showToast();
+        });
+
+        function toggleSpinner(showSpinner){
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+
+        function disableSubmit() {
+            toggleSpinner(true);
+            $('#submitButton').attr('disabled', 'disabled');
+        }
+
+        function showToast() {
+            $('#toast').fadeIn(400).delay(1000).fadeOut(400); 
+            $('#submitButton').removeAttr('disabled');
+        }
+        
+        function deleteAttachment(attachmentId, parentRecordId) {
+            clearError();
+            $('#ajaxLoading').show();
+            var request = {};
+            request.attachmentId = attachmentId;
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.OppRoleDocumentUploadController.deleteAttachment}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                                window.location.href = '/apex/OppRoleDocumentUpload?id=' + parentRecordId;
+                                return;
+                        } else {
+                            showError(response.errorMessage);
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        //alert(errMsg);
+                        showError(errMsg);
+                    }
+                    $('#ajaxLoading').hide();
+                },
+                { escape: true }
+            );
+        }
+        
+        function showError(errorMessage) {
+            $('#messages').addClass('alert alert--danger');
+            $('#messages').html(errorMessage);
+            $('#messages').show();
+        }
+        function clearError() {
+            $('#messages').removeClass('alert alert--danger');
+            $('#messages').html('');
+            $('#messages').hide();
+        }
+
+    </script>
+
+</apex:page>

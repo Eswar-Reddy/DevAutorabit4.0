@@ -1,0 +1,70 @@
+<apex:component controller="EstimatePVValueController" access="global">
+<apex:attribute name="componentValue" description="QuoteID value" type="String" assignTo="{!quoteIDVal}" />
+
+ The following pricing has been submitted for Approval. Please click the link below to review the Quote.
+<br /><br />
+
+<a href="https://login.salesforce.com/{!relatedTo.Id}">https://login.salesforce.com/{!relatedTo.Id}</a>
+<br /><br />
+<apex:outputField value="{!relatedTo.Description}"></apex:outputField>
+<br /><br />
+
+<b><u>Deal Information</u></b><br />    
+<b> Business Unit:</b> &nbsp; {!relatedTo.Business_Unit__c}<br />
+<b> Opportunity Name:</b> &nbsp; {!relatedTo.Opportunity.Name}<br />
+<b> Amount:</b> {!relatedTo.CurrencyISOCode} &nbsp; <apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.TotalPrice}" /></apex:outputText><br />
+<b> Direct Project Margin:</b> {!relatedTo.CurrencyISOCode} &nbsp; <apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.Direct_Margin__c}" /></apex:outputText><br />
+<b> Direct Project Margin %:</b> &nbsp; {!relatedTo.DirectMargin_per__c}<br />
+<b> ASP $/W:</b> {!relatedTo.CurrencyISOCode}&nbsp; {!relatedTo.ASP_Formula__c}<br />  <!--  {!relatedTo.Opportunity.ASP_New_del__c}<br /> -->
+<b> BOS $/W:</b> {!relatedTo.CurrencyISOCode} &nbsp; <apex:outputText value="{0, number, 0.00}"><apex:param value="{!relatedTo.BOS_w__c}" /></apex:outputText>  <br />  <!--  {!relatedTo.Opportunity.BOS_s_w__c}<br /> -->
+<b> PV $/W:</b> {!relatedTo.CurrencyISOCode} &nbsp; <apex:outputText value="{0, number, 0.00}"><apex:param value="{!relatedTo.PV_w__c}" /></apex:outputText><br />    <!--  {!relatedTo.Opportunity.PV_s_w__c}<br /> -->
+<b> Other Cost $/W:</b> {!relatedTo.CurrencyISOCode} &nbsp; {!relatedTo.Other_Cost_W__c}<br />  <!--  {!relatedTo.Opportunity.Other_Cost_W__c}<br /> -->
+
+<br /><br />
+
+<b><u>Opportunity Detail</u></b><br />
+<b> Name:</b> &nbsp; {!relatedTo.Opportunity.Name}<br />
+<b> Close Date:</b> &nbsp; <apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!relatedTo.Opportunity.CloseDate}" /></apex:outputText><br />
+<b> Expected COD Date:</b> &nbsp; <apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!relatedTo.Opportunity.Expected_Commercial_Operation_Date__c}" /></apex:outputText><br />
+<b> Probability:</b> &nbsp; {!relatedTo.Opportunity.Probability} %<br />
+<b> Customer Contract Type:</b> &nbsp; {!relatedTo.Opportunity.Contract_Type__c}<br />
+<b> Next Step:</b> &nbsp; {!relatedTo.Opportunity.NextStep}<br />
+<b> Sales Stage:</b> &nbsp; {!relatedTo.Opportunity.StageName}<br />
+<br /><br />
+
+<b><u>O&amp;M Information:</u></b><br />
+<b> Total O&amp;M Amount:</b>{!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.Total_O_M_Amount__c}" /></apex:outputText> <br/>
+<b> Total O&amp;M Cost:</b>{!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.Total_O_M_Cost__c}" /></apex:outputText><br/> 
+<b> O&amp;M Direct Project Margin:</b>{!relatedTo.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 0,000.00}"><apex:param value="{!relatedTo.O_M_Direct_Project_Margin__c}" /></apex:outputText> <br/> 
+<b> O&amp;M Direct Project Margin%:</b> &nbsp; {!relatedTo.O_M_Direct_Project_Margin1__c} <br/> 
+
+<br /><br />
+
+
+<b><u>Team</u></b><br />
+<b> Salesperson:</b> &nbsp; {!relatedTo.Opportunity.Owner.Name}<br />
+<b> Sales Analyst:</b> &nbsp; {!systemAnalyst}<br /> <!-- relatedToOpportunity.Sales_Analyst__r.Name -->
+<b> Project Manager:</b> &nbsp; {!projectManager}<br /> <!-- relatedToOpportunity.Project_Manager__c -->
+
+<br /><br />
+
+<b><u>Product Information</u></b><br />
+<b> Mounting System:</b> &nbsp; {!mountingSystem}<br /> <!-- {!relatedTo.Mounting_System_Module__c} -->
+<b> PV Module:</b> &nbsp; {!pvModuleType}<br />      <!-- {!estimatePVVal} -->
+<b>System Size (BOS):</b> &nbsp; <apex:outputText value="{0, number, 0.00}"><apex:param value="{!relatedTo.System_Size_BOS__c}" /></apex:outputText> <br /> <!-- {!relatedTo.Opportunity.System_SizeBOS__c} -->
+<b>System Size(PV):</b> &nbsp;<apex:outputText value="{0, number, 0.00}"><apex:param value="{!relatedTo.System_Size_PV__c}" /></apex:outputText> <br /> <!-- {!relatedTo.Opportunity.System_SizePV__c} -->
+<br /><br />
+
+<!--  HIde EPC section as not present in New Modified HTML template on Production -->
+<apex:outputPanel rendered="{!IF(relatedTo.Quote_Steps__c='Budgetary Pricing','true','false')}">
+<b><u>EPC Information</u></b><br />
+<b> Contract Amount ({!relatedTo.CurrencyISOCode}):</b> &nbsp; <apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!relatedTo.TotalPrice}" /></apex:outputText><br />
+<b> ASP:</b> &nbsp; <apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!relatedTo.ASP_Formula__c}" /></apex:outputText><br />
+<b> PV Cost:</b> &nbsp; <apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!relatedTo.Opportunity.PV_Cost_Sys__c}" /></apex:outputText><br />
+<b> BOS $/W):</b> &nbsp; {!relatedTo.Opportunity.BOS_s_w__c}<br />
+<b> Gross Margin ({!relatedTo.CurrencyISOCode}):</b> &nbsp; <apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!relatedTo.Opportunity.Gross_Margin__c}" /></apex:outputText><br />
+<b> Gross Margin (%):</b> &nbsp; {!relatedTo.Opportunity.Gross_Margin_percent__c}<br />
+<br /><br /> 
+</apex:outputPanel>
+
+</apex:component>

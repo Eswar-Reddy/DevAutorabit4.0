@@ -6,5 +6,12 @@
     <tab>standard-OtherUserProfile</tab>
     <tab>standard-CollaborationGroup</tab>
     <tab>standard-File</tab>
-    <tab>Mobile__c</tab>
+    <tab>Customer_Survey_Result__c</tab>
+    <tab>Metrics__c</tab>
+    <tab>Price_Request__c</tab>
+    <tab>Dealer_Notification__c</tab>
+    <tab>Sunpower_Spectrum_Debug_Log__c</tab>
+    <tab>Portal_Login_Page_Setup__c</tab>
+    <tab>Order_Discount__c</tab>
+    <tab>Solar_Access_Presets__c</tab>
 </CustomApplication>

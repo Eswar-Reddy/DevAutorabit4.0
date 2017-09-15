@@ -1,0 +1,54 @@
+<apex:page showHeader="false" Controller="OpportunityReportController" sidebar="false" id="pg" >
+<script>            
+ function CallOnComplete(v) {
+    if(v == 'true') {
+       alert(' Email has been sent successfully ');
+       window.close();
+    }
+ }
+ function MailDetails() {
+     toadd = document.getElementById('pg:frm:pgblockQuesImg:pgbEmailbdy:section2:inputEmailTo').value;
+       ccadd= document.getElementById('pg:frm:pgblockQuesImg:pgbEmailbdy:section3:inputEmailCC').value;
+       bccadd = document.getElementById('pg:frm:pgblockQuesImg:pgbEmailbdy:section4:inputEmailBcc').value;
+       subject = document.getElementById('pg:frm:pgblockQuesImg:pgbEmailbdy:section5:inputSubject').value;
+       body= document.getElementById('pg:frm:pgblockQuesImg:pgbEmailbdy:section6:inputEmailBody').value;
+       window.opener.test(toadd , ccadd, bccadd ,subject,body);
+       window.close();   
+ }
+</script>
+<apex:form id="frm" >         
+    <apex:pageBlock id="pgblockQuesImg" title="Compose Email" >       
+            <apex:pageblockSection id="pgbEmailbdy" columns="1" title="Multiple email addresses must be seperated by ;"  collapsible="false">
+            <apex:pageBlockSectionItem id="section1">
+                        <apex:outputLabel value="Email From : " />
+                        <apex:inputtext value="{!currentUserEmail}" id="inputEmailFrom" style="width:450px;" disabled="true"  /> 
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="section2">
+                        <apex:outputLabel value="Email To : "  />
+                        <apex:inputtext value="{!sendEmailToUser}" style="width:450px;" id="inputEmailTo"/> 
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="section3">
+                        <apex:outputLabel value="Email CC : " />
+                        <apex:inputtext value="{!strEmailDealerCC}" style="width:450px;" id="inputEmailCC" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="section4">
+                        <apex:outputLabel value="Email Bcc : " />
+                        <apex:inputtext value="{!strEmailDealerBcc}" style="width:450px;" id="inputEmailBcc" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="section5">
+                    <apex:outputLabel value="Subject :"/>
+                    <apex:inputtext id="inputSubject" style="width:450px;" value="{!MAIL_SUBJECT}" />
+                </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="section6">
+                        <apex:outputLabel value="Email Body : " />
+                        <apex:inputTextarea cols="80" rows="10" value="{!strEmailBody}"  id="inputEmailBody">   
+                        </apex:inputTextarea>
+            </apex:pageBlockSectionItem>
+          </apex:pageblockSection>
+          <apex:pageBlockButtons location="bottom" id="importButton">           
+                <apex:commandbutton id="btnSend" value="Send"  onClick="MailDetails(); return false;"   />     
+                <input type="button" id="btnCancel" value="Cancel" onclick="window.close();" class="btn" />             
+           </apex:pageBlockButtons>
+        </apex:pageBlock>
+  </apex:form> 
+</apex:page>

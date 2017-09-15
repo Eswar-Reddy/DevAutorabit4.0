@@ -1,0 +1,20 @@
+<script>
+function hidemyButton(){
+
+if('{!Partner_Application__c.Status__c}' == 'Approved'){
+var inputTags = parent.document.getElementsByTagName('input');
+// alert(inputTags.length);
+for(var i=0;i<inputTags.length;i++){
+if(inputTags[i].getAttribute('type')=='button' && (inputTags[i].getAttribute('name')=='submit' || inputTags[i].getAttribute('name')=='piSubmit' )){
+inputTags[i].style.display='none';
+}
+}
+}
+}
+
+function setMyInterval(){
+
+setTimeout("hidemyButton()", 1000);
+}
+window.onload=setMyInterval();
+</script>

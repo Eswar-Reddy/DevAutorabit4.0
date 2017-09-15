@@ -1,0 +1,766 @@
+<apex:page standardController="Account" extensions="AccountExtension" showHeader="false" sidebar="false" id="pg" >
+<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+<c:CommunitiesMainNavComponent activeTab="Accounts"/>
+        <!-- Edit Page for NA and EU Residential Customer -->
+        <link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet" />
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&v=3.exp&sensor=false&libraries=places&language=en"/>
+          
+        <link rel="stylesheet" href="{!URLFOR($Resource.jquery_ui_18, 'css/smoothness/jquery-ui-1.8.16.custom.css')}" type="text/css" media="all" />
+        <script src="{!URLFOR($Resource.jquery_16min)}" type="text/javascript"></script>
+        <script src="{!URLFOR($Resource.jquery_ui_18, 'js/jquery-ui-1.8.16.custom.min.js')}"></script>
+        <script src="{!URLFOR($Resource.deal_registration)}" type="text/javascript"></script>
+        <script src="{!$Resource.wz_tooltip}"/>
+        
+        <style type="text/css">
+            .btnGo, .btnImportant, .btnSharing, .btnDisabled, .btn, 
+            .bEditBlock .btnGo, .bEditBlock .btnImportant, .bEditBlock .btnSharing, 
+            .bEditBlock .btnDisabled, .bEditBlock .btn, .btnCustomAction, .btnOverriddenAction {
+                margin: 0 2px;
+                padding: 5px 10px;
+            }
+
+            .labelStyle{
+                font-family: 'Arial','Verdana',sans-serif;
+                font-size: 10px;
+                font-weight: bold;      
+            }
+
+            .labelStyle2{
+                font-family: 'Arial','Verdana',sans-serif;
+                font-size: 10px;
+                font-weight: bold;
+                top:1px;
+            }       
+        </style>
+ 
+    <style>
+        .vfHelpText a            {position:relative;}
+        .vfHelpText a span       {display: none;}
+        .vfHelpText a:hover span {display: block;
+                                  position:absolute;
+                                  top:1.25em;
+                                  padding:2px 5px;
+                                  left:-15em; width:15em;
+                                  z-index:100;
+                                  border:1px solid orange;
+                                  background-color:#FEFDB9;
+                                  color:black;
+                                 }
+    </style>
+        
+        <script type="text/javascript">
+            var geocoder;
+            function initialize() {
+                var mapOptions = {
+                    center: ("{!RIGHT(partnerAccount.Country_Domain__c,2) == 'au'}" == "false") ? new google.maps.LatLng(37.405178, -121.946483) : new google.maps.LatLng(-33.857767, 151.214993),
+                    zoom: 18,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE
+                };
+
+                var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                var input = /** @type {HTMLInputElement} */(document.getElementById('searchTextField'));
+                var autocomplete = new google.maps.places.Autocomplete(input);
+                
+                autocomplete.bindTo('bounds', map);
+
+                var infowindow = new google.maps.InfoWindow();
+                var marker = new google.maps.Marker({ map: map });
+
+                google.maps.event.addListener(autocomplete, 'place_changed', function(){
+                    infowindow.close();
+                    marker.setVisible(false);
+                    input.className = '';
+                    var place = autocomplete.getPlace();
+                    
+                    if (!place.geometry) { // Inform the user that the place was not found and return.
+                        input.className = 'notfound';
+                        return;
+                    }
+
+                    // If the place has a geometry, then present it on a map.
+                    if (place.geometry.viewport){
+                        map.fitBounds(place.geometry.viewport);
+                    }
+                    else{
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(20);  
+                    }
+                    
+                    marker.setIcon(/** @type {google.maps.Icon} */({
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(35, 35)
+                    }));
+
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                    var locationvalu  = place.formatted_address ;
+                    var address = '';
+                    
+                    if (place.address_components){
+                        address = [(place.address_components[0] && place.address_components[0].short_name || ''),
+                                   (place.address_components[1] && place.address_components[1].short_name || ''),
+                                   (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
+                    }
+
+                    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                    var lat = place.geometry.location.lat();
+                    var lng= place.geometry.location.lng();
+/*                    alert('hi1');
+                    alert(lat);
+                    alert(lng);*/
+
+                    geocoder = new google.maps.Geocoder();
+                    codeLatLng(lat, lng, place.name);
+                });
+
+                // Sets a listener on a radio button to change the filter type on Places
+                // Autocomplete. 
+                function setupClickListener(id, types){
+                    var radioButton = document.getElementById(id);
+                    google.maps.event.addDomListener(radioButton, 'click', function(){  autocomplete.setTypes(types); });
+                }
+
+                setupClickListener('changetype-all', []);
+            }//End Func initialize
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+            function codeLatLng(lat, lng, place){
+                var latlng = new google.maps.LatLng(lat, lng);
+                document.getElementById('pg:frm:pb:addpbs1:pbsi11:lat').value = lat ;
+                document.getElementById('pg:frm:pb:addpbs1:pbsi12:log').value = lng ;
+                var local;
+                var sublocal;
+/*                alert('hi');
+                alert(lat);
+                alert(lng);*/
+                geocoder.geocode({'latLng': latlng}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK){
+                        if (!Function.prototype.bind && typeof console != 'undefined' && typeof console.log == 'object')
+                            Function.prototype.call.call(console.log, console, Array.prototype.slice.call(results));
+                        if(results[1]){
+                            for (var i=0; i<results[0].address_components.length; i++){
+                                for (var b=0;b<results[0].address_components[i].types.length;b++){
+                                    //Street
+                                    if (results[0].address_components[i].types[b] == "route" 
+                                            || results[0].address_components[i].types[b] == "street_number"){
+                                        route= results[0].address_components[i];
+                                        document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi2:BillingStreet').value =  place ;
+                                        break;
+                                    }
+                                    // State
+                                    if (results[0].address_components[i].types[b] == "administrative_area_level_1"){
+                                        State= results[0].address_components[i];
+                                        document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi3:state1').value = State.short_name;
+                                        break;
+                                    }
+                                    //Country
+                                    if (results[0].address_components[i].types[b] == "country"){
+                                        country= results[0].address_components[i];
+                                        document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi:country').value = country.long_name ;
+                                        break;
+                                    }
+                                    //postal code
+                                    if (results[0].address_components[i].types[b] == "postal_code"){
+                                        postal_code= results[0].address_components[i];
+                                        document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi4:zipCode1').value = postal_code.long_name ;
+                                        break;
+                                    }               
+                                    //city
+                                    if (results[0].address_components[i].types[b] == "locality"){
+                                        locality= results[0].address_components[i];
+                                        local = locality.long_name;
+                                        document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi1:city1').value = locality.long_name ;
+                                        break;
+                                    }
+                                    if (results[0].address_components[i].types[b] == "sublocality"){
+                                        sublocality= results[0].address_components[i];
+                                        sublocal = sublocality.long_name;
+                                       // document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi1:city1').value = sublocality.long_name ;
+                                        break;
+                                    }
+                                    if (place != '' 
+                                            && document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi2:BillingStreet').value == ''){
+                                        document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi2:BillingStreet').value =  place ;
+                                        break;
+                                    }                                          
+                                }
+                            }
+                            if(local == null)
+                            {
+                                document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi1:city1').value = sublocal;
+                            }
+                        } 
+                        else{
+                            alert("No results found");
+                        }
+                    } 
+                    else{
+                        alert("Geocoder failed due to: " + status);
+                    }
+                });
+            }//End Func codeLatLng
+
+            function validatephone(event)
+            {
+                var v = document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value;
+                var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+                
+                if(v.length < 15){
+                    if (((event.keyCode > 95 && event.keyCode < 106)) || (((event.keyCode > 47) && (event.keyCode < 58)))){ 
+                        if (v.match(/^\d{2}$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        } 
+                        else if (v.match(/^\d{2}\ \d{2}$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        } 
+                        else if (v.match(/^\d{2}\ \d{2}\ \d{2}\$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        } 
+                        else if (v.match(/^\d{2}\ \d{2}\ \d{2}\ \d{2}\$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        }
+                    }
+                    else if((event.keyCode > 64) && (event.keyCode < 223) && v.length < 14){
+                        document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v.substr(0,v.length-1);
+                    }
+                }
+                else{
+                    document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v.substr(0,v.length-1);
+                } 
+            }//End Func validatephone
+            
+            function setAccountNameToOptyName(value) {
+                var accFeldRef = document.getElementById('pg:frm:pb:oppbs:pb2:accId');
+                accFeldRef.value  = value;
+                return false;
+            }//End Func setAccountNameToOptyName
+
+            function disableSaveButton(){
+                var obj= document.getElementById('pg:frm:pb:savebttop');
+                var obj2= document.getElementById('pg:frm:pb:savebtbottom')
+                var obj3= document.getElementById('pg:frm:pb:savequotebttop');
+                var obj4= document.getElementById('pg:frm:pb:savequotebtbottom');
+
+                obj.disabled=true;
+                obj2.disabled=true;
+                obj3.disabled=true;
+                obj4.disabled=true;
+                
+                obj.className = 'btnDisabled';
+                obj2.className = 'btnDisabled';
+                obj3.className = 'btnDisabled';
+                obj4.className = 'btnDisabled';
+                return true;
+            }//End Func disableSaveButton    
+
+            // Added by Ganesh Chedella for Multi-State project to display Alert message when the partner clicks Save and Quote and does not have valid Business Registartion in the state of the Customer 
+            function doesBrExistsOrValid(brParam, customerId){
+                if(brParam != null && brParam.length > 0){
+                    alert('{!$Label.Business_Registration_Invalid}');
+                    window.open('/'+customerId,'_self');
+                }
+            }   
+        
+        </script>
+
+<body class="detail-container"> 
+   <apex:sectionHeader title="{!$Label.Account} {!$Label.Edit}" subtitle="{!newCustomer.name}"/>
+   <div id="citySelectionDialog"><p></p></div>
+   <div id="navigateToCprDialog"><p></p></div>
+   
+    <apex:form id="frm">
+        <apex:pageBlock id="pb" mode="edit">
+            <apex:outputPanel >
+                <script type="text/javascript">
+                    function openCprCheck(){
+                        if (isCprQuote == true ){    
+                          // Commented by Ganesh Chedella as part of Multi-state project                       
+                          /*  if("{!newOpp.Id}" != "" ){
+                                openCprQuotePage( "{!newCustomer.Id}", "{!contact.Id}", "{!newOpp.Id}", "{!normalRedirectUrl}" );
+                            }  */
+                        }
+                        else{                           
+                            var normalRedirect = "{!normalRedirectUrl}";                
+                            if(normalRedirect != "")            
+                                currentPageRedirect(normalRedirect);
+                        }
+                    }//End Func openCprCheck  
+
+                    initialize();
+                </script>
+            </apex:outputPanel>
+            
+            
+            <apex:actionFunction name="save" action="{!save}" reRender="errorMessages,pbbuttns,pb" oncomplete="openCprCheck();setupListeners();"/>
+            <apex:actionFunction name="save_and_quote" action="{!saveAndQuote}" reRender="errorMessages,pbbuttns,pb" oncomplete="openCprCheck();setupListeners();doesBrExistsOrValid('{!businessRegParameter}','{!newCustomer.Id}');"/>
+
+            <apex:outputPanel id="Buttons">
+                <center>
+                    <apex:commandButton id="savebttop" value="{!$Label.Save}" onclick="validateAndSave();disableSaveButton();return false;" 
+                    oncomplete="setupListeners();" reRender="errorMessages,Buttons,Buttons2,pb" />
+                    <apex:commandButton id="savequotebttop" value="{!$Label.Save_and_Quote}" onclick="isCprQuote=true;validateAndSave();disableSaveButton();return false;" 
+                    oncomplete="setupListeners();" reRender="errorMessages,Buttons,Buttons2,pb" rendered="{!$User.Quote_Creation_Allowed__c}" />
+                    <apex:commandButton value="{!$Label.Cancel}" action="{!cancel}" immediate="true" />  
+                </center>
+            </apex:outputPanel>
+            
+            <!-- Case I : Create Opty, Account and Contact Case START -->
+            <apex:outputPanel rendered="{!recType== 'Home Owner'}">
+                    <apex:iframe src="/apex/APPR_PUB__CustomMessages?tabName=New Residential Customer" height="200"/>
+            </apex:outputPanel>
+            <apex:pageBlockSection showHeader="true" id="oppbs1" title="Customer Information" rendered="{!isEdit != 'Y'}">   
+                <apex:inputField value="{!contact.FirstName}" required="true" />
+                
+                <apex:inputField value="{!contact.LastName}" />
+                
+                <apex:pageBlockSectionItem >
+                     <apex:outputLabel value="{!$Label.Phone}" styleClass="labelStyle" />   
+                     <apex:inputField value="{!newCustomer.Phone}" required="true" />
+                </apex:pageBlockSectionItem>
+                
+                
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.E_mail}" styleClass="labelStyle" /> 
+                    <apex:inputField value="{!newCustomer.Email__c}" required="true" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Preferred Language" styleClass="labelStyle" /> 
+                    <!--  <apex:inputField value="{!contact.Contact_Language__c}" style="width:173px" /> -->
+                    <apex:selectList value="{!prefLangSelected}" multiselect="false" size="1" style="width:173px">
+                        <apex:selectOptions value="{!PrefLangs}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Best_Time_To_Call}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Best_Time_To_Call__c}" />
+                </apex:pageBlockSectionItem>               
+            </apex:pageBlockSection>    
+
+            <apex:pageBlockSection showHeader="true" id="opctpbs1" title="Opportunity Information" rendered="{!isEdit != 'Y'}" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Stage}" styleClass="labelStyle" />
+                    <apex:inputField value="{!opp.StageName}" required="true" />
+                </apex:pageBlockSectionItem> 
+
+                <apex:pageBlockSectionItem >
+                    
+                    <!--  <apex:outputText value="{!$Label.Close_Date}" > -->
+                    <apex:outputtext >Close Date <apex:image url="{!$Resource.YellowQuestion}" title="{!$Label.Close_Date_Message}"/></apex:outputtext>
+                    <apex:inputField value="{!opp.CloseDate}" required="true">
+                        
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>               
+            </apex:pageBlockSection>         
+            <br/>         
+            <apex:outputPanel id="errorMessages">
+                <apex:pageMessages ></apex:pageMessages>
+            </apex:outputPanel>    
+            <!-- Case I : Create Opty, Account and Contact Case END -->    
+            <apex:pageBlockSection showHeader="true" id="oppbs2" title="{!$Label.Opportunity_Details}" rendered="{!recType== 'Home Owner' && isEdit == 'Y'}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Account_Name}" styleClass="labelStyle"/>   
+                    <apex:inputField value="{!newCustomer.Name}"  />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Opportunity_Owner}" styleClass="labelStyle"/>   
+                    <apex:outputField value="{!opp.Owner.Name}"    />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Opportunity_Name}" styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Name}" required="true"   />
+                </apex:pageBlockSectionItem>  
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Stage}" styleClass="labelStyle" />
+                    <apex:inputField value="{!opp.StageName}" required="true"/>
+                </apex:pageBlockSectionItem> 
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Account_Record_Type}" styleClass="labelStyle"/>   
+                    <apex:outputField value="{!newCustomer.RecordType.Name}" />
+                </apex:pageBlockSectionItem> 
+                
+                <apex:pageBlockSectionItem rendered="{!isEUProfile == true }">
+                </apex:pageBlockSectionItem> 
+
+                <apex:pageBlockSectionItem rendered="{!isEUProfile != true }" >
+                    <apex:outputText value="{!$Label.Amount}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Amount}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$Label.Close_Date}" styleClass="labelStyle"/>
+                 <apex:inputField value="{!opp.CloseDate}" required="true"/>
+                </apex:pageBlockSectionItem> 
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$Label.Reason_WonLost}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Reason_Won_Lost__c}" />
+                </apex:pageBlockSectionItem>
+
+                 <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$Label.Installation_Date}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Installation_Date__c}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!isEUProfile != true }" >
+                    <apex:outputText value="{!$Label.Reason_Won_Lost_Comments}"  styleClass="labelStyle"/>   
+                    <apex:inputTextArea value="{!opp.Reason_Won_Lost_comments__c}" style="width:185px; height:60px;"/>
+                </apex:pageBlockSectionItem>  
+
+                <apex:pageBlockSectionItem rendered="{!isEUProfile == true }">
+                        <apex:outputText value="{!$Label.Aging}"  styleClass="labelStyle"/>   
+                        <apex:inputField value="{!opp.Aging__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>       
+                 
+            <apex:pageBlockSection showHeader="true" id="opctpbs2" title="{!$Label.Opportunity_Contact_Information}" rendered="{!recType== 'Home Owner' && isEdit == 'Y'}">           
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Best_Time_To_Call}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Best_Time_To_Call__c}" />
+                </apex:pageBlockSectionItem>          
+            </apex:pageBlockSection> 
+            
+            <apex:pageBlockSection title="{!$Label.Qualification_Details}" rendered="{!recType== 'Home Owner' && isEdit == 'Y' && isEUProfile != true}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.How_did_you_hear_about_us}"  styleClass="labelStyle"/>   
+                    
+                    <!--KCM_06082016: request to replace How_did_you_hear_about_us__c with hear_about_us__c; Case 00729568-->
+                    <!--apex:inputField value="{!opp.How_did_you_hear_about_us__c}" /-->
+                    <apex:inputfield value="{!opp.hear_about_us__c}" /> 
+                    
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.How_long_have_you_owned_your_home}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.How_long_have_you_owned_your_home__c}" />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Motivation_for_Solar}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Motivation_for_Solar__c}" />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Home_has_an_unshaded_South_Facing_Roof}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.unshaded_Roof__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Already_Receiving_Quotes}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Already_Receiving_Quotes__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Roof_Orientation}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Roof_Orientation__c}" />
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Request_Dealer_Quote}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Request_Dealer_Quote__c}" />
+                </apex:pageBlockSectionItem>    
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Average_Monthly_Electricity_Bill}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Average_Monthly_Electricity_Bill__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Lead_Manufacturer}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Lead_Manufacturer__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Primary_Campaign_Source}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.CampaignId}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Description}"  styleClass="labelStyle"/>   
+                    <apex:inputTextArea value="{!opp.Description}" style="width:185px; height:60px;"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Lead_Source}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.LeadSource}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem> <!--&& isEUProfile == true -->
+                <apex:pageBlockSectionItem rendered="{!recType== 'Home Owner' }" >
+                    <apex:outputLabel value="{!$Label.Lead_Referral_Name}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Lead_Referral_Name__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Lead_Web_Form_Details}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Lead_Web_Form_Details__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Alliance_Program_Lead}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Alliance_Program_Lead__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Referral_Program_Status}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Referral_Program_Status__c}" />
+                </apex:pageBlockSectionItem>               
+            </apex:pageBlockSection>            
+         
+            <apex:pageBlockSection title="{!$Label.Qualification_Details}" rendered="{!recType== 'Home Owner' && isEdit == 'Y' && isEUProfile == true }" > 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Already_Receiving_Quotes}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Already_Receiving_Quotes__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!$Label.Financing_in_Place}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Financing_in_Place__c}" />
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Primary_Campaign_Source}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Campaign.Name}" />
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Alliance_Program_Lead}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Alliance_Program_Lead__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+       
+            <apex:pageBlockSection title="{!$Label.From_the_Online_Package_Selector}" rendered="{!recType== 'Home Owner' && isEdit == 'Y' && isEUProfile != true }" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Quote_Number}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Quote__c}" />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Quote_Details}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Quote_Details__c}" />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Package}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Package__c}" />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Down_Payment}"  styleClass="labelStyle"/>   
+                        <apex:inputField value="{!opp.Down_Payment__c}" />
+                     </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Roof_sq_ft}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Roof_sq_ft__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Monthly_Cost}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Monthly_Cost__c}" />
+                </apex:pageBlockSectionItem>    
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>                    
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Net_Cost}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Net_Cost__c}" />
+                 </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>                                    
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Monthly_Savings}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Monthly_Savings__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Total_Savings}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Total_Savings__c}" />
+                </apex:pageBlockSectionItem>               
+            </apex:pageBlockSection>
+    
+            <apex:pageBlockSection title="{!$Label.Installation_Information}" rendered="{!recType== 'Home Owner' && isEdit == 'Y' && isEUProfile == true }" > 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Roof_Material}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Roof_Material__c}" />
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.System_Size}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.System_Size__c}" />
+                </apex:pageBlockSectionItem>    
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Roof_Orientation}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Roof_Orientation__c}" />
+                </apex:pageBlockSectionItem> 
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Home_has_an_unshaded_South_Facing_Roof}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.unshaded_Roof__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$Label.Description}"  styleClass="labelStyle"/>   
+                        <apex:inputTextArea value="{!opp.Description}" style="width:185px; height:60px;"/>
+                </apex:pageBlockSectionItem>   
+            </apex:pageBlockSection>        
+    
+            <apex:pageBlockSection title="{!$Label.Warranty_Link}" rendered="{!recType== 'Home Owner' && isEdit == 'Y' && isEUProfile == true }" > 
+            </apex:pageBlockSection>        
+    
+            <apex:pageBlockSection title="{!$Label.Warranty}" rendered="{!recType== 'Home Owner' && isEdit == 'Y' && isEUProfile != true }" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Quality_Inspection_opt}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Quality_Inspection_opt_in__c}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>                
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Customer_Satisfaction_survey_opt_in}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Customer_Satisfaction_survey_opt_in__c}" />
+                </apex:pageBlockSectionItem>  
+                
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Marketing_opt}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Marketing_opt_in__c}" />
+                </apex:pageBlockSectionItem>  
+                
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >    
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Internal_Comments}"  styleClass="labelStyle"/>   
+                    <apex:inputTextArea value="{!opp.Internal_Comments__c}" style="width:185px; height:60px;"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection showHeader="true" title="{!$Label.Address_Information}" id="addpbs1" columns="1">    
+                <apex:pageBlockSectionItem id="pbsi11">
+                    <apex:InputHidden value="{!newcustomer.Lat__c}" id="lat" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="pbsi12">
+                    <apex:inputHidden value="{!newcustomer.Log__c}" id="log" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="pbsi22">
+                    
+                    <apex:outputLabel value="Customer Address" styleClass="labelStyle" >
+                        <apex:image url="{!$Resource.YellowQuestion}" alt="" title="{!$Label.Customer_Address}"/>
+                    </apex:outputLabel> 
+                    
+                    <input id="searchTextField" type="text" size="106" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"/>
+                    <!--<apex:inputHidden value="{!newCustomer.BillingStreet}" id="BillingStreet" required="true"/> -->
+                </apex:pageBlockSectionItem> 
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <apex:pageBlockSection id="addpbs2"  columns="2">
+                    <apex:inputHidden />
+                    <apex:pageBlockSectionItem id="pbsi2">
+                        <apex:outputLabel value="{!$Label.Street}" styleClass="labelStyle" >
+                            <apex:image url="{!$Resource.YellowQuestion}" alt="" title="{!$Label.Street_Message}"/>
+                        </apex:outputLabel>
+                        <!-- textarea rows="4" cols="50" id="BillingStreet" value="{!newCustomer.BillingStreet}" / --> 
+                        <apex:inputField value="{!newCustomer.BillingStreet}" id="BillingStreet" style="font-family: 'MS Shell Dlg';font-size:13.3333px;width:150px" required="true" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"></apex:inputField>  
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi1">
+                         <apex:outputLabel value="{!If(RIGHT(partnerAccount.Country_Domain__c,2) == 'us',$Label.City,$Label.City)}" styleClass="labelStyle" >
+                            <apex:image url="{!$Resource.YellowQuestion}" alt="" title="{!$Label.City_Message}"/>
+                         </apex:outputLabel>   
+                        <apex:inputField value="{!newCustomer.BillingCity}" required="true" id="city1"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"> 
+                            <script>
+                                document.getElementById('{!$Component.city1}').disabled = true;
+                            </script>
+                        </apex:inputField>
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi10">
+                        <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="county" /> 
+                    </apex:pageBlockSectionItem>
+         
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi3">
+                        <apex:outputLabel value="{!$Label.State}" styleClass="labelStyle" >
+                            <apex:image url="{!$Resource.YellowQuestion}" alt="" title="{!$Label.State_Message}"/>
+                        </apex:outputLabel> 
+                        <apex:inputField value="{!newCustomer.BillingState}" required="{!RIGHT(partnerAccount.Country_Domain__c,2) == 'us'}" id="state1"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}">
+                            <script>
+                               document.getElementById('{!$Component.state1}').disabled = true;
+                            </script>
+                        </apex:inputField> 
+                    </apex:pageBlockSectionItem>
+                 
+                    <apex:inputHidden />
+            
+                    <apex:pageBlockSectionItem id="pbsi">
+                        <apex:outputLabel value="{!$Label.Country}" styleClass="labelStyle" > 
+                            <apex:image url="{!$Resource.YellowQuestion}" title="{!$Label.Country_Message}"/>
+                        </apex:outputLabel>
+                        <apex:InputField value="{!newCustomer.BillingCountry}" required="true" id="country">
+                            <script>
+                              document.getElementById('{!$Component.country}').disabled = true;
+                            </script>
+                        </apex:InputField>
+                    </apex:pageBlockSectionItem>
+            
+                    <apex:inputHidden />
+                     
+                    <apex:pageBlockSectionItem id="pbsi4">
+                        
+                        <apex:outputLabel value="{!IF(RIGHT(partnerAccount.Country_Domain__c,2) == 'us','Postal Code','Postal Code')}" styleClass="labelStyle" > 
+                            <apex:image url="{!$Resource.YellowQuestion}" alt="" title="{!$Label.Postal_Code_Message}"/>
+                        </apex:outputLabel>
+
+                        <apex:inputField value="{!newCustomer.BillingPostalCode}" required="true" id="zipCode1" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"> 
+                            <script>
+                                 document.getElementById('{!$Component.zipCode1}').disabled = true;
+                            </script>                
+                        </apex:inputField> 
+                    </apex:pageBlockSectionItem>
+          
+                    <apex:inputHidden />       
+                    <apex:inputHidden />
+                    <apex:inputHidden />
+                    
+                    <apex:inputHidden value="{!validatedAddress}" id="validatedAddress" />
+                    <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="oracleCounty" />
+                    
+                    <apex:inputHidden />
+    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Address Map" style="position:relative;top: -130px;"></apex:outputLabel> 
+                        <div style="position:absolute;margin:-135px 0 0 0;">
+                            <div id="map-canvas" style="width:300px;height:200px;margin:5px 0 5px 5px;"></div>
+                        </div>   
+                    </apex:pageBlockSectionItem>
+
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+          
+            <apex:outputPanel id="Buttons2">
+                <center>
+                    <apex:commandButton id="savebtbottom" value="{!$Label.Save}" onclick="validateAndSave();disableSaveButton();return false;" oncomplete="setupListeners();" reRender="errorMessages,Buttons,Buttons2,pb" />
+                    <apex:commandButton id="savequotebtbottom" value="{!$Label.Save_and_Quote}" onclick="isCprQuote=true;validateAndSave();disableSaveButton();return false;" oncomplete="setupListeners();" reRender="errorMessages,Buttons,Buttons2,pb" rendered="{!$User.Quote_Creation_Allowed__c}" />
+                    <apex:commandButton value="{!$Label.Cancel}" action="{!cancel}" immediate="true"  />    
+                </center>
+            </apex:outputPanel>                        
+       </apex:pageBlock>    
+    </apex:form>
+</body>
+<!-- Load JS Scripts Last -->
+    <c:SPCommunityAppResources_JS />  
+</apex:page>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.Region__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.Sub_Region__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.X75_Meeting_Date__c</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_CLOSE_DATE</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.System_SizePV__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>For use by proposal design Opp. Info. Summary Sheet</description>
+    <filter>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_OPP_PROBABILITY</column>
+            <operator>greaterOrEqual</operator>
+            <value>25</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_OPP_PROBABILITY</column>
+            <operator>lessOrEqual</operator>
+            <value>50</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_OPP_PROBABILITY</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>25%-50% Opp. by site</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Site_Information_Form__c@Site_Information_Form__c.Opportunity_del__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>FK_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

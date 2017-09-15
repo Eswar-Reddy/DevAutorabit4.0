@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Case$Subject</field>
+    </columns>
+    <columns>
+        <field>Case$SunPower_Employee__c</field>
+    </columns>
+    <columns>
+        <field>Case$Owner</field>
+    </columns>
+    <columns>
+        <field>Case$Status</field>
+    </columns>
+    <columns>
+        <field>Case$Release_Notes__c</field>
+    </columns>
+    <crossFilters>
+        <operation>without</operation>
+        <primaryTableColumn>Case$Id</primaryTableColumn>
+        <relatedTable>CaseReleaseJunction__c</relatedTable>
+        <relatedTableJoinColumn>Related_Cases__c</relatedTableJoinColumn>
+    </crossFilters>
+    <currency>USD</currency>
+    <description>CR Cases Approved</description>
+    <filter>
+        <criteriaItems>
+            <column>Case$Status</column>
+            <operator>notEqual</operator>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Type</column>
+            <operator>equals</operator>
+            <value>Change Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Non_Technical_Reasons__c</column>
+            <operator>equals</operator>
+            <value>Approved</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>CR Cases Approved</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Cases_Detail__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Case$Case_CreatedDate__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

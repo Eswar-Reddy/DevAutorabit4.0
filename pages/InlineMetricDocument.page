@@ -1,0 +1,21 @@
+<!-- 
+Page                    :   InlineMetricDocument
+Related Class           :   InlineMetricDocumentController
+Created By              :   Appirio Offshore (Hemant Garg)
+Created On              :   Oct 25, 2010 
+Description             :   Inline page to audit uploaded documents.
+--> 
+<apex:page standardController="Metric__c" extensions="InlineMetricDocumentController" >
+    <apex:detail subject="{!currentMetric.Id}" relatedList="false" />
+    <apex:form >
+	<apex:pageBlock >
+		<apex:pageBlockSection columns="1">
+		    <apex:iframe src="/servlet/servlet.FileDownload?file={!attachmentId}" />	    
+		</apex:pageBlockSection>
+		<apex:pageBlockButtons location="top">
+			<apex:commandButton value="Accept" action="{!acceptAttach}" />
+			<apex:commandButton value="Reject" action="{!rejectAttach}" />			
+		</apex:pageBlockButtons>
+	</apex:pageBlock>
+	</apex:form>
+</apex:page>

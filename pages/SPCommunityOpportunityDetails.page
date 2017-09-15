@@ -1,0 +1,21 @@
+<apex:page showHeader="false" sidebar="false" standardController="Opportunity">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Opportunities"/>
+    <body class="detail-container">
+        <apex:detail subject="{!Opportunity.Id}" inlineEdit="true"/>
+        <c:AttachmentUploadComponent parentId="{!Opportunity.Id}"/>
+        <c:NotesTable parentAtt="{!Opportunity.Id}" />
+        <c:OpportunityContactRoles parentAtt="{!Opportunity.Id}" />
+    </body>
+    <c:SPCommunityAppResources_JS />
+    <script>
+    window.onload = function() {
+        UserRedirect();
+    }
+    </script>
+
+</apex:page>

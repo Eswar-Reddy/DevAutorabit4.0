@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_25090325</developerName>
+        <masterLabel>Sales Stage</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>STAGE_NAME</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>01 – Prospecting</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>01 - Build Single Sales Objective</sourceValue>
+            </sourceValues>
+            <value>01-Build SSO/Prospecting</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>02 - Early Development</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>02 - Finalize SSO</sourceValue>
+            </sourceValues>
+            <value>02-Finalize SSO/Early Dev</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>03 - Firm Offer</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>03 - Mid Development</sourceValue>
+            </sourceValues>
+            <value>03-Firm Offer/Mid Dev</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>04 – Negotiate Contract</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>04 - Late Development</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>04 - Negotiate Binding Contract</sourceValue>
+            </sourceValues>
+            <value>04-Negotiate/Adv Dev</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>05 - Finalize Assets</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>05 – Agreements Finalized</sourceValue>
+            </sourceValues>
+            <value>05-Finalize Agreements/Assets</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Country__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Region1__c</field>
+    </columns>
+    <columns>
+        <field>AMOUNT.CONVERT</field>
+    </columns>
+    <columns>
+        <field>Opportunity.DirectMargin_per__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.System_SizePV__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Contract_Type__c</field>
+    </columns>
+    <columns>
+        <field>CLOSE_MONTH</field>
+    </columns>
+    <columns>
+        <field>STAGE_NAME</field>
+    </columns>
+    <columns>
+        <field>PROBABILITY</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_NAME</field>
+    </columns>
+    <columns>
+        <field>FORECAST_CATEGORY</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Red_Flags__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Actions_Remaining_to_Close_Deal__c</field>
+    </columns>
+    <columns>
+        <field>NEXT_STEP</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.Contract_Type__c</column>
+            <operator>equals</operator>
+            <value>BOS+PV,BOS Only,Development,EPC,PV Only,PPA (including EPC),O&amp;M</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Intl,UPP Americas</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FORECAST_CATEGORY</column>
+            <operator>equals</operator>
+            <value>Best Case,Commit</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Off_Grid__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>BucketField_25090325</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FULL_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>OffGrid Pipeline Review2 - As per UPP</name>
+    <params>
+        <name>role_territory</name>
+        <value>role</value>
+    </params>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Opportunity.Country__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE2</dateColumn>
+        <endDate>2016-12-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-09-01</startDate>
+    </timeFrameFilter>
+</Report>

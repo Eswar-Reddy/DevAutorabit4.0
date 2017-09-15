@@ -1,0 +1,353 @@
+<apex:page id="pgEnablePartnerAccount" standardController="Account" extensions="EnablePartnerAccountController">
+
+
+    <script>
+        var recordSep=';';
+        var dataSep='~';
+        var QtyMAP = function(count){
+            //Properties 
+            var editQtyID = new Array();
+            var editQtyVal = new Array();
+            var counter =count;
+        }
+            //Methods
+            QtyMAP.prototype.put = function(id,val){
+                if(this.counter == 0){
+                    this.editQtyID[0] = id; 
+                    this.editQtyVal[0]= val;
+                    this.counter++;
+                }else{
+                    var pos = this.getIndex(id);
+                    if(pos == -1){
+                        this.editQtyID[this.counter] = id; 
+                        this.editQtyVal[this.counter]= val;
+                        this.counter++;     
+                    }else{
+                        this.editQtyVal[pos]= val;
+                    }
+                }
+            }
+            QtyMAP.prototype.getIndex = function(id){
+                if(this.counter == 0) return -1;
+                for(var i =0;i < this.counter;i++){
+                    if(this.editQtyID[i] == id) return i;
+                }
+                return -1; //if not exists
+            }
+            QtyMAP.prototype.clear = function(){
+                this.counter=0;
+                this.editQtyID = new Array();
+                this.editQtyVal = new Array();
+            }
+            
+            QtyMAP.prototype.remove = function(id){
+                if(this.counter == 0) return;
+                for(var i=0;i < this.counter;i++){
+                    if(this.editQtyID[i]==id){
+                        isEnter =true;
+                        for(var j=i; j < this.counter-1;j++){
+                            this.editQtyID[j] = this.editQtyID[j+1]; 
+                            this.editQtyVal[j] = this.editQtyVal[j+1];  
+                        }
+                        this.counter--;
+                        break;
+                    }
+                }
+            }//function ends
+            QtyMAP.prototype.convertToString= function(){
+                var retStr='';
+                if(this.counter <=0) return null;
+                for(var i=0;i < this.counter; i++){
+                   // retStr +=   this.editQtyID[i] + dataSep + this.editQtyVal[i] + recordSep;
+                    retStr +=   this.editQtyID[i] + recordSep;
+                }
+                return retStr;  
+            }
+            //new after response
+            QtyMAP.prototype.valueConvertToString= function(){
+                var retStr='';
+                if(this.counter <=0) return null;
+                for(var i=0;i < this.counter; i++){
+                   // retStr +=   this.editQtyID[i] + dataSep + this.editQtyVal[i] + recordSep;
+                    retStr +=   this.editQtyVal[i] + dataSep;
+                }
+                return retStr;  
+            }
+            
+            var mapJS = new QtyMAP(0);
+            var RecordTypeMap = new QtyMAP(0);
+            mapJS.clear();
+            RecordTypeMap.clear();
+            function setMap(val,conId,accID,recordType){
+                if(!val){
+                    mapJS.put(conId,accID);
+                    
+                }else{
+                    mapJS.remove(conId);
+                    RecordTypeMap.put(conId,recordType);
+               }
+            }
+    </script>
+
+
+
+
+<style>
+
+..hide { display: none; }
+..show { display: inline; }
+</style>
+<script>
+function setSelectedIds(){
+  //create a comma separated string of selected account Ids
+  var iter = 0;
+  var checked = 0;
+  var IdString = '';
+  var m = document.getElementsByName("AccountIdCheckbox");
+
+  for(iter = 0; iter < m.length; iter++){
+    var elem = m[iter];
+    if(elem.checked){
+      IdString = IdString + elem.value + ',';
+      checked++;
+    }
+  }
+  if(IdString == ''){
+    alert('Please select atleast one record to proceed.');
+    return false;
+  }
+  else{
+    document.getElementById('pgEnablePartnerAccount:frmEnablePartnerAccount:selectedAccountIds1').value=IdString; 
+    //For Exclude contacts 
+    var excludeContacts = mapJS.convertToString();
+   // alert(excludeContacts);
+    if(excludeContacts != null && excludeContacts != '')
+        document.getElementById('pgEnablePartnerAccount:frmEnablePartnerAccount:exculdeContactsString').value=excludeContacts;      
+    return true;
+  }
+}
+
+//Function for changing/updating Roles and Profiles of Users as per their related Contacts
+//Created by Appirio(Prakash G.)
+//As on 27 July 2009
+//Reference:-PR-02250 
+function jsUpdateRoleProfileAsContact(){
+  var result = setSelectedIds();
+  if(result){
+    
+    var confirmResult = confirm('All associated contacts of selected accounts will be modified.');
+    if(confirmResult){      
+      return true;
+    }
+    else{      
+      return false;
+    }
+  }
+  else{    
+    return false;
+  }
+} 
+
+function jsEnableAsPartner(){
+  var result = setSelectedIds();
+  if(result){
+    var confirmResult = confirm('All selected accounts will be enabled as partners.');
+    if(confirmResult){
+        
+        return true;
+    }
+    else{      
+      return false;
+    }
+  }
+  else{    
+    return false;
+  }
+}
+
+function jsEnablePartnerPortalLogin(){
+  var result = setSelectedIds();  
+  if(result){
+     //alert(result);
+      CheckPartnercontacts();      
+  }
+}
+function jsCheckPartnerContactComplete(){
+    var nonPartner =document.getElementById('pgEnablePartnerAccount:frmEnablePartnerAccount:nonPartnerContactExist').value;
+    //alert('Record Type'+nonPartner);
+    if(nonPartner=='true'){
+        alert('The recordtype is not Partner for the selected contacts.Please deselect the contact which is not partner type');               
+    }
+    else{
+      var confirmResult = confirm('All selected contacts for the selected accounts will be enabled as partner portal users.');
+      if(confirmResult){      
+          enablePartnerPortalLogin();          
+      }                          
+    }  
+}
+
+function jsActivatePartnerPortalUsers(){
+  var result = setSelectedIds();
+  if(result){
+
+    var confirmResult = confirm('All selected partner portal users for the selected accounts will be activated');
+    if(confirmResult){      
+      return true;
+    }
+    else{      
+      return false;
+    }
+  }
+  else{    
+    return false;
+  } 
+}
+
+function jsSelectAll(){  
+  var m = document.getElementsByName("AccountIdCheckbox");
+  for(iter = 0; iter < m.length; iter++){
+    var elem = m[iter];
+    elem.checked = "true";
+  }  
+  return false;
+}
+
+function jsSelectNone(){  
+  var m = document.getElementsByName("AccountIdCheckbox");
+  for(iter = 0; iter < m.length; iter++){
+    var elem = m[iter];
+    if(elem.checked){
+      elem.checked = !elem.checked;
+    }
+  }
+  return false;
+}
+function jsEnableBtn(id){
+    var r = document.getElementsByName("ContactBtn"+id);
+    alert(r);
+    r.disabled = false;
+}
+function enableContactRadio(id,val){
+   /* var divId = document.getElementById('divRadio'+id);
+    divId.style.display="block";
+    var r = document.getElementsByName("ContactIdRadio"+id);
+    */
+    var conDiv =document.getElementById('contacts'+id);
+    if(conDiv.style.display =="block")
+       conDiv.style.display ="none";
+    else
+        conDiv.style.display ="block";
+}
+function jsselectedContacts(url){
+    //selectContacts(id);
+    newwindow=window.open(url,'name','width=550,height=550,top=50,toolbar=no,personalbar=no,location=no,directories=no,statusbar=no,menubar=no,status=no,re sizable=yes,left=60,screenX=60,top=100,screenY=100');
+    if (window.focus){newwindow.focus()}
+    
+}
+
+function jsSelectedContactsForPartner(contactIds,accId){
+    alert('Top Contact'+contactIds);
+    alert('Top Account'+accId);
+    //document.getElementById('pgEnablePartnerAccount:frmEnablePartnerAccount:selectedContactIds').value = contactIds;
+    //document.getElementById('pgEnablePartnerAccount:frmEnablePartnerAccount:accountId').value = accId;  
+    //SaveContact1(contactIds,accId);
+    addContacts(contactIds,accId);
+    return false;
+}
+
+function jsChangeView(ele){
+    changeSelectedView(ele.value);
+}
+
+</script>
+
+<apex:form id="frmEnablePartnerAccount">
+
+<apex:outputPanel id="outErrorMessages" rendered="true">{!errorMessage}</apex:outputPanel>
+   <apex:outputPanel id="pnlHidden">
+    <apex:inputHidden id="selectedAccountIds1" value="{!selectedAccountIds}"/>
+    <apex:inputHidden id="nonPartnerContactExist" value="{!nonPartnerContactExist}"/>
+     <apex:inputHidden id="exculdeContactsString" value="{!exculdeContactsString}" />
+    </apex:outputPanel>
+    <!--<apex:inputHidden id="accountId" value="{!accountId}" />-->
+    <apex:pageBlock >
+    <apex:pageblockSection columns="1">
+        <apex:pageblockSectionItem >
+            <apex:outputLabel ><span style="font-weight:bold;">Choose View</span></apex:outputLabel>
+            <apex:selectList size="1" onChange="jsChangeView(this);">
+                <apex:selectOption itemValue="1" itemLabel="Display Accounts (Record Type=Partner)"/>
+                <apex:selectOption itemValue="2" itemLabel="Display Enabled Partner Accounts"/>
+                <apex:selectOption itemValue="3" itemLabel="Display NOT-Enabled Partner Accounts"/>
+            </apex:selectList>
+        </apex:pageblockSectionItem>
+    <apex:pageblockSectionItem />
+    </apex:pageblockSection>
+
+  <apex:pageBlockButtons >
+<!-- 
+    <apex:commandButton value="Display Accounts (Record Type=Partner)" action="{!displayAllAccounts}"/>
+    <apex:commandButton value="Display Enabled Partner Accounts" action="{!displayPartnerAccounts}"/>
+    <apex:commandButton value="Display NOT-Enabled Partner Accounts" action="{!displayNonPartnerAccounts}"/>  
+-->    
+    <apex:commandButton value="Enable Account as Partner" action="{!enableAsPartner}" onclick="return jsEnableAsPartner();"/>
+    <apex:commandButton value="Enable Partner Portal Logins" onclick="jsEnablePartnerPortalLogin();return false;" />
+    <apex:commandButton value="Activate Partner Portal Users" action="{!activatePartnerPortalUsers}" onclick="return jsActivatePartnerPortalUsers();"/>
+    <apex:commandButton value="Update Partner Users Profiles and Roles based on Contacts" action="{!updatePartnerProfilesRoles}" onclick="return jsUpdateRoleProfileAsContact();"/>
+  </apex:pageBlockButtons>  
+
+  <apex:pageBlock title="{!currentAccountPartnerStatus}">
+   <apex:outputPanel layout="block" style="text-align:center;">   &nbsp;
+         <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                       startText="Please wait..." id="status" />
+    </apex:outputPanel>
+    <apex:pageBlockButtons rendered="{!recordsToDisplay}">
+      <apex:commandButton value="Select All" onclick="return jsSelectAll();"/>
+      <apex:commandButton value="Select None" onclick="return jsSelectNone();"/>
+    </apex:pageBlockButtons>
+    <apex:outputPanel rendered="{!NOT(recordsToDisplay)}">There are no records to display.</apex:outputPanel>
+    <apex:outputPanel id="panel1">
+    <apex:pageblockTable value="{!lstAccounts}" var="match" columns="1" rendered="{!recordsToDisplay}">    
+      <apex:column >
+        <apex:facet name="header">Select</apex:facet>
+        <input type="checkbox" name="AccountIdCheckbox" value="{!match.Id}" onClick="enableContactRadio(this.value,'{!match.Id}');"></input>
+      </apex:column>
+      <apex:column > 
+        <apex:facet name="header">Account</apex:facet>
+        {!match.name}
+      </apex:column>
+      <apex:column >
+       <div id="contacts{!match.id}" style="display:none;">
+           <apex:pageblockTable value="{!match.Contacts}" var="matchCon" rendered="{!IF(match.Contacts.size ==0,'false','true')}">    
+                  <apex:column width="5%">
+                    <input type="checkbox" checked="checked" onclick="setMap(this.checked,'{!matchCon.id}','{!match.id}','{!matchCon.RecordType.name}');"/>
+                </apex:column>
+                <apex:column width="95%">
+                <apex:facet name="header"><b>Contact(s)</b></apex:facet>
+                    {!matchCon.Name}
+                </apex:column>
+                <apex:column width="95%">
+                <apex:facet name="header"><b>Record Type</b></apex:facet>
+                    {!matchCon.RecordType.name}
+                </apex:column>
+            </apex:pageblockTable> 
+           <apex:outputPanel layout="block" style="text-align:center;" rendered="{!IF(match.Contacts.size ==0,'true','false')}">   &nbsp;
+                 <span style="color:#cc0000;font-weight:bold;"><I>No Contacts</I></span>
+            </apex:outputPanel>
+
+        </div>
+      </apex:column>
+      <apex:column value="{!match.isPartner}" headerValue="Is Partner"/>
+    </apex:pageblockTable>
+    </apex:outputPanel>
+ </apex:pageBlock>    
+ <apex:outputPanel id="tempPanel" ></apex:outputPanel>
+</apex:pageBlock>
+ <apex:actionFunction action="{!changeSelectedView}" name="changeSelectedView" status="status" rerender="panel1" onComplete="javascript: mapJS.clear();">
+     <apex:param assignTo="{!selectedViewValue}" name="s" value=""/>
+ </apex:actionFunction>
+     
+<apex:actionFunction action="{!checkPartnerContact}" name="CheckPartnercontacts" status="status" oncomplete="jsCheckPartnerContactComplete();"  reRender="pnlHidden" />
+<apex:actionFunction action="{!enablePartnerPortalLogin}" name="enablePartnerPortalLogin" />
+</apex:form>  
+  
+</apex:page>

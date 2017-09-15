@@ -1,0 +1,22 @@
+<messaging:emailTemplate subject="MQC1/MQC2 Participant Update" recipientType="User" relatedToType="Account">
+<messaging:htmlEmailBody >
+Hi,<br/><br/>
+
+<apex:outputPanel rendered="{!relatedTo.MQC1_Multi_Quarter_Contract_Participant__c && NOT(relatedTo.MQC2_Multi_Quarter_Contract_Participant__c)}" >
+MQC1(Multi Quarter Contract )Participant has been checked for the account {!relatedTo.Name}.
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!relatedTo.MQC2_Multi_Quarter_Contract_Participant__c && NOT(relatedTo.MQC1_Multi_Quarter_Contract_Participant__c)}" >
+MQC2(Multi Quarter Contract )Participant has been checked for the account {!relatedTo.Name}.
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!relatedTo.MQC2_Multi_Quarter_Contract_Participant__c && relatedTo.MQC1_Multi_Quarter_Contract_Participant__c}" >
+MQC1(Multi Quarter Contract )Participant and MQC2(Multi Quarter Contract )Participant have been checked for the account {!relatedTo.Name}.
+</apex:outputPanel>
+
+<br/>
+<br/>
+Thanks,
+
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

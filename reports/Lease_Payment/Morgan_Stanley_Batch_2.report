@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Placed_In_Service__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>equals</operator>
+            <value>Commissioning Report,PTO Letter</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Funding_Tranche__c</column>
+            <operator>equals</operator>
+            <value>SPWR MS 2013-1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Placed_In_Service__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Notice_to_Proceed_Sent__c</column>
+            <operator>equals</operator>
+            <value>10/31/2013</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Morgan Stanley Batch 2</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$Workers_Comp_Exp__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

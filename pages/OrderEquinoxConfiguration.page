@@ -1,0 +1,303 @@
+<!--
+* OrderEquinoxConfiguration - Equinox Experience configuration page for cash based ordering system 
+* SFDC Release - https://na29.salesforce.com/a5B34000000xp2Y
+* Pivotal Tracker Updates:
+* ID #114755381 - Add the a la carte selection to the Equinox Ordering Experience - 3/18/16
+* ID #115634041 - SolarEdge inverter availability - Hawaii (Smart Pack) - 5/7/2016
+* #130240625 - Remove racking table from Smart Pack Config page
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+-->
+
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" docType="html-5.0" showHeader="{!IF(isPartnerUser,false,true)}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    
+    <style>
+        
+        .bs .label {
+            font-size: .90em;            
+        }
+        
+        .bs .body {
+            font-size: .90em;
+        }
+        
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+        font-size: .90em;
+        }
+        
+        .nopadding {
+            padding: 0 !important;
+        }
+        
+        .modal-dialog{
+            position: relative;
+            display: table; //important  
+            overflow-y: initial !important;
+            overflow-x: auto;
+            width: auto;
+            min-width: 300px;   
+        }
+        .bs .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }
+        
+        .bs .logo {
+            display: block;
+            height: auto;
+            max-width: 50%;
+        }
+        @-moz-document url-prefix() {  
+            .logo{
+                width: 50%;
+                max-width: 50%;
+            }
+        }
+        
+        @media screen and (-webkit-min-device-pixel-ratio:0) {    
+            .logo{
+                max-width: 50%;
+            }    
+        }
+        
+    </style> 
+    
+    
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 80%">
+            
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+            <apex:iframe src="/apex/APPR_PUB__CustomMessages?tabName=Order" height="100"/>            
+            <ol class="breadcrumb" style="margin-bottom:0px;">
+                <li><a href="#" onclick="toOrderType();">{!$Label.Home}</a></li>
+                <li><a href="#" onclick="toOpportunity();">{!$Label.Opportunity}</a></li>
+                <li><a href="#" onclick="toShipping();">{!$Label.POWizardShippingLabel}</a></li>
+                <li style="color: #f7921e;">{!$Label.Configure}</li>
+                <li>{!$Label.Finalize}</li>
+            </ol>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>{!$Label.Equinox}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row row-fluid">
+                        <div class="span6">
+                            <img src="{!$Resource.EquinoxBrandHeader}" class="img-responsive logo" alt="{!$Label.Equinox}" style="margin:auto;"/>
+                        </div>
+                    </div><br/><br/>
+                    <apex:form styleClass="form-horizontal" >
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="modSelectDivOut" class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Module_Type__c.label}</label>
+                                                <div class="col-sm-8" id="modSelectDivOut">
+                                                    <div id="modSelectDiv">
+                                                        <apex:actionRegion >
+                                                            <apex:selectList value="{!selectedModuleTypeIdentifier}" styleClass="form-control" size="1">
+                                                                <apex:selectOptions value="{!EquinoxModules}"/>
+                                                            </apex:selectList>
+                                                        </apex:actionRegion>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="modQtyDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Module_Quantity__c.label}</label>
+                                                <div class="col-sm-8" id="modQtyDiv">
+                                                    <apex:inputField id="modQty" styleClass="form-control" value="{!purchaseOrder.Module_Quantity__c}" type="number" html-min="1"> 
+                                                        <apex:actionSupport event="onkeyup" reRender="buttonPanel" />
+                                                        <apex:actionSupport event="onmouseup" reRender="buttonPanel" />
+                                                    </apex:inputField>               
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <apex:actionFunction name="doCallout" action="{!doCallout}" reRender="theEQPricingPanel, errorMsgs" oncomplete="toggleSpinner(false); enableNextStep();"/> 
+                        <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+                        <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+                        <apex:actionFunction name="toShipping" action="{!ToShipping}"/>
+                        <apex:actionFunction action="{!saveFromOrderConfig}" name="saveOrderConfig"/>          
+                    </apex:form>
+
+                    <div>
+                        <div class="col-sm-12" id="alaCarteDivEQ">
+                            <i id="alacarteCaretEQ" class="fa fa-caret-right"></i>
+                            <h4>&nbsp;&nbsp;{!$Label.A_La_Carte}</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">                        
+                                <div id="alaCarteComponentEQ" class="collapse">
+                                  <c:AlaCarteComponent controllerForPage="{!this}" componentName="alacarteComponent" shippingStateString="{!sts.State__c}"/><!--updated per #115634041-->
+                                </div><!--end Ala Carte-->
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div id="calcPriceDiv">
+                        <div class="row">
+                            <div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                                <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>{!$Label.Calculating_Price}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:center;">
+                                <a href="#" onclick="calculatePrice(event);" class="btn" role="button" style="background-color:#69b342; font-weight: bold; color:#ffffff;">{!$Label.Calculate_Price}</a>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <apex:outputPanel id="theEQPricingPanel" >
+                                <apex:dataTable value="{!returnLines}" var="line" id="thePriceTable" rowClasses="odd,even" styleClass="table" rendered="{!returnLines.size != 0 && returnLines != null}" columns="6">
+                                    <apex:column width="60%">
+                                        <apex:facet name="header">{!$Label.Description}</apex:facet>
+                                        <apex:outputText value="{!line.item_description}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.PAS_Item}</apex:facet>
+                                        <apex:outputText value="{!line.ordered_item}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                                        <apex:outputText value="{!line.ordered_quantity}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.POWizardUnitPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                        <apex:outputText value="{!line.unit_priceFORMATTED}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.POWizardExtendedPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                        <apex:outputText value="{!line.extended_priceFORMATTED}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.Line_Type}</apex:facet>
+                                        <apex:outputText value="{!line.product_line_type}"/>
+                                    </apex:column>
+                                </apex:dataTable>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <blockquote class="blockquote-reverse">
+                                            <apex:outputText rendered="{!totalPriceFormatted != null && totalPriceFormatted != ''}" value="{!$Label.POWizardTotalPriceHeading}: {!totalPriceFormatted} ({!currentUser.CurrencyISOCode})"/>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </div><!--end pricing table-->
+                    </div><!--end calc price div-->
+
+                    <!-- Alacarte stuff -->
+                    <apex:outputPanel id="rerenderPanel">
+                        <script type="text/javascript">
+                        if('{!alacarteController.selProductItemsJSON}'){
+                            var alacarteProductItems = JSON.parse('{!alacarteController.selProductItemsJSON}');
+                        }
+                        </script>
+                    </apex:outputPanel>
+
+                    <div class="row">
+                        <div class="col-sm-12" style="text-align: center">
+                            <apex:outputPanel id="buttonPanel">
+                                <a href="#" class="btn btn-primary" onclick="toShipping();" role="button">{!$Label.POWizardPrevStep}</a>&nbsp;&nbsp;
+
+                                <a href="#" id="EQNextStep" class="btn btn-primary disabled" onClick="saveOrderConfig();" role="button">{!$Label.POWizardNextStep}</a>
+                            </apex:outputPanel>
+                        </div> 
+                    </div>    
+                </div><!--end panel body-->
+            </div><!--end panel-->
+        </div><!--end container-->
+        
+        <!-- Modal -->
+        <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title" id="shippingSiteModalLabel">{!$Label.Important_Information}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            {!$Label.Equinox_Bundle_Notification}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal" style="color: #f7921e; border-color: darkgray;" role="button">{!$Label.Got_It}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+
+        $(document).ready(function() {
+            
+           $('#notificationModal').modal({
+                show: true,
+            }) 
+            
+        });
+        
+        function toggleSpinner(showSpinner){
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+        
+        function enableNextStep(){
+            $('#EQNextStep').removeClass('disabled');
+        }
+
+        function calculatePrice(event) {
+            console.log('event');
+            console.log(event);
+            event.preventDefault();
+            toggleSpinner(true); 
+            doCallout();
+        }
+            
+        $("#alaCarteDivEQ").click(function () {
+            $("#alaCarteComponentEQ").slideToggle(400, function(){console.log('DONE');});
+            
+            var caretIcon = $("#alacarteCaretEQ");
+            if(caretIcon.hasClass('fa-caret-down')){
+                caretIcon.removeClass('fa-caret-down').addClass('fa-caret-right');
+            }else if(caretIcon.hasClass('fa-caret-right')){
+                caretIcon.removeClass('fa-caret-right').addClass('fa-caret-down');
+            }
+        });
+    
+    </script>
+</apex:page>

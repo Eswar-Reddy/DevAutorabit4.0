@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Credit_Check_Request__c.Credit_Check_Submission_Date__c</field>
+    </columns>
+    <columns>
+        <field>LAST_UPDATE</field>
+    </columns>
+    <columns>
+        <field>CUST_LAST_UPDATE</field>
+    </columns>
+    <columns>
+        <field>FK_$Account.Days_since_last_update__c</field>
+    </columns>
+    <columns>
+        <field>Account.Account_Name__c</field>
+    </columns>
+    <columns>
+        <field>DESCRIPTION</field>
+    </columns>
+    <columns>
+        <field>Account.Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Pending HomeSale Credit Checks</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Partner_Account__c</column>
+            <operator>equals</operator>
+            <value>North American Lease Transfer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Credit_Check_Request__c.Credit_Check_Submission_Date__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>3/28/2016</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Credit_Check_Request__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Pending - Application Sent,Pending - Application Opened</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Credit_Check_Request__c.Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Pending HomeSale Credit Checks</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$Credit_Check_Request__c@Credit_Check_Request__c.Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>FK_$Account.Days_since_last_update__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CUST_LAST_UPDATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

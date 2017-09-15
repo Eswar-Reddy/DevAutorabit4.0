@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_20587760</developerName>
+        <masterLabel>Invalid Case</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>Case.Resolution__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>Mail Delivery Error</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Duplicate Case</sourceValue>
+            </sourceValues>
+            <value>Invalid Case</value>
+        </values>
+    </buckets>
+    <buckets>
+        <bucketType>text</bucketType>
+        <developerName>BucketField_86452928</developerName>
+        <masterLabel>Owner Group</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>OWNER</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>John Taylor</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Kane Macaspac</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Michi Magsarili</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Arvin Jay Visco</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Ralph Alega</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Janice Zaguirre</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Agatha Freida Alcantara</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>James Ryan Bulacso</sourceValue>
+            </sourceValues>
+            <value>CS</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Praveen Kumar</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Niket Chandane</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Sudarshan Kataria</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Samuel Salter</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Sangita Gupta</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Chaitanya Devarapalli</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Lakshmi Manapragada</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Rej Punzalan</sourceValue>
+            </sourceValues>
+            <value>CRM IT</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Jasmin Rosal</sourceValue>
+            </sourceValues>
+            <value>CRM OPS</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>CASE_ID</field>
+    </columns>
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>CLOSED</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>Case.Functional_Area_for_Trending__c</field>
+    </columns>
+    <columns>
+        <field>DESCRIPTION</field>
+    </columns>
+    <columns>
+        <field>Case.Resolution__c</field>
+    </columns>
+    <columns>
+        <field>Case.Resources_Updated__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Case.CRM_Case</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.Resolution__c</column>
+            <operator>notEqual</operator>
+            <value>Duplicate Case,Mail Delivery Error</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>BucketField_86452928</column>
+            <operator>equals</operator>
+            <value>CS,CRM IT,CRM OPS</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.Solution_Plan__c</column>
+            <operator>equals</operator>
+            <value>Standard Configuration</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>TYPE</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case.Solution_Plan__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case.Sizing_Notes__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Standard Config</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATEONLY</dateColumn>
+        <endDate>2015-05-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2015-04-01</startDate>
+    </timeFrameFilter>
+</Report>

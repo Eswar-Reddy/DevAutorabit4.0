@@ -1,0 +1,47 @@
+<!-- 
+Page                    :   Select_Design
+Related Class           :   Controller_Select_Design
+Created By              :   Appirio Offshore
+Created On              :   Feb 24, 2010
+Desciption              :   VF page to Select a Design__c from the list of related designs.
+ -->
+<apex:page standardController="PSR__c" extensions="Controller_Select_Design" id="pg" >
+	<script>
+	//javascript function to assign the id of selected design record to hidden input field.
+	function assignValue(value){
+		if(document.getElementById('pg:frm:hidden') != null && value != null)		
+			document.getElementById('pg:frm:hidden').value = value; 
+	}
+	</script>
+	<apex:pageMessages />
+	<!-- Done for Case # 00071200 
+	<apex:form id="frm">  -->
+	<apex:form id="frm" rendered="{!IF(currentPSRList.size > 0 , true,false)}">
+		<apex:inputHidden value="{!selectedDesignOnPage}" id="hidden" /> 
+		<apex:pageBlock title="Select a Design">
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Cancel" action="{!Cancel}"/>
+				<apex:commandButton value="Return to PSR" action="{!returnToPSR}"/>
+			</apex:pageBlockButtons>
+			
+			<apex:pageBlockTable value="{!listDesignWrapper}" var="item" rendered="{!IF(renderTable == true,true,false)}">
+				<apex:column headerValue="Select">					
+					 <apex:outputpanel rendered="{!IF(item.isSelected == true,true,false)}">							
+						<input type="Radio" name="group" value="{!item.design.id}" CHECKED="true" onclick="javascript:assignValue(this.value)"/>
+					</apex:outputpanel>
+					<apex:outputpanel rendered="{!IF(item.isSelected == false,true,false)}">							
+						<input type="Radio" name="group" value="{!item.design.id}" onclick="javascript:assignValue(this.value)"/>
+					</apex:outputpanel> 
+				</apex:column>
+				<apex:column value="{!item.design.Name}" />
+				<apex:column value="{!item.design.Revision_Letter__c}" />
+				<apex:column value="{!item.design.Proposal_Designer__c}" />
+				<apex:column value="{!item.design.Product_Type__c}" />
+				<apex:column value="{!item.design.Module_Type__c}" />
+				<apex:column value="{!item.design.Actual_System_Size__c}" />
+				<apex:column value="{!item.design.Status__c}" />
+				<apex:column value="{!item.design.Date_Design_Completed__c}" />
+			</apex:pageBlockTable>			
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

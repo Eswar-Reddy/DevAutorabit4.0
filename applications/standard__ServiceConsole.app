@@ -166,6 +166,17 @@
         <location>full</location>
     </listPlacement>
     <listRefreshMethod>none</listRefreshMethod>
+    <pushNotifications>
+        <pushNotification>
+            <fieldNames>Categories__c</fieldNames>
+            <fieldNames>Complaint__c</fieldNames>
+            <fieldNames>Owner</fieldNames>
+            <fieldNames>Priority</fieldNames>
+            <fieldNames>Status</fieldNames>
+            <fieldNames>Sub_Categories__c</fieldNames>
+            <objectName>Case</objectName>
+        </pushNotification>
+    </pushNotifications>
     <saveUserSessions>true</saveUserSessions>
     <tab>standard-Account</tab>
     <tab>standard-Contact</tab>
@@ -173,10 +184,35 @@
     <tab>standard-Opportunity</tab>
     <tab>standard-Lead</tab>
     <tab>standard-Knowledge</tab>
-    <tab>Mobile__c</tab>
+    <tab>standard-LiveAgent</tab>
+    <tab>Metrics__c</tab>
+    <tab>Price_Request__c</tab>
+    <tab>Dealer_Notification__c</tab>
+    <tab>Sunpower_Spectrum_Debug_Log__c</tab>
+    <tab>Portal_Login_Page_Setup__c</tab>
+    <tab>Order_Discount__c</tab>
+    <tab>Solar_Access_Presets__c</tab>
     <workspaceMappings>
         <mapping>
-            <tab>Mobile__c</tab>
+            <tab>Dealer_Notification__c</tab>
+        </mapping>
+        <mapping>
+            <tab>Metrics__c</tab>
+        </mapping>
+        <mapping>
+            <tab>Order_Discount__c</tab>
+        </mapping>
+        <mapping>
+            <tab>Portal_Login_Page_Setup__c</tab>
+        </mapping>
+        <mapping>
+            <tab>Price_Request__c</tab>
+        </mapping>
+        <mapping>
+            <tab>Solar_Access_Presets__c</tab>
+        </mapping>
+        <mapping>
+            <tab>Sunpower_Spectrum_Debug_Log__c</tab>
         </mapping>
         <mapping>
             <tab>standard-Account</tab>
@@ -194,6 +230,9 @@
         </mapping>
         <mapping>
             <tab>standard-Lead</tab>
+        </mapping>
+        <mapping>
+            <tab>standard-LiveAgent</tab>
         </mapping>
         <mapping>
             <fieldName>AccountId</fieldName>

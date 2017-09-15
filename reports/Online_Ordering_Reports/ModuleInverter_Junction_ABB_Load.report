@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>ModuleInverterJunction__c.Module_Configuration__c</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>ModuleInverterJunction__c.Module_Name__c</column>
+            <operator>notContain</operator>
+            <value>-AC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_$Inverter_Configuration__c.Inverter_Manufacturer__c</column>
+            <operator>equals</operator>
+            <value>ABB,Sunpower</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_$Inverter_Configuration__c.Inverter_Manufacturer__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>ModuleInverter Junction | ABB Load</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$ModuleInverterJunction__c@ModuleInverterJunction__c.Inverter_Configuration__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

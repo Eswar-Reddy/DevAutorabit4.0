@@ -1,0 +1,224 @@
+<apex:page standardController="Purchase_Order__c" extensions="ResidentialProjectPurchaseOrder" action="{!init}" docType="html-5.0" showHeader="true" sidebar="true">
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    <style>
+        .row-centered {
+            text-align:center;
+        }
+        .bs .label {
+            font-size: .90em;
+        }
+
+        .bs .body {
+            font-size: .90em;
+        }
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+            font-size: .90em;
+        }
+        .bPageBlock {
+            border-top: 3px solid #0076be !important;
+            border-radius: 0px !important;
+        }
+        .customnotabTab .secondaryPalette, .individualPalette .customnotabBlock .secondaryPalette {
+            background-color: #ffffff !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function toggleSpinner(showSpinner){
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+    </script>
+
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 80%">
+            <apex:form >
+                <!-- Page failure message -->
+                <apex:messages styleClass="alert alert-danger"/>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>{!$Label.Order_Submission}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <h4>{!$Label.Order_Information}</h4>
+                        <apex:outputPanel rendered="{!purchaseOrder.Order_Status__c == 'Error' || showSubmitButton}" >
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top: 1em;">
+                                    <apex:commandButton styleClass="btn btn-primary btn-sm" action="{!psrSubmitOrder}" value="{!$Label.POWizardSubmitOrderLabel}" onclick="toggleSpinner(true);" oncomplete="toggleSpinner(false);" reRender="errorMsgs" />
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <hr/>
+                        <div class="form-horizontal">
+                            <div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                                <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>&nbsp;&nbsp;{!$Label.POWizardPendingStatusText}</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="partnerNameOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</label>
+                                                    <apex:outputText styleClass="col-sm-8" id="partnerNameOutput" value="{!purchaseOrder.Dealer_Account__r.Name}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="billingInfoOutput" class="col-sm-4" style="padding-top:8px;">{!$Label.POWizardBillToAddress}</label>
+                                                    <div class="col-sm-8">
+                                                        <apex:outputField styleClass="form-control" style="width:50%; font-size: .85em;" value="{!bts.Address1__c}"/><br/>
+                                                        <apex:outputField styleClass="form-control" style="width:50%; font-size: .85em;" value="{!bts.City__c}" />,&nbsp;
+                                                        <apex:outputField styleClass="form-control" style="width:50%; font-size: .85em;" value="{!bts.State__c}" />&nbsp;&nbsp;
+                                                        <apex:outputField styleClass="form-control" style="width:50%; font-size: .85em;" value="{!bts.Zip__c}" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="oppOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Name.Label}</label>
+                                                    <apex:inputField styleClass="col-sm-8" id="orderNameOutput" value="{!purchaseOrder.Name}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <h4>{!$Label.POWizardShippingInfoTitle}</h4>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="deliveryDateOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}</label>
+                                                    <div class="col-sm-8" id="deliveryDateOutput" >
+                                                        <apex:inputField value="{!purchaseOrder.Requested_Delivery_Date__c}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shipContactPhone" class="col-sm-4">{!$ObjectType.Lead.Fields.Phone.Label}</label>
+                                                    <apex:outputText id="shipContactPhone" styleClass="col-sm-8" value="{!purchaseOrder.Ship_to_Contact__r.Phone}"/>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shippingContactOutput" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Contact__c.Label}</label>
+                                                    <div id="shippingContactOutput" class="col-sm-8">
+                                                        <apex:outputText value="{!purchaseOrder.Ship_To_Contact__r.Name}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shipToAddressOutput" class="col-sm-4">{!$Label.POWizardShipToAddress}</label>
+                                                    <apex:outputText id="shipToAddressOutput" styleClass="col-sm-8" value="{!sts.Address__c}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="specialInstructionsDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}</label>
+                                            <div class="col-sm-8" id="specialInstructionsDiv">
+                                                <apex:inputField value="{!purchaseOrder.Special_Instructions__c}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <h4>{!$Label.POWizardLineItemsHeading}</h4>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <apex:dataTable value="{!poLines}" rows="{!numLines}" var="pol" id="theTable" rowClasses="odd,even" styleClass="table" columns="6">
+                                        <apex:column width="10%" >
+                                            <apex:facet name="header">{!$Label.POWizardLineNumberHeading}</apex:facet>
+                                            <apex:outputField value="{!pol.Order_Line_Number__c}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.PAS_Item}</apex:facet>
+                                            <apex:outputText value="{!pol.Item_ID__c}"/>
+                                        </apex:column>
+                                        <apex:column width="50%">
+                                            <apex:facet name="header">{!$Label.Description}</apex:facet>
+                                            <apex:outputText value="{!pol.Item_Description__c}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                                            <apex:outputField value="{!pol.Quantity__c}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.POWizardUnitPriceHeading}</apex:facet>
+                                            <apex:outputField value="{!pol.Unit_Price__c}"/>
+                                        </apex:column>
+                                        <apex:column >
+                                            <apex:facet name="header">{!$Label.POWizardExtendedPriceHeading}</apex:facet>
+                                            <apex:outputField value="{!pol.Price__c}"/>
+                                        </apex:column>
+                                    </apex:dataTable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:form>
+        </div>
+    </div>
+</apex:page>

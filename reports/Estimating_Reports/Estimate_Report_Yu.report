@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Estimate__c.Estimator__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c.Project_Manager__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c.Business_Unit__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Estimate__c.System_Size_MWp__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Estimate Report For Global Estimating</description>
+    <filter>
+        <criteriaItems>
+            <column>Estimate__c.Estimator__c</column>
+            <operator>equals</operator>
+            <value>Brad Harbidge,Frederick Yu,Ryan Lewis,Jeff Harold,Pranalika Shinde</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Estimate__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Completed</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Estimate__c.Estimate_Complete_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Estimate__c.Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Estimate Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Estimate__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Estimate__c.Estimate_Complete_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-01-01</startDate>
+    </timeFrameFilter>
+</Report>

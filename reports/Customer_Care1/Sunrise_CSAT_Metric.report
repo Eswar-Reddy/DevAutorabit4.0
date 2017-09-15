@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <aggregateTypes>Average</aggregateTypes>
+        <field>Customer_Survey_Result__c$Aggregate_Score_New__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>For 3rd Sunrise period, ending on July 4th, 2011</description>
+    <filter>
+        <criteriaItems>
+            <column>Customer_Survey_Result__c$Opportunity_ID__c.Theater__c</column>
+            <operator>equals</operator>
+            <value>Europe</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Customer_Survey_Result__c$Survey_Status__c</column>
+            <operator>notEqual</operator>
+            <value>1st Invitation Sent,2nd Invitation Sent,3rd invitation Sent,No Response Received</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Customer_Survey_Result__c$Partner_Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Sunrise CSAT Metric</name>
+    <params>
+        <name>co</name>
+        <value>0</value>
+    </params>
+    <reportType>Customer_Survey_Results__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Customer_Survey_Result__c$Survey_Response_Date__c</dateColumn>
+        <endDate>2011-07-04</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2010-07-05</startDate>
+    </timeFrameFilter>
+</Report>

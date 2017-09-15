@@ -1,0 +1,84 @@
+<apex:page standardController="Lead" extensions="PartnerCompetitionExtension" tabStyle="Contact">
+    <apex:form >
+    <apex:pageBlock title="Potential Related Records Owned by Other Partners">
+        <apex:pageBlockSection title="Lead Record for Comparison" collapsible="false">
+            <apex:pageBlockTable value="{!LeadDetails}" var="l">
+                <apex:column value="{!l.Name}"/>
+                <apex:column value="{!l.Street}"/>
+                <apex:column value="{!l.Email}"/>
+                <apex:column headerValue="Phone" value="{!l.Phone}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Opportunities" >
+            <apex:pageBlockTable value="{!PartnerResults}" var="opp">
+                <apex:column headervalue="Name">
+                    <apex:outputLink value="/{!opp.Id}">
+                        {!opp.Name}
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Street" value="{!opp.Customer_Street__c}"/>
+                <!--apex:column headerValue="Email" value="{!opp.Account.Email__c}"/-->
+                <apex:column headervalue="Phone" value="{!opp.Account.Phone}"/>
+                <apex:column headerValue="Partner Owner" value="{!opp.Partner_Account_Id__c}"/>
+                <apex:column headerValue="Date Created">
+                   <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                         <apex:param value="{!opp.CreatedDate}" /> 
+                   </apex:outputText>  
+                </apex:column> 
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        <!--apex:pageBlockSection title="Quotes"-->
+        <apex:pageBlockSection title="Quotes" rendered="{! IF(isQuotes, true, false)}">
+            <apex:pageBlockTable value="{!PartnerResults}" var="opp">
+                
+                    <apex:column headervalue="Name">
+                      <apex:repeat value="{!opp.Quotes}" var="q">
+                        <apex:outputLink value="/{!q.Id}">
+                            {!q.Name}
+                        </apex:outputLink>
+                      </apex:repeat>  
+                    </apex:column>
+                    <apex:column headerValue="Status">
+                        <apex:repeat value="{!opp.Quotes}" var="q">
+                            {!q.Status}
+                        </apex:repeat>
+                    </apex:column>
+                    <apex:column headerValue="Date Created">        
+                      <apex:repeat value="{!opp.Quotes}" var="q">
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!q.CreatedDate}" /> 
+                        </apex:outputText>  
+                      </apex:repeat>  
+                    </apex:column>
+                
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        <!--apex:pageBlockSection title="Agreements"-->
+        <apex:pageBlockSection title="Agreements" rendered="{! IF(isAgreements, true, false)}">
+            <apex:pageBlockTable value="{!PartnerResults}" var="agg">
+                
+                <apex:column headerValue="Agreement Name">
+                   <apex:repeat value="{!agg.Agreements__r}" var="a">
+                      <apex:outputLink value="/{!a.Id}">
+                         {!a.Name}
+                      </apex:outputLink>
+                   </apex:repeat>  
+                </apex:column>
+                <apex:column headerValue="Status">
+                   <apex:repeat value="{!agg.Agreements__r}" var="a">
+                      {!a.echosign_dev1__Status__c}
+                   </apex:repeat>
+                </apex:column>
+                <apex:column headerValue="Date Created">        
+                   <apex:repeat value="{!agg.Agreements__r}" var="a">
+                      <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                         <apex:param value="{!a.CreatedDate}" /> 
+                      </apex:outputText>  
+                   </apex:repeat>  
+                </apex:column>
+                
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

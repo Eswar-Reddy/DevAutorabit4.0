@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>BarrySerafino</submitter>
+        <type>group</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>U_C_and_RLC_and_Off_Grid</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>alexandre.policarpopinheiro@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>First Credit Approval &amp; Theater is Europe &amp; MEA below 500000</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Requested_Credit_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>USD 0</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Account.Theater__c</field>
+                <operation>equals</operation>
+                <value>Europe,Middle East and Africa</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>First Credit Approval &amp; Theater is Europe &amp; MEA below 500000</label>
+        <name>First_Credit_Approval_Theater_is_Europe_MEA_below_500000</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>philippe.querbes@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Second level credit approval for Europe, Middle East and Africa</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Requested_Credit_Amount__c</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Account.Theater__c</field>
+                <operation>equals</operation>
+                <value>Europe,Middle East and Africa</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Second Level Credit Approval for Europe, Middle East and Africa</label>
+        <name>Second_Level_Credit_Approval_for_Europe_Middle_East_and_Africa</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>UPPi Credit Check Request</description>
+    <emailTemplate>Account/Credit_Check_Request_Account</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Account.Credit_Check_Required__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.RecordType</field>
+            <operation>equals</operation>
+            <value>Standard,Infrastructure Account</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.Theater__c</field>
+            <operation>equals</operation>
+            <value>Europe,Middle East and Africa</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.Requested_Credit_Amount__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Credit_Check_Approved_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Credit_Check_Rejected_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>UPPi Credit Check Request1</label>
+    <recallActions>
+        <action>
+            <name>Credit_Check_Recalled_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

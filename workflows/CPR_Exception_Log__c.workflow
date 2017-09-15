@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Sim_Engine_Failure_Notification</fullName>
+        <ccEmails>Rommel.Cruz@sunpowercorp.com;</ccEmails>
+        <ccEmails>dima@swdfactory.com;Pratap.Raju@sunpowercorp.com</ccEmails>
+        <description>Sim Engine Failure Notification</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>eric.niheu@sunpowercorp.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jason.ritchie@sunpowercorp.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>marc.georgiou@sunpowercorp.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>naga.vinnakota@sunpowercorp.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>ram.pattamatta@sunpowercorp.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>rose.punzalan@sunpower.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderAddress>digital.support@sunpowercorp.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Sim_Engine_Failure_Notification</template>
+    </alerts>
+    <rules>
+        <fullName>Sim Engine Failure</fullName>
+        <actions>
+            <name>Sim_Engine_Failure_Notification</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>CPR_Exception_Log__c.Exception_Message__c</field>
+            <operation>contains</operation>
+            <value>SimEngine</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+</Workflow>

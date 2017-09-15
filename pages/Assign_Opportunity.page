@@ -1,0 +1,36 @@
+<!-- 
+...................................................
+Page: Assign_Opportunity
+Author : Appirio (Prakash)
+Date: Aug 24,2009
+PR: PR-02394
+....................................................
+ -->
+<apex:page standardController="Opportunity" extensions="Assign_Opportunity_Controller" action="{!onPageLoad}" >
+	<apex:form >
+		<apex:pageBlock title="Assign Opportunity" rendered="{!showAccountDialog}">
+				<apex:outputLabel >{!errorMessage}</apex:outputLabel>	
+				<apex:pageBlockButtons >
+					<apex:commandButton value="Return to Opportunity" action="{!cancel}" />
+				</apex:pageBlockButtons>
+		</apex:pageBlock>
+		<apex:pageBlock title="Assign Opportunity" rendered="{!showProceedDialog}">
+				<apex:outputLabel >{!errorMessage}</apex:outputLabel>	
+				<apex:pageBlockButtons >
+					<apex:commandButton value="Proceed" action="{!proceed}" />
+					<apex:commandButton value="Cancel" action="{!cancel}" />
+				</apex:pageBlockButtons>
+		</apex:pageBlock>
+	</apex:form>
+	<script>
+		window.onload = function(){
+			if(!{!showAccountDialog} && !{!showProceedDialog}){
+				try{
+					window.parent.location.href="/{!oppID}";
+				}catch(e){
+					window.location.href="/{!oppID}";
+				}
+			}
+		}
+	</script>	
+</apex:page>

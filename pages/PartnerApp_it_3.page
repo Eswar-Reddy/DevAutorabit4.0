@@ -1,0 +1,222 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false">
+<apex:form >
+ <table width="100%" border="0">
+     <tr>
+         <td width="100%" align="center" ><font size="5"><B>Modulo Qualifica “SunPower Dealer”</B></font>
+         </td> 
+
+     </tr>
+ </table><apex:pageMessages />
+<apex:pageBlock >
+ <apex:pageBlockButtons >
+                <apex:commandButton value="Indietro" action="{!step2_it}"/>
+                <apex:commandButton value="Salvare" action="{!step4_it}"/>
+                <apex:commandButton value="Annulla" action="{!cancelPartner_it}"/>
+            </apex:pageBlockButtons>
+            
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Coperture assicurative</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr>
+                <td colspan="4" style="padding-left:5px;">
+                    Indicare le coperture assicurative previste dalla legge ed extra
+                </td>
+            </tr>
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Tipo</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Limite di copertura</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Ente/Compagnia</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Numero di polizza</td>
+
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_1__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_1__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_2__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_3__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Policy_Number_4__c}"/> </td>
+
+            </tr>
+        </table>
+         <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="2">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Garanzia Bancaria</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="height:20px">
+                <td colspan="2" style="padding-left:5px">
+                    Nel caso in cui la Sua azienda non abbia i requisiti per ricevere il credito da parte di SunPower, potrebbe qualificarsi per l’approvazione di un credito bancario di almeno € 50.000? 
+                </td>
+            </tr>       
+            <tr>
+                  <td align="right" width="25%"style="padding-right:15px;"><B>SI</B></td>
+
+                   <td width="75%"><apex:inputField style="width:75%" value="{!partnerApp.Bank_Guarantee__c}"/></td>
+    
+            </tr>
+        </table>    
+        <!-- Misc Start -->
+         <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="3">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Ulteriori Informazioni</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    La Sua azienda dispone di ufficio, officina e  magazzino? 
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>SI</B></td>
+
+                   <td width="20%"><apex:inputField value="{!partnerApp.Formal_office_workshop_warehouse__c}"/></td>
+            </tr>       
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    La Sua azienda dispone di un sito internet?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>SI</B></td>
+
+                   <td width="20%"><apex:inputField value="{!partnerApp.Web_Page__c}"/></td>
+            </tr>   
+            <tr style="height:20px">
+                <td width="60%" style="padding-left:5px">
+                    La Sua azienda dispone di proprio materiale di marketing ?
+                </td>
+                 <td align="center" width="20%"style="padding-right:15px;"><B>SI</B></td>
+
+                   <td width="20%"><apex:inputField value="{!partnerApp.Marketing_Material__c}"/></td>
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    La Sua azienda dispone di uno Showroom?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>SI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Showroom__c}"/></td>
+            </tr>       
+            <tr >
+                <td style="padding-left:5px">
+                    La Sua azienda dispone di una propria flotta di veicoli per le installazioni? 
+                </td>
+                 <td align="center"  style="padding-right:15px;"><B>SI</B></td>
+
+                   <td><apex:inputField value="{!partnerApp.Installation_Vehicle_Fleet__c}"/></td>
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    La Sua azienda dispone di almeno un veicolo commerciale aziendale con logo? 
+                </td>
+                 <td align="center"  style="padding-right:15px;"><B>SI</B></td>
+
+                   <td><apex:inputField value="{!partnerApp.Vehicle_with_Logo__c}"/></td>
+            </tr>   
+                
+            <tr >
+                <td style="padding-left:5px">
+                    La Sua azienda dispone di strumenti informatici per il follow up commerciale?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>SI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.CRM__c}"/></td>
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    Tabelle e abilitazioni all’impiantistica (es. 46/90)
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>SI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Tabelle_e_abilitazioni_es_46_90__c}"/></td>
+            </tr>               
+            <tr >
+                <td style="padding-left:5px">
+                    Tabelle e abilitazioni all’impiantistica da più di 5 anni?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>SI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Tabelle_e_abilitazioni_more_than_5_years__c}"/></td>
+            </tr>               
+            <tr >
+                <td style="padding-left:5px">
+                    La Sua azienda è in possesso di certificazioni di qualità?
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>SI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Quality_Certification__c}"/></td>
+            </tr>   
+            <tr >
+                <td style="padding-left:5px">
+                    La Sua azienda ha delle cause giudiziali in corso e/o pregresse?    
+                </td>
+                 <td align="center" style="padding-right:15px;"><B>SI</B></td>
+
+                   <td ><apex:inputField value="{!partnerApp.Existing_Pending_Litigation__c}"/></td>
+            </tr>   
+                    
+        </table>    
+        <!--  Misc End -->
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

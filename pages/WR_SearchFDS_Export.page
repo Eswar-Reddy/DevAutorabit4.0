@@ -1,0 +1,5 @@
+<apex:page standardController="WR_FDS_Product__c" extensions="Warranty_SearchFDSAdminClass"  cache="true" contentType="text/csv#FDS_Search_Result.csv" language="en-US">Product,Dealer Name,Packing Slip,Alternate Packing Slip,Serial Number,Product Type(Group),Product Name,Customer PO,Sales Order,PickUpDate,Date Pushed
+<apex:repeat value="{!products}" var="fds">
+"{!fds.Name}","{!fds.Dealer_Name__c}","{!fds.Packing_Slip__c}","{!fds.Alternate_Packing_Slip__c}","{!fds.Serial_Number__c}","{!fds.Product_Type__c}","{!fds.Product_Name__c}","{!fds.WR_ORACLE_SalesOrder__r.Purchase_Order__c}","{!fds.WR_ORACLE_SalesOrder__r.Sales_Order__c}","{!fds.PickUpDate__c}","{!fds.LastModifiedDate}"
+</apex:repeat>
+</apex:page>

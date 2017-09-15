@@ -1,0 +1,128 @@
+<apex:page controller="AgreementReviewRequestController" docType="html-5.0" sidebar="{!IF(isInternalUser, TRUE, FALSE)}" showHeader="{!IF(isInternalUser, TRUE, FALSE)}" standardStylesheets="false">
+    <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.font_awesome_4_7_0, 'css/font-awesome.min.css')}"/>
+    <c:SPCommunityAppResources_CSS />
+    <style type="text/css">
+        .sunpower-style .btn {
+            line-height: 1;
+        }
+        .sunpower-style .btn.disabled,
+        .sunpower-style .btn:disabled {
+            pointer-events: none !important;
+        }
+        .sp-blue {
+            color: #0076be;
+        }
+        .greybutton{
+            background-color:gray !important;
+        }
+        label.spLabel{
+            font-size:medium;
+            color:black;
+            margin-right:10px;
+            width:200px; !important
+        }
+        .selectStyles{
+            border: 1px solid #e5e5e5;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            height:45px;
+        }
+        .has-Error{
+            box-shadow: 0 0 8px red;
+        }
+        .asterisk{
+            color:#ef373e;
+            opacity:0.6;
+            margin-left:3px;
+        }
+    </style>
+    <apex:outputPanel rendered="{!!isInternalUser}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts"/>
+    </apex:outputPanel>
+    <body class="sunpower-style container-fluid" style="max-width: 1250px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <apex:form id="frm">
+                    <apex:outputPanel rendered="{!!isInternalUser}" style="margin-top:1em">
+                        &nbsp;
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!systemError}" styleClass="alert alert--danger">
+                        <apex:messages />
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!notSent}">
+                        <h1>Submit request for amendment review</h1>
+                        <div class="alert alert--info" style="margin-top:1em">
+                            <span>To submit a request to review this amendment, please provide an explanation in the field below, then click Submit Request.</span>
+                        </div>
+                        <p>Please note that you don't need to submit details about the amendment aside from your reasons for requesting a review. We will pass all the necessary information to the responsible SunPower team automatically.</p>
+                        <div style="margin-top:1em">
+                            <label class="spLabel">
+                                <span class="asterisk"><i class="fa fa-asterisk fa-1" aria-hidden="true"></i></span>
+                                <strong>Explanation</strong>
+                            </label>
+                        </div>
+                        <div id="noteContainer" class="input-container">
+                            <apex:inputHidden id="hiddenNote" value="{!comment}"/>
+                            <textarea cols="100" rows="3" id="note" class="has-Error"/>
+                        </div>
+                        <div class="proceed-section" style="float:right;margin-top:15px">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!requestHelp}" id="submitButton" value="Submit Request" styleClass="btn btn-primary btn--small greybutton"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!errorSubmitSuccess}">
+                        <h1>Your request has been submitted</h1>
+                        <div class="alert alert--success" style="margin-top:1em">
+                            <span>Thank you for submitting an amendment help request.</span>
+                        </div>
+                        <p>We've provided all the necessary information to the responsible SunPower team. Expect to hear a response from them shortly.</p>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <apex:commandButton action="{!back}" value="Continue" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!errorSubmitFailure}">
+                        <h1>Error: Your help request was not submitted</h1>
+                        <div class="alert alert--danger" style="margin-top:1em">
+                            <span>We're sorry! We attempted to submit your amendment help request, but something went wrong.</span>
+                        </div>
+                        <p>If you would like to try again, please click Resubmit Request</p>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!reportError}" value="Resubmit Request" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                </apex:form>
+            </div>
+        </div>
+    </body>
+
+    <c:SPCommunityAppResources_JS />
+    <script type="text/javascript">
+        j$ = jQuery.noConflict();
+        j$(document).ready(function() {
+            j$('input[id=submitButton]').attr('disabled', 'true');
+
+            // check note value
+            j$('textarea[id=note]').on('input', function() {
+                var value = j$.trim(j$(this).val());
+                document.getElementById('{!$Component.frm:hiddenNote}').value = value;
+                // make sure there's text
+                if(value.length < 4) {
+                    setSubmit(true);
+                    j$('#note').addClass('has-Error');
+                } else {
+                    j$('#note').removeClass('has-Error');
+                    setSubmit(false);
+                }
+            });
+        })
+
+        function setSubmit(value) {
+            if(value) {
+                j$('input[id*=submitButton]').attr('disabled', 'true').addClass('greybutton');
+            } else {
+                j$('input[id*=submitButton]').removeAttr('disabled').removeClass('greybutton');
+            }
+        }
+    </script>
+</apex:page>

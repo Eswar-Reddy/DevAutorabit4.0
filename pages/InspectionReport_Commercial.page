@@ -1,0 +1,670 @@
+<apex:page StandardController="Inspection__c" Extensions="InspectionReportExtension" id="pg">
+  <!--
+  <script type="text/javascript"
+      src="{!URLFOR($Resource.yui1,'yui/yahoo-min.js')}" />
+  <script type="text/javascript"
+      src="{!URLFOR($Resource.yui1,'yui/event-min.js')}" />
+  <script src="/static/102207/js/spch.js" type="text/javascript" />
+  -->
+<script type="text/javascript">
+  var oldSiteId = null;
+  var newSiteId = null;
+  
+  var oldSiteName = '';
+  var newSiteName = '';
+  
+  var oldJSId  = null;
+  var newJSId = null;
+  
+  var newJSName = '';
+  var oldJSName = '';
+  
+  function jsRerenderSitePnl() {
+    newSiteId = document.getElementById('pg:frm:pb:txtSite_lkid').value ;
+    newSiteName = document.getElementById('pg:frm:pb:txtSite').value;
+   
+    if (oldSiteId == newSiteId || newSiteId == '000000000000000'
+         || newSiteId == '' || oldSiteName == newSiteName)
+    
+     return;
+  
+    oldSiteId = newSiteId;
+    oldSiteName = newSiteName;
+    jsSitepanel(newSiteId);
+  }
+
+
+function jsKeyRerenderSitePnl() {
+  newSiteName = document.getElementById('pg:frm:pb:txtSite').value;
+  
+  if (oldSiteName == newSiteName)
+    return;
+  
+  oldSiteName = newSiteName;
+  jsSitepanelByName(newSiteName);
+  oldSiteId = document.getElementById('pg:frm:pb:txtSite_lkid').value;
+}
+
+function jsRerenderSupervisorPnl() {
+  newJSId = document.getElementById('pg:frm:pb:txtSupervisor_lkid').value;
+  newJSName = document.getElementById('pg:frm:pb:txtSupervisor').value;
+  //alert('oldJSId'+oldJSId);
+  if (oldJSId == newJSId || newJSId == '000000000000000'
+      || newJSId == '' || oldJSName == newJSName)
+    return;
+  
+  oldJSId = newJSId;
+  oldJSName = newJSName;
+  actionJobSupervisorLookup(newJSId);
+}
+
+function jsKeyRerenderSupervisorPnl() {
+  newJSName = document.getElementById('pg:frm:pb:txtSupervisor').value;
+  
+  if (oldJSName == newJSName)
+    return;
+  
+  oldJSName = newJSName;
+  actionJobSupervisorLookupByName(newJSName);
+  newJSId = document.getElementById('pg:frm:pb:txtSupervisor_lkid').value;
+}
+  </script>
+  
+ 
+  
+  <apex:actionStatus startText="Please Wait" id="siteStatus"
+      startStyle="color:#cc0000;font-weight:Bold;" />
+  <apex:form id="frm">
+    
+    <apex:actionfunction action="{!refreshSiteByName}"
+            rerender="sectionCustomerName,sectionTelephone,sectionSiteCityStateZip,sectionSiteStreet"
+            name="jsSitepanelByName" status="siteStatus">
+            <apex:param name="a" value="" assignTo="{!siteName}" />
+   </apex:actionfunction>
+
+  <apex:actionfunction action="{!refreshSite}"
+            rerender="sectionCustomerName,sectionTelephone,sectionSiteCityStateZip,sectionSiteStreet"
+            name="jsSitepanel" status="siteStatus">
+            <apex:param name="a" value="" assignTo="{!selectedSiteId}" />
+  </apex:actionfunction>
+    
+    <apex:actionfunction action="{!refreshJobSupervisorByName}"
+            rerender="sectionJobSupTelephone"
+            name="actionJobSupervisorLookupByName" status="siteStatus">
+            <apex:param name="a" value="" assignTo="{!jobSupervisorName}" />
+      </apex:actionfunction>
+        
+     <apex:actionfunction action="{!refreshJobSupervisor}"
+            rerender="sectionJobSupTelephone"
+            name="actionJobSupervisorLookup" status="siteStatus">
+            <apex:param name="a" value="" assignTo="{!selectedJobSupervisorId}" />
+     </apex:actionfunction>
+    
+    <apex:pageMessages />
+    <apex:pageBlock id="pb" title="Commercial Report">
+      <apex:pageBlockButtons id="pnlButton" >
+        <apex:commandButton action="{!Save}" value="Save" />
+        <apex:commandButton immediate="true" action="{!cancelInspection}" value="Cancel" />
+        <apex:commandButton immediate="true" action="{!printCommercial}" value="Print" />
+      </apex:pageBlockButtons>
+      
+      <table width="100%"><tr width="100%" align="center"><td width="100%" align="center">
+      <apex:outputLabel value="T-10 Commercial Systems Quality Inspection Form" style="font-size:15px" />
+      </td></tr></table>
+      
+      <apex:panelGrid columns="2" border="0">
+        <apex:outputLabel value="Project & size in kWdc:" />
+        <apex:panelGroup >
+          <apex:inputfield style="width:200px;" value="{!inspection.Comm_Project__c}" />
+          <apex:inputfield style="width:200px;" value="{!inspection.Comm_ProjectSize__c}" />
+        </apex:panelGroup>
+        
+        <!-- 
+        <apex:outputLabel value="Site:" />
+        <apex:panelGroup >
+          <apex:inputfield value="{!inspection.Site__c}" 
+                           onfocus="jsRerenderSitePnl();" 
+                           onkeyup="jsKeyRerenderSitePnl();"
+                           onblur="jsKeyRerenderSitePnl();" id="txtSite"/>
+        </apex:panelGroup>
+         -->
+        <apex:outputLabel value="Site Street Address:" />
+        <apex:panelGroup >                        
+                        <apex:inputText style="width:200px;" id="sectionSiteStreet"
+                            value="{!Site_StreetAdd}" disabled="true" />
+        </apex:panelGroup>
+         
+        <apex:outputLabel value="Site Address:" />
+        <apex:panelGroup >                        
+                        <apex:inputText style="width:200px;" id="sectionSiteCityStateZip"
+                            value="{!Site_CityStateZip}" disabled="true" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Building Occupancy:" />
+        <apex:panelGroup >
+         <apex:inputfield style="width:200px;" value="{!inspection.Comm_BuildingOccupancy__c}" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Date of Inspection:" />
+        <apex:panelGroup >
+          <apex:inputfield style="width:200px;" value="{!inspection.Inspection_Date__c}" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Time of Inspection:" />
+        <apex:panelGroup >
+          <u> <apex:inputfield style="width:200px;" value="{!inspection.Inspection_Time__c}" /></u>
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Site Contact & Phone:" />
+        <apex:panelGroup >
+            <apex:inputText style="width:200px;" id="sectionCustomerName" value="{!site_ContactName}" disabled="true" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="" />
+        <apex:panelGroup >
+          <apex:inputText style="width:200px;" id="sectionTelephone" value="{!site_phone}" disabled="true" /> 
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Dealer Contact & Phone:" />
+        <apex:panelGroup >
+          <!--
+          <apex:inputText id="txtSupervisor" 
+                            value="{!partnerContactName}"  disabled="true" />
+          --> 
+          <apex:inputfield style="width:200px;" value="{!inspection.Partner_Contact__c}"  id="txtSupervisor" 
+                            onfocus="jsRerenderSupervisorPnl();" onkeyup="jsKeyRerenderSupervisorPnl();"
+                            onblur="jsKeyRerenderSupervisorPnl();" />
+                             
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="" />
+        <apex:panelGroup >
+          <apex:inputText style="width:200px;" id="sectionJobSupTelephone" value="{!JobSupervisor_phone}" disabled="true" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Inspected By:" />
+        <apex:panelGroup >
+          <apex:inputfield style="width:200px;" value="{!inspection.Contact__c}" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="Others Present:" />
+        <apex:panelGroup >
+          <apex:inputfield style="width:200px;" value="{!inspection.Comm_OtherPresent__c}" />
+        </apex:panelGroup>
+        
+        <apex:outputLabel value="As-Builts:" />
+        <apex:panelGroup >
+          <apex:inputfield style="width:200px;" value="{!inspection.Comm_As_Builts__c}" />
+        </apex:panelGroup>
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="1.0 Site & Roof Information" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.2 Verify Roof Height – Highest above grade:" />
+        <apex:panelGroup >
+          <apex:inputField style="width:60px;" value="{!inspection.Comm_Q1_2_Number1__c}" />
+          <apex:outputLabel value="  to  " />
+          <apex:inputField style="width:60px;" value="{!inspection.Comm_Q1_2_Number2__c}" />
+        </apex:panelGroup>
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.3 Verify Building Wind Exposure:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_3_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.4 Verify Building Occupancy Type:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_4_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.5 Verify Roof System Type:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_5_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.5a Deck Type:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_5a_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.5b Roof Edge Type:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_5b_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.5c Roof Area:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_5c_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.5d Verify Roof Slope:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_5d_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.5e Verify Air Barrier:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_5e_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.6 Drainage:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_6_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.7 Insulation:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_7_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.8 Damages to roof from construction activities:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_8_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="1.9 Overall Roof Condition:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q1_9_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="2.0 Array Site Information" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.1 Conforms with approved layout:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_01_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.2 Meets size and layout req'mts:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_02_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.3 Total Number of panels:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_03_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.4 Verify curb ballasting per zone – actual ballast block weight:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_04_1__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="Required in middle zone:" />
+        <apex:panelGroup >
+          <apex:inputField style="width:150px;" value="{!inspection.Comm_Q2_04_2_1__c}" />
+          <span style="width:10px;padding-left:10px" />
+          <apex:inputField style="width:150px;" value="{!inspection.Comm_Q2_04_2_2__c}" />
+        </apex:panelGroup>
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="Required in edge zone:" />
+        <apex:panelGroup >
+          <apex:inputField style="width:150px;" value="{!inspection.Comm_Q2_04_3_1__c}" />
+          <span style="width:10px;padding-left:10px" />
+          <apex:inputField style="width:150px;" value="{!inspection.Comm_Q2_04_3_2__c}" />
+        </apex:panelGroup>
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="Required in corner zone:" />
+        <apex:panelGroup >
+          <apex:inputField style="width:150px;" value="{!inspection.Comm_Q2_04_4_1__c}" />
+          <span style="width:10px;padding-left:10px" />
+          <apex:inputField style="width:150px;" value="{!inspection.Comm_Q2_04_4_2__c}" />
+        </apex:panelGroup>
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.5 Insure expansion has been accommodated:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_05_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.6 Verify array basic dimension:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_06_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.6a Setback dimensions: 8’ minimum for arrays:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_06a_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.6b Confirm modules in edge zones as allowed:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_06b_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.7 Note potential shading issues:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_07_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.9 Note accumulations of organic matter:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_09_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="2.10 Note accumulations of water:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q2_10_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="3.0 Array Installation" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.1 Cracks, hazing or other defects in PV:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_01_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.2 All deflectors installed:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_02_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.3 Adequate deflector clearance to roof:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_03_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.4 All deflector nuts installed:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_04_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.5 Cutouts through deflectors:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_05_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.6 All clip bolts are installed - properly" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_06_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.7 Appropriate signage:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_07_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.8 Roof to foot pad interface:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_08_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.9 Significant dents or creases in deflectors:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_09_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.10 Deflector corrosion:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_10_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.11 Trueness of array:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_11_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.12 Note potential shading issues:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_12_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.13 Damages to roof from construction activities:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_13_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="3.16 Other" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q3_16_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="4.0 Securement Installation" style="font-size:15px;font-weight:bold;" /></u>
+      <span style="width:40px;padding-left:40px" />
+      <apex:inputField style="width:350px;" value="{!inspection.Comm_Q4_0_Field__c}" />
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="4.1 Inter-support cabling:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q4_1_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="4.2 Spreader installation:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q4_2_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="4.3 Type and size of anchor devices:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q4_3_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="4.4 Request &ldquo;As-Built&rdquo; Securement Drawing:" escape="false" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q4_4_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="4.5 Other" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q4_5_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="5.0 Electrical Installation" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.1 Check conduit runs for expansion provisions:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_01_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.2 Conduit supports: secure and roof protected:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_02_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.3 Type and location of grounding lugs:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_03_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.4 Ground braids installed:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_04_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.5 IFF clip connections to modules:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_05_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.6 Conduit heights above roof:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_06_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.7 Type and gauge of wire for “exposed” wiring:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_07_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.8 Type and gauge of wire “conduit runs”:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_08_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.9 General dimension from array to DC disconnect combiner:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_09_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.10 General dimension from DC combiner to inverter:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_10_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.11 General dimension from inverter to POC tie-in:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_11_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.12 POC tie-in type and location specifics:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_12_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.13 Wire trays: secure & not overfilled:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_13_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.14 Wire trays used for single wire jumpers:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_14_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.15 Wire management acceptable:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_15_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.16 Loose wire or wires:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_16_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.17 All fasteners are non-corroding:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_17_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.18 As builts:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_18_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="5.19 Other" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q5_19_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="6.0 DC Combiner Boxes" style="font-size:15px;font-weight:bold;" /></u>
+      <span style="width:40px;padding-left:40px" />
+      <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_00_Field__c}" />
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.1 Cover attachment/seals:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_01_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.2 Water penetration/corrosion:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_02_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.3 Heyco tightness on wires:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_03_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.4 Conduit entry seal:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_04_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.5 Ground bonding:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_05_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.6 Wire condition in box:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_06_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.7 Strings labeled properly:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_07_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.8 Fuses (extra fuses and fuse puller):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_08_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.9 Terminal tightness:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_09_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.10 Sign: Splice/Junction Combiner Box:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_10_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.11 Sign: Warning Sign:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_11_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="6.12 Other:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q6_12_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="7.0 Inverter and AC Equipment" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.1a Inverter operation from display:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_01a_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.1b Inverter type and model:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_01b_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.2 Note excessive room temperature or need for ventilation:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_02_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.3 Note inverter temperature from display:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_03_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.4 Unusual sounds from inverter (fans):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_04_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.5 Inverter physical condition:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_05_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.6 Inverter bolted down:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_06_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.7 Inverter terminal connections:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_07_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.8 Neutral should hit ground in inverter only:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_08_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.9 Torque on lugs - inverter (optional):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_09_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.10 AC disconnect (at inverter):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_10_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.11 PV/DC disconnect (at inverter):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_11_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.12 Utility AC disconnect (after transformer):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_12_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="7.13 O&M manual in inverter room:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q7_13_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="8.0 Signage & Labels" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.1 Sign: DC to AC Inverter:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_1_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.2 Sign: Warning! Elec Shock Hazard:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_2_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.3 Sign: Warning! Secondary PV Power:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_3_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.4 Sign: AC disconnect (at inverter):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_4_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.5 Sign: DC disconnect (at inverter):" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_5_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.7 Sign: Isolation Transformer:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_7_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="8.8 Sign: Inverter Reset Procedure" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q8_8_Field__c}" />
+      </apex:panelGrid>
+      <br />
+      
+      <u><apex:outputLabel value="9.0 System monitoring" style="font-size:15px;font-weight:bold;" /></u>
+      <apex:panelGrid columns="3" border="0">
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="9.1 Monitoring type:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q9_1_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="9.2 Operational status:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q9_2_Field__c}" />
+        
+        <span style="width:40px;padding-left:40px" />
+        <apex:outputLabel value="9.3 Website url:" />
+        <apex:inputField style="width:350px;" value="{!inspection.Comm_Q9_3_Field__c}" />
+      </apex:panelGrid>
+    </apex:pageBlock>
+     <apex:outputText value="{!inspection.Site_Type__c}" rendered="false" />
+     <apex:outputText value="{!inspection.Case__c}" rendered="false" />
+  </apex:form>
+  <script>
+   oldSiteId = document.getElementById('pg:frm:pb:txtSite_lkid').value ;
+   oldSiteName = document.getElementById('pg:frm:pb:txtSite').value;
+   oldJSId = document.getElementById('pg:frm:pb:txtSupervisor_lkid').value;
+   oldJSName = document.getElementById('pg:frm:pb:txtSupervisor').value;
+  </script>
+</apex:page>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>IBD Master Agreement Managing Director Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>IBD</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>RejectRecord</ifCriteriaNotMet>
+        <label>IBD Master Agreement Managing Director Approval</label>
+        <name>IBD_Master_Agreement_Managing_Director_Approval</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>santiago.senn@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPP Intl Budgetary Pricing Sales Manager Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>IBD</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>IBD Budgetary Pricing Sales Manager Approval</label>
+        <name>IBD_Budgetary_Pricing_Sales_Manager_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>giora.salita@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>IBD Components Director</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>IBD</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>IBD Components Director</label>
+        <name>IBD_Components_Director</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>dennis.arriola@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Budgetary Pricing BU/CFO President Approval</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 AND 2)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Expected_Direct_Margin1__c</field>
+                <operation>greaterThan</operation>
+                <value>25</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount_Approved__c</field>
+                <operation>lessThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Budgetary Pricing BU/CFO President Approval</label>
+        <name>Budgetary_Pricing_BU_CFO_President_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Budgetary Pricing Deal Review Committee Approval</description>
+        <entryCriteria>
+            <booleanFilter>NOT (1 and 2) or 3</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Expected_Direct_Margin1__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount_Approved__c</field>
+                <operation>lessThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount_Approved__c</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Budgetary Pricing Deal Review Committee Approval</label>
+        <name>Budgetary_Pricing_Deal_Review_Committee_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Framework Agreement - IBD</description>
+    <emailTemplate>Opportunity_Role/Master_Agreement_Submission</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Framework Master Agreement</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Business_Unit1__c</field>
+            <operation>equals</operation>
+            <value>IBD</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Contract_Status__c</field>
+            <operation>equals</operation>
+            <value>Draft,Rejected</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Master_Agreement_Submission_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Master_Contract_Status_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Master_Agreement_Rejected_Contract</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Master_Agreement_Rejected_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Master_Agreement_Submission_Status</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Framework Agreement - IBD</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recallActions>
+        <action>
+            <name>Master_Agreement_Recall_Contract_Status</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

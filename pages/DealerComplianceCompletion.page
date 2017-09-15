@@ -1,0 +1,72 @@
+<!--  
+    Created By: Ralph Alega 
+    Company: Cloudsherpas
+    Date: 02/01/2014
+    Purpose: Page that shows the details of Compliance Completion page and updates the fields of Dealer Compliance Requirement record onclick of Submit button
+-->
+
+<apex:page standardController="Dealer_Compliance_Requirement__c" extensions="DealerComplianceCompletionCC" id="thePage" tabStyle="Opportunity" showHeader="false" sidebar="false">
+<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+<c:CommunitiesMainNavComponent activeTab="Accounts"/>
+<body class="detail-container">
+    <apex:form id="theForm">
+        <apex:pageblock id="thePageBlock">
+            <apex:pageBlockSection title="Compliance Completion" columns="2" collapsible="false" id="theSection">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Dealer_Compliance_Requirement__c.fields.Dealer_Name__c.label}" />
+                <apex:outputField value="{!DCompReq.Dealer_Name__c}" label=""/>
+            </apex:pageBlockSectionItem>
+            <br/>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Dealer_Compliance_Requirement__c.fields.Opportunity_Owner__c.label}" />
+                <apex:outputField value="{!DCompReq.Opportunity_Owner__c}" label=""/>
+            </apex:pageBlockSectionItem>
+            <br/>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.Dealer_Compliance_Requirement__c.fields.Opportunity__c.label}" />
+                <apex:outputField value="{!DCompReq.Opportunity__r.Name}" label=""/>
+            </apex:pageBlockSectionItem>
+            <br/>
+            <apex:pageBlockSectionItem id="compDescriptionItem">
+                <apex:outputLabel value="{!$ObjectType.Dealer_Compliance_Requirement__c.fields.Compliance_Description__c.label}" />
+                <apex:outputField value="{!DCompReq.Compliance_Description__c}" label="" id="compDescription" />
+            </apex:pageBlockSectionItem>
+            <br/>
+            <apex:pageBlockSectionItem >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             
+                <apex:panelGroup >
+                    <apex:inputCheckbox value="{!DCompReq.Compliance_Completed__c}" id="theCheckbox" > &nbsp;
+                        <apex:param name="dealerComplainceCehckbox" assignTo="{!dealerComplianceChecked}" value="" />
+                    </apex:inputCheckbox>
+                    {!$Label.Dealer_Compliance_Checkbox_Message} <br/> <br/>
+                </apex:panelGroup>    
+            </apex:pageBlockSectionItem>
+            <br/>
+            <apex:pageBlockSectionItem >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <apex:panelGroup >
+                    <apex:commandButton value="Submit" action="{!saveBtn}" />
+                    <apex:commandButton value="Cancel" action="{!cancelBtn}"/>
+                </apex:panelGroup>
+            </apex:pageBlockSectionItem>
+        
+            </apex:pageBlockSection>
+        </apex:pageblock>
+    </apex:form>
+</body>
+<!-- Load JS Scripts Last -->
+<c:SPCommunityAppResources_JS />
+</apex:page>

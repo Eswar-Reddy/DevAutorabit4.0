@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT_NAME</field>
+    </columns>
+    <columns>
+        <field>Account.Contractors_License__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Contract.Contract_Type__c</column>
+            <operator>equals</operator>
+            <value>NA Lease 2.0 Program Participation Agreement</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STATUS</column>
+            <operator>equals</operator>
+            <value>Signed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease2_0_Program_Partner__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Contractors_License__c</column>
+            <operator>notContain</operator>
+            <value>NO</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Contractors_Lic_Expiry__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Contractors Lic EXPIRY DASH1</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>ContractList</reportType>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Contractors_Lic_Expiry__c</dateColumn>
+        <interval>INTERVAL_NEXT60</interval>
+    </timeFrameFilter>
+</Report>

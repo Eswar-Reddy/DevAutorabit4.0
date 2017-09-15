@@ -1,0 +1,150 @@
+<apex:component controller="OpportunityValuesController" access="global">
+<apex:attribute name="componentPercent" description="Opportunity Probability Percent" type="String" assignTo="{!OppPer}" />
+<apex:attribute name="componentValue" description="Opportunity value" type="String" assignTo="{!OppId}" />
+<apex:attribute name="emailTemplateType" description="Change point 3 based on this attribute" type="String"  />
+<apex:outputPanel rendered="false">{!OppObj.Account.Name}</apex:outputPanel>
+<br/> 
+The following Opportunity has reached <b>{!OppPer}% Probability:</b>
+<br/><br/>
+Account: <b>{!OppObj.Account.Name}</b><br/>
+Business Unit: <b>{!OppObj.Business_Unit__c}</b><br/>
+Opportunity: <b>{!OppObj.Name}</b><br/>
+Currency: <b>{!OppObj.CurrencyIsoCode}</b><br/>
+ASP /W: <b>{!OppObj.ASP_New_del__c}</b><br/>
+Product Name: <b>{!prodName}</b><br/>
+System Size(PV): <b>{!OppObj.System_SizePV__c}</b><br/>
+System Size(BOS): <b>{!OppObj.System_SizeBOS__c}</b><br/>
+SPWR Deal Type: <b>{!OppObj.Contract_Type__c}</b><br/>
+Salesperson: <b>{!OppObj.Owner.Name}</b><br/>
+Sales Analyst: <b>{!systemAnalyst}</b><br/>
+Project Manager: <b>{!projectManager}</b><br/>
+Proposal Designer: <b>{!proposalDesigner}</b><br/>
+
+<apex:outputpanel rendered="{!oppPer='50'}" > 
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+<br/>
+<br/>
+<apex:outputText rendered="{!IF(emailTemplateType!='UPPa' , true , false)}">
+{!OppObj.Lead_Analyst__c} Please take the following steps:
+<br/><br/>
+<b>Sales Analyst:</b><br/>
+1) Ensure FEL Stage 3 pre-spend process is initiated to complete the site survey, geotech/topo, roof qual and structural qual reports during this sales s
+<br/><br/>
+2) Confirm that credit approval for the customer has been obtained
+<br/><br/>
+</apex:outputText>
+<apex:outputText rendered="{!IF(emailTemplateType==null , true , false)}">
+3) If the opportunity is a PPA, ensure that an LLC has been created.  Work with the legal department to confirm (Michael Holland, Lindsey Wiedmann, Karla Rogers
+<br/><br/>
+<b>Project Manager:</b>
+Assign project resources and assess long lead time items for potential pre-contract spend
+</apex:outputText>
+<apex:outputText rendered="{!IF(emailTemplateType=='NAC' , true , false)}">
+3) If the opportunity is a PPA, ensure that an LLC has been created.  Work with the legal department to confirm (Michael Holland, Lindsey Wiedmann, Karla Rogers
+</apex:outputText>
+<br/><br/>
+<apex:outputText rendered="{!IF(emailTemplateType!='UPPa' , true , false)}">
+<b>Project Manager:</b>  Assign project resources and assess long lead time items for potential pre-contract spend
+</apex:outputText>
+<apex:outputText rendered="{!IF(emailTemplateType=='UPPa' , true , false)}">
+Please work to ensure that: <br/><br/>
+1) The opportunity is utility shortlisted or a PPA is under negotiation <br/><br/>
+2) Permit applications have been submitted. <br/> <br/>
+3) Transmission queue position is established; interconnection studies are underway and/or agreement is in negotiation <br/><br/>
+</apex:outputText>
+</apex:outputpanel>
+
+<apex:outputpanel rendered="{!oppPer='75'}" >  <!--Changed This Panel for Case#00238668. -->
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+
+<b>Sales Analyst:</b> <br/>
+1) Please schedule the 75% kickoff meeting at least 5 days from today to allow time for preparation <br/><br/>
+2) Work with the PM to fill out the 75% meeting agenda and notes prior to the meeting. <br/><br/>
+3) Following the 75% meeting, please complete the SOV-1 process in e-Builder by loading the required 75% meeting documents. 
+<br/><br/>
+ 
+<b> Project Manager:</b> <br/>
+1) Pease provide latest budget &amp; schedule to project designer at least 2 days prior to the project kick-off meeting.<br/><br/>
+2) Work with the sales analyst to fill out the 75% meeting agenda and notes prior to the meeting. <br/><br/>
+
+<b>Designer:</b> Please review budget &amp; schedule details prior to project kick-off meeting.
+<br/><br/>
+ <!-- Done for the case#00076605 -->
+ <!--Commented below line for Case#00238668. -->
+<!--<b>Karla Rogers</b> Karla Rogers please create an LLC if the SunPower Contract Type is PPA(including EPC)-->
+
+<br/><br/>
+
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+</apex:outputpanel>
+
+<!--Start: Done for the case#00076605 -->
+<apex:outputpanel rendered="{!oppPer='75.00'}" >  
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+
+
+<b>Sales Analyst:</b> 1) Please schedule the 75% kickoff meeting at least 5 days from today to allow time for preparation. <br/>
+               2) Please attach a Schedule of Values to the Opportunity Role for the Credit Team to conduct a credit check.
+
+ <br/><br/>
+ 
+<b> Project Manager:</b> Please provide latest budget &amp; schedule to project designer at least 2 days prior to the project kick-off meeting.
+ <br/><br/>
+<b>Designer:</b> Please review budget &amp; schedule details prior to project kick-off meeting.
+ <br/><br/>
+ 
+<br/><br/>
+
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+</apex:outputpanel>
+<!-- END:Done for the case#00076605 00076605-->
+
+<apex:outputpanel rendered="{!oppPer='90'}" > 
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+<br/>
+<br/>
+<!--    For Case#00238668:Removing Below 2 lines -->
+<!--
+Sales Operations - 
+<br/>
+Please confirm that the LEAD SOURCE and PRIMARY CAMPAIGN SOURCE fields have been populated for this opportunity.
+-->
+
+</apex:outputpanel>
+ 
+<apex:outputpanel rendered="{!oppPer='100'}" >
+<!-- Proposal Designer: <b>{!proposalDesigner}</b><br/>  -->
+Project Designer: <b>{!projectDesigner}</b><br/>
+Structured Finance: <b>{!structuredFinance}</b><br/>
+Close Date: <b>{!OppObj.CloseDate}</b><br/>
+<br/>
+<br/>
+
+<!-- For case 00557545: edit this following lines
+{!OppObj.Lead_Analyst__c} Please send Projects Administration the <u>Project Summary for Handoff</u> email to expedite the creation of a job number.
+<br/>
+<strong>(Does not apply to Components only sales.)</strong>
+<br/>
+{!OppObj.Owner.Name}, please fill out a Dedication Request form, if appropriate. 
+-->
+
+<!-- Case 00572609: Requested to remove these following Lines
+{!systemAnalyst} please complete the SOV-1 process in e-Builder to expedite the creation of the job number.
+<br/>
+{!OppObj.Owner.Name} work with the Marketing team if a dedication request is necessary.
+<br/>
+<strong>(Does not apply to Components only sales.)</strong>
+-->
+
+<br/><br/>
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+</apex:outputpanel>
+
+</apex:component>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>TYPE</field>
+    </columns>
+    <columns>
+        <field>Account.Status__c</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 OR 2 OR (3 AND 4)) AND 5</booleanFilter>
+        <criteriaItems>
+            <column>SUBJECT</column>
+            <operator>startsWith</operator>
+            <value>Email: Partner Promotion Notification</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>SUBJECT</column>
+            <operator>startsWith</operator>
+            <value>Email: Partner Transition Notification</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>SUBJECT</column>
+            <operator>contains</operator>
+            <value>Terminated</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>SUBJECT</column>
+            <operator>contains</operator>
+            <value>Email</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Theater__c</column>
+            <operator>equals</operator>
+            <value>North America</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NA RVAR Partner Transitions</name>
+    <params>
+        <name>closed</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>te</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountActivity</reportType>
+    <roleHierarchyFilter>SunpowerCorporation</roleHierarchyFilter>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>SUBJECT</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_LAST30</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,654 @@
+<!-- 
+Page                    :   incentrailComm
+Related Class           :   incentiveCommCls
+Created By              :   Appirio Offshore(Hemant Garg)
+Created On              :   Nov 5, 2010
+Description             :   Incentive detail page for commercial dealers.
+--> 
+<apex:page controller="incentiveCommCls" tabStyle="Account" action="{!updateEvaluation}" sidebar="true" showHeader="{!hideHeaderForPartner}">
+<style>
+.disabledInput {readonly: true;}
+.hyper {color:blue;}
+.sample {background-color: #90EE90;}
+</style>
+
+<script type="text/javascript">
+  var inlineHelpMapLocal = {};
+  var displayDivMapLocal = {};
+  
+  function setHelpLocal(key, text) {
+    inlineHelpMapLocal[key] = text;
+  }
+  
+  function showHelpLocal(key, element) {
+    var help = inlineHelpMapLocal[key];
+    
+    if (!help) {
+      return;
+    }
+    
+    document.getElementById(key).className = "helpButtonOn";
+    var displayDiv = displayDivMapLocal[key];
+    if (!displayDiv) {
+      displayDiv = document.createElement("DIV");
+      displayDiv.className = "helpText";
+      displayDivMapLocal[key] = displayDiv;
+    }
+    displayDiv.style.display = '';
+    
+    var parentElement = element.parentNode;
+    parentElement.appendChild(displayDiv);
+    displayDiv.style.top = (getObjYLocal(element) + element.offsetHeight + 8 - getObjYLocal(parentElement)) + "px";
+    var helpFader = new MouseOverFadeHandler(null, displayDiv, false);
+    
+    displayDiv.innerHTML = help;
+    helpFader.setPosition();
+    var sidebar = document.getElementById("sidebarDiv");
+    
+    if (getCurrentStyleLocal(document.body, "direction") == "rtl") {
+      var right = getObjXLocal(parentElement) + parentElement.offsetWidth - getObjXLocal(element) - displayDiv.offsetWidth;
+      
+      if (sidebar) {
+        var sidebarLeft = getObjXLocal(parentElement) + parentElement.offsetWidth - getObjXLocal(sidebar);
+        if (right < sidebarLeft) {
+          right = sidebarLeft;
+        }
+      }
+      
+      if (right >= 0) {
+        displayDiv.style.right = right + "px";
+      }
+    } else {
+      var left = (getObjXLocal(element) - getObjXLocal(parentElement) + element.offsetWidth - displayDiv.offsetWidth);
+      
+      if (sidebar) {
+        var sidebarRight = getObjXLocal(sidebar) + sidebar.offsetWidth;
+        if (left < sidebarRight) {
+          left = sidebarRight;
+        }
+      }
+      
+      if (left >= 0) {
+        displayDiv.style.left = left + "px";
+      }
+    }
+    
+    helpFader.fadeIn();
+  }
+  
+  function hideHelpLocal(key) {
+    document.getElementById(key).className = "helpButton";
+    displayDivMapLocal[key].style.display = 'none';
+  }
+  
+  function getObjXLocal(obj) {
+    var x = 0;
+    var offset = obj;
+    while (offset != null) {
+      x += offset.offsetLeft;
+      offset = offset.offsetParent;
+    }
+    
+    return x;
+  }
+  
+  function getObjYLocal(obj) {
+    var y = 0;
+    var offset = obj;
+    while (offset != null) {
+      y += offset.offsetTop;
+      offset = offset.offsetParent;
+    }
+    
+    return y;
+  }
+  
+  function getCurrentStyleLocal(element, styleProp) {
+    if (element.currentStyle) {
+      return element.currentStyle[styleProp];
+    } else if (document.defaultView && document.defaultView.getComputedStyle) {
+      return document.defaultView.getComputedStyle(element, null).getPropertyValue(XBrowser.dashify(styleProp));
+    }
+    
+    return null;
+  }
+</script>
+    
+    <apex:form > 
+     <apex:pageBlock >
+          <table border="0" width="80%">
+          <tr width="60%">
+              <td>
+                    <apex:outputLabel style="text-weight: bold">
+                          <b>{!$Label.Account_Name}</b>
+                    </apex:outputLabel>
+              </td>
+              <td>
+                    <apex:outputText value="{!accountName}"/>
+              </td>
+              <td>
+                    <apex:outputLabel style="text-weight: bold">
+                          <b>{!$Label.PartnerType}</b>
+                    </apex:outputLabel>
+              </td>
+              <td>
+                    <apex:outputText value="{!partnerType}"/>
+              </td>
+              <apex:outputPanel rendered="{!IF(accTheatre=='Europe',false,true)}">
+              <td> <apex:outputLink title="{!$Label.ClickOpenDealerPF}" value="/apex/MDTF_Account?id={!$CurrentPage.parameters.accId}">View DP Fund Program Details</apex:outputLink>
+              </td>
+              </apex:outputPanel>
+          </tr>
+          <tr width="60%">
+              <td>
+                    <apex:outputLabel style="text-weight: bold">
+                          <b>{!$Label.PerformancePeriod}</b>
+                    </apex:outputLabel>
+              </td>
+              <td>
+                    <apex:outputText value="{!validEvalFromDate}"/>
+                    &nbsp; To &nbsp;
+                    <apex:outputText value="{!validEvalToDate}"/>
+              </td>
+             
+          </tr>
+          <tr>
+              <td>
+                  <apex:outputLabel title="{!$Label.PeriodRevencetgtset}"><b> {!$Label.PRevenueTarget} </b></apex:outputLabel>
+              </td>
+              <td>
+              {!CurrencySyb}
+                  <!-- <apex:outputfield value="{!ordSun.QTD_Net_Purchase_Amount__c}"/> --><!-- apex:outputText value="{!perRevenueTgt}"/ -->
+                  <apex:outputText value="{0,Number,###,###,###,##0.00}" >
+                    <apex:param value="{!netPurchaseAmt}" />
+                  </apex:outputText>
+                  {!CurrencySybm}
+              </td>  
+              <td>
+                  <!--apex:commandLink action="{!goToPreviousIncentivePage}" title="Previous" value="Incentive Jan-Jul2010 Link" target="_blank"/-->
+              </td>            
+          </tr>
+      </table>
+  </apex:pageBlock>
+        <apex:pageBlock title="{!$Label.DBCalculator}" >
+            <table border="1" width="100%">
+                <tr>
+                    <td width="50%" title="Minimum Requirement">Minimum Requirement</td>
+                    <td width="50%">
+                    <apex:outputText rendered="{!IF(minRequirementMet=='Yes', true , false)}">
+                    {!$Label.Yes}
+                    </apex:outputText>
+                    <apex:outputText rendered="{!IF(minRequirementMet=='No', true , false)}">
+                    {!$Label.No}
+                    </apex:outputText>
+                    <!-- <apex:outputText value="{!minRequirementMet}"/></td> -->
+                    </td>
+                </tr>
+                <tr>
+                    <!-- <td width="50%" title="{!$label.NetRevenuehelptext}">{!CurrencySyb} {!$label.ShippedBonusPeriod }</td> -->
+                    <td width="50%">
+                        <span id="spanId" class="helpButton">
+                          {!CurrencySyb} {!$label.ShippedBonusPeriod }
+                          <img title="" class="helpOrb" alt="" src="/s.gif" onmouseover="showHelpLocal('spanId', this);" onmouseout="hideHelpLocal('spanId');" />
+                          
+                          <script type="text/javascript">
+                            setHelpLocal('spanId', '{!$label.NetRevenuehelptext}');
+                          </script>
+                        </span>
+                    </td>
+                    <td width="50%"> 
+                        <apex:outputText value="{0,Number,###,###,###,##0.00}" >
+                        <apex:param value="{!netPurchaseAmt}" />
+                        </apex:outputText><!-- <apex:outputfield value="{!ordSun.QTD_Net_Purchase_Amount__c}"/> -->{!CurrencySybm}<!--apex:outputText value="{!comingSoon}"/--></td><!--{!netAmount}-->
+                </tr>  
+                <tr>
+                    <td width="50%" title="{!$label.InputDealerHelptxt}">{!CurrencySyb} {!$label.SBCalculator}</td>
+                    <td width="50%"><apex:inputText value="{!shipBonus}" onkeypress="return blockNonNumbers(this, event, true, true);">
+                    <!-- apex:actionSupport action="{!button}" event="onchange"/ -->
+                    </apex:inputText></td>                
+                </tr>
+                <tr>
+                    <td width="50%" title="{!$label.InputDealerestimateTxt} 2%">{!$label.BonusRate} 2%) {!$label.for} Elite (Proforma)</td>
+                    <td width="50%"><apex:inputText value="{!Bonus}" onkeypress="return blockNonNumbers(this, event, true, true);">
+                    <apex:actionSupport action="{!button}" event="onchange"/>
+                    </apex:inputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="50%" title="{!$label.CalculationHelptxt}">{!CurrencySyb} {!$label.TotalBonus}</td>
+                    <td width="50%"><apex:outputText value="{!totBonus}" rendered="{!isactive}"/></td>
+                </tr>
+                 <!-- <tr>
+                    <td width="50%">Dealer Program Fund Contribution (Proforma)</td>
+                    <td width="50%"><apex:outputText value="{!PfContri}" rendered="{!isactive}"/></td>
+                </tr>
+               <tr>
+                    <td width="50%">Check or Credit Memo Reward  (Proforma)</td>
+                    <td width="50%"><apex:outputText value="{!ChckRwd}" rendered="{!isactive}"/></td>
+                </tr>-->
+            </table> 
+        </apex:pageBlock> 
+        
+         <apex:pageBlock title="{!$Label.BonusAvail}"> 
+             <apex:pageBlockSection title="{!$Label.CBPlan}" collapsible="true" rendered="{!PbplFlag}" columns="1"><!-- changed rendered from pbpFlag to pbp1Flag-->
+        <table width="100%" cellpadding = "5">
+            <tr width ="100%"><td width="1%"></td>
+                <td width="30%"><b>{!$label.Metric}</b></td>
+                <td width="20%"><b>{!$label.Goal}</b></td>
+                <td width="20%"><b>{!$label.Achivement}</b></td>
+                <td width="15%"><b>{!$label.GoalMet}</b></td>
+                <td width="20%"><b>{!$label.Bonus}</b></td>
+            </tr>    
+            <apex:repeat value="{!BussinessPlan}" var="m">
+            
+                <tr class="{!IF(m.mtrP.metric.Goal_Met__c==true,'sample','')}">
+                    <td >
+                        <apex:commandLink action="{!showPb}" > 
+                            <apex:image value="{!$Resource.rgarrw}" width="10" height="10" rendered="{!NOT(m.expand)}"/>
+                            <apex:image value="{!$Resource.crgarw}" width="10" height="10" rendered="{!m.expand}"/>
+                            <apex:param name="pbId" value="{!m.mtrP.meetricTierRel.Id}"/>
+                            <!--<apex:actionSupport event="onclick"  />-->
+                        </apex:commandlink>
+                        
+                    </td>
+                 
+                    <td width="30%">
+                        <apex:outputPanel rendered="{!IF((m.mtrP.meetricTierRel.isRSMView__c==true) && (m.mtrP.meetricTierRel.Metric_Label__c!='Bonus for Meeting 6 Month Revenue Target') && (m.mtrP.meetricTierRel.Metric_Label__c!='Kw agreed target'),true,false)}">
+                            <apex:outputLabel rendered="{!IF(ISNULL(m.mtrP.metric.Metric_Description__c),false,true)}" value="{!m.mtrP.metric.Metric_Description__c}" title="{!m.mtrP.meetricTierRel.HelpText__c}"/>
+                            <apex:outputLabel rendered="{!IF(ISNULL(m.mtrP.metric.Metric_Description__c),true,false)}" value="{!m.mtrP.meetricTierRel.Metric_Label__c}" title="{!m.mtrP.meetricTierRel.HelpText__c}" />
+                         </apex:outputPanel>
+                         <apex:outputPanel rendered="{!IF((m.mtrP.meetricTierRel.isRSMView__c==false) || (m.mtrP.meetricTierRel.Metric_Label__c=='Bonus for Meeting 6 Month Revenue Target') || (m.mtrP.meetricTierRel.Metric_Label__c=='Kw agreed target'),true,false)}">
+                             <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!m.mtrP.meetricTierRel.Metric_Description__c}" title="{!m.mtrP.meetricTierRel.HelpText__c}" /> 
+                             <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!m.mtrP.meetricTierRel.Metric_Label__c}" title="{!m.mtrP.meetricTierRel.HelpText__c}" />                              
+                         </apex:outputPanel>
+                    </td>
+                    <td width="20%">
+                        <apex:outputPanel >
+                            <apex:inputCheckbox disabled="true" rendered="{!IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}"  value="{!m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c}"/>
+                            <apex:outputPanel rendered="{!IF(m.mtrP.meetricTierRel.isRSMView__c==true,true,false)}">
+                                <apex:outputPanel rendered="{!IF(ISNULL(m.mtrP.metric.Metric_Min_Value__c),false,true)}">
+                                    <apex:outputField id="goalToStayMin1"   value="{!m.mtrP.metric.Metric_Min_Value__c}" style="width : 50px" />
+                                    <!-- <script>document.getElementById('{!$Component.goalToStayMin1}').disabled = true; </script> -->
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!IF((ISNULL(m.mtrP.metric.Metric_Min_Value__c) && m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == false),true,false)}">
+                                    <apex:outputField id="goalToStayMin11"   value="{!m.mtrP.metric.Metric_Min_Value__c}" style="width : 50px" />
+                                    <!-- <script>document.getElementById('{!$Component.goalToStayMin11}').disabled = true; </script> -->
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!IF((m.mtrP.meetricTierRel.isRSMView__c==false),true,false)}">
+                                <apex:outputPanel rendered="{!IF(ISNULL(m.mtrP.meetricTierRel.Metric_Min_Value__c),false,true)}">
+                                    <apex:outputField id="goalToStayMin2"   value="{!m.mtrP.meetricTierRel.Metric_Min_Value__c}" style="width : 50px" />
+                                    <!-- <script>document.getElementById('{!$Component.goalToStayMin2}').disabled = true; </script> -->
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!IF(ISNULL(m.mtrP.meetricTierRel.Metric_Max_Value__c),false,true)}">
+                                <apex:outputField id="goalToStayMax" value="{!m.mtrP.meetricTierRel.Metric_Max_Value__c}" style="width : 50px"/>
+                                <!-- <script>document.getElementById('{!$Component.goalToStayMax}').disabled = true; </script> -->
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </td>
+                    <td width="20%">
+                        <apex:inputCheckbox value="{!m.mtrP.metric.Boolean_Achievement__c}" rendered="{!IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}" disabled="{!IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated')||(disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}"/>
+                       <!-- <apex:inputField id="achivement" rendered="{!IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true)}" value="{!m.mtrP.metric.Achievement_Value__c}" styleclass="width : 50px"/> -->
+                        <!--<script>document.getElementById('{!$Component.achivement}').disabled = {!IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}; </script>-->
+                        <apex:inputField id="achivement" rendered="{!NOT(IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}" value="{!m.mtrP.metric.Achievement_Value__c}" styleclass="width : 50px"/>
+                        &nbsp;&nbsp;<apex:outputField value="{!m.mtrP.metric.Achievement_Value__c}" rendered="{!(IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}"/>
+                    </td>
+                    <td width="15%">
+                        <apex:inputCheckbox value="{!m.mtrP.metric.Goal_Met__c}" disabled="{!IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') && (isExecutiveManager) && (disableButton==false),false,true)}"  />
+                    </td>
+                    <td width="20%">
+                        <apex:outputPanel >
+                            <apex:outputField id="incentive" value="{!m.mtrP.meetricTierRel.Incentive_Amount__c}" styleclass="width : 50px" />
+                            <!--<script>document.getElementById('{!$Component.incentive}').disabled = true; </script>-->
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:outputLink value="/{!m.mtrP.metric.Id}" id="theLink" rendered="{!IF((ShowLink == true) && (NOT(ISNULL(m.mtrP.metric.Id))),true,false) }" target="_blank">{!$Label.Audit} </apex:outputLink>
+                    </td>
+                </tr>
+                <tr>
+                    <apex:outputPanel rendered="{!m.expand}">
+                        <apex:repeat value="{!m.mtrC}" var="a">
+                            <tr class="{!IF(a.metric.Goal_Met__c==true,'sample','')}">
+                                <td></td>
+                                 
+                                <td width="30%">
+                                    <apex:outputPanel rendered="{!IF((a.meetricTierRel.isRSMView__c==true) && (a.meetricTierRel.Metric_Label__c!='Bonus for Meeting 6 Month Revenue Target') && (a.meetricTierRel.Metric_Label__c!='Kw agreed target'),true,false)}">
+                                        <apex:outputLabel rendered="{!IF(ISNULL(a.metric.Metric_Description__c),false,true)}" value="{!a.metric.Metric_Description__c}" title="{!a.meetricTierRel.HelpText__c}"/>
+                                        <apex:outputLabel rendered="{!IF(ISNULL(a.metric.Metric_Description__c),true,false)}" value="{!a.meetricTierRel.Metric_Label__c}" title="{!a.meetricTierRel.HelpText__c}" />
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!IF((a.meetricTierRel.isRSMView__c==false) || (a.meetricTierRel.Metric_Label__c=='Bonus for Meeting 6 Month Revenue Target') || (a.meetricTierRel.Metric_Label__c=='Kw agreed target'),true,false)}">
+                                        <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!a.meetricTierRel.Metric_Description__c}" title="{!a.meetricTierRel.HelpText__c}" /> 
+                                        <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!a.meetricTierRel.Metric_Label__c}" title="{!a.meetricTierRel.HelpText__c}" />                                         
+                                    </apex:outputPanel>
+                                </td>
+                               
+                                <td width="20%">
+                                    <apex:outputPanel >
+                                        <apex:inputCheckbox disabled="true" rendered="{!IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}"  value="{!a.meetricTierRel.Boolean_Metric_Y_N__c}"/>
+                                        <apex:outputPanel rendered="{!IF(a.meetricTierRel.isRSMView__c==true,true,false)}">
+                                            <apex:outputPanel rendered="{!IF(ISNULL(a.metric.Metric_Min_Value__c),false,true)}">
+                                                <apex:outputField id="goalToStayMin1"   value="{!a.metric.Metric_Min_Value__c}" style="width : 50px" />
+                                                <!-- <script>document.getElementById('{!$Component.goalToStayMin1}').disabled = true; </script> -->
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!IF((ISNULL(a.metric.Metric_Min_Value__c) && a.meetricTierRel.Boolean_Metric_Y_N__c == false),true,false)}">
+                                                <apex:outputField id="goalToStayMin11"   value="{!a.metric.Metric_Min_Value__c}" style="width : 50px" />
+                                                <!-- <script>document.getElementById('{!$Component.goalToStayMin11}').disabled = true; </script> -->
+                                            </apex:outputPanel>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!IF((a.meetricTierRel.isRSMView__c==false),true,false)}">
+                                            <apex:outputPanel rendered="{!IF(ISNULL(a.meetricTierRel.Metric_Min_Value__c),false,true)}">
+                                                <apex:outputField id="goalToStayMin2"   value="{!a.meetricTierRel.Metric_Min_Value__c}" style="width : 50px" />
+                                                <!-- <script>document.getElementById('{!$Component.goalToStayMin2}').disabled = true; </script> -->
+                                            </apex:outputPanel>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!IF(ISNULL(a.meetricTierRel.Metric_Max_Value__c),false,true)}">
+                                            <apex:outputField id="goalToStayMax" value="{!a.meetricTierRel.Metric_Max_Value__c}" style="width : 50px"/>
+                                            <!-- <script>document.getElementById('{!$Component.goalToStayMax}').disabled = true; </script> -->
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>                                      
+                                </td>
+                                <td width="20%">
+                                    <apex:inputCheckbox value="{!a.metric.Boolean_Achievement__c}" rendered="{!IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}" disabled="{!IF((a.meetricTierRel.Metric_Input_Type__c=='Automated')||(disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}"/>
+                                    <!-- <apex:inputField id="achivement" rendered="{!IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true)}" value="{!a.metric.Achievement_Value__c}" style="width : 50px"/>
+                                    <script>document.getElementById('{!$Component.achivement}').disabled = {!IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}; </script> -->
+                                    <apex:inputField id="achivement" rendered="{!NOT(IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}" value="{!a.metric.Achievement_Value__c}" styleclass="width : 50px"/>
+                                    &nbsp;&nbsp;<apex:outputField value="{!a.metric.Achievement_Value__c}" rendered="{!(IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}"/>
+                                </td>
+                                <td width="15%">
+                                    <apex:inputCheckbox value="{!a.metric.Goal_Met__c}" disabled="{!IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') && (isExecutiveManager) && (disableButton==false),false,true)}"  />
+                                </td>
+                                <td width="20%">
+                                    <apex:outputPanel >
+                                        <apex:outputField id="incentive" value="{!a.meetricTierRel.Incentive_Amount__c}" style="width : 15%"/>
+                                        <!--<script>document.getElementById('{!$Component.incentive}').disabled = true; </script> -->
+                                    </apex:outputPanel>
+                                </td>
+                                <td>
+                                    <apex:outputLink value="/{!a.metric.Id}" id="theLink" rendered="{!IF((ShowLink == true) && (NOT(ISNULL(a.metric.Id))),true,false) }" target="_blank">{!$Label.Audit} </apex:outputLink>
+                                </td>
+                            </tr>
+                        </apex:repeat>  
+                    </apex:outputPanel>
+                </tr>
+            </apex:repeat>
+        </table>
+      </apex:pageBlockSection>
+          <!--- Dealer Training --->
+          <apex:pageBlockSection title="{!$Label.Dtraining}" collapsible="true" rendered="{!TrnlFlag}" columns="1"><!-- changed rendered from trnFlag to trn1Flag-->
+        <table width="100%" cellpadding = "5">
+            <tr width ="100%"><td width="1%"></td>
+                <td width="30%"><b>{!$label.Metric}</b></td>
+                <td width="20%"><b>{!$label.Goal}</b></td>
+                <td width="20%"><b>{!$label.Achivement}</b></td>
+                <td width="15%"><b>{!$label.GoalMet}</b></td>
+                <td width="20%"><b>{!$label.Bonus}</b></td>
+            </tr>    
+            <apex:repeat value="{!Trainings}" var="m">
+            
+                <tr class="{!IF(m.mtrP.metric.Goal_Met__c==true,'sample','')}">
+                    <td>
+                    
+                        <apex:commandLink action="{!showTrg}" > 
+                            <apex:image value="{!$Resource.rgarrw}" width="10" height="10" rendered="{!NOT(m.expand)}"/>
+                            <apex:image value="{!$Resource.crgarw}" width="10" height="10" rendered="{!m.expand}"/>
+                            <apex:param name="trId" value="{!m.mtrP.meetricTierRel.Id}"/>
+                            <!--<apex:actionSupport event="onclick"  />-->
+                        </apex:commandlink>
+                        
+                    </td>
+                 
+                    <td width="30%">
+                        <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!m.mtrP.meetricTierRel.Metric_Description__c}" title="{!m.mtrP.meetricTierRel.HelpText__c}"/>
+                        <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!m.mtrP.meetricTierRel.Metric_Label__c}" title="{!m.mtrP.meetricTierRel.HelpText__c}"/>                        
+                    </td>
+                    <td width="20%">
+                        <apex:inputCheckbox disabled="true" rendered="{!IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}"  value="{!m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c}"/>
+                        <apex:outputPanel rendered="{!IF(ISNULL(m.mtrP.meetricTierRel.Metric_Min_Value__c),false,true)}">
+                            <apex:outputField id="goalToStayMin"   value="{!m.mtrP.meetricTierRel.Metric_Min_Value__c}" style="width : 50px"/>
+                            <!-- <script>document.getElementById('{!$Component.goalToStayMin}').disabled = true; </script>--><!-- removed script and changed inputfield to outputfield -->
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IF(ISNULL(m.mtrP.meetricTierRel.Metric_Max_Value__c),false,true)}">
+                            <apex:outputField id="goalToStayMax" value="{!m.mtrP.meetricTierRel.Metric_Max_Value__c}" style="width : 50px"/>
+                            <!-- <script>document.getElementById('{!$Component.goalToStayMax}').disabled = true; </script>--><!-- removed script and changed inputfield to outputfield -->
+                        </apex:outputPanel>
+                    </td>
+                    <td width="20%">
+                        <apex:inputCheckbox value="{!m.mtrP.metric.Boolean_Achievement__c}" rendered="{!IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}" disabled="{!IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated')||(disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}"/>
+                        <!-- <apex:inputField id="achivement" rendered="{!IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true)}" value="{!m.mtrP.metric.Achievement_Value__c}" style="width : 50px"/>
+                        <script>document.getElementById('{!$Component.achivement}').disabled = {!IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}; </script> -->
+                        <apex:inputField id="achivement" rendered="{!NOT(IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}" value="{!m.mtrP.metric.Achievement_Value__c}" styleclass="width : 50px"/>
+                        &nbsp;&nbsp;<apex:outputField value="{!m.mtrP.metric.Achievement_Value__c}" rendered="{!(IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (m.mtrP.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(m.mtrP.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}"/>
+                    </td>
+                    <td width="15%">
+                        <apex:inputCheckbox value="{!m.mtrP.metric.Goal_Met__c}" disabled="{!IF((m.mtrP.meetricTierRel.Metric_Input_Type__c=='Automated') && (isExecutiveManager) && (disableButton==false),false,true)}"  />
+                    </td>
+                    <td width="20%">
+                        <apex:outputPanel >
+                            <apex:outputField id="incentive" value="{!m.mtrP.meetricTierRel.Incentive_Amount__c}" style="width : 50px"/>
+                            <!-- <script>document.getElementById('{!$Component.incentive}').disabled =true; </script> -->
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:outputLink value="/{!m.mtrP.metric.Id}" id="theLink" rendered="{!IF((ShowLink == true) && (NOT(ISNULL(m.mtrP.metric.Id))),true,false) }" target="_blank">{!$Label.Audit} </apex:outputLink>
+                    </td>
+                </tr>
+                <tr>
+                    <apex:outputPanel rendered="{!m.expand}">
+                        <apex:repeat value="{!m.mtrC}" var="a">
+                            <tr class="{!IF(a.metric.Goal_Met__c==true,'sample','')}">
+                                <td></td>
+                                 
+                                <td width="30%">
+                                    <apex:outputLabel rendered="{!ISPICKVAL( $User.UserType, 'PowerPartner')}" value="{!a.meetricTierRel.Metric_Description__c}" title="{!a.meetricTierRel.HelpText__c}"/ >
+                                    <apex:outputLabel rendered="{!NOT(ISPICKVAL( $User.UserType, 'PowerPartner'))}" value="{!a.meetricTierRel.Metric_Label__c}" title="{!a.meetricTierRel.HelpText__c}"/ >                                    
+                                </td>
+                               
+                                <td width="20%">
+                                    <apex:inputCheckbox disabled="true" rendered="{!IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}"  value="{!a.meetricTierRel.Boolean_Metric_Y_N__c}"/>
+                                    <apex:outputPanel rendered="{!IF(ISNULL(a.Metric.Metric_Min_Value__c),false,true)}">
+                                        <apex:outputField id="goalToStayMin"   value="{!a.Metric.Metric_Min_Value__c}" style="width : 50px"/>
+                                         <!--<script>document.getElementById('{!$Component.goalToStayMin}').disabled = true; </script>--><!-- removed script and changed inputfield to outputfield -->
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!IF(ISNULL(a.meetricTierRel.Metric_Max_Value__c),false,true)}">
+                                        <apex:outputField id="goalToStayMax" value="{!a.meetricTierRel.Metric_Max_Value__c}" style="width : 50px"/>
+                                       <!-- <script>document.getElementById('{!$Component.goalToStayMax}').disabled = true; </script>--><!-- removed script and changed inputfield to outputfield -->
+                                    </apex:outputPanel>
+                                </td>
+                                <td width="20%">
+                                    <apex:inputCheckbox value="{!a.metric.Boolean_Achievement__c}" rendered="{!IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,true,false)}" disabled="{!IF((a.meetricTierRel.Metric_Input_Type__c=='Automated')||(disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}"/>
+                                    <!-- <apex:inputField id="achivement" rendered="{!IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true)}" value="{!a.metric.Achievement_Value__c}" style="width : 50px"/>
+                                    <script>document.getElementById('{!$Component.achivement}').disabled = {!IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)}; </script> --->
+                                    <apex:inputField id="achivement" rendered="{!NOT(IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}" value="{!a.metric.Achievement_Value__c}" styleclass="width : 50px"/>
+                                    &nbsp;&nbsp;<apex:outputField value="{!a.metric.Achievement_Value__c}" rendered="{!(IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') || (disableButton == true) || (a.meetricTierRel.Manual_Partner__c==false && partnerExecutive==true),true,false)) && (IF(a.meetricTierRel.Boolean_Metric_Y_N__c == true,false,true))}"/>
+                                </td>
+                                <td width="15%">
+                                    <apex:inputCheckbox value="{!a.metric.Goal_Met__c}" disabled="{!IF((a.meetricTierRel.Metric_Input_Type__c=='Automated') && (isExecutiveManager) && (disableButton==false),false,true)}"  />
+                                </td>
+                                <td width="20%">
+                                    <apex:outputPanel >
+                                        <apex:outputField id="incentive" value="{!a.meetricTierRel.Incentive_Amount__c}" style="width : 15%"/>
+                                        <!-- <script>document.getElementById('{!$Component.incentive}').disabled = true; </script> -->
+                                    </apex:outputPanel>
+                                </td>
+                                <td>
+                                    <apex:outputLink value="/{!a.metric.Id}" id="theLink" rendered="{!IF((ShowLink == true) && (NOT(ISNULL(a.metric.Id))),true,false) }" target="_blank">{!$Label.Audit} </apex:outputLink>
+                                </td>
+                            </tr>
+                        </apex:repeat>  
+                    </apex:outputPanel>
+                </tr>
+            </apex:repeat>
+        </table>
+      </apex:pageBlockSection>
+                 <!-- 
+              <table style="border-bottom:none;border-top:solid;border-top-color:grey;"  width="100%">
+                          <tr width="100%">
+                              <td width="15%">
+                              &nbsp;
+                              </td>
+                              <td width="10%">
+                              &nbsp;
+                              </td>
+                              <td width="7%">
+                              &nbsp;
+                              </td>
+                              <td width="7%">
+                              &nbsp;
+                              </td>
+                              <td width="23%" align="left" title="{!$label.IfDealermeets}">
+                              <b>{!$label.TPBPercent}: </b><input type="text" value="{!possibleIncentive}" size="5" disabled="true"/>
+                              </td>
+                          </tr>
+                      </table> 
+              <table width="100%">
+                          <tr width="100%">
+                              <td width="23%">
+                              &nbsp;
+                              </td>
+                              <td width="9%">
+                              &nbsp;
+                              </td>
+                              <td width="35%" align="left" title="{!$label.ForThoseBonusTxt}">
+                              <b>{!$label.BEarned}</b> ({!$label.ifMinimumReqMet} {!Tname} {!$label.TeirBmet}):<input type="text" value="{!earnedIncentive}" size="5" disabled="true"/>
+                              </td>
+                          </tr>
+                      </table> 
+                       -->        
+              <p align="center">
+    <table align="center" width="100%">
+        <tr>
+         <td width="100%" height="5%" align="center">
+            <apex:commandButton styleClass="btn"  value="{!$Label.Save}" action="{!updateEvaluation}" rendered="{!IF((disableEditButton == false)||(PartnerExecutive == true && accTheatre == 'Europe'),false,true)}"> 
+                <font size="3">
+                </font>
+            </apex:commandButton>
+            <apex:commandButton styleClass="btn"  value="{!$Label.Edit}" action="{!enableInputFields}" rendered="{!IF((disableEditButton == false)||(PartnerExecutive == true && accTheatre == 'Europe'),false,true)}"/>  <!-- "{!disableEditButton}" -->
+            </td>
+         </tr>
+        </table>  
+    </p>       
+        </apex:pageBlock>
+
+        <apex:pageBlock >
+            <table border="1" width="100%">
+                <tr>
+                    <td width="50%">{!$Label.MaxBonusAcc}</td>
+                    <td width="50%"><apex:outputText value="{!totalPDFNumber}%"/></td>
+                </tr>
+            </table> 
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <table border="0" width="100%">
+                <tr> 
+                    <td width="33%" nowrap="nowrap">Total Funds &nbsp;<apex:inputText value="{!totalFunds}" disabled="true"/></td>
+                    <td width="33%" nowrap="nowrap">Partner Development Funds &nbsp;<apex:inputText value="{!PDFNumber}" disabled="true"/></td>
+                    <td width="33%" nowrap="nowrap">Credit Memo &nbsp;<apex:inputText value="{!creditMemoNumber}" disabled="true"/></td>
+                </tr>
+            </table>
+        </apex:pageBlock>
+        <!-- Start -->
+  
+          <!-- <apex:pageBlockSectionItem >
+              <apex:outputLabel >{!$label.TotalIncentive} %</apex:outputLabel>
+              <apex:inputText value="{!totalIncentive}" disabled="true"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem >
+              <apex:outputLabel >% {!$Label.PDF}</apex:outputLabel>
+              <apex:inputText value="{!partnerDevelopmentFunds}" disabled="true"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem >
+              <apex:outputLabel >% {!$Label.CreditMemo} </apex:outputLabel>
+              <apex:inputText value="{!CreditMemo}" disabled="true"/>
+          </apex:pageBlockSectionItem>-->
+         <!-- Reshma Commented Code --> 
+      <!--<apex:pageBlock title="{!$Label.IncentiveInfo}">
+     <apex:pageBlockSection columns="3">    
+          <apex:pageBlockSectionItem >
+              <apex:outputLabel >{!$Label.TotalFund}</apex:outputLabel>
+              <apex:inputText value="{!totalFunds}" disabled="true"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem >
+              <apex:outputLabel >{!$Label.PDF}</apex:outputLabel>
+              <apex:inputText value="{!PDFNumber}" disabled="true"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem >
+              <apex:outputLabel >{!$Label.CreditMemo}</apex:outputLabel>
+              <apex:inputText value="{!creditMemoNumber}" disabled="true"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+    <p align="center">
+      <table>
+          <tr>
+              <td>
+                  <apex:commandButton styleClass="btn" action="{!backToAccount}" value="{!$Label.BackAccount}" title="{!$Label.ClickAccount}" rendered="{!HideHeaderForPartner}"/>
+              </td>
+          </tr>
+      </table>
+    </p>
+  </apex:pageBlock> -->
+        <!--End -->
+        <!-- End Reshma commented the below code -->
+        <!---Start--->
+    <!--<apex:pageblock title="Bonuses Available2">
+       
+        
+      <p align="center">
+    <table align="center" width="100%">
+        <tr>
+         <td width="100%" height="5%" align="center">
+            <apex:commandButton styleClass="btn"  value="Save" action="{!updateEvaluation}" rendered="{!disableEditButton}">
+                <font size="3">
+                </font>
+            </apex:commandButton>
+            <apex:commandButton styleClass="btn"  value="Edit" action="{!enableInputFields}" rendered="{!disableEditButton}"/>
+            </td>
+         </tr>
+        </table>  
+    </p>      
+    </apex:pageblock> -->
+        <!--end --->    
+    </apex:form>
+
+<script>
+    
+function blockNonNumbers(obj, e, allowDecimal, allowNegative)
+{
+    //alert('hRRhhiiuj'+obj+'--'+e);
+    var key;
+    var isCtrl = false;
+    var keychar;
+    var reg;
+    
+    if(window.event) {
+        key = e.keyCode;
+        isCtrl = window.event.ctrlKey
+    }
+    else if(e.which) {
+        key = e.which;
+        isCtrl = e.ctrlKey;
+    }
+    
+    if (isNaN(key)) return true;
+    
+    keychar = String.fromCharCode(key);
+    
+    // check for backspace or delete, or if Ctrl was pressed
+    if (key == 8 || isCtrl)
+    {
+        return true;
+    }
+    
+    reg = /\d/;
+    var isFirstN = allowNegative ? keychar == '-' && obj.value.indexOf('-') == -1 : false;
+    var isFirstD = allowDecimal ? keychar == '.' && obj.value.indexOf('.') == -1 : false;
+    //alert(isFirstN + "--" +isFirstD + "--" +reg.test(keychar));
+    return isFirstN || isFirstD || reg.test(keychar);
+}
+
+
+
+</script>  
+  
+</apex:page>

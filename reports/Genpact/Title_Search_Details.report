@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c.Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.TEST_Partner_Facts__c</field>
+    </columns>
+    <columns>
+        <field>Account.Business_Unit1__c</field>
+    </columns>
+    <columns>
+        <field>Account.APNs__c</field>
+    </columns>
+    <columns>
+        <field>Account.xxxxx__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Property Details for lien filings</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c.Dealer_Name__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_NAME</column>
+            <operator>notContain</operator>
+            <value>Test,Draft</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Duplicate,Cancellation with RMA,Terminated</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Title Search Details</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$LeasePayment__c@LeasePayment__c.End_Customer_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c.Lease__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c.Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-12-22</startDate>
+    </timeFrameFilter>
+</Report>

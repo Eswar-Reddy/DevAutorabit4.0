@@ -1,0 +1,23 @@
+<apex:page controller="SendLendingAgreementConfirmationCtrl" showHeader="false" sidebar="false">
+   
+   
+   
+   <script type="text/javascript">
+   window.onload = function(){
+       init();
+   }
+   
+   function init(){
+      var qId = '{!quoteId}';
+      var r = confirm("WARNING: You can only generate one Lending Agreement per customer.Is this your final quote for this customer?");
+      if (r == true) {
+            window.open('/apex/createleasedocsvf?id='+qId+'&show=true','_self');
+      }
+      else{
+          var accId = '{!accountId}';
+          window.open('/'+accId,'_self');
+      } 
+   }
+   </script>
+   
+</apex:page>

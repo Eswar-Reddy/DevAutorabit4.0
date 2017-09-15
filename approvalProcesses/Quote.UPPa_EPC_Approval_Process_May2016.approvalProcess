@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <type>adhoc</type>
+            </approver>
+        </assignedApprover>
+        <description>UPPa EPC Approval Process First Step</description>
+        <label>UPPa EPC Approval Process First Step</label>
+        <name>UPPa_EPC_Approval_Process_First_Step</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder1</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder1</label>
+        <name>Placeholder1</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder2</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder2</label>
+        <name>Placeholder2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>brian.ross@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Finance and Sales Ops approval.</description>
+        <label>UPPa Finance Approval EPC</label>
+        <name>UPPa_Finance_Approval_EPC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ty.daul@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa Binding Offer SVP</description>
+        <entryCriteria>
+            <booleanFilter>1 or 2 or (3 and 4)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>UPPa Binding Offer SVP</label>
+        <name>UPPa_Binding_Offer_SVP</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>eduardo.medina@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa Binding Offer Global President</description>
+        <entryCriteria>
+            <booleanFilter>1 or 2 or (3 and 4)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>12</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.25</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>UPPa Binding Offer Global President</label>
+        <name>UPPa_Binding_Offer_Global_President</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>tom.werner@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>tom.werner@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa DRC Approval</description>
+        <entryCriteria>
+            <booleanFilter>1 or (2 and 3) or (2 and 4 and 5)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>12</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.25</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <label>UPPa DRC Approval</label>
+        <name>UPPa_DRC_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>UPPa EPC Approval Process May 2016</description>
+    <emailTemplate>Quote/U_C_Deal_Sheet</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND 6</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Binding Offer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Quote.RecordType</field>
+            <operation>equals</operation>
+            <value>Proposal Quote</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>UPP Americas</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>EPC,Development</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Territory_Text__c</field>
+            <operation>notContain</operation>
+            <value>Business Development</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Opportunity_type__c</field>
+            <operation>notEqual</operation>
+            <value>Steed,Biz Dev Residential,ESP</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Udpat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Rejection_Email_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Binding_Offer_Submission_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Set_Initial_Submitter</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>UPPa EPC Approval Process May2016</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

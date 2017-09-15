@@ -1,0 +1,99 @@
+<apex:page controller="DealerLocatorController" sidebar="false" showHeader="false" standardStylesheets="false">
+    <apex:form >
+        <apex:panelGrid columns="3">
+            <apex:outputText value="Zip Code"/>
+            <apex:inputText value="{!baseLocation}" size="10"/>
+            <apex:commandButton value="Search" action="{!onSearch}" rerender="results" oncomplete=""/>
+        </apex:panelGrid>
+        
+        <apex:outputPanel id="results" layout="block">
+        
+        <apex:outputPanel layout="block" style="color: red">
+            <apex:messages />
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" rendered="{!AND(searched,empty)}">
+        
+            <span>
+            Your search returned no results.
+            </span>
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" rendered="{!AND(searched,NOT(empty))}">
+        <!-- SiteCatalyst code version: H.19.4.
+Copyright 1997-2009 Omniture, Inc. More info available at
+http://www.omniture.com --> 
+<script language="JavaScript" type="text/javascript"><!--
+/* You may give each page an identifying name, server, and channel on
+the next lines. */
+s.pageName="en_US/residential/products-services/services/our-dealers/dealer-locator-list"
+s.server=""
+s.channel="/residential"
+s.pageType=""
+s.prop1="/residential"
+s.prop2="/residential/products-services"
+s.prop3="/residential/products-services/services"
+s.prop4="/residential/products-services/services/our-dealers"
+s.prop13="en_US"
+/* Conversion Variables */
+s.campaign=""
+s.state=""
+s.zip=""
+s.events=""
+s.products=""
+s.purchaseID=""
+s.eVar1=""
+s.eVar2=""
+s.eVar3=""
+s.eVar4=""
+s.eVar5=""
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();if(s_code)document.write(s_code)//--></script> 
+<script language="JavaScript" type="text/javascript"><!--
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+//--></script><noscript><a href="http://www.omniture.com" title="Web Analytics"><img
+
+src="http://metrics.sunpowercorp.com/b/ss/spcDev/1/H.19.4--NS/0"
+
+height="1" width="1" border="0" alt="" /></a></noscript><!--/DO NOT REMOVE/--> 
+<!-- End SiteCatalyst code version: H.19.4. -->
+            <table>
+                <tr>
+                    <th>Dealer</th>
+                    <th>Tier</th>
+                    <th>Street</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip Code</th>
+                    <th>Distance (Miles)</th>
+                </tr>
+                <apex:repeat var="row" value="{!resultRows}">
+                <tr>
+                    <td>
+                        <apex:outputText value="{!row.account.Name}"/>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!row.account.Dealer_Tier__c}"/>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!row.account.BillingStreet}"/>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!row.account.BillingCity}"/>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!row.account.BillingState}"/>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!row.account.BillingPostalCode}"/>
+                    </td>
+                    <td>
+                        <apex:outputText value="{!row.distance}"/>
+                    </td>
+                </tr>
+                </apex:repeat>
+            </table>
+        </apex:outputPanel>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

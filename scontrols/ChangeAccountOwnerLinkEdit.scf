@@ -1,0 +1,28 @@
+<html>
+<script src="/soap/ajax/13.0/connection.js" type="text/javascript"></script> 
+<script src="/soap/ajax/13.0/apex.js" type="text/javascript"></script>
+<script>
+ function changeOwnerURL(){
+     url = '/{!Account.Id}/a?retURL=%2F{!Account.Id}';
+     newUrl = '/{!Account.Id}/a?retURL=%2F{!Account.Id}?isChangeOwner=1';      
+     //var anchorLinks1 = window.parent.document.getElementById('change');    
+     var anchorTags = window.parent.document.getElementsByTagName('a');        
+     var anchorTagsLength = anchorTags.length;          
+      for(var a=0; a < anchorTagsLength ; a++){
+       var anchorLinks1 = anchorTags[a];
+          if(anchorTags[a].getAttribute('href')!=null){           
+             if(anchorTags[a].getAttribute('href').indexOf(url)>=0 &&     anchorTags[a].getAttribute('href').indexOf('isChangeOwner=1')<0){   
+             	anchorTags[a].setAttribute('href',newUrl);
+             }
+         }
+      }
+
+    var loc = window.parent.location.href;
+    if(loc.indexOf('isChangeOwner=1')>0){
+       sforce.apex.execute("OpportunitySharingController","shareOpportunities",{accID:'{!Account.Id}'});
+    }
+ }
+ 
+ window.onload = function(){ changeOwnerURL(); };
+ </script>
+</html>

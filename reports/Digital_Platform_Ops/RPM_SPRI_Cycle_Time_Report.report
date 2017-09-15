@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Project_Task__c$Residential_Project__c.Name</field>
+    </columns>
+    <columns>
+        <field>Project_Task__c$Residential_Project__c.RecordType</field>
+    </columns>
+    <columns>
+        <field>Project_Task__c$Residential_Project__c.Project_Template__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Average</aggregateTypes>
+        <field>Project_Task__c$Time_from_Project_Start__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(((1 or 2 or 3 or 4) AND 5) AND 6) AND 7</booleanFilter>
+        <criteriaItems>
+            <column>Project_Task__c$Name</column>
+            <operator>equals</operator>
+            <value>Perform Site Survey</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Task__c$Name</column>
+            <operator>equals</operator>
+            <value>Complete Design Package</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Task__c$Name</column>
+            <operator>equals</operator>
+            <value>System Installation Complete</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Task__c$Name</column>
+            <operator>equals</operator>
+            <value>Receive PTO</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Task__c$Time_from_Project_Start__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Task__c$Residential_Project__c.RecordType</column>
+            <operator>equals</operator>
+            <value>Residential_Project__c.SPD</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Task__c$Residential_Project__c.Project_Template__c</column>
+            <operator>equals</operator>
+            <value>SPRI - TEMPLATE</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <aggregateType>Average</aggregateType>
+        <dateGranularity>Day</dateGranularity>
+        <field>Project_Task__c$Name</field>
+        <sortByName>Project_Task__c$Time_from_Project_Start__c</sortByName>
+        <sortOrder>Asc</sortOrder>
+        <sortType>Aggregate</sortType>
+    </groupingsDown>
+    <name>RPM SPRI Cycle Time Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Project_Tasks__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Project_Task__c$Residential_Project__c.Project_Template__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Project_Task__c$End_DateTime__c</dateColumn>
+        <interval>INTERVAL_LAST30</interval>
+    </timeFrameFilter>
+</Report>

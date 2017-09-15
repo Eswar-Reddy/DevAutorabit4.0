@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Territory</field>
+    </columns>
+    <columns>
+        <field>Opportunity$CloseDate</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.OpportunityLineItems$Quantity</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$PricebookEntry.Product2</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Product_Family__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$Product_Family__c</column>
+            <operator>contains</operator>
+            <value>mounting system</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>notEqual</operator>
+            <value>06 – Closed Won,07 – Closed Lost</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$Product_Family__c</column>
+            <operator>equals</operator>
+            <value>mounting systems - ground</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$PricebookEntry.Product2</column>
+            <operator>contains</operator>
+            <value>C7</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>C7 Pipeline</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Products_and_Schedules_and_Site__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Opportunity.OpportunityLineItems$PricebookEntry.Product2</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <territoryHierarchyFilter>UPPa154641</territoryHierarchyFilter>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2012-01-02</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>NH_Community__c$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Lot_Number__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Escrow_Date__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Account__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Comment__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Post Installation, Summary of all homes in Community and their current state</description>
+    <filter>
+        <criteriaItems>
+            <column>NH_Community__c$Name</column>
+            <operator>contains</operator>
+            <value>stationhouse</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Critical_Path__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</column>
+            <operator>equals</operator>
+            <value>In Progress</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Trim_Promised__c</column>
+            <operator>lessThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</column>
+            <operator>notEqual</operator>
+            <value>System Installation</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NH Community Interconnection Summary</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_w_Residential_Proj_w_Proj_Tasks__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>NH_Community__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

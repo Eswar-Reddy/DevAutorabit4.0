@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Rebate_Authority__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Rebate_Reserved__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Rebate_Reservation_Confirmation__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Expected_Rebate__c</column>
+            <operator>equals</operator>
+            <value>USD 0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Pending Transfer,Duplicate,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notContain</operator>
+            <value>Gabi</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Rebate_Authority__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Site_State_Prov__c</column>
+            <operator>equals</operator>
+            <value>ca,az,ny,nv</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Rebate - Lease Payment</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

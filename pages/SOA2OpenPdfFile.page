@@ -1,0 +1,107 @@
+<apex:page controller="SOA2OpenPdfFileController" showHeader="false" sidebar="false" action="{!findAllDocuments}" standardStylesheets="false">
+<script>
+function displayErrorMsg(){
+    if('{!ERROR}' != ''){
+        alert("{!$Label.SOA2NoRecordFound}");
+        if(window.parent){
+             window.parent.close();
+        }else{
+             window.close();
+        }    
+    }
+}
+window.onload = displayErrorMsg;
+</script>
+<style>
+ .body{
+   background-color:#FFF;
+   font-size:9px;
+ }
+ .blk_t3 {
+    background-color: #000;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+    padding: 2px;
+    text-align:left;
+}
+.data-text-bold {
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    color:#000;
+}
+.datatable-std-row-odd {
+    background-color:#FFFFFF;
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+
+.datatable-std-row-even {
+    background-color:#F4F4F4;
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+.datatable-std-col {
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+.waitingSearchDiv .waitingHolder {
+    font-weight:bold;
+    font-size:1.20em;
+    position:relative;
+    padding:0.5em;
+    white-space:nowrap;
+    margin: auto;
+    background-color:#fff;
+    border:0px;
+}
+</style>
+<apex:form >
+  <apex:actionFunction name="openDocument" action="{!openDocument}" reRender="searchArea" status="status">
+     <apex:param name="a" value="" assignTo="{!selectedAttachment}"/>
+  </apex:actionFunction>
+<apex:outputPanel id="searchArea">
+<table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+         <th class="blk_t3">
+                    Doc No. 
+         </th>
+         <th class="blk_t3">
+              Transaction Type 
+         </th>
+          <th class="blk_t3">
+              Transaction Date 
+         </th>
+        </tr> 
+      <apex:repeat value="{!lstTrnDtl}" var="sr">
+        <tr class="{!sr.backColor}">
+         <td class="datatable-std-col">
+            <apex:outputpanel >
+              <a href="#" onclick="openDocument('{!sr.soa2TranDetail.Attachment_Id__c}');" >
+                {!sr.soa2TranDetail.Doc_No__c}
+              </a> 
+             </apex:outputpanel> 
+         </td>
+         <td class="datatable-std-col">
+             {!sr.soa2TranDetail.Transaction_Type__c}
+         </td>
+          <td class="datatable-std-col">
+             {!sr.trnDate}
+         </td>
+        </tr> 
+      </apex:repeat>  
+  </table>
+</apex:outputPanel>
+</apex:form>
+</apex:page>

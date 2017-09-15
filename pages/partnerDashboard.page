@@ -1,0 +1,698 @@
+<!--Back up @ 07/19 -->
+<!--PRASHNAT propGfB_cus,propGfB_rus,propGfB_cus -->
+<apex:page controller="partnerDashboard" readOnly="true" tabStyle="Account"><!-- tabStyle="Partner_Program" -->
+<apex:sectionHeader title="Portal User" subtitle="Dashboard ..."/>
+<style type="text/css">
+.dshB { background-color:#000000;color:#FFFFFF;font-weight:bold;font-size:19px;padding-left:2%;height:24px; }
+.fWet { font-weight: bold; font-size: 12px; padding-top:3px; }
+.row (font-weight:bold;color:#333333;background-color: #90EE90;)
+.lblh {font-weight:bold; color: #333333;}
+.row1 { background-color: #C6C6C6; }
+.row2 { background-color: #DB8E9F; color: #FFFFFF; }
+.row3 { background-color: #FFF600; color: #FFFFFF; }
+.row4 { background-color: #E1C29A; color: #FFFFFF; }
+.ovrAll { font-weight:bold;font-size:15px; padding-left:2%; color:#FFFFFF; }
+.cnt { text-align:center;}
+.rtBdr { border-right:1px solid #000000;}
+.tpBdr { border-top: 1px solid #000000; }
+.ltBdr { border-top: 1px solid #000000; }
+.bmBdr { border-bottom: 1px solid #000000; }
+.nWrap { white-space:nowrap; margin: 0px 2px 0px 2px}
+.bgCOA { background-color:#463E3F; color:#FFFFFF}
+</style>
+<script>
+  function changeArrow(ele, sec)
+  { 
+    if(ele.src.indexOf("imgArrowRight") != -1){
+      ele.src = "{!$Resource.imgArrowDown}";
+      if(sec == "RESIDENTIAL") 
+        document.getElementById('tblResidential').style.display = "block";
+      if(sec == "COMMERCIAL")      
+        document.getElementById('tblCommercial').style.display = "block";     
+      if(sec == "NARROWFINANCIAL"){ 
+        if("{!propUser.LanguageLocaleKey}" == 'en_US'){
+          document.getElementById('tblNarrowFinancials').style.display = "block";
+          document.getElementById('tblNarrowCommercial').style.display = "block";
+        }
+        else if("{!propUser.LanguageLocaleKey}" != 'en_US')
+          document.getElementById('tblNarrowEU').style.display = "block"; 
+      }
+      if(sec == "NARROWFINANCIALRESIDENTIAL") 
+        document.getElementById('tblNarrowFinancialsResidential').style.display = "block";
+      if(sec == "NARROWFINANCIALCOMMERCIAL") 
+        document.getElementById('tblNarrowFinancialsCommercial').style.display = "block";           
+    }
+    else{       
+      ele.src = "{!$Resource.imgArrowRight}";  
+      if(sec == "RESIDENTIAL") 
+        document.getElementById('tblResidential').style.display = "none";
+      if(sec == "COMMERCIAL")       
+        document.getElementById('tblCommercial').style.display = "none";
+      if(sec == "NARROWFINANCIAL"){ 
+        if("{!propUser.LanguageLocaleKey}" == 'en_US'){
+          document.getElementById('tblNarrowFinancials').style.display = "none";
+          document.getElementById('tblNarrowCommercial').style.display = "none";
+        }
+        else if("{!propUser.LanguageLocaleKey}" != 'en_US')
+          document.getElementById('tblNarrowEU').style.display = "none"; 
+      }
+      if(sec == "NARROWFINANCIALRESIDENTIAL") 
+        document.getElementById('tblNarrowFinancialsResidential').style.display = "none";
+      if(sec == "NARROWFINANCIALCOMMERCIAL") 
+        document.getElementById('tblNarrowFinancialsCommercial').style.display = "none";        
+    }
+  }//End changeArrow
+  /*
+  function CallDashboard(eleId)
+  {
+    if(eleId.indexOf("--") != -1)
+    {
+      eleId = eleId.split("--")[0];
+      alert(eleId);
+      actFuncPortalUser(eleId);
+    }  
+  }//End CallDashboard
+  */
+</script>
+<apex:pagemessages />
+  <apex:form id="frm1">
+    <apex:actionfunction name="actFuncPeriod" action="{!AccntName}" rerender="frm1_oPnlData,frm1_oPnl1,oPnlDashboard" onComplete="" status="myStatus" >
+        <apex:param name="prmPeriod" assignTo="{!propPeriod}"  value=""/>
+    </apex:actionfunction>  
+
+    <apex:actionfunction name="actFuncPortalUser" action="{!ChangePortalUser}" rerender="oPnlDashboard" onComplete="" status="myStatusPortal" >
+        <apex:param name="prmPortUsr" assignTo="{!propPortalUsrId}"  value=""/>
+    </apex:actionfunction>  
+        
+    <apex:pageBlock id="pbSelector">
+       <apex:pageBlockSection columns="2" title="Portal User"><apex:pageBlockSectionItem >
+            <apex:selectList value="{!propSelPartenr}" size="1" multiselect="false" onchange="actFuncPortalUser(this.value);" style="font-family: Courier, monospace;">
+                <apex:selectOptions value="{!PortalUserItems}"/>
+            </apex:selectList>
+           <apex:actionStatus startText="Requesting Data..." id="myStatusPortal">                            
+               <apex:facet name="start"><apex:image value="{!$Resource.Loading}" style="margin-left:4px;"/></apex:facet>
+           </apex:actionStatus>              
+       </apex:pageBlockSectionItem></apex:pageBlockSection> 
+    </apex:pageBlock>
+    
+<apex:outputPanel id="oPnlDashboard">
+    <apex:pageBlock id="pbDashboard" rendered="{!NOT(ISNULL(propPortalUsrId))}">   
+    <table id="tblTop" width="100%" height="100%" border="0">
+<!-- Row:1 -->
+         <tr  width="100%" height="18%">        
+            <td  width="85%">
+                <table id="tblHeader" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td><apex:OutputLabel id="frm1_lbl1" styleClass="fWet" style="font-size:22px" rendered="{!propUser.LanguageLocaleKey='en_US'}">{!$Label.Current_Welcome} {!propUser.FirstName}!</apex:OutputLabel></td>
+                    </tr>
+                    <tr>
+                        <td><apex:OutputLabel id="frm1_lbl2" styleClass="fWet">{!$Label.Current_Valued_Member} {!sincedate}!</apex:OutputLabel></td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <apex:OutputLabel id="frm1_lbl3" styleClass="fWet" style="font-style:italic;">{!$Label.Current_Tier}: </apex:OutputLabel> 
+                          <apex:outputText id="frm1_lbl4" styleClass="fWet" value=" {!partnerTier}"  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <apex:OutputLabel id="frm1_lbl5" styleClass="fWet" style="font-style:italic;">{!$Label.Current_Performence_Period}: </apex:OutputLabel> 
+                          <apex:outputText id="frm1_lbl6" styleClass="fWet" value=" {!validEvalFromDate} - {!validEvalToDate} "  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fWet" align="left">
+                          <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td align="left">
+                                  <apex:selectList id="frm1_selLst1" value="{!propPeriod}" size="1"  onchange="actFuncPeriod(this.value);">                       
+                                     <apex:selectOptions value="{!Items}"/>
+                                  </apex:selectList>                               
+                              </td>
+                              <td align="left">
+                                  <apex:actionStatus startText="Requesting Data..." id="myStatus">                            
+                                     <apex:facet name="start"><apex:image value="{!$Resource.Loading}" style="margin-left:4px;"/></apex:facet>
+                                  </apex:actionStatus>           
+                              </td>
+                            </tr>
+                          </table>   
+                        </td>
+                    </tr>                   
+                </table><!-- id="tblHeader" -->  
+            </td>            
+            <td  width="15%">
+                <apex:image id="frm1_img1" value="{!$Resource.birla_poc_pp}" width="250px" height="125px" />
+            </td>
+        </tr>
+<!-- End Row:1 -->
+<!-- Row:2 -->
+        <tr  width="100%" height="18%"> 
+            <td colspan="2" class="dshB">
+               <apex:outputLabel id="frm1_lbl7" value="{!$Label.Dashboard}" />
+            </td>
+        </tr>
+<!-- End Row:2 -->  
+<!-- Row:3 -->
+        <tr>
+            <td id="broadTd" style="padding-left:2%">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-top:none;border-bottom:solid;border-bottom-color:grey;">
+                <tr>
+                    <td>
+                        <apex:outputPanel id="frm1_oPnlData" >
+<!--=======================-->                      
+<!----- EU USER SECTION ----->
+<!--=======================-->                  
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="display:{!IF(propUser.LanguageLocaleKey != 'en_US','block',IF(propUser.LocaleSidKey != 'en_US','block','none'))};padding-top:3%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <table id="tblEU" width="100%" cellspacing="0" cellpadding="0" border="0" style="display:block;border:1px solid #000000;">
+                                            <tr>
+                                                <td width="37%" class="cnt bmBdr rtBdr" colspan="2">         </td>
+                                                <td width="{!propHideShowHandler_EU.propC1}%"  style="display:{!IF(propHideShowHandler_EU.propARes,'table-cell','none')};"  class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Achievement}" /></td>
+                                                <td width="{!propHideShowHandler_EU.propC2}%"  style="display:{!IF(propHideShowHandler_EU.propSSTRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_to_Stay_in_Tier}" /></td>
+                                                <td width="{!propHideShowHandler_EU.propC3}%"  style="display:{!IF(propHideShowHandler_EU.propSSTRes,'table-cell','none')};"  class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Stay_in_Same_Tier}"  /></td>
+                                                <td width="{!propHideShowHandler_EU.propC4}%"  style="display:{!IF(propHideShowHandler_EU.propPNTRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_for_Promotion_to_Next_Tier}" /></td>
+                                                <td width="{!propHideShowHandler_EU.propC5}%"  style="display:{!IF(propHideShowHandler_EU.propPNTRes,'table-cell','none')};"  class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Promotion_to_Next_Tier}"  /></td>
+                                                <td width="{!propHideShowHandler_EU.propC6}%"  style="display:{!IF(propHideShowHandler_EU.propBRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_for_Bonus}"  /></td>
+                                                <td width="{!propHideShowHandler_EU.propC7}%"  style="display:{!IF(propHideShowHandler_EU.propBRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Bonus}"  /></td>
+                                            </tr> 
+    <!--== OVERALL STATUS START ==--> 
+                                      
+                                    <apex:repeat value="{!propWC_Overall_EU}" var="CUS">                                           
+                                        <apex:repeat value="{!CUS.propMet_EU}" var="wCUS">                                      
+                                            <tr style="border:2px solid #000000;">
+                                                <td width="37%" class="rtBdr bgCOA" colspan="2" style="border-right-color:#463E3F"><apex:outputLabel value="{!$Label.OVERALL_STATUS}" styleClass="ovrAll"/></td><!-- {!wCUS.propMName_EU} -->
+                                                <td width="{!propHideShowHandler_EU.propC1}%"  style="display:{!IF(propHideShowHandler_EU.propARes,'table-cell','none')};border-right-color:#463E3F;" class="cnt rtBdr bgCOA"><!--apex:outputLabel value="{!wRUS.propAchie_RUS }"/--></td>
+                                                <td width="{!propHideShowHandler_EU.propC2}%"  style="display:{!IF(propHideShowHandler_EU.propSSTRes,'table-cell','none')};" class="cnt nWrap bgCOA"></td>
+                                                <td width="{!propHideShowHandler_EU.propC3}%"  style="display:{!IF(propHideShowHandler_EU.propSSTRes,'table-cell','none')};border-right-color:#463E3F"  class="cnt rtBdr bgCOA">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}"  rendered="{!wCUS.propSfR_EU=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}"  rendered="{!wCUS.propSfR_EU=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}"  rendered="{!wCUS.propSfR_EU=0}"/>
+                                                </td>
+                                                
+                                                <td width="{!propHideShowHandler_EU.propC4}%"  style="display:{!IF(propHideShowHandler_EU.propPNTRes,'table-cell','none')};" class="cnt bgCOA"></td>
+                                                <td width="{!propHideShowHandler_EU.propC5}%"  style="display:{!IF(propHideShowHandler_EU.propPNTRes,'table-cell','none')};border-right-color:#463E3F"  class="cnt rtBdr bgCOA">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}"  rendered="{!wCUS.propSfP_EU=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}"  rendered="{!wCUS.propSfP_EU=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}"  rendered="{!wCUS.propSfP_EU=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC6}%"  style="display:{!IF(propHideShowHandler_EU.propBRes,'table-cell','none')};" class="cnt bgCOA"></td>
+                                                <td width="{!propHideShowHandler_EU.propC7}%"  style="display:{!IF(propHideShowHandler_EU.propBRes,'table-cell','none')};" class="cnt bgCOA">
+                                                    <apex:outputLabel style="display:{!if(wCUS.propBon_EU=0,'none','block')};color:{!IF(wCUS.propBon_EU=1,'#44BA47','#FF4500')};padding-right:2px;font-weight:bold;font-size:11px;vertical-align:middle;">{!wCUS.propAchie_EU}</apex:outputLabel>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}" rendered="{!wCUS.propBon_EU=0}"/>
+                                                </td>   
+                                            </tr>
+                                        </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt1_rpt1" -->
+                                    </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt1" -->
+    <!--== OVERALL STATUS END ==-->
+                                    <apex:repeat value="{!propWC_EU}" var="wc">
+                                            <tr width="100%">
+                                                <td width="100%" class="nWrap" style="background-color:#c3c3c3;color:#FFFFFF;height:20px;vertical-align:middle;font-weight:bold;padding-left:4px" colspan="9">
+                                                    {!wc.propCategory_COM}
+                                                </td>                                  
+                                            </tr>
+                                        <apex:repeat value="{!wc.propWrapMet_COM}" var="wcM">
+                                            <tr>
+                                             <td width="4%">                           
+                                                  <apex:image height="18px" value="{!$Resource.ChildImg}"  rendered="{!wcM.propIndent_COM= true}" style="vertical-align:middle;"/>
+                                                  <apex:image height="18px" value="{!$Resource.ParentImg}"  rendered="{!wcM.propIndent_COM != true}" style="padding-top:1px;vertical-align:middle;"/>
+                                             </td>                                               
+                                                <td width="37%" class="rtBdr">
+                                                  <apex:outputLabel value="{!wcM.propMName_COM }"  rendered="{!wcM.propIndent_COM= true}" />
+                                                  <apex:outputLabel value="{!wcM.propMName_COM }"  rendered="{!wcM.propIndent_COM != true}" />
+                                                  <input type="hidden" value="{!wcM.propMMId_COM}" />
+                                                </td>                                          
+                                                <td width="{!propHideShowHandler_EU.propC1}%"  style="display:{!IF(propHideShowHandler_EU.propARes,'table-cell','none')};" class="cnt rtBdr">
+                                                 <apex:outputLabel value="{!wcM.propAchie_COM }" rendered="{!IF(AND(wcM.propMrType_COM='N',NOT(CONTAINS(propEUAchieBypass,wcM.propMetricCode_COM))),true,false)}"></apex:outputlabel>
+                                                 <!-- {!wcM.propAchie_COM }--{!propEUAchieBypass}--{!wcM.propMetricCode_COM} -->
+                                                 <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propAchie_COM='1'),true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propAchie_COM='0'),true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propAchie_COM=''),true,false)}"/>
+                                                <!--
+                                                 <apex:outputLabel value="{!wcM.propAchie_COM }" rendered="{!IF(wcM.propMrType_COM='N',true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propAchie_COM='1'),true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propAchie_COM='0'),true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propAchie_COM=''),true,false)}"/>
+                                                  -->
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC2}%"  style="display:{!IF(propHideShowHandler_EU.propSSTRes,'table-cell','none')};" class="cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfR_cus }" /
+                                                -->
+                                                    <apex:outputLabel value="{!wcM.propGfR_cus }" rendered="{!IF(OR(wcM.propGfR_cus='TRUE',wcM.propGfR_cus='FALSE'),false,true)}" />
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfR_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfR_cus='TRUE',wcM.propGfR_cus='FALSE'),true,false)}"/>
+                                                    
+                                                    <!--
+                                                    <apex:outputLabel value="{!wcM.propGfR_cus }" rendered="{!IF(wcM.propMrType_COM='N',true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propGfR_cus='TRUE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propGfR_cus=''),true,false)}"/> 
+                                                    -->                                                 
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC3}%"  style="display:{!IF(propHideShowHandler_EU.propSSTRes,'table-cell','none')};" title="{!wcM.propStayHelp_COM}" class="cnt rtBdr">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" title="{!wcM.propStayHelp_COM }" rendered="{!wcM.propSfR_COM=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}" title="{!wcM.propStayHelp_COM }" rendered="{!wcM.propSfR_COM=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" title="{!wcM.propStayHelp_COM }" rendered="{!wcM.propSfR_COM=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC4}%"  style="display:{!IF(propHideShowHandler_EU.propPNTRes,'table-cell','none')};" class="nWrap cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfP_cus }" /
+                                                -->
+                                                    <apex:outputLabel value="{!wcM.propGfP_cus }" rendered="{!IF(OR(wcM.propGfP_cus='TRUE',wcM.propGfP_cus='FALSE'),false,true)}" />
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfP_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfP_cus='TRUE',wcM.propGfP_cus='FALSE'),true,false)}"/>                                                
+                                                <!--
+                                                    <apex:outputLabel value="{!wcM.propGfP_cus }" rendered="{!IF(wcM.propMrType_COM='N',true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propGfP_cus='TRUE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propGfP_cus=''),true,false)}"/>
+                                                --> 
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC5}%"  style="display:{!IF(propHideShowHandler_EU.propPNTRes,'table-cell','none')};" title="{!wcM.propPromHelp_COM}" class="cnt rtBdr"  ><!-- style="{!IF((wcM.propDbResult_RUS != false) && (propAccType !='Residential Installer'),'text-align:center;border-right:1px solid #000000;','')}" -->
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" title="{!wcM.propPromHelp_COM }" rendered="{!wcM.propSfP_COM=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}" title="{!wcM.propPromHelp_COM }" rendered="{!wcM.propSfP_COM=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" title="{!wcM.propPromHelp_COM }" rendered="{!wcM.propSfP_COM=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC6}%"  style="display:{!IF(propHideShowHandler_EU.propBRes,'table-cell','none')};" class="cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfBDF_cus }" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer'),true,false)}"/
+                                                -->
+                                                    <apex:outputLabel value="{!wcM.propGfBDF_cus }" rendered="{!IF(OR(wcM.propGfBDF_cus='TRUE',wcM.propGfBDF_cus='FALSE'),false,true)}" />
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfBDF_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfBDF_cus='TRUE',wcM.propGfBDF_cus='FALSE'),true,false)}"/>                                              
+                                                <!--
+                                                    <apex:outputLabel value="{!wcM.propGfBDF_cus }" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer') && (wcM.propMrType_COM =='N'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer') && (wcM.propMrType_COM =='C') && (wcM.propGfBDF_cus =='TRUE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer')&& (wcM.propMrType_COM='C') && (wcM.propGfBDF_cus='FALSE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer') && ((wcM.propMrType_COM =='D') || (wcM.propGfBDF_cus == '')),true,false)}"/>
+                                                --> 
+                                                </td>
+                                                <td width="{!propHideShowHandler_EU.propC7}%"  style="display:{!IF(propHideShowHandler_EU.propBRes,'table-cell','none')};" title="{!wcM.propBonusHelp_COM}" class="cnt"><!-- style="{!IF( (wcM.propDbResult_RUS != false) && (propAccType !='Residential Installer'),'text-align:center;border-right:1px solid #000000;','')}" -->
+                                                  <apex:outputLabel style="display:{!if(OR(wcM.propSfB_COM=0,wcM.propSfB_COM=2),'none','block')};color:{!IF(wcM.propSfB_COM=1,' #009900',' #CD2626')};padding-right:2px;">{!wcM.propGfB_cus}</apex:outputLabel>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!OR(wcM.propSfB_COM=0,wcM.propSfB_COM=2)}"/>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt2_rpt1" -->
+                                    </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt2" -->       
+                                        </table>
+                                    </td>
+                                </tr>                               
+                            </table>
+<!--=====================-->                            
+<!-- END EU USER SECTION -->
+<!--=====================-->
+                        
+<!--===================-->                      
+<!----- RESIDENTIAL ----->
+<!--===================-->                     
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="display:{!IF(AND(propUser.LanguageLocaleKey == 'en_US',propUser.LocaleSidKey == 'en_US'),'block;','none;')}">
+                                <tr> 
+                                    <td style="width:18px;height:18px">
+                                      <img src="{!$Resource.imgArrowDown}" onclick="changeArrow(this, 'RESIDENTIAL');" width="18px"/>
+                                    </td>
+                                    <td style="height:18px;font-weight:bold;font-size:17px;">
+                                      <apex:outputLabel id="frm1_oPnlData_lbl1" value="{!$Label.RESIDENTIAL}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <table id="tblResidential" width="100%" cellspacing="0" cellpadding="0" border="0" style="display:block;border:1px solid #000000;">
+                                            <tr>
+                                                <td width="37%" class="cnt bmBdr rtBdr" colspan="2">         </td>
+                                                <td width="{!propHideShowHandler_RES.propC1}%" style="display:{!IF(propHideShowHandler_RES.propARes,'table-cell','none')};"   class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Achievement}" id="frm1_oPnlData_lbl2"/></td>
+                                                <td width="{!propHideShowHandler_RES.propC2}%" style="display:{!IF(propHideShowHandler_RES.propSSTRes,'table-cell','none')};" class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_to_Stay_in_Tier}" id="frm1_oPnlData_lbl3"/></td>
+                                                <td width="{!propHideShowHandler_RES.propC3}%" style="display:{!IF(propHideShowHandler_RES.propSSTRes,'table-cell','none')};" class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Stay_in_Same_Tier}" id="frm1_oPnlData_lbl4"/></td>
+                                                <td width="{!propHideShowHandler_RES.propC4}%" style="display:{!IF(propHideShowHandler_RES.propPNTRes,'table-cell','none')};" class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_for_Promotion_to_Next_Tier}" id="frm1_oPnlData_lbl5"/></td>
+                                                <td width="{!propHideShowHandler_RES.propC5}%" style="display:{!IF(propHideShowHandler_RES.propPNTRes,'table-cell','none')};" class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Promotion_to_Next_Tier}" id="frm1_oPnlData_lbl6"/></td>
+                                                <td width="{!propHideShowHandler_RES.propC6}%" style="display:{!IF(propHideShowHandler_RES.propBRes,'table-cell','none')};"   class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_for_Bonus}" id="frm1_oPnlData_lbl7"/></td>
+                                                <td width="{!propHideShowHandler_RES.propC7}%" style="display:{!IF(propHideShowHandler_RES.propBRes,'table-cell','none')};"   class="cnt bmBdr"><apex:outputLabel value="{!$Label.Bonus}" id="frm1_oPnlData_lbl8"/></td>
+                                            </tr> 
+    <!--== OVERALL STATUS START ==-->
+                                    <apex:repeat id="frm1_oPnlData_rpt1" value="{!propWC_Overall_RUS}" var="RUS">                                            
+                                        <apex:repeat id="frm1_oPnlData_rpt1_rpt1" value="{!RUS.propMet}" var="wRUS">
+                                            <tr style="border:2px solid #000000;">
+                                                <td width="37%" class="rtBdr bgCOA" colspan="2" style="border-right-color:#463E3F"><apex:outputLabel value="{!$Label.OVERALL_STATUS}" styleClass="ovrAll" id="frm1_oPnlData_rpt1_rpt1_lbl1"/></td><!-- {!wRUS.propMName_RUS } -->
+                                                <td width="{!propHideShowHandler_RES.propC1}%"   style="display:{!IF(propHideShowHandler_RES.propARes,'table-cell','none')};border-right-color:#463E3F" class="cnt rtBdr bgCOA"><!--apex:outputLabel value="{!wRUS.propAchie_RUS }"/--></td>
+                                                <td width="{!propHideShowHandler_RES.propC2}%" style="display:{!IF(propHideShowHandler_RES.propSSTRes,'table-cell','none')};"  class="cnt nWrap bgCOA"></td>
+                                                <td width="{!propHideShowHandler_RES.propC3}%" style="display:{!IF(propHideShowHandler_RES.propSSTRes,'table-cell','none')};border-right-color:#463E3F;"  class="cnt rtBdr bgCOA">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!wRUS.propSfR_RUS=1}" id="frm1_oPnlData_rpt1_rpt1_img1"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}"  rendered="{!wRUS.propSfR_RUS=2}" id="frm1_oPnlData_rpt1_rpt1_img2"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}"  rendered="{!wRUS.propSfR_RUS=0}" id="frm1_oPnlData_rpt1_rpt1_img3"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC4}%" style="display:{!IF(propHideShowHandler_RES.propPNTRes,'table-cell','none')};" class="cnt bgCOA"></td>
+                                                <td width="{!propHideShowHandler_RES.propC5}%" style="display:{!IF(propHideShowHandler_RES.propPNTRes,'table-cell','none')};border-right-color:#463E3F"  class="cnt rtBdr bgCOA">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}"  rendered="{!wRUS.propSfP_RUS=1}" id="frm1_oPnlData_rpt1_rpt1_img4"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}"  rendered="{!wRUS.propSfP_RUS=2}" id="frm1_oPnlData_rpt1_rpt1_img5"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}"  rendered="{!wRUS.propSfP_RUS=0}" id="frm1_oPnlData_rpt1_rpt1_img6"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC6}%"   style="display:{!IF(propHideShowHandler_RES.propBRes,'table-cell','none')};" class="cnt bgCOA"></td>
+                                                <td width="{!propHideShowHandler_RES.propC7}%"   style="display:{!IF(propHideShowHandler_RES.propBRes,'table-cell','none')};" class="cnt bgCOA">
+                                                    <apex:outputLabel style="display:{!if(wRUS.propBon_RUS=0,'none','block')};color:{!IF(wRUS.propBon_RUS=1,'#44BA47','#FF4500')};padding-right:2px;font-weight:bold;font-size:11px;vertical-align:middle;">{!wRUS.propAchie_RUS}</apex:outputLabel>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}" rendered="{!wRUS.propBon_RUS=0}"/>                                             
+                                                </td> 
+                                            </tr>
+                                        </apex:repeat>
+                                    </apex:repeat>
+    <!--== OVERALL STATUS END ==-->                                    
+                                    <apex:repeat id="frm1_oPnlData_rpt2" value="{!propWC}" var="wc">
+                                            <tr width="100%">
+                                                <td width="100%" class="nWrap" style="background-color:#c3c3c3;color:#FFFFFF;height:20px;vertical-align:middle;font-weight:bold;padding-left:4px" colspan="9">{!wc.propCategory}</td>                                  
+                                            </tr>
+                                        <apex:repeat id="frm1_oPnlData_rpt2_rpt1" value="{!wc.propMet}" var="wcM">
+                                            <tr>
+                                             <td width="4%" >                           
+                                                  <apex:image height="18px" value="{!$Resource.ChildImg}"  rendered="{!wcM.propIndent= true}" style="vertical-align:middle;" id="frm1_oPnlData_rpt2_rpt1_img1"/>
+                                                  <apex:image height="18px" value="{!$Resource.ParentImg}"  rendered="{!wcM.propIndent != true}" style="padding-top:1px;vertical-align:middle;" id="frm1_oPnlData_rpt2_rpt1_img2"/>
+                                             </td>                                               
+                                                <td width="37%" class="rtBdr">                                                                                             
+                                                  <apex:outputLabel value="{!wcM.propMName }" rendered="{!wcM.propIndent= true}" id="frm1_oPnlData_rpt2_rpt1_lbl1"/>
+                                                  <apex:outputLabel value="{!wcM.propMName }"  rendered="{!wcM.propIndent != true}" id="frm1_oPnlData_rpt2_rpt1_lbl2"/>
+                                                  <input type="hidden" value="{!wcM.propMMId}" />
+                                                </td> 
+                                                                                    
+                                                <td width="{!propHideShowHandler_RES.propC1}%"   style="display:{!IF(propHideShowHandler_RES.propARes,'table-cell','none')};" class="cnt rtBdr">
+                                                  <!-- apex:outputLabel value="{!wcM.propAchie }" rendered="{!IF(wcM.propMrType='N',true,false)}" id="frm1_oPnlData_rpt2_rpt1_lbl3"/ -->
+                                                  <apex:outputText value="{!wcM.propAchie}" rendered="{!IF(wcM.propMrType='N',true,false)}" id="frm1_oPnlData_rpt2_rpt1_lbl3" />
+                                                  <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType='C',wcM.propAchie='1'),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img3"/>
+                                                  <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF(AND(wcM.propMrType='C',wcM.propAchie='0'),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img4"/>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType='D',wcM.propAchie=''),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img5"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC2}%" style="display:{!IF(propHideShowHandler_RES.propSSTRes,'table-cell','none')};" class="cnt">
+                                                    <apex:outputLabel value="{!wcM.propGfR_rus }" rendered="{!IF(OR(wcM.propGfR_rus='TRUE',wcM.propGfR_rus='FALSE'),false,true)}" id="frm1_oPnlData_rpt2_rpt1_lbl4"/>
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfR_rus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfR_rus='TRUE',wcM.propGfR_rus='FALSE'),true,false)}"/>                                                
+                                                <!--
+                                                  <apex:outputLabel value="{!wcM.propGfR_rus }" rendered="{!IF(wcM.propMrType='N',true,false)}" id="frm1_oPnlData_rpt2_rpt1_lbl4"/>
+                                                  <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF((wcM.propMrType =='C') && (wcM.propGfR_rus =='TRUE'),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img6"/>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF((wcM.propMrType =='D') || (wcM.propGfR_rus ==''),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img7"/>
+                                                 -->                                                  
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC3}%" style="display:{!IF(propHideShowHandler_RES.propSSTRes,'table-cell','none')};" title="{!wcM.propStayHelp}" class="cnt rtBdr">
+                                                  <apex:image height="17px" value="{!$Resource.checkImg}" title="{!wcM.propStayHelp }" rendered="{!wcM.propSfR=1}" id="frm1_oPnlData_rpt2_rpt1_img8"/>
+                                                  <apex:image height="17px" value="{!$Resource.uncheckImg}" title="{!wcM.propStayHelp }" rendered="{!wcM.propSfR=2}" id="frm1_oPnlData_rpt2_rpt1_img9"/>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" title="{!wcM.propStayHelp }" rendered="{!wcM.propSfR=0}" id="frm1_oPnlData_rpt2_rpt1_img10"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC4}%" style="display:{!IF(propHideShowHandler_RES.propPNTRes,'table-cell','none')};" class="cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfP_rus }"  id="frm1_oPnlData_rpt2_rpt1_lbl5"/ 07/27/28-->
+                                                
+                                                   <apex:outputLabel value="{!wcM.propGfP_rus }" rendered="{!IF(OR(wcM.propGfP_rus='TRUE',wcM.propGfP_rus='FALSE'),false,true)}" id="frm1_oPnlData_rpt2_rpt1_lbl5"/>
+                                                   <apex:image height="17px" value="{!IF(wcM.propGfP_rus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfP_rus='TRUE',wcM.propGfP_rus='FALSE'),true,false)}"/>                                             
+                                                 <!--
+                                                  <apex:outputLabel value="{!wcM.propGfP_rus }" rendered="{!IF(wcM.propMrType='N',true,false)}" id="frm1_oPnlData_rpt2_rpt1_lbl5"/>
+                                                  <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType='C',wcM.propGfP_rus='TRUE'),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img11"/>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType='D',wcM.propGfP_rus=''),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img12"/> 
+                                                 -->                                                  
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC5}%" style="display:{!IF(propHideShowHandler_RES.propPNTRes,'table-cell','none')};" title="{!wcM.propPromHelp}" class="cnt rtBdr"  ><!-- style="{!IF((wcM.propDbResult_RUS != false) && (propAccType !='Residential Installer'),'text-align:center;border-right:1px solid #000000;','')}" -->
+                                                  <apex:image height="17px" value="{!$Resource.checkImg}" title="{!wcM.propPromHelp }" rendered="{!wcM.propSfP=1}" id="frm1_oPnlData_rpt2_rpt1_img13"/>
+                                                  <apex:image height="17px" value="{!$Resource.uncheckImg}" title="{!wcM.propPromHelp }" rendered="{!wcM.propSfP=2}" id="frm1_oPnlData_rpt2_rpt1_img14"/>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" title="{!wcM.propPromHelp }" rendered="{!wcM.propSfP=0}" id="frm1_oPnlData_rpt2_rpt1_img15"/>
+                                                </td> 
+                                                <td width="{!propHideShowHandler_RES.propC6}%"   style="display:{!IF(propHideShowHandler_RES.propBRes,'table-cell','none')};" class="cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfBDF_rus }" id="frm1_oPnlData_rpt2_rpt1_lbl6"/-->
+                                                   <apex:outputLabel value="{!wcM.propGfBDF_rus }" rendered="{!IF(OR(wcM.propGfBDF_rus='TRUE',wcM.propGfBDF_rus='FALSE'),false,true)}" id="frm1_oPnlData_rpt2_rpt1_lbl6"/>
+                                                   <apex:image height="17px" value="{!IF(wcM.propGfBDF_rus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfBDF_rus='TRUE',wcM.propGfBDF_rus='FALSE'),true,false)}"/>                                               
+                                                <!--
+                                                  <apex:outputLabel value="{!wcM.propGfBDF_rus }" rendered="{!IF(wcM.propMrType='N',true,false)}" id="frm1_oPnlData_rpt2_rpt1_lbl6"/>
+                                                  <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF((wcM.propDbResult_RUS != False) && (propAccType !='Residential Installer') && (wcM.propMrType =='C') && (wcM.propGfBDF_rus == 'TRUE'),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img16"/>
+                                                  <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF((wcM.propDbResult_RUS != False) && (propAccType !='Residential Installer') && (wcM.propMrType =='C') && (wcM.propGfBDF_rus == 'FALSE'),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img17"/>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF((wcM.propDbResult_RUS != False) && (propAccType !='Residential Installer') && ((wcM.propMrType == 'D') || (wcM.propGfBDF_rus='')),true,false)}" id="frm1_oPnlData_rpt2_rpt1_img18"/>
+                                                  -->                                                 
+                                                </td>
+                                                <td width="{!propHideShowHandler_RES.propC7}%"   style="display:{!IF(propHideShowHandler_RES.propBRes,'table-cell','none')};" title="{!wcM.propBonusHelp}" class="cnt" >
+                                                  <apex:outputLabel style="display:{!if(OR(wcM.propSfB=0,wcM.propSfB=2),'none','block')};color:{!IF(wcM.propSfB=1,' #009900',' #CD2626')};padding-right:2px;">{!wcM.propGfB_RUS}</apex:outputLabel>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!OR(wcM.propSfB=0,wcM.propSfB=2)}"/>                                                
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </apex:repeat>
+                                        </table>
+                                    </td>
+                                </tr>                               
+                            </table>
+<!--=================-->                            
+<!-- END RESIDENTIAL -->
+<!--=================-->
+                            <table height="18px" border="0"><tr><td>  </td></tr></table>  
+<!--============-->                         
+<!-- COMMERCIAL -->
+<!--============--> 
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="display:{!IF(AND(propUser.LanguageLocaleKey == 'en_US', NOT(CONTAINS(propAccType, 'Partner-Residential'))),'block;','none;')}">
+                                <tr>
+                                    <td style="width:18px;height:18px">
+                                      <img src="{!$Resource.imgArrowDown}" onclick="changeArrow(this, 'COMMERCIAL');" width="18px"/>
+                                    </td>
+                                    <td style="height:18px;font-weight:bold;font-size:17px;">
+                                      <apex:outputLabel value="{!$Label.COMMERCIAL}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <table id="tblCommercial" width="100%" cellspacing="0" cellpadding="0" border="0" style="display:block;border:1px solid #000000;">
+                                            <tr>
+                                                <td width="37%" class="cnt bmBdr rtBdr" colspan="2">         </td>
+                                                <td width="{!propHideShowHandler_COM.propC1}%" style="display:{!IF(propHideShowHandler_COM.propARes,'table-cell','none')};"  class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Achievement}" /></td>
+                                                <td width="{!propHideShowHandler_COM.propC2}%" style="display:{!IF(propHideShowHandler_COM.propSSTRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_to_Stay_in_Tier}" /></td>
+                                                <td width="{!propHideShowHandler_COM.propC3}%" style="display:{!IF(propHideShowHandler_COM.propSSTRes,'table-cell','none')};"  class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Stay_in_Same_Tier}"  /></td>
+                                                <td width="{!propHideShowHandler_COM.propC4}%" style="display:{!IF(propHideShowHandler_COM.propPNTRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_for_Promotion_to_Next_Tier}" /></td>
+                                                <td width="{!propHideShowHandler_COM.propC5}%" style="display:{!IF(propHideShowHandler_COM.propPNTRes,'table-cell','none')};"  class="cnt bmBdr rtBdr"><apex:outputLabel value="{!$Label.Promotion_to_Next_Tier}"  /></td>
+                                                <td width="{!propHideShowHandler_COM.propC6}%" style="display:{!IF(propHideShowHandler_COM.propBRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Goal_for_Bonus}"  /></td>
+                                                <td width="{!propHideShowHandler_COM.propC7}%" style="display:{!IF(propHideShowHandler_COM.propBRes,'table-cell','none')};"  class="cnt bmBdr"><apex:outputLabel value="{!$Label.Bonus}"  /></td>
+                                            </tr> 
+    <!--== OVERALL STATUS START ==-->                                           
+                                    <apex:repeat value="{!propWC_Overall_CUS}" var="CUS">                                           
+                                        <apex:repeat value="{!CUS.propMet_CUS}" var="wCUS">
+                                            <tr style="border:2px solid #000000;">
+                                                <td width="37%" class="rtBdr bgCOA" colspan="2" style="border-right-color:#463E3F"><apex:outputLabel value="{!$Label.OVERALL_STATUS}" styleClass="ovrAll"/></td><!-- {!wCUS.propMName_CUS } -->
+                                                <td width="{!propHideShowHandler_COM.propC1}%" style="display:{!IF(propHideShowHandler_COM.propARes,'table-cell','none')};border-right-color:#463E3F;" class="cnt rtBdr bgCOA"><!--apex:outputLabel value="{!wRUS.propAchie_RUS }"/--></td>
+                                                <td width="{!propHideShowHandler_COM.propC2}%" style="display:{!IF(propHideShowHandler_COM.propSSTRes,'table-cell','none')};" class="cnt nWrap bgCOA"></td>
+                                                <td width="{!propHideShowHandler_COM.propC3}%" style="display:{!IF(propHideShowHandler_COM.propSSTRes,'table-cell','none')};border-right-color:#463E3F;"  class="cnt rtBdr bgCOA">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}"  rendered="{!wCUS.propSfR_CUS=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}"  rendered="{!wCUS.propSfR_CUS=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}"  rendered="{!wCUS.propSfR_CUS=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC4}%" style="display:{!IF(propHideShowHandler_COM.propPNTRes,'table-cell','none')};" class="cnt bgCOA"></td>
+                                                <td width="{!propHideShowHandler_COM.propC5}%" style="display:{!IF(propHideShowHandler_COM.propPNTRes,'table-cell','none')};border-right-color:#463E3F;"  class="cnt rtBdr bgCOA">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}"  rendered="{!wCUS.propSfP_CUS=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}"  rendered="{!wCUS.propSfP_CUS=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}"  rendered="{!wCUS.propSfP_CUS=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC6}%" style="display:{!IF(propHideShowHandler_COM.propBRes,'table-cell','none')};" class="cnt bgCOA"></td>
+                                                <td width="{!propHideShowHandler_COM.propC7}%" style="display:{!IF(propHideShowHandler_COM.propBRes,'table-cell','none')};" class="cnt bgCOA">
+                                                    <apex:outputLabel style="display:{!if(wCUS.propBon_CUS=0,'none','block')};color:{!IF(wCUS.propBon_CUS=1,'#44BA47','#FF4500')};padding-right:2px;font-weight:bold;font-size:11px;vertical-align:middle;">{!wCUS.propAchie_CUS}</apex:outputLabel>
+                                                    <apex:image height="17px" value="{!$Resource.dashImgOA}" rendered="{!wCUS.propBon_CUS=0}"/>                                             
+                                                </td>   
+                                            </tr>
+                                        </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt1_rpt1" -->
+                                    </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt1" -->
+    <!--== OVERALL STATUS END ==-->
+                                    <apex:repeat value="{!propWC_COM}" var="wc">
+                                            <tr width="100%">
+                                                <td width="100%" class="nWrap" style="background-color:#c3c3c3;color:#FFFFFF;height:20px;vertical-align:middle;font-weight:bold;padding-left:4px" colspan="9">
+                                                    {!wc.propCategory_COM}
+                                                </td>                                  
+                                            </tr>
+                                        <apex:repeat value="{!wc.propWrapMet_COM}" var="wcM">
+                                            <tr>
+                                             <td width="4%">                           
+                                                  <apex:image height="18px" value="{!$Resource.ChildImg}"  rendered="{!wcM.propIndent_COM= true}" style="vertical-align:middle;"/>
+                                                  <apex:image height="18px" value="{!$Resource.ParentImg}"  rendered="{!wcM.propIndent_COM != true}" style="padding-top:1px;vertical-align:middle;"/>
+                                             </td>                                               
+                                                <td width="37%" class="rtBdr">
+                                                  <apex:outputLabel value="{!wcM.propMName_COM }"  rendered="{!wcM.propIndent_COM= true}" />
+                                                  <apex:outputLabel value="{!wcM.propMName_COM }"  rendered="{!wcM.propIndent_COM != true}" />
+                                                  <input type="hidden" value="{!wcM.propMMId_COM}" />
+                                                </td>                                           
+                                                <td width="{!propHideShowHandler_COM.propC1}%" style="display:{!IF(propHideShowHandler_COM.propARes,'table-cell','none')};" class="cnt rtBdr">
+                                                 <apex:outputLabel value="{!wcM.propAchie_COM }" rendered="{!IF(wcM.propMrType_COM='N',true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propAchie_COM='1'),true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propAchie_COM='0'),true,false)}"/>
+                                                 <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propAchie_COM=''),true,false)}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC2}%" style="display:{!IF(propHideShowHandler_COM.propSSTRes,'table-cell','none')};" class="cnt">
+                                                <!--
+                                                    <apex:outputLabel value="{!wcM.propGfR_cus }" rendered="{!IF(OR(wcM.propGfR_cus='TRUE',wcM.propGfR_cus='FALSE'),false,true)}"/>
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfR_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfR_cus='TRUE',wcM.propGfR_cus='FALSE'),true,false)}"/>
+                                                -->
+                                                    <apex:outputLabel value="{!wcM.propGfR_cus }" rendered="{!IF(OR(wcM.propGfR_cus='TRUE',wcM.propGfR_cus='FALSE'),false,true)}" />
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfR_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfR_cus='TRUE',wcM.propGfR_cus='FALSE'),true,false)}"/>                                                
+                                                    
+                                                <!--
+                                                    <apex:outputLabel value="{!wcM.propGfR_cus }" rendered="{!IF(wcM.propMrType_COM='N',true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propGfR_cus='TRUE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propGfR_cus=''),true,false)}"/>
+                                                -->                                                 
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC3}%" style="display:{!IF(propHideShowHandler_COM.propSSTRes,'table-cell','none')};" title="{!wcM.propStayHelp_COM}" class="cnt rtBdr">
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" title="{!wcM.propStayHelp_COM }" rendered="{!wcM.propSfR_COM=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}" title="{!wcM.propStayHelp_COM }" rendered="{!wcM.propSfR_COM=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" title="{!wcM.propStayHelp_COM }" rendered="{!wcM.propSfR_COM=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC4}%" style="display:{!IF(propHideShowHandler_COM.propPNTRes,'table-cell','none')};" class="nWrap cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfP_cus }" / 07272012
+                                                -->
+                                                    <apex:outputLabel value="{!wcM.propGfP_cus }" rendered="{!IF(OR(wcM.propGfP_cus='TRUE',wcM.propGfP_cus='FALSE'),false,true)}" />
+                                                    <apex:image height="17px" value="{!IF(wcM.propGfP_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfP_cus='TRUE',wcM.propGfP_cus='FALSE'),true,false)}"/>                                                
+                                                <!--
+                                                    <apex:outputLabel value="{!wcM.propGfP_cus }" rendered="{!IF(wcM.propMrType_COM='N',true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF(AND(wcM.propMrType_COM='C',wcM.propGfP_cus='TRUE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF(OR(wcM.propMrType_COM='D',wcM.propGfP_cus=''),true,false)}"/>
+                                                --> 
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC5}%" style="display:{!IF(propHideShowHandler_COM.propPNTRes,'table-cell','none')};" title="{!wcM.propPromHelp_COM}" class="cnt rtBdr"  ><!-- style="{!IF((wcM.propDbResult_RUS != false) && (propAccType !='Residential Installer'),'text-align:center;border-right:1px solid #000000;','')}" -->
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" title="{!wcM.propPromHelp_COM }" rendered="{!wcM.propSfP_COM=1}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}" title="{!wcM.propPromHelp_COM }" rendered="{!wcM.propSfP_COM=2}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" title="{!wcM.propPromHelp_COM }" rendered="{!wcM.propSfP_COM=0}"/>
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC6}%" style="display:{!IF(propHideShowHandler_COM.propBRes,'table-cell','none')};" class="cnt">
+                                                <!--apex:outputLabel value="{!wcM.propGfBDF_cus }" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer'),true,false)}"/
+                                                -->
+                                                <apex:outputLabel value="{!wcM.propGfBDF_cus }" rendered="{!IF(OR(wcM.propGfBDF_cus='TRUE',wcM.propGfBDF_cus='FALSE'),false,true)}" />
+                                                <apex:image height="17px" value="{!IF(wcM.propGfBDF_cus='TRUE', $Resource.checkImg, $Resource.dashImg)}" rendered="{!IF(OR(wcM.propGfBDF_cus='TRUE',wcM.propGfBDF_cus='FALSE'),true,false)}"/>                                              
+                                                <!--
+                                                    <apex:outputLabel value="{!wcM.propGfBDF_cus }" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer') && (wcM.propMrType_COM =='N'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.checkImg}" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer') && (wcM.propMrType_COM =='C') && (wcM.propGfBDF_cus =='TRUE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.uncheckImg}" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer')&& (wcM.propMrType_COM='C') && (wcM.propGfBDF_cus='FALSE'),true,false)}"/>
+                                                    <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!IF( (wcM.propDbResult_CUS_AEU != False) && (propAccType !='Residential Installer') && ((wcM.propMrType_COM =='D') || (wcM.propGfBDF_cus == '')),true,false)}"/>
+                                                -->      
+                                                </td>
+                                                <td width="{!propHideShowHandler_COM.propC7}%" style="display:{!IF(propHideShowHandler_COM.propBRes,'table-cell','none')};" title="{!wcM.propBonusHelp_COM}" class="cnt">
+                                                  <apex:outputLabel style="display:{!if(OR(wcM.propSfB_COM=0,wcM.propSfB_COM=2),'none','block')};color:{!IF(wcM.propSfB_COM=1,' #009900',' #CD2626')};padding-right:2px;">{!wcM.propGfB_cus}</apex:outputLabel>
+                                                  <apex:image height="17px" value="{!$Resource.dashImg}" rendered="{!OR(wcM.propSfB_COM=0,wcM.propSfB_COM=2)}"/>  
+                                                </td>
+                                            </tr>
+                                        </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt2_rpt1" -->
+                                    </apex:repeat><!-- id="frm1_oPnlData_pb2_pbs1_oPnl1_rpt2" -->       
+                                        </table>
+                                    </td>
+                                </tr>                               
+                            </table>
+<!--================-->                         
+<!-- END COMMERCIAL -->
+<!--================-->                     
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+                </table>  
+            </td><!-- id="broadTd" -->
+            <td id="narrowTd" style="padding-left:2%;">
+<!--==================-->                         
+<!-- NARROW FINANCIAL -->
+<!--==================--> 
+                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td style="width:18px;height:18px;border-bottom:2px solid #808080;" colspan="2">
+                          <img src="{!$Resource.imgArrowDown}" onclick="changeArrow(this, 'NARROWFINANCIAL');" width="18px"/>
+                          <apex:outputLabel value="{!$Label.FINANCIALS}" style="font-weight:bold;font-size:17px;"/>
+                        </td>
+
+                    </tr>
+    <!--=================================-->                         
+    <!-- NARROW FINANCIAL - Residential  -->
+    <!--=================================-->   
+                    
+        <!-- Upadted on 3/31/2012- By Amit Saha-->
+        <!--
+                    <tr style="display:{!IF(propUser.LanguageLocaleKey != 'en_US','block',IF(propUser.LocaleSidKey != 'en_US','block','none'))};">
+         -->           
+                    <tr style="display:{!IF(propUser.LanguageLocaleKey == 'en_US','block',IF(propUser.LocaleSidKey == 'en_US','block','none'))};">
+                        <td colspan="2" style="padding-left:5%;padding-top:10px;">
+                           <table id="tblNarrowFinancials" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="width:18px;height:18px">
+                                      <img src="{!$Resource.imgArrowDown}" onclick="changeArrow(this, 'NARROWFINANCIALRESIDENTIAL');" width="18px" style="vertical-align:middle;"/>
+                                    </td>
+                                    <td style="height:18px;font-weight:bold;font-size:14px;">
+                                      <apex:outputLabel value="RESIDENTIAL"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-left:14%;">
+                                        <table id="tblNarrowFinancialsResidential" width="100%" cellspacing="0" cellpadding="0" border="0" style="display:block;">
+                                       <apex:repeat value="{!propLstFin_Rus}" var="RUS1">
+                                            <tr>
+                                                <td width="60%" ><apex:outputLabel value="{!RUS1.propMName_RUS_FIN }" /></td> <!-- class="nWrap" -->                                         
+                                                <td width="40%" style="text-align:left"><apex:outputLabel value="{!RUS1.propAmount_RUS_FIN}" style="padding-left:4px;"/></td>
+                                            </tr>
+                                       </apex:repeat>                           
+                                        </table>                                            
+                                    </td>
+                                </tr>
+                           </table> 
+                        </td>                          
+                    </tr>
+
+        <!--AMIT -END-->        
+    <!--=====================================-->                         
+    <!-- END NARROW FINANCIAL - Residential  -->
+    <!--=====================================--> 
+    
+    <!--================================-->                         
+    <!-- NARROW FINANCIAL - Commercial  -->
+    <!--================================-->
+<!--START  Updated by Amit saha on 3/31/2012 -->
+                   <tr style="display:{!IF(AND(propUser.LanguageLocaleKey == 'en_US', NOT(CONTAINS(propAccType, 'Partner-Residential'))),'block','none')}">
+                        <td colspan="2" style="padding-left:5%;padding-top:10px;">
+                           <table id="tblNarrowCommercial" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="width:18px;height:18px">
+                                      <img src="{!$Resource.imgArrowDown}" onclick="changeArrow(this, 'NARROWFINANCIALCOMMERCIAL');" width="18px" style="vertical-align:middle;"/>
+                                    </td>
+                                    <td style="height:18px;font-weight:bold;font-size:14px;">
+                                      <apex:outputLabel value="COMMERCIAL"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-left:14%;">
+                                        <table id="tblNarrowFinancialsCommercial" width="100%" cellspacing="0" cellpadding="0" border="0" style="display:block;">
+                                     <apex:repeat value="{!propLstFin_Cus}" var="CUS1">
+                                            <tr>
+                                                <td width="60%" ><apex:outputLabel value="{!CUS1.propMName_CUS_FIN }" /></td> <!-- class="nWrap" -->                                                                                   
+                                                <td width="40%" style="text-align:left"><apex:outputLabel value="{!CUS1.propAmount_CUS_FIN}" style="padding-left:4px;"/></td>
+                                            </tr>
+                                     </apex:repeat>                                                            
+                                        </table>                                            
+                                    </td>
+                                </tr>
+                            
+                           </table> 
+                        </td>                          
+                    </tr>
+<!--END-->                  
+    <!--====================================-->                         
+    <!-- END NARROW FINANCIAL - Commercial  -->
+    <!--====================================-->     
+
+    <!--=======================-->                         
+    <!-- NARROW FINANCIAL - EU -->
+    <!--=======================--> 
+          <tr  style="display:{!IF(propUser.LanguageLocaleKey != 'en_US','block',IF(propUser.LocaleSidKey != 'en_US','block','none'))};">
+             <td colspan="2" style="padding-left:5%;padding-top:10px;">
+                <table id="tblNarrowEU" width="100%" cellspacing="0" cellpadding="0" border="0">                                    
+                   <apex:repeat value="{!propLstFin_Cus}" var="eu1"> 
+                        <tr style="width:100%">
+                            <td width="60%" ><apex:outputLabel value="{!eu1.propMName_CUS_FIN }" /></td> <!-- class="nWrap" -->                                                                                  
+                            <td width="40%" style="text-align:left"><apex:outputLabel value="{!eu1.propAmount_CUS_FIN}" style="padding-left:4px;"/></td>
+                        </tr>
+                   </apex:repeat>
+                 </table>
+              </td>                   
+           </tr>           
+    <!--===========================-->                         
+    <!-- END NARROW FINANCIAL - EU -->
+    <!--===========================-->  
+
+                </table>
+<!--======================-->                         
+<!-- END NARROW FINANCIAL -->
+<!--======================-->            
+            </td><!-- id="narrowTd" -->
+        </tr>
+<!-- End Row:3 -->
+<!-- Row:4 -->
+        <tr  width="100%" height="2%"> 
+            <td align="right" colspan="2" valign="top">
+                <apex:outputpanel id="frm1_oPnl1">
+                    <apex:outputLabel value="{!$Label.LAST_UPDATED}: {!propLastUpdated}" style="vertical-align:top;padding-right:2px;font-style:italic" />
+                </apex:outputpanel><!-- frm1_oPnl1 -->
+            </td>  
+            
+        </tr>
+<!-- End Row:4 -->
+    </table><!-- id="tblTop" -->
+    </apex:pageBlock>
+</apex:outputPanel>        
+  </apex:form><!-- id="frm1" --> 
+</apex:page>

@@ -1,0 +1,206 @@
+<!--
+* OrderAlaCarteConfiguration - Ala carte configuration page for cash based ordering system 
+* SFDC Release - https://na29.salesforce.com/a5B34000000xp2Y
+* Pivotal Tracker Updates:
+* ID #115634041 - SolarEdge inverter availability - Hawaii (Smart Pack) - 5/7/2016
+* #130240625 - Remove racking table from Smart Pack Config page
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+-->
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" docType="html-5.0" showHeader="{!IF(isPartnerUser,false,true)}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <style>
+
+    </style>
+
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 90%">
+            
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+            
+            <ol class="breadcrumb" style="margin-bottom:0px;">
+                <li><a href="#" onclick="toOrderType();">{!$Label.Home}</a></li>
+                <li><a href="#" onclick="toOpportunity();">{!$Label.Opportunity}</a></li>
+                <li><a href="#" onclick="toShipping();">{!$Label.POWizardShippingLabel}</a></li>
+                <li style="color: #f7921e;">{!$Label.Configure}</li>
+                <li>{!$Label.Finalize}</li>
+            </ol>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>{!$Label.A_La_Carte}</h4>
+                </div>
+
+                    <div class="panel-body" style="padding-top:0px;">
+                        <c:AlaCarteComponent controllerForPage="{!this}" componentName="alacarteComponent" shippingStateString="{!sts.State__c}"/><!--updated per #115634041-->
+                    </div><!--end panel body-->
+                <apex:form >
+                	<div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                        <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i> Calculating Price...</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12" style="text-align:center;">
+                            <apex:outputPanel id="calculatePriceButton">
+                                <apex:commandButton action="{!doCallout}" value="{!$Label.Calculate_Price}" reRender="theTablePanel, errorMsgs" styleClass="btn" style="background-color:#69b342; font-weight: bold; color:#ffffff;" status="callout" onclick="toggleSpinner(true);" oncomplete="toggleSpinner(false); enableNextStep();" disabled="{!alacarteController.selProductItems == null || alacarteController.selProductItems.size == 0}"/>
+                            </apex:outputPanel>
+                        </div> 
+                    </div>
+                    <apex:outputPanel id="theTablePanel" >
+                        <apex:dataTable value="{!returnLines}" var="line" id="theTable" rowClasses="odd,even" styleClass="table" rendered="{!returnLines.size != 0 && returnLines != null}" columns="6">
+                            <apex:column width="60%">
+                                <apex:facet name="header">{!$Label.Description}</apex:facet>
+                                <apex:outputText value="{!line.item_description}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.PAS_Item}</apex:facet>
+                                <apex:outputText value="{!line.ordered_item}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                                <apex:outputText value="{!line.ordered_quantity}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.POWizardUnitPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                <apex:outputText value="{!line.unit_priceFORMATTED}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">{!$Label.POWizardExtendedPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                <apex:outputText value="{!line.extended_priceFORMATTED}"/>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Line Type</apex:facet>
+                                <apex:outputText value="{!line.product_line_type}"/>
+                            </apex:column>
+                        </apex:dataTable>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <blockquote class="blockquote-reverse">
+                                    <apex:outputText rendered="{!totalPriceFormatted != null && totalPriceFormatted != ''}" value="Total Price: {!totalPriceFormatted} ({!currentUser.CurrencyISOCode})"/>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    
+                    <!--  Use this form to get alacarte items -->
+                    <div id="calcPriceDiv" style="padding:1em;">
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:center;">
+
+                                    <a href="#" class="btn btn-primary" onclick="toOpportunity();" role="button">{!$Label.POWizardPrevStep}</a>
+                                    <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+
+                                    <a href="#" id="nextStepButton" class="btn btn-primary disabled" onClick="setOkToLeave(); saveOrderConfig();" role="button">{!$Label.POWizardNextStep}</a>
+
+                                <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+                                <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+                                <apex:actionFunction name="toShipping" action="{!ToShipping}"/>
+                                <apex:actionFunction action="{!saveFromOrderConfig}" name="saveOrderConfig"/>
+                                
+                            </div> 
+                        </div>
+                    </div>
+                </apex:form>
+            </div><!--end panel-->
+        </div><!--end container-->
+    </div>
+    
+    
+    <script id="testscript">
+        var okToLeave = false;
+        var allWrappers = [];
+        var jsonHeader = {"pricing_order_request":{"message_header":{"source_system_id":"SFDC","transaction_id":"02052016"},"sales_order":{"order_header":
+                            {"cust_account_number":"22557","country":"US","sales_type":"PURCHASE","channel_type":"RVAR","ship_to_state_code":"CA","system_count":"0", "racking_opt_out":"N","monitoring_opt_out":"N"},"order_lines":{"order_line":[]}}}}
+        
+        window.onbeforeunload = function(test3){
+            // console.log(test3);
+            if(!okToLeave){
+                return 'By navigating away from this page you will lose your configuration data.';
+            }
+        }
+
+        function setOkToLeave(){
+            okToLeave = true;
+        }
+
+        function enableNextStep(){
+            console.log('ENABLENEXT');
+            $('#nextStepButton').removeClass('disabled');
+        }
+        
+        function calculatePrice() {
+            console.log('ITEMS');
+            console.log(productItems);
+            jsonHeader.pricing_order_request.sales_order.order_lines.order_line = [];
+            for(i=0; i<productItems.length; i++) {
+                jsonHeader.pricing_order_request.sales_order.order_lines.order_line.push({"ordered_item":productItems[i].itemID,"ordered_quantity":productItems[i].Qty,"product_line_type":"A La Carte"});                  
+            }
+            $('#ajaxLoading').show();
+            $('#tableSection').hide();
+            OrderAppController.happyCalloutTime(JSON.stringify(jsonHeader), function(result, event) {
+
+                if(event.status){
+                    if(result.success){
+                        $('#ajaxLoading').hide();
+                        var payload = result.payloadMap.response;
+
+                        var elem = document.createElement('textarea');
+                        elem.innerHTML = payload;
+                        var decoded = elem.value;
+                        
+                        var arr_from_json = JSON.parse(decoded);
+                        console.log(arr_from_json);
+                        
+                        var responseLines = arr_from_json.pricing_order_response.sales_order.order_lines;
+                        console.log(responseLines);
+                        //console.log(responseLines.order_line.length);
+                        //var totalCost = arr_from_json.pricing_order_response.sales_order.order_header.order_total
+                        //console.log(totalCost);
+                        $('#tableSection').show();
+                        createResponseLinesTable(responseLines.order_line); 
+                    }else{
+                        $('#ajaxLoading').hide();
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    $('#ajaxLoading').hide();
+                    alert(event.message);
+                }  
+            
+            });
+        }
+        
+        function toggleSpinner(showSpinner){
+            if(showSpinner){
+                $('#ajaxLoading').show();
+            }else{
+                $('#ajaxLoading').hide();
+            }
+        }
+           
+       function createResponseLinesTable(responseLines){
+           var newTableString = '';
+           console.log(responseLines.item_description);
+           if(responseLines.length == undefined) {
+               newTableString += '<tr id="lineItem1" Line_Number="1"><td>'+i+"</td><td>"+responseLines.item_description+"</td><td>"+responseLines.ordered_item+"</td><td>"+responseLines.ordered_quantity+"</td><td>"+responseLines.adjusted_unit_price+"</td><td>"+responseLines.extended_price+"</td></tr>";
+           }
+           else {
+               for (var i = 0; i < responseLines.length; i++) {
+                   newTableString += '<tr id="lineItem'+i+'" Line_Number="'+i+'"><td>'+i+"</td><td>"+responseLines[i].item_description+"</td><td>"+responseLines[i].ordered_item+"</td><td>"+responseLines[i].ordered_quantity+"</td><td>"+responseLines[i].adjusted_unit_price+"</td><td>"+responseLines[i].extended_price+"</td></tr>";
+               }
+           }
+            $('#responseTableBody').html(newTableString);
+        }
+    </script>
+</apex:page>

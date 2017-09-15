@@ -1,0 +1,21 @@
+<apex:page controller="CHome_ReportController" showHeader="false" sidebar="false">
+    
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Home" />
+    <body class="detail-container">
+    <apex:form > 
+    <!--Reports Chart:: this is usefull for extending charts in CHOME-->
+    
+    <apex:outputPanel id="ReportChart" rendered="{!NOT(isNULL(rcid))}">
+    <analytics:reportChart reportId="{!rcid}?isdtp=vw">
+    </analytics:reportChart>
+    </apex:outputPanel>
+    
+    
+    <apex:outputPanel id="toDisableHeader" rendered="{!NOT(isNULL(rid))}">
+    <apex:iframe src="/{!rid}?isdtp=vw"  />   
+    </apex:outputPanel>
+    </apex:form>   
+    </body>
+    <c:SPCommunityAppResources_JS />
+</apex:page>

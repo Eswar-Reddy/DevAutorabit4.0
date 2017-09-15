@@ -1,0 +1,129 @@
+<apex:page StandardController="Account" extensions="SetPartnerLogoController" tabStyle="Account" showHeader="false" sidebar="false" id="page1">
+  <style type="text/css" media="screen">
+         body {background-color:#F3F3EC;}
+        .bPageBlock {border-top:0; padding-bottom:0;}
+        .bPageBlock .pbBody {margin-right:0; padding:0;}
+        .bPageBlock .pbFooter {display:none;}
+       </style>
+<apex:form id="form1">
+<script>
+    var selected = null;
+	function setImage(id){
+		var ctrl = document.getElementById("page1:form1:block1:hiddenImgId");
+		if(ctrl != undefined){
+			ctrl.value = id;
+			selected = id;
+		}
+		
+	}
+	function showPanel(val){
+       var ctrl1 = document.getElementById("page1:form1:block1:blockSection2:panelUpload1");
+       var ctrl2 = document.getElementById("page1:form1:block1:blockSection2:panelUpload2");
+       if(ctrl1 != undefined && ctrl2 != undefined) {
+          if(val.toString() == "SHOW") {
+              ctrl1.style.display="none";
+              ctrl2.style.display="block";
+          }
+          else {
+              ctrl1.style.display="block";
+              ctrl2.style.display="none";
+          }    
+       }
+    }
+    function reloadParent(){
+		var done = "{!refreshParent}";
+        if(done.toString() == "true") {
+            window.parent.location.href = "/{!acc.id}";
+         }   
+    }
+    //to check whether user select any image
+    function chkSelected(){
+        if(selected == null){
+        	alert('Please select Image.');
+        	return false;
+        }
+        return true;
+    }
+    
+    
+    function validateform(){
+
+    	try{
+	    	var ctrl = document.getElementsByName('page1:form1:block1:blockSection2:ImgInputFile:inputFile:file');
+	    	if(ctrl != undefined){
+	    		var selectedFile = ctrl.item(0).value;	
+	    		if(selectedFile == ''){
+	    			alert('Please select a file to upload');
+	    		}
+	    		else {
+	    		    var selectedFileUppercase = selectedFile.toUpperCase();
+	    			if(selectedFileUppercase.lastIndexOf(".JPG")==-1 && selectedFileUppercase.lastIndexOf(".JPEG")==-1 && selectedFileUppercase.lastIndexOf(".BMP")==-1 && selectedFileUppercase.lastIndexOf(".PNG")==-1 && selectedFileUppercase.lastIndexOf(".GIF")==-1){
+	    				alert("Please upload only jpg/jpeg/bmp/png/gif extention file");
+						return false;
+	    			}
+	    			else {
+	    				var ctrl = document.getElementById("page1:form1:block1:hiddenImgName");
+	    				var filename = '';
+	    				if(ctrl != undefined) {
+	    					 var indx = selectedFile.lastIndexOf("\\");	
+	    					 filename = selectedFile.substring(indx);
+	    					 ctrl.value = filename;
+	    				}
+	    			}//else end
+	    			
+	    		}//else end
+	    	}//if end
+	    	
+    	}//try end
+    	catch(e){
+    	  alert(e.toString()); 
+    	}
+    	return true;
+    }
+   
+    reloadParent();
+</script>
+	<apex:pageMessages />		
+	 <apex:pageBlock id="block1">
+	 	 <apex:pageBlockSection columns="1" id="blockSection1">
+		 		<apex:pageBlockTable value="{!listAttachmentClass}" var="la" rendered="{!listAttachmentClass.Size>0}">
+		 			<apex:Column headerValue="Select">
+		 					<input type="radio" id="{!la.id}" onclick="setImage('{!la.id}')" name="rdo" /> 
+		 			</apex:Column>
+		 			<apex:Column value="{!la.imageName}" headerValue="Image Name"/>
+		 		</apex:pageBlockTable>
+		 </apex:pageBlockSection> 
+		 <apex:pageBlockSection columns="1" id="blockSection2">
+		 	                  <apex:outputPanel id="panelUpload1">
+                                  <input type="button" value="Add New Attachment" onclick="showPanel('SHOW')"  class="btn"/>&nbsp;&nbsp;<apex:CommandButton value="Set Partner Logo" onClick="return chkSelected();"  action="{!setPartnerLogo}"/>
+                              </apex:outputPanel>
+                              <apex:outputPanel id="panelUpload2" style="display:none">
+                                            <apex:outputLabel value="Logo" />
+                                            <apex:inputFile value="{!logo}" id="ImgInputFile"/> &nbsp;&nbsp;<input type="button" value="Cancel" onclick="showPanel('HIDE')"  />
+                                    		<apex:outputPanel layout="block" style="align:center">
+                                    		<br/>
+					                           <apex:CommandButton value="Save" onclick="javascript:return validateform();"  action="{!save}"/>
+	            				            </apex:outputPanel>  
+                              </apex:outputPanel>  
+         </apex:pageBlockSection>
+		 <apex:inputHidden value="{!imageId}" id="hiddenImgId"/>
+		 <apex:inputHidden value="{!imageName}" id="hiddenImgName"/>
+ 	</apex:pageBlock>  
+ 	<div>
+        <iframe id="resizeHack" width="0" height="0" frameborder="no"/>
+    </div>
+</apex:form>
+<script>
+	function setSelected(){
+	    var id = '{!checkeRadioId}';
+	   var ctrl = document.getElementById(id);
+		if(ctrl != undefined){
+			ctrl.checked = true;
+		}
+	}	
+	setSelected();
+	  document.getElementById("resizeHack").src = "{!URLFOR($SControl.Resize_VF_Iframe)}" +
+                                              "&ifName=" + window.name +
+                                              "&ifHeight=" + document.body.offsetHeight;
+</script>
+</apex:page>

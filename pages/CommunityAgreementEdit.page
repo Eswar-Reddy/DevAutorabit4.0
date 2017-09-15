@@ -1,0 +1,295 @@
+<apex:page showHeader="false" id="cpg" sidebar="false" standardStylesheets="false" standardController="echosign_dev1__SIGN_Agreement__c">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        .sunpower-style img{
+            width:5% !important;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+        
+        var newWin=null;
+    function openLookupPopup(name, id, objName,fieldName)
+    {
+        var url="/apex/LookupPopUp?namefield=" + name + "&idfield=" + id + "&ObjectName=" + objName + "&FieldName="+ fieldName;
+        newWin=window.open(url, 'Popup','height=500,width=600,left=100,top=100,resizable=no,scrollbars=yes,toolbar=no,status=no');
+        if (window.focus) 
+        {
+            newWin.focus();
+        }
+            
+        return false;
+    }
+                  
+    function closeLookupPopup()
+    {
+       if (null!=newWin)
+       {
+          newWin.close();
+       }  
+    }
+
+    </script>
+    
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;max-width:1180px;">
+        <!--<div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">-->
+            <apex:form >
+            <apex:actionFunction name="save_contact" action="{!save}"/>
+            <div class="row top2" >
+                <div class="col-xs-12 col-md-10">
+                    <a href="/{!$CurrentPage.parameters.Id}">
+                        <h5 style="font-size: small;color: #0076be !important;">BACK TO AGREEMENT INFORMATION </h5>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-2">
+                    <a class="btn btn-primary btn--small" style="float:right;" id="savebotton" onclick="save_contact();" >Save</a>
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Agreement Detail</h3>    
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Agreement Name</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!echosign_dev1__SIGN_Agreement__c.Name}"></apex:inputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Recipient(Contact)</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:inputHidden value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Recipient__c}" id="targetId" />
+                    <apex:inputText id="targetName" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;" onFocus="this.blur()" value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Recipient__r.Name}"></apex:inputText><a href="#" style="float:right;" onclick="openLookupPopup('{!$Component.targetName}', '{!$Component.targetId}','Contact','Name'); return false"><i class="fa fa-search" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="row" style="margin-top:15px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Account</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Account__r.Name}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Additional Recipient 1(Contact)</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:inputHidden value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Recipient2__c}" id="targetId1" />
+                    <apex:inputText id="targetName1" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;" onFocus="this.blur()" value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Recipient2__r.Name}"></apex:inputText><a href="#" style="float:right;" onclick="openLookupPopup('{!$Component.targetName1}', '{!$Component.targetId1}','Contact','Name'); return false"><i class="fa fa-search" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Agreement Type</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;" value="{!echosign_dev1__SIGN_Agreement__c.Agreement_Type_2__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Agreement Status</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c}"></apex:outputField>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Date Sent</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSentDate__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Date Viewed</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateViewedDate__c}"></apex:outputField>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Date Signed</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSignedDate__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Quote</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Quote__r.Name}"></apex:outputField>
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Message</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Message__c}"></apex:inputField>
+                </div>
+            </div>
+                        
+            </apex:form>
+            
+    </body>
+    
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+    
+</apex:page>

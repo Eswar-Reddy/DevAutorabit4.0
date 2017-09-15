@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Design__c.Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Inverter_Notes__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Design__c.Project_Design</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Americas,NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Not Started,Missing Info,Completed,Permit Approval,Construction,Record Drawings,Customer Service,Waiting on someone else,On Hold,De-Activated,Invalid,Awaiting Approval,Correct,Cancelled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Opportunity__c</column>
+            <operator>notEqual</operator>
+            <value>378762_Test Oppty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Opportunity_Stage__c</column>
+            <operator>notEqual</operator>
+            <value>02 – Budgetary Pricing,05 – Agreements Finalized,06 – Closed Won,07 – Closed Lost</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>FiscalQuarter</dateGranularity>
+        <field>Design__c.Close_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Opportunity_Stage__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_$Site_Information_Form__c.Opportunity_del__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Inverter Demand Planning Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Design__c@Design__c.Site__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_PREVCURFY</interval>
+    </timeFrameFilter>
+</Report>

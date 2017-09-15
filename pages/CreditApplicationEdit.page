@@ -1,0 +1,36 @@
+<!--
+Name   : CreditApplicationEdit
+Author : Aashish Mathur
+Date   : May 13, 2010
+Usage  : Redirect user to standard edit page if CA can be edited.
+-->
+
+<apex:page standardController="Credit_Application__c" extensions="CreditApplicationEditController"
+    tabStyle="Credit_Application__c" action="{!redirectUser}">
+  <style>
+    .bPageTitle  {
+      margin-bottom: 0px;
+    }
+  </style>
+  
+  <apex:sectionHeader title="Credit Application Edit" subtitle="{!Credit_Application__c.Name}" />
+  
+  <apex:form >
+    <apex:outputPanel layout="block" rendered="{!NOT(isCAEditable)}"
+        style="font-size:91.3%; font-family:'Verdana','Geneva',sans-serif; padding-left:8px; padding-bottom:3px;">
+      <apex:commandLink action="{!cancel}" value="Back to Previous Page" />
+    </apex:outputPanel>
+    
+    <apex:pageBlock >
+      <apex:outputPanel layout="block" style="width:100%; text-align:center;" rendered="{!isCAEditable}">
+        <img src="/img/waiting_dots.gif" /><br />
+        <h4>Please Wait...</h4>
+      </apex:outputPanel>
+      
+      <apex:outputPanel layout="block" style="padding:4px 2px 4px 5px; color: #333333;"
+          rendered="{!NOT(isCAEditable)}">
+        This CA is not Editable.
+      </apex:outputPanel>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

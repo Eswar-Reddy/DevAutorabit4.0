@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>Case.Expected_Outcome__c</field>
+    </columns>
+    <columns>
+        <field>Case.Resolution__c</field>
+    </columns>
+    <columns>
+        <field>REASON</field>
+    </columns>
+    <columns>
+        <field>Case.Requested_Due_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Case.CRM_Case</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>SUBJECT</column>
+            <operator>equals</operator>
+            <value>On Line Warranty Auto Case CRM #</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CONTACT.NAME</column>
+            <operator>notEqual</operator>
+            <value>SunPower Warranty Operator</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CREATED_DATE</column>
+            <operator>greaterThan</operator>
+            <value>3/1/2013 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CONTACT.ACCOUNT</column>
+            <operator>equals</operator>
+            <value>&quot;Solarmax Renewable Energy Provider, Inc.&quot;</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>STATUS</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Auto Warranty Cases | SM</name>
+    <params>
+        <name>units</name>
+        <value>h</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Case.Resolution__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATEONLY</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

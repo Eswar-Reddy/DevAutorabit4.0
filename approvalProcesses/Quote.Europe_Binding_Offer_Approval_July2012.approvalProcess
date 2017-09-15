@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>fatima.berral@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step 1a: (Countries France, Belgium, Holland)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>France,Holland,Belgium</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Approval Step 1a: (Countries France, Belgium, Holland)</label>
+        <name>Approval_Step_1a_Countries_France_Belgium_Holland</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>alex.tranter@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step 1b: (Greece and Israel)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Greece,Israel</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Approval Step 1b: (Greece and Israel)</label>
+        <name>Approval_Step_1b_Greece_and_Israel</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>andrea.antolini@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step 1c: (Italy)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Italy</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Approval Step 1c: (Italy)</label>
+        <name>Approval_Step_1c_Italy</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>reinhard.lampe@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step 1d: (Other Europe Countries)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>France,Israel,Greece,Holland,Italy,Belgium</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Approval Step 1d: (Other Europe Countries)</label>
+        <name>Approval_Step_1d_Other_Europe_Countries</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Binding Offer VP (EU) (France, Israel, Greece, Belgium)</description>
+        <entryCriteria>
+            <booleanFilter>(NOT(1 AND 2) and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 1,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>France,Israel,Greece,Belgium</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Binding Offer VP (EU) (France, Israel, Greece, Belgium)</label>
+        <name>Binding_Offer_VP_EU_France_Israel_Greece_Belgium</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>reinhard.lampe@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Binding Offer VP (EU) (Not France, Israel, Greece, Belgium)</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 AND 2) and 3</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 1,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>France,Israel,Greece,Belgium</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Binding Offer VP (EU) (Not France, Israel, Greece, Belgium)</label>
+        <name>Binding_Offer_VP_EU_Not_France_Israel_Greece_Belgium</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>guillaume.dufosse@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Binding Offer SVP (EU)</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 OR 2)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 15,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Binding Offer SVP (EU)</label>
+        <name>Binding_Offer_SVP_EU</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Global President Approval (EU)</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 and 2) or 3</booleanFilter>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>lessOrEqual</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Global President Approval (EU)</label>
+        <name>Global_President_Approval_EU</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Deal Review Committee Approval</description>
+        <entryCriteria>
+            <booleanFilter>2 or (1 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Deal Review Committee Approval</label>
+        <name>Deal_Review_Committee_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Europe - Binding Offer Approval July 2012</description>
+    <emailTemplate>Quote/Binding_Offer_Quote_Submission_VF</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 2 and 3</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Binding Offer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Region1__c</field>
+            <operation>equals</operation>
+            <value>Europe</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>BOS+PV,PV Only,BOS Only</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Udpat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Rejection_Email_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Binding_Offer_Quote_Submission_UPPi_Binding_Offer_Mature_Markets</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Submission_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Europe - Binding Offer Approval July2012</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

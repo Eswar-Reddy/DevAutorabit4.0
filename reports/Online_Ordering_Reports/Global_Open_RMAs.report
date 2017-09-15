@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>oe_order_headers__c.LEASE_NUMBER__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c.ORDER_STATUS__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c.SSD__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c.SAD__c</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>oe_order_headers__c.CASH_BOOKED</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c.ORDER_TYPE__c</column>
+            <operator>equals</operator>
+            <value>SPAU RVAR Return,SPCN RVAR Return,SPDE CVAR Return,SPDE RVAR Return,SPES CVAR Return,SPES RVAR Return,SPFR CVAR Return,SPFR RVAR Return,SPGB RVAR Return,SPIT CVAR Return,SPIT RVAR Return,SPNA CVAR Return,SPNA RVAR Return,SPSW CVAR Return,SPSW RVAR Return</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>oe_order_headers__c.ORDER_TYPE__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Global Open RMAs</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$oe_order_headers__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

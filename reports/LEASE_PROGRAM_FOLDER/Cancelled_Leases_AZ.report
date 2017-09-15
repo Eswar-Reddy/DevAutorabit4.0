@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c.Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Lease__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Module__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Module_Qty__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Cancelled,Cancellation with RMA</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ADDRESS2_STATE</column>
+            <operator>equals</operator>
+            <value>AZ</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>Cancelled Leases AZ</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$LeasePayment__c@LeasePayment__c.Quote__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

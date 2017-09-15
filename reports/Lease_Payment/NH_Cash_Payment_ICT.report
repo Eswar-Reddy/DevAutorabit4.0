@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$RecordType</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>equals</operator>
+            <value>LeasePayment__c.TPS_Cash_Payment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Name__c</column>
+            <operator>equals</operator>
+            <value>SunPower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Duplicate,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Lease__c</column>
+            <operator>notContain</operator>
+            <value>1075830</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Install_Pymnt_Submitted__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Cash Payment_ICT</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Closing_Request_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

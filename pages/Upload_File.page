@@ -1,0 +1,27 @@
+<apex:page showHeader="false" sidebar="false" controller="UploadFileController" id="pg">
+<script>
+</script>
+
+<apex:form > 
+       <apex:pageBlock id="pgblockImport" title="Upload File">
+           <apex:pageBlockButtons location="top" id="importButton">
+             <input type="button" id="close" value="Close" onclick="window.close();" class="btn"/>
+            </apex:pageBlockButtons>
+               
+               <apex:pageblockSection >
+                   <apex:pageBlockSectionItem >
+                   
+                     <apex:outputLabel value="Upload From" />
+                      <apex:inputFile value="{!contentFile}" filename="{!nameFile}"  contentType="{!contentTypeFile}"/>
+                   </apex:pageBlockSectionItem>
+                  
+                   <apex:pageblockSectionItem >
+                   <apex:commandButton value="Upload" action="{!UploadFile}" />
+                          <!--
+                          <input type="button" value="Upload" onclick="jsUploadFile()" />
+                          -->
+            </apex:pageblockSectionItem>
+         </apex:pageblockSection>
+       </apex:pageBlock>
+     </apex:form>
+</apex:page>

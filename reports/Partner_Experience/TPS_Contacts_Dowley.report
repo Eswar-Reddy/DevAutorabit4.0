@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$Lease2_0_Program_Partner__c</field>
+    </columns>
+    <columns>
+        <field>Account.Contacts$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Contacts$Active_Partner_Portal_User__c</field>
+    </columns>
+    <columns>
+        <field>Account.Contacts$Portal_User_Profile__c</field>
+    </columns>
+    <columns>
+        <field>Account.Contacts$Portal_User_Role__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account$RecordType</column>
+            <operator>equals</operator>
+            <value>Account.Partner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Status__c</column>
+            <operator>equals</operator>
+            <value>Contract Pending,Active</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$NH_SSE_Type__c</column>
+            <operator>equals</operator>
+            <value>TPS</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>TPS Contacts | Dowley</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_and_Portal_Users__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Account.Contacts$Active_Partner_Portal_User__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Account$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

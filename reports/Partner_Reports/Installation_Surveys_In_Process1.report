@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>Customer_Survey_Result__c.Survey_Status__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_OWNER_NAME</field>
+    </columns>
+    <columns>
+        <field>Customer_Survey_Result__c.Primary_Contact_Email__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.Primary_Phone__c</field>
+    </columns>
+    <columns>
+        <field>FK_ACC_ADDR1_LINE1</field>
+    </columns>
+    <columns>
+        <field>FK_ACC_ADDR1_CITY</field>
+    </columns>
+    <currency>USD</currency>
+    <description>In-Process Installation Surveys by dealer for current and previous quarter</description>
+    <filter>
+        <criteriaItems>
+            <column>Customer_Survey_Result__c.Survey_Status__c</column>
+            <operator>equals</operator>
+            <value>1st Invitation Sent,2nd Invitation Sent,3rd invitation Sent,Scheduled</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ACCOUNT.NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Installation Surveys - In Process</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$Customer_Survey_Result__c@Customer_Survey_Result__c.Opportunity_ID__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>CUST_CREATED_DATE</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CURPREV1</interval>
+    </timeFrameFilter>
+</Report>

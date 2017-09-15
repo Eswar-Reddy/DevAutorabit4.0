@@ -1,0 +1,1729 @@
+<apex:page controller="WarrantyRegistrationController" id="pg" tabStyle="Warranty_Registration__tab" sidebar="true" action="{!setCustomerID}">
+   <head>
+     <link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet" />
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&v=3.exp&sensor=false&libraries=places&language=en"/>
+     <link rel="stylesheet" href="{!URLFOR($Resource.jquery_ui_18, 'css/smoothness/jquery-ui-1.8.16.custom.css')}" type="text/css" media="all" />
+    <!--cdevarapalli -  Warranty Registration Process - SSE - Javascript to prevent page redirect when user hits enter in Custom Search Text box-->
+    <script type='text/javascript'>
+      function noenter(ev)  {
+        if(window.event && window.event.keyCode == 13 || ev.which == 13) {
+            return false;
+        }else {
+            srchCustByTxt();
+            return true;
+        }
+    }
+   </script>
+   <!-- Java script to redirect Warranty List page-->
+    <apex:pageBlock rendered="{!NOT(currentLoginUser.IsPortalEnabled)}">
+        <script type="text/javascript">
+                window.location = "/{!warrantyRegistrationObjPreFix}" 
+           </script> 
+    </apex:pageBlock>
+     <apex:form style="display:inline;">
+     <!--cdevarapalli -  Warranty Registration Process - SSE - New action function for deleting Warranty Registration-->
+         <apex:actionFunction action="{!deleteWR}" name="delWR" />
+         <apex:actionFunction action="{!next}" name="next" rerender="registrationWizard" onComplete="lockScreen(false);">
+             <apex:param name="step" assignTo="{!step}" value="" />
+             <apex:param name="requestedTabName" assignTo="{!requestedTabName}" value="" />
+         </apex:actionFunction>
+         <apex:actionFunction action="{!persistWarranty}" name="persistWarranty" rerender="registrationWizard" onComplete="lockScreen(false);"/>
+         <apex:actionFunction action="{!generateExceptionCSV}" name="generateExceptionCSV" >
+         </apex:actionFunction>
+         <c:WaitingComponent />
+     </apex:form> 
+    <script type="text/javascript">
+      var geocoder;
+            function initialize() {
+                var mapOptions = {
+                    center: ("{!RIGHT(partnerAccount.Country_Domain__c,2) == 'au'}" == "false") ? new google.maps.LatLng(37.405178, -121.946483) : new google.maps.LatLng(-33.857767, 151.214993),
+                    zoom: 18,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE
+                };
+
+                var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                var input = /** @type {HTMLInputElement} */(document.getElementById('searchTextField'));
+                var autocomplete = new google.maps.places.Autocomplete(input);
+                
+                autocomplete.bindTo('bounds', map);
+
+                var infowindow = new google.maps.InfoWindow();
+                var marker = new google.maps.Marker({ map: map });
+
+                google.maps.event.addListener(autocomplete, 'place_changed', function(){
+                    infowindow.close();
+                    marker.setVisible(false);
+                    input.className = '';
+                    var place = autocomplete.getPlace();
+                    
+                    if (!place.geometry) { // Inform the user that the place was not found and return.
+                        input.className = 'notfound';
+                        return;
+                    }
+
+                    // If the place has a geometry, then present it on a map.
+                    if (place.geometry.viewport){
+                        map.fitBounds(place.geometry.viewport);
+                    }
+                    else{
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(20);  
+                    }
+                    
+                    marker.setIcon(/** @type {google.maps.Icon} */({
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(35, 35)
+                    }));
+
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                    var locationvalu  = place.formatted_address ;
+                    var address = '';
+                    
+                    if (place.address_components){
+                        address = [(place.address_components[0] && place.address_components[0].short_name || ''),
+                                   (place.address_components[1] && place.address_components[1].short_name || ''),
+                                   (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
+                    }
+
+                    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                    var lat = place.geometry.location.lat();
+                    var lng= place.geometry.location.lng();
+/*                    alert('hi1');
+                    alert(lat);
+                    alert(lng);*/
+
+                    geocoder = new google.maps.Geocoder();
+                    codeLatLng(lat, lng, place.name);
+                });
+
+                // Sets a listener on a radio button to change the filter type on Places
+                // Autocomplete. 
+                function setupClickListener(id, types){
+                    var radioButton = document.getElementById(id);
+                    google.maps.event.addDomListener(radioButton, 'click', function(){  autocomplete.setTypes(types); });
+                }
+
+                setupClickListener('changetype-all', []);
+            }//End Func initialize
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+            function codeLatLng(lat, lng, place){
+                var latlng = new google.maps.LatLng(lat, lng);
+                document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:pbsi11:lat').value = lat ;
+                document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:pbsi12:log').value = lng ;
+                var local;
+                var sublocal;
+/*                alert('hi');
+                alert(lat);
+                alert(lng);*/
+                geocoder.geocode({'latLng': latlng}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK){
+                        if (!Function.prototype.bind && typeof console != 'undefined' && typeof console.log == 'object')
+                            Function.prototype.call.call(console.log, console, Array.prototype.slice.call(results));
+                        if(results[1]){
+                            for (var i=0; i<results[0].address_components.length; i++){
+                                for (var b=0;b<results[0].address_components[i].types.length;b++){
+                                    //Street
+                                    if (results[0].address_components[i].types[b] == "route"){
+                                        route= results[0].address_components[i];
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi2:BillingStreet').value =  place ;
+                                        break;
+                                    }
+                                    // State
+                                    if (results[0].address_components[i].types[b] == "administrative_area_level_1"){
+                                        State= results[0].address_components[i];
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi3:state1').value = State.short_name;
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi3:hiddenState1').value = State.short_name;
+                                        break;
+                                    }
+                                    //Country
+                                    if (results[0].address_components[i].types[b] == "country"){
+                                        country= results[0].address_components[i];
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi:country').value = country.long_name ;
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi:hiddenCountry').value = country.long_name ;
+                                        break;
+                                    }
+                                    //postal code
+                                    if (results[0].address_components[i].types[b] == "postal_code"){
+                                        postal_code= results[0].address_components[i];
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi4:zipCode1').value = postal_code.long_name ;
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi4:hiddenZipCode1').value = postal_code.long_name ;
+                                        break;
+                                    }               
+                                    //city
+                                    if (results[0].address_components[i].types[b] == "locality"){
+                                        locality= results[0].address_components[i];
+                                        local = locality.long_name;
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi1:city1').value = locality.long_name ;
+                                        document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi1:hiddenCity1').value = locality.long_name ;
+                                        break;
+                                    }
+                                    if (results[0].address_components[i].types[b] == "sublocality"){
+                                        sublocality= results[0].address_components[i];
+                                        sublocal = sublocality.long_name;
+                                      //  document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi1:city1').value = sublocality.long_name ;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(local == null)
+                            {
+                                document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi1:city1').value = sublocal;
+                                document.getElementById('pg:pageBlock:frm:custDetail:addpbs1:addpbs2:pbsi1:hiddenCity1').value = sublocal;
+                            }
+                        } 
+                        else{
+                            alert("No results found");
+                        }
+                    } 
+                    else{
+                        alert("Geocoder failed due to: " + status);
+                    }
+                });
+            }//End Func codeLatLng
+    </script>   
+    <script>
+            //cdevarapalli -  Warranty Registration Process - SSE - Javascript for Confirmation popup aler on deleting Warranty Registration
+           function deleteWarReg(){
+              if(confirm('Are you sure you want to delete this Warranty Registration?')){
+                   delWR();     
+                }
+              else
+                return false;
+           } 
+           function setFocusOnLoad() {}
+           
+           function showAccountAlert(){
+                if(!confirm("{!$Label.Account_creatation_alertMessage}"))
+                {
+                    return false;
+                }
+           }
+           function handleReturnKey(event,focusId){
+                    event = event || window.event;
+                    if(event && event.keyCode == 13){
+                        document.getElementById(focusId).focus();
+                    }
+                    return false;
+           }
+           function changeSalesOrderLabel(value) 
+           {
+               if(value == 'Sales Order')
+                document.getElementById("salesOrderLabel").innerHTML = "{!$Label.Sales_Order}";
+               else if(value == 'Purchase order')
+                document.getElementById("salesOrderLabel").innerHTML = "{!$Label.Purchase_Order}";
+               else if(value == 'Serial Number')
+                document.getElementById("salesOrderLabel").innerHTML = "{!$Label.Serial_Number}";
+               else if(value == 'Packing List')
+                document.getElementById("salesOrderLabel").innerHTML = "{!$Label.Packing_List}";
+           }
+            function downloadWarrantyCard(id){
+                openPopup("/servlet/servlet.FileDownload?file="+id,"",400, 580,"width=580,height=400,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no",true);
+            }
+            
+           function logCase(caseType,numList,warrantyId,startDate,endDate){ 
+                //var errMsg="";
+                //alert(numList);
+                var url="";
+                if(document.getElementById("pg:pageMessage").innerHTML != "") {
+                    //var errMsg = document.getElementById("pg:pageMessage:j_id11:j_id12:0:j_id13:j_id14:j_id16").firstChild.nextSibling.nodeValue;
+                    var node = document.getElementById("pg:pageMessage:j_id12:j_id13:0:j_id14:j_id15:j_id17").firstChild.nextSibling;
+                    var errMsg='';// = node.nodeValue;
+                    //node = node.nextSibling;
+                    while( node ) {
+                        errMsg += node.nodeValue;
+                        node = node.nextSibling;
+                    }
+                    //var errMsg = document.getElementById("pg:pageMessage:j_id11:j_id12:0:j_id13:j_id14:j_id16").firstChild.childNodes;
+                    //alert(errMsg);
+                    while(errMsg.indexOf('null') > -1){
+                        errMsg = errMsg.replace('null',' ');
+                    }
+                    url='/apex/WR_CreateCase?warrantyId=' + warrantyId+'&caseType='+caseType+'&numList='+escape(numList)+'&errMsg='+errMsg+'&stDate='+startDate+'&endDt='+endDate;
+                    
+                }
+                else{ 
+                    url='/apex/WR_CreateCase?warrantyId=' + warrantyId+'&caseType='+caseType+'&numList='+escape(numList)+'&stDate='+startDate+'&endDt='+endDate;
+                 }  
+                openPopup(url,"",400, 580,"width=580,height=400,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no",true);  
+           }
+           
+            function popupwindow(url, title, w, h) {
+              var left = (screen.width/2)-(w/2);
+              var top = (screen.height/2)-(h/2);
+              return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+            }    
+                 
+            
+        </script>     
+         
+    <apex:outputPanel layout="block" rendered="{!currentLoginUser.IsPortalEnabled}" id="registrationWizard">
+<!--        <apex:messages id="pageMessage" style="text-wrap: normal;width:80%;" />-->
+        <apex:pageMessages id="pageMessage" escape="false"/>
+        <script type="text/javascript">
+           var previousTab ='';
+           function handleSwitchTab(currentTab){
+                if(currentTab == previousTab)
+                    return false;
+                if(currentTab == 'Home' && '{!warranty.Status__c}' != 'Completed' && previousTab != 'WarantyDetails'){
+                    if(!confirm('{!$Label.Save_Existing_Work}')){
+                        lockScreen(true);
+                        window.parent.location.href='apex/WarrantyRegistrationPanel';
+                        return false;
+                    }
+                }else if('{!warranty.Status__c}' == 'Completed' || (previousTab == 'WarantyDetails' && currentTab == 'Home')){
+                    //lockScreen(true);
+                    //window.parent.location.href='apex/WarrantyRegistrationPanel';
+                    //return false;
+                    //cdevarapalli -  Warranty Registration Process - SSE - Confirmation popup on clicking Home button
+                    if(confirm('Save and go back to Home')){
+                      //window.alert(" Line 104");
+                      lockScreen(true);
+                      window.parent.location.href='apex/WarrantyRegistrationPanel';
+                      return false;
+                    } 
+                }
+                if(previousTab =='InstallationData'){
+                    lockScreen(true);
+                    saveProductSelection(currentTab);
+                }else if(previousTab == 'optin'){
+                    lockScreen(true);
+                    saveOptinPreference(currentTab);
+                }else if(previousTab == 'CustomerData'){
+                    lockScreen(true);
+                    next(1,currentTab);
+                }
+               // No need to make server trip when moveing from this tab.
+              //  else if(previousTab == 'WarantyDetails'){
+               //      lockScreen(true);
+              //       next(3,currentTab);
+              //   } )/
+                return false;
+           }
+         function exportWarranty(fileName){
+                    if('' == '{!warranty}')
+                    {
+                        alert("{!$Label.Customer_select_errorMessage}");
+                        return false;
+                    }
+                    openPopup(fileName,'',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);
+                    return false;
+           }
+           function printWarranty(fileName){
+               if('' == '{!warranty}')
+                {
+                    alert("{!$Label.Customer_select_errorMessage}");
+                    return false;
+                }
+                openPopup(fileName,'',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);
+                return false;
+           }           
+        </script>
+    <apex:tabPanel switchType="client" id="theTabPanel" value="{!defaultTabName}">
+            <apex:tab label="{!$Label.Home}" name="Home" id="hm" disabled="false" ontableave="previousTab='Home'" ontabenter="handleSwitchTab('Home')">
+                <!-- Start Home Tab contents -->
+                <apex:outputpanel rendered="{!$CurrentPage.parameters.err != ''}" >
+                     <div class="message errorM3" >
+                     <table  border="0" cellpadding="0" cellspacing="0" class="messageTable" style="padding:0px;margin:0px;">
+                    <tr valign="top" >
+                        <td>
+                            <img alt="ERROR" class="msgIcon" src="/s.gif" title="ERROR" />
+                        </td>
+                        <td class="messageCell" ><div class="messageText"><span style="color:#cc0000">
+                                        </span>{!$CurrentPage.parameters.err}<br/></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                        </td>
+                    </tr>
+               </table>
+                </div>
+                </apex:outputpanel>
+                <apex:outputpanel rendered="{!$CurrentPage.parameters.successMsg != ''}" >
+                     <div class="message infoM3" >
+                     <table border="0" cellpadding="0" cellspacing="0" class="messageTable" style="padding:0px;margin:0px;">
+                     <tbody>
+                        <tr valign="top" >
+                            <td>
+                                <img alt="INFO" class="msgIcon" src="/s.gif" title="ERROR" />
+                            </td>
+                            <td class="messageCell" ><div class="messageText">
+                            <span id="pg:pageMessage:j_id13:j_id14:0:j_id15:j_id16:j_id19">
+                                <h4></h4>
+                             </span>{!$CurrentPage.parameters.successMsg}<br/></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                </apex:outputpanel>                 
+                <apex:pageBlock >
+                    
+                    <apex:form >
+                        <apex:actionFunction action="{!searchWarranties}" name="filterWarranty" rerender="warrantyList,pageMessage" onComplete="lockScreen(false);">
+                            <apex:param name="customerName" assignTo="{!warrantyFilter.customerName}" value="" />
+                        </apex:actionFunction>
+                        <apex:actionFunction action="{!searchWarranties}" name="sortWarranty" rerender="warrantyList,pageMessage" onComplete="lockScreen(false);">
+                            <apex:param name="sortField" assignTo="{!warrantyFilter.sortField}" value="" />
+                        </apex:actionFunction>
+                        <input value="0" name="step" type="hidden" />
+                        <!-- Passing step in request parameter -->
+                        <!-- Search Box -->
+                        <apex:pageBlockSection onkeydown="handleReturnKey(event,'{!$Component.blockSection.find}')" columns="4">
+                            <apex:pageblockSectionItem > 
+                                <apex:outputText style="float:left" value="{!$Label.Status}" /> 
+                                <apex:selectList id="lstStatus" value="{!warrantyFilter.status}" size="1">
+                                    <apex:selectoption itemValue="" itemLabel="{!$Label.All}" />
+                                    <apex:selectoption itemValue="Draft" itemLabel="{!$Label.In_Process}" />
+                                    <apex:selectoption itemValue="Completed" itemLabel="{!$Label.Completed}" />
+                                </apex:selectList>
+                            </apex:pageblockSectionItem>
+
+
+                            <apex:pageblockSectionItem >
+                                <apex:outputText ><nobr>{!$Label.Start_Date} </nobr></apex:outputText>
+                                <apex:inputField value="{!homeStartDate.Delivery_Date__c}" />
+                            </apex:pageblockSectionItem>
+
+                            <apex:pageblockSectionItem >
+                                <apex:outputText ><nobr>{!$Label.End_Date} </nobr></apex:outputText>
+                                <apex:inputField value="{!homeEndDate.Delivery_Date__c}" />
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem id="blockSection">
+                                <apex:commandButton id="find" value="{!$Label.Find}" action="{!searchWarranties}" style="margin-top: 4px;width:50px;" rerender="warrantyList,pageMessage" onclick="lockScreen(true);" onComplete="lockScreen(false);" />
+                            </apex:pageblockSectionItem>
+                        </apex:pageBlockSection>
+                        <!-- End of Search filter  -->
+                        <div class="bNext withFilter rolodex" style="white-space: nowrap;"><apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('A')">
+                            <span class="listItemPad">A</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);lockScreen(true);filterWarranty('B')">
+                            <span class="listItemPad">B</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('C')">
+                            <span class="listItemPad">C</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('D')">
+                            <span class="listItemPad">D</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('E')">
+                            <span class="listItemPad">E</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('F')">
+                            <span class="listItemPad">F</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('G')">
+                            <span class="listItemPad">G</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('H')">
+                            <span class="listItemPad">H</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('I')">
+                            <span class="listItemPad">I</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('J')">
+                            <span class="listItemPad">J</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('K')">
+                            <span class="listItemPad">K</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('L')">
+                            <span class="listItemPad">L</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('M')">
+                            <span class="listItemPad">M</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('N')">
+                            <span class="listItemPad">N</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('O')">
+                            <span class="listItemPad">O</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('P')">
+                            <span class="listItemPad">P</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('Q')">
+                            <span class="listItemPad">Q</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('R')">
+                            <span class="listItemPad">R</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('S')">
+                            <span class="listItemPad">S</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('T')">
+                            <span class="listItemPad">T</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('U')">
+                            <span class="listItemPad">U</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('V')">
+                            <span class="listItemPad">V</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('W')">
+                            <span class="listItemPad">W</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('X')">
+                            <span class="listItemPad">X</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('Y')">
+                            <span class="listItemPad">Y</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('Z')">
+                            <span class="listItemPad">Z</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);filterWarranty('')">
+                            <span class="listItemSelected listItemLast">{!$Label.All_For_Paging}</span>
+                        </apex:outputLink></div>
+                        <!-- List view  -->
+                        <apex:outputPanel id="warrantyList">
+                            <apex:outputPanel layout="block" StyleClass="paginator" rendered="{!IF(warrantySetController.resultSize !=0,true,false)}">
+                                <span class="prevNextLinks"> <span class="left" style="color:black"> {!warranties.size} {!$Label.Of} {!warrantySetController.resultSize} {!$Label.Records}</span> <span class="prevNext"> <apex:commandLink rendered="{!warrantySetController.hasPrevious}" action="{!warrantySetController.first}" rerender="warrantyList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="First" styleClass="first" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="First" title="First" styleClass="firstoff" rendered="{!NOT(warrantySetController.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!warrantySetController.hasPrevious}" action="{!warrantySetController.previous}" rerender="warrantyList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="Previous" title="Previous" styleClass="prev" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="Previous" title="Previous" styleClass="prevoff" rendered="{!NOT(warrantySetController.hasPrevious)}" /> </span>      <span class="prevNext"> <apex:commandLink rendered="{!warrantySetController.hasNext}" action="{!warrantySetController.next}" rerender="warrantyList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="Next" title="Next" styleClass="next" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="Next" title="Next" styleClass="nextoff" rendered="{!NOT(warrantySetController.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!warrantySetController.hasNext}" action="{!warrantySetController.last}" rerender="warrantyList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="Last" title="Last" styleClass="last" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="Last" title="Last" styleClass="lastoff" rendered="{!NOT(warrantySetController.hasNext)}" /> </span> <span class="right" style="color:black">{!$Label.Page} {!warrantySetController.PageNumber}</span> </span>
+                            </apex:outputPanel>
+                            <div class="bPageBlock secondaryPalette">
+                            <div class="pbHeader listHeader"><span>
+                            <center><apex:commandButton action="{!next}" value="{!$Label.New_Product_Registration}" style="font-size: 10px;" /></center>
+                            </span></div>
+                            <apex:pageBlockTable value="{!warranties}" var="warranty" captionStyle="pbHeader listHeader">
+                                <apex:column headerValue="{!$Label.Action}" styleClass="actionColumn">
+                                  <apex:outputPanel rendered="{!warranty.Status__c == 'Completed'}">
+                                        <apex:commandlink styleClass="actionLink" title="Download CSV" onclick="openPopup('/apex/WarrantyRegistrationCSV?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" action="#">
+                                              {!$Label.CSV}
+                                          </apex:commandlink> | 
+                                          <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'it'}" onclick="openPopup('/apex/WROptinForm_italy?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- Italy -->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'de'}" onclick="openPopup('/apex/WROptinForm_germany?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- Germany -->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'fr'}" onclick="openPopup('/apex/WROptinForm_france?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                        </apex:commandlink>
+                                        <!-- France -->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}" onclick="openPopup('/apex/WROptinForm_us?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- US -->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'es'}" onclick="openPopup('/apex/WROptinForm_spain?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- Spain -->
+                                        <!-- Belgium_BE updated for Case#00082691-->
+                                        <!-- <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'be'}" onclick="openPopup('/apex/WROptinForm_BELGIUM?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink> -->
+                                        <!-- Belgium -->                                        
+                                        <apex:commandlink styleClass="actionLink" rendered="{!AND(RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'be', currentLoginUser.LanguageLocaleKey == 'nl_NL')}" onclick="openPopup('/apex/WROptinForm_BELGIUM?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- Belgium_BE updated for Case#00082691-->  
+                                        <!-- United Kingdom added for Case#00082572-->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'uk'}" onclick="openPopup('/apex/WROptinForm_UK?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- United Kingdom added for Case#00082572-->
+                                        <!-- Belgium_FR added for Case#00082691-->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!AND(RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'be', currentLoginUser.LanguageLocaleKey == 'fr')}" onclick="openPopup('/apex/WROptinForm_BELGIUM_FR?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                        <!-- Belgium_FR added for Case#00082691-->
+                                        <!-- Netherlands added for Case#00546729-->
+                                        <apex:commandlink styleClass="actionLink" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'nl'}" onclick="openPopup('/apex/WROptinForm_NL?warrantyId={!warranty.id}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;" title="Print Warranty" action="#">
+                                               {!$Label.Print}
+                                           </apex:commandlink>
+                                    </apex:outputPanel>
+
+                                    <apex:outputPanel rendered="{!warranty.Status__c == 'Draft'}">
+                                        <apex:commandlink title="Edit" styleClass="actionLink" action="{!resumeRegistration}" value="{!$Label.Edit_1}">
+                                            <apex:param value="{!warranty.id}" name="warrantyNumber" id="edwarrantyID" />
+                                        </apex:commandlink>  |    
+                                            <apex:commandlink title="Remove" styleClass="actionLink" action="{!deleteWarranty}" value="{!$Label.Del}" immediate="true" id="dwlink" title="Remove" rerender="warrantyList" onclick="if(!confirm('{!$Label.Confirm_Remove_Warranty}')){return false;}lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:param value="{!warranty.id}" name="warrantyID" />
+                                        </apex:commandlink>
+                                    </apex:outputPanel>
+                                </apex:column>
+                                <apex:column >
+                                    <apex:commandlink value="{!warranty.Name}" action="{!resumeRegistration}" id="click">
+                                        <apex:param value="{!warranty.id}" name="warrantyNumber" id="warrantyId" />
+                                        <apex:param value="{!warranty.Customer_SFDC_ID__c}" name="customerNumber" id="customerId" />
+                                    </apex:commandlink>
+                                    <apex:facet name="header">
+                                        <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortWarranty('Name')">
+                                        {!$Label.Warranty_Number}<img src="{!IF(warrantyFilter.sortField = 'Name', IF(warrantyFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                        </apex:outputLink>
+                                    </apex:facet>
+                                </apex:column>
+                                <apex:column >
+                                    {!warranty.Customer_SFDC_ID__r.Name}
+                                    <apex:facet name="header"> 
+                                        <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortWarranty('Customer_SFDC_ID__r.Name')">
+                                            {!$Label.Customer_Name}<img src="{!IF(warrantyFilter.sortField = 'Customer_SFDC_ID__r.Name', IF(warrantyFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                        </apex:outputLink>
+                                    </apex:facet>
+                                </apex:column>
+                                <apex:column >
+                                    <nobr> {!warranty.Customer_SFDC_ID__r.BillingStreet},
+                                    {!warranty.Customer_SFDC_ID__r.BillingCity} <apex:outputText rendered="{!NOT(ISBLANK(warranty.Customer_SFDC_ID__r.BillingState))}">,  {!warranty.Customer_SFDC_ID__r.BillingState}</apex:outputText> {!warranty.Customer_SFDC_ID__r.BillingPostalCode} {!warranty.Customer_SFDC_ID__r.BillingCountry} </nobr>
+                                    <apex:facet name="header">
+                                        <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortWarranty('Customer_SFDC_ID__r.BillingStreet')">
+                                        {!$Label.Address}<img src="{!IF(warrantyFilter.sortField = 'Customer_SFDC_ID__r.BillingStreet', IF(warrantyFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                        </apex:outputLink>
+                                    </apex:facet>
+                                </apex:column>
+                                <apex:column >
+                                    <nobr> <!-- <apex:outputText value="{0,date,MM/dd/yy}"><apex:param value="{!warranty.Delivery_Date__c}" /></apex:outputText> -->
+                        <apex:outputField value="{!warranty.Delivery_Date__c}" /> </nobr>
+                                    <apex:facet name="header">
+                                        <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortWarranty('Delivery_Date__c')">
+                                        {!$Label.Date}<img src="{!IF(warrantyFilter.sortField = 'Delivery_Date__c', IF(warrantyFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                        </apex:outputLink>
+                                    </apex:facet>
+                                </apex:column>
+                                <apex:column >
+                                   <apex:outputText rendered="{!IF(warranty.Status__c == 'Draft',true,false)}">
+                                        <font color="red"> <nobr>{!$Label.In_Process}</nobr> </font>
+                                    </apex:outputText> 
+                                    <apex:outputText rendered="{!IF(warranty.Status__c == 'Completed',true,false)}">
+                                        <nobr>{!$Label.Completed} </nobr>
+                                    </apex:outputText> 
+                                    <apex:facet name="header">
+                                        <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortWarranty('Status__c')">
+                                            {!$Label.Status}<img src="{!IF(warrantyFilter.sortField = 'Status__c', IF(warrantyFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                        </apex:outputLink>
+                                    </apex:facet>
+                                </apex:column>
+                            </apex:pageBlockTable></div>
+                        </apex:outputPanel>
+                    </apex:form>
+                </apex:pageBlock>
+                <!-- End Home Tab -->
+            </apex:tab>
+            <apex:tab label="{!$Label.Customer_Information}" name="CustomerData" id="cData" disabled="{!if(warranty.Status__c == 'Completed',true,false)}" ontableave="previousTab='CustomerData'" ontabenter="handleSwitchTab('CustomerData')">
+                <!-- Customer info Tab -->
+                <apex:pageBlock id="pageBlock">
+                    <apex:form id="frm">
+                        
+                        <!--cdevarapalli -  Warranty Registration Process - SSE - New Search Functionality using user entered text-->
+                        <apex:pageBlockSection id="pbs">
+                        <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Search Customer</apex:outputLabel>
+                        <apex:inputText id="searchText" value="{!customerFilter.filterText}" onkeypress="return noenter(event);">
+                          <!--<apex:actionSupport event="onkeyup" rerender="UnitApprovalBlock,partnumber,partdesc,level1,level2,level3,level4,level5" action="{!search}" />-->
+                          <apex:actionSupport event="onkeyup" action="{!searchCustomersByText}" rerender="customerPanel,pageMessage" onComplete="lockScreen(false);" >
+                              <apex:param name="searchCByText" assignTo="{!customerFilter.isSearchByClick}" value="false" />
+                          </apex:actionSupport>
+                           </apex:inputtext>
+                         </apex:pageBlockSectionItem>
+                         </apex:pageBlockSection>
+                         
+                         <apex:outputPanel id="customerPanel">
+                         
+                         <apex:actionFunction action="{!searchCustomersByText}" name="srchCustByTxt" reRender="customerPanel,pageMessage" onComplete="lockScreen(false);"/>
+
+                        <apex:actionFunction action="{!searchCustomersByClick}" name="searchCustomers" rerender="searchText,customerPanel,pageMessage" onComplete="lockScreen(false);">
+                            <apex:param name="customerSearchText" assignTo="{!customerFilter.SearchText}" value="" />
+                            <apex:param name="searchCByClick" assignTo="{!customerFilter.isSearchByClick}" value="true"/>
+                        </apex:actionFunction>
+                        <!--
+                        <apex:actionFunction action="{!searchCustomers}" name="searchCustomers" rerender="pageBlock,pageMessage" onComplete="lockScreen(false);">
+                            <apex:param name="customerSearchText" assignTo="{!customerFilter.SearchText}" value="" />
+                        </apex:actionFunction>-->
+                        <apex:actionFunction action="{!searchCustomers}" name="sortCustomers" rerender="customerPanel,pageMessage" onComplete="lockScreen(false);">
+                            <apex:param name="sortField" assignTo="{!customerFilter.sortField}" value="" />
+                        </apex:actionFunction>
+                        <div class="bNext withFilter rolodex"><!-- ABC navigation --> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('A')">
+                            <span class="listItemPad">A</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);lockScreen(true);searchCustomers('B')">
+                            <span class="listItemPad">B</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('C')">
+                            <span class="listItemPad">C</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('D')">
+                            <span class="listItemPad">D</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('E')">
+                            <span class="listItemPad">E</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('F')">
+                            <span class="listItemPad">F</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('G')">
+                            <span class="listItemPad">G</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('H')">
+                            <span class="listItemPad">H</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('I')">
+                            <span class="listItemPad">I</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('J')">
+                            <span class="listItemPad">J</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('K')">
+                            <span class="listItemPad">K</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('L')">
+                            <span class="listItemPad">L</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('M')">
+                            <span class="listItemPad">M</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('N')">
+                            <span class="listItemPad">N</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('O')">
+                            <span class="listItemPad">O</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('P')">
+                            <span class="listItemPad">P</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('Q')">
+                            <span class="listItemPad">Q</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('R')">
+                            <span class="listItemPad">R</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('S')">
+                            <span class="listItemPad">S</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('T')">
+                            <span class="listItemPad">T</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('U')">
+                            <span class="listItemPad">U</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('V')">
+                            <span class="listItemPad">V</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('W')">
+                            <span class="listItemPad">W</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('X')">
+                            <span class="listItemPad">X</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('Y')">
+                            <span class="listItemPad">Y</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('Z')">
+                            <span class="listItemPad">Z</span>
+                        </apex:outputLink> <apex:outputLink styleClass="listItem" value="javascript:void(0);" onclick="lockScreen(true);searchCustomers('')">
+                            <span class="listItemSelected listItemLast">{!$Label.All_For_Paging}</span>
+                        </apex:outputLink></div>
+                       <apex:outputPanel layout="block" StyleClass="paginator" id="pagingButtons" >
+                            <span class="prevNextLinks"> <span class="left" style="color:black"> {!customerList.size} {!$Label.Of} {!total_size} {!$Label.Records}</span> 
+                            
+                            <!-- <span class="prevNext"> <apex:commandLink rendered="{!opportunitySetController.hasPrevious}" action="{!opportunitySetController.first}" rerender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                <apex:image value="/s.gif" alt="{!$Label.First}" styleClass="first" />
+                            </apex:commandLink> </span> 
+                            <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.First}" title="First" styleClass="firstoff" rendered="{!NOT(opportunitySetController.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!opportunitySetController.hasPrevious}" action="{!opportunitySetController.previous}" rerender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+
+                                <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prev" />
+                            </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prevoff" rendered="{!NOT(opportunitySetController.hasPrevious)}" /> </span>      <span class="prevNext"> <apex:commandLink rendered="{!opportunitySetController.hasNext}" action="{!opportunitySetController.next}" rerender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="next" />
+                            </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="nextoff" rendered="{!NOT(opportunitySetController.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!opportunitySetController.hasNext}" action="{!opportunitySetController.last}" rerender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="last" />
+                            </apex:commandLink> </span><span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="lastoff" rendered="{!NOT(opportunitySetController.hasNext)}" /> </span> 
+                            -->
+                            
+                            <!-- JAJA -->
+                            <span class="prevNext"><apex:commandButton action="{!Beginning}" title="Beginning" value="<<" disabled="{!disablePrevious}" reRender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);"/> </span>
+                            <span class="prevNext"><apex:commandButton action="{!Previous}" title="Previous" value="<" disabled="{!disablePrevious}" reRender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);"/> </span>       
+                            <span class="prevNext"><apex:commandButton action="{!Nextpaging}" title="Next" value=">" disabled="{!disableNext}" reRender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);" /> </span>
+                            <span class="prevNext"><apex:commandButton action="{!End}" title="End" value=">>" disabled="{!disableNext}" reRender="pageBlock" onclick="lockScreen(true);" onComplete="lockScreen(false);"/> </span>        
+                            
+                            <span class="right" style="color:black">{!$Label.Page} {!pageNumber}</span> </span>
+                                           
+                        </apex:outputPanel>
+                        
+                        <div class="bPageBlock secondaryPalette">
+                        <div class="pbHeader listHeader"><span>
+                        <center><apex:commandButton immediate="true" action="{!createCustomerRequest}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  rerender="custData,pageMessage" onclick="lockScreen(true);" onComplete="lockScreen(false);initialize();" value="{!$Label.Create_New_Customer}" />
+                        
+                        <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                        <!-- Render this button for EU new customer creation. This removes the initialize function that calls Google MAP API. -->
+                        <apex:commandButton immediate="true" action="{!createCustomerRequest}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'us'}" rerender="custData,pageMessage" onclick="lockScreen(true);" onComplete="lockScreen(false)" value="{!$Label.Create_New_Customer}" />
+                        
+                        </center>
+                        </span></div>
+                        <apex:pageBlockTable value="{!customerList}" var="customerWrapper" id="custList">
+                            <apex:column >
+                                <apex:image value="{!$Resource.checked}" rendered="{!customerWrapper.customer.id == customer.id}" height="14px;" width="14px;" />
+                            </apex:column>
+                            <apex:column >
+                                <nobr> <apex:commandlink value="{!customerWrapper.customer.Name}" action="{!displayCustomerInfo}" id="clink" immediate="true" rerender="custData,custList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:param value="{!customerWrapper.customer.id}" assignTo="{!customerID}" name="customerID" id="cid" />
+                                </apex:commandlink> </nobr>
+                                <apex:facet name="header">
+                                    <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortCustomers('Name')">
+                                                    {!$Label.Customer_Name}<img src="{!IF(customerFilter.sortField = 'Name', IF(customerFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                    </apex:outputLink>
+                                </apex:facet>
+                            </apex:column>
+                            <apex:column >
+                                <nobr>{!customerWrapper.customer.Email__c}</nobr>
+                                <apex:facet name="header">
+                                    <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortCustomers('Email__c')">
+                                                {!$Label.E_mail}<img src="{!IF(customerFilter.sortField = 'Email__c', IF(customerFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                    </apex:outputLink>
+                                </apex:facet>
+                            </apex:column>
+                            <apex:column >
+                                    <nobr> 
+                                        {!customerWrapper.customer.BillingStreet}, 
+                                        {!customerWrapper.customer.BillingCity}<apex:outputText rendered="{!NOT(ISBLANK(customerWrapper.customer.BillingState))}">, {!customerWrapper.customer.BillingState}</apex:outputText> {!customerWrapper.customer.BillingPostalCode} {!customerWrapper.customer.BillingCountry} 
+                                    </nobr>                              
+                                
+                                <apex:facet name="header">
+                                    <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortCustomers('BillingStreet')">
+                                                {!$Label.Address}<img src="{!IF(customerFilter.sortField = 'BillingStreet', IF(customerFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                    </apex:outputLink>
+                                </apex:facet>
+                            </apex:column>
+                            <apex:column >
+                                <nobr>{!customerWrapper.customer.BillingState}</nobr>
+                                <apex:facet name="header">
+                                    <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortCustomers('BillingState')">
+                                                {!$Label.State}<img src="{!IF(customerFilter.sortField = 'BillingState', IF(customerFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                    </apex:outputLink>
+                                </apex:facet>
+                            </apex:column>
+                            <apex:column >
+                                <nobr>{!customerWrapper.customer.BillingPostalCode}</nobr>
+                                <apex:facet name="header">
+                                    <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortCustomers('BillingPostalCode')">
+                                        <apex:outputText rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'uk'}">Post Code</apex:outputText>
+                                        <apex:outputText rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'uk'}">{!$Label.ZipCode}</apex:outputText>
+                                        <img src="{!IF(customerFilter.sortField = 'BillingPostalCode', IF(customerFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                    </apex:outputLink>
+                                </apex:facet>
+                            </apex:column>
+                            <apex:column >
+                                <nobr>  <apex:outputText value="{0,date,dd/MM/yyyy}" rendered="{!currentLoginUser.Contact.Account.Theater__c != 'North America'}">
+<!--                                    <apex:outputText value="{0,date,dd/MM/yyyy}">-->
+                                    <apex:param value="{!customerWrapper.customer.createdDate}" />
+                                </apex:outputText> 
+                                <apex:outputText value="{0,date,MM/dd/yyyy}" rendered="{!currentLoginUser.Contact.Account.Theater__c == 'North America'}">
+                                    <apex:param value="{!customerWrapper.customer.createdDate}" />
+                                </apex:outputText>
+                                </nobr>
+                                <apex:facet name="header">
+                                    <apex:outputLink value="javascript:void(0);" onclick="lockScreen(true);sortCustomers('createdDate')">
+                                                {!$Label.Date_Created}<img src="{!IF(customerFilter.sortField = 'createdDate', IF(customerFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                    </apex:outputLink>
+                                </apex:facet>
+                            </apex:column>
+                        </apex:pageBlockTable></div>
+                        <apex:outputPanel id="custData">
+                            <!-- Create New Customer UI -->
+                            <div id="custInfo">
+                            <apex:outputPanel rendered="{!NOT(ISBLANK(newCustomer))}" id="Address">
+                                <apex:pageBlock title="{!$Label.Customer_Detail}" id="custDetail">
+                                <apex:pageBlockButtons location="both">
+                                    <apex:commandButton value="{!$Label.Warranty_Registration_Save}" action="{!createCustomer}"  onclick="showAccountAlert()"/>
+                                    <apex:commandButton value="{!$Label.Cancel}" onclick="document.getElementById('custInfo').style.display='none';return false;" immediate="true" /> 
+                                </apex:pageBlockButtons>
+                                
+                                <apex:pageBlockSection id="custinfopbs"> 
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputText >{!$Label.Name}</apex:outputText>
+                                        <apex:inputField value="{!newCustomer.Name}" />
+                                    </apex:pageBlockSectionItem>
+
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputText >{!$Label.E_mail}</apex:outputText>
+                                        <apex:inputField value="{!newCustomer.Email__c}" required="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}" />
+                                    </apex:pageBlockSectionItem>
+                                    <!-- Below Section Changed for Case # 00156389 -->
+                                     <apex:pageBlockSectionItem rendered="{!AND(RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'be')}">
+                                        <apex:outputText >{!$Label.Contact_Language}</apex:outputText>
+                                        <apex:inputField value="{!contact.Contact_Language__c}"/>
+                                    </apex:pageBlockSectionItem>
+                                    <!-- End Case # 00156389 -->
+                                    
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputText >{!$Label.Phone}</apex:outputText>
+                                        <apex:inputField value="{!newCustomer.Phone}" />
+                                    </apex:pageBlockSectionItem>
+                                </apex:pageBlockSection>
+                                <apex:pageBlockSection showHeader="true" title="{!$Label.Address_Information}" id="addpbs1" columns="1">    
+                
+                <!--Nwil/Case 00613789-->
+                <apex:pageBlockSectionItem id="newPbsi" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}">  <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                    <apex:outputLabel value="{!$Label.Address_Informtion_Insturction}" />
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem id="pbsi11" >
+                    <apex:InputHidden value="{!newcustomer.Lat__c}" id="lat" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="pbsi12" >
+                    <apex:inputHidden value="{!newcustomer.Log__c}" id="log" />
+                </apex:pageBlockSectionItem>
+            
+                <apex:pageBlockSectionItem id="pbsi22" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}">   <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                    <!--Nwil/Case 00613789-->
+                    <apex:outputLabel value="{!$Label.Location}" styleClass="labelStyle" />
+                    <input id="searchTextField" type="text" size="106" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"/>
+                    <!--<apex:inputHidden value="{!newCustomer.BillingStreet}" id="BillingStreet" required="true"/> -->
+                </apex:pageBlockSectionItem> 
+                <br/>
+            
+                <apex:pageBlockSection id="addpbs2"  columns="2">
+                    <apex:inputHidden />
+                    <apex:pageBlockSectionItem id="pbsi2" >
+                        <apex:outputLabel value="{!$Label.Street}" styleClass="labelStyle" />
+                        <!-- textarea rows="4" cols="50" id="BillingStreet" value="{!newCustomer.BillingStreet}" / --> 
+                        <apex:inputField value="{!newCustomer.BillingStreet}" id="BillingStreet" style="font-family: 'MS Shell Dlg';font-size:13.3333px;width:150px" required="true" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"></apex:inputField>  
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi1">
+                         <apex:outputLabel value="{!If(RIGHT(partnerAccount.Country_Domain__c,2) == 'us',$Label.City,$Label.City)}" styleClass="labelStyle"/>
+                         <apex:outputPanel layout="block">   
+                        <apex:inputField value="{!newCustomer.BillingCity}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  required="true" id="city1"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"> 
+                            <script>
+                                document.getElementById('{!$Component.city1}').disabled = true;
+                            </script>  
+                        </apex:inputField>
+                        <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                         <apex:inputField value="{!newCustomer.BillingCity}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'us'}" required="true"/> 
+                        <apex:inputHidden value="{!newCustomer.BillingCity}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  id="hiddenCity1"/> 
+                      </apex:outputPanel>
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi10">
+                        <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="county" /> 
+                    </apex:pageBlockSectionItem>
+         
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi3">
+                        <apex:outputLabel value="{!$Label.State}" styleClass="labelStyle" />
+                      <apex:outputPanel layout="block">
+                        <apex:inputField value="{!newCustomer.BillingState}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  required="{!RIGHT(partnerAccount.Country_Domain__c,2) == 'us'}" id="state1"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}">
+                            <script>
+                                document.getElementById('{!$Component.state1}').disabled = true;
+                            </script>
+                        </apex:inputField>
+                        <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                        <apex:inputField value="{!newCustomer.BillingState}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'us'}"/>
+                        <apex:inputHidden value="{!newCustomer.BillingState}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  id="hiddenState1"/>
+                      </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>
+                 
+                    <apex:inputHidden />
+            
+                    <apex:pageBlockSectionItem id="pbsi">
+                        <apex:outputLabel value="{!$Label.Country}" styleClass="labelStyle" />
+                        <apex:outputPanel layout="block">
+                        <apex:InputField value="{!newCustomer.BillingCountry}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}" required="true" id="country">
+                            <script>
+                                document.getElementById('{!$Component.country}').disabled = true;
+                            </script>
+                        </apex:InputField>
+                        <apex:InputField value="{!newCustomer.BillingCountry}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'us'}" required="true" />
+                        <apex:inputHidden value="{!newCustomer.BillingCountry}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  id="hiddenCountry"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+            
+                    <apex:inputHidden />
+                     
+                    <apex:pageBlockSectionItem id="pbsi4">
+                        <!--Nwil/Case 00613789-->
+                        <apex:outputLabel value="{!IF(RIGHT(partnerAccount.Country_Domain__c,2) == 'it',"Cap","Postal Code")}" styleClass="labelStyle" />
+                        <apex:outputPanel layout="block"> 
+                        <apex:inputField value="{!newCustomer.BillingPostalCode}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}" required="true" id="zipCode1" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"> 
+                            <script>
+                                    document.getElementById('{!$Component.zipCode1}').disabled = true;
+                            </script>                
+                        </apex:inputField>
+                        <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                        <apex:inputField value="{!newCustomer.BillingPostalCode}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'us'}" required="true" /> 
+                        <apex:inputHidden value="{!newCustomer.BillingPostalCode}" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}"  id="hiddenZipCode1"/>
+                        </apex:outputPanel> 
+                    </apex:pageBlockSectionItem>
+          
+                    <apex:inputHidden />       
+                    <apex:inputHidden />
+                    <apex:inputHidden />
+                    
+                    <apex:inputHidden value="{!validatedAddress}" id="validatedAddress" />
+                    <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="oracleCounty" />
+                    
+                    <apex:inputHidden />
+                    
+                    <!-- R.Alega - 26.JAN.2016 - CRM Case 00599878  - Remove the Google MAP API lookup for EU partners -->
+                    <apex:pageBlockSectionItem rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}">
+                        <!--Nwil/Case 00613789-->
+                        <apex:outputLabel value="{!$Label.Address_Map}" style="position:relative;top: -130px;"></apex:outputLabel> 
+                        <div style="position:absolute;margin:-135px 0 0 0;">
+                            <div id="map-canvas" style="width:300px;height:200px;margin:5px 0 5px 5px;"></div>
+                        </div>   
+                    </apex:pageBlockSectionItem>
+
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+                                </apex:pageBlock>
+                            </apex:outputPanel></div>
+                            <apex:outputPanel id="oldCustInfo" rendered="{!ISBLANK(newCustomer) && NOT(ISBLANK(customer))}">
+                                <apex:pageBlock title="{!$Label.Customer_Detail}" mode="edit">
+                                <div id="custDiv">
+                                    <apex:pageBlockSection >
+                                        <!-- <apex:outputField value="{!customer.ParentID}" />   -->
+                                        <apex:outputField value="{!customer.Name}" />
+                                        <apex:outputField value="{!customer.Phone}" />
+                                        
+                                        <apex:outputField value="{!customer.Email__c}" />
+                                        <apex:outputField value="{!contact.Contact_Language__c}" rendered="{!AND(RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'be')}"/>
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputText >{!$Label.Billing_Address}</apex:outputText>
+                                            <apex:outputPanel >
+                                                 {!customer.BillingStreet} <br />
+                                                 {!customer.BillingCity} 
+                                                 <apex:outputText rendered="{!NOT(ISBLANK(customer.BillingState))}">, {!customer.BillingState}</apex:outputText>
+                                                 {!customer.BillingPostalCode}
+                                                 {!customer.BillingCountry}                      
+                                            </apex:outputPanel>
+                                        </apex:pageBlockSectionItem>
+                                     </apex:pageBlockSection>
+                                 </div>
+                                </apex:pageBlock>
+                            </apex:outputPanel>
+                          <apex:pageBlockSection columns="1" dir="RTL">
+                                <apex:outputPanel style="float:right;margin-right:50px;margin-top:50px;">
+                                    <input value="1" name="step" type="hidden" />
+                                    <!-- Passing step in request parameter -->
+                                    <apex:commandButton value="{!$Label.Next}" action="{!next}" rendered="{!NOT(ISBLANK(customer.id))}" />
+                                    <apex:commandButton value="{!$Label.Back}" action="{!back}" immediate="true" />   
+                                    <!-- <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel" /> -->
+                                    <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='CustomerData';handleSwitchTab('Home')" />
+                                </apex:outputPanel>
+                            </apex:pageBlockSection>
+                        </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:form>
+                </apex:pageBlock>
+                <!-- Customer Data end -->
+            </apex:tab>
+            <apex:tab label="{!$Label.Product_Selection}" name="InstallationData" id="instData" disabled="{!if(warranty.Status__c == 'Completed',true,false)}" ontableave="previousTab='InstallationData'" ontabenter="handleSwitchTab('InstallationData')">
+                <!-- Product selection tab contents  -->
+                <apex:outputPanel rendered="{!insertWarranty}">
+                    <!--  In case of redirected from Order Detail, We need to insert Warranty object by action function since DML is not allowed in Constructor -->
+                    <script type="text/javascript">
+                        lockScreen(true);
+                        persistWarranty();
+                    </script>
+                </apex:outputPanel>
+                <apex:pageBlock id="pbIns">
+               
+                        <apex:form style="height:20px;">
+                         <apex:pageBlock >
+                                <apex:pageBlockSection columns="3">
+                                    <apex:pageBlockSectionItem >
+<!--                                        <apex:commandButton value="Report Problem" onclick="logCase(document.getElementById('pg:pbIns:frmIns:pbSecIns:pbsecItem:pklSO').value,document.getElementById('pg:pbIns:frmIns:pbSecIns:pbsecItem:numValId').value,'{!warranty.Id}',document.getElementById('pg:pageMessage:j_id11:j_id12:0:j_id13:j_id14:j_id16').firstChild.nextSibling.nodeValue);return false;" />-->
+                                     <apex:commandButton value="{!$Label.Report_Problem}" onclick="logCase(document.getElementById('pg:pbIns:frmIns:pbSecIns:pbsecItem:pklSO').value,document.getElementById('pg:pbIns:frmIns:pbSecIns:pbsecItem:numValId').value,'{!warranty.Id}',document.getElementById('pg:pbIns:frmIns:pbSecIns:pbSecItemStDateIns:startDeliveryDateId').value,document.getElementById('pg:pbIns:frmIns:pbSecIns:pbSecItemEndDateIns:endDeliveryDateId').value);return false;" />
+                                     </apex:pageBlockSectionItem> 
+                                     <apex:pageBlockSectionItem labelStyle="width:1px" helpText="{!$Label.CSV_Template_Help_Text}">
+                                        <apex:outputText />
+                                        <apex:commandButton value="{!$Label.S_N_CSV_Template}"  onclick="openPopup('/apex/WR_SerialNumberToUploadCSV');return false;"/>
+                                    </apex:pageBlockSectionItem>
+                                    <apex:pageBlockSectionItem >
+                                       
+                                       
+                                         <apex:inputFile value="{!serialNumFile}" accept="text/csv" fileName="{!csvFileName}" />
+                                            <apex:commandButton action="{!uploadCSVFile}" value="{!$Label.UploadCSVFile}"/>
+                                 
+                                       
+                                    </apex:pageBlockSectionItem>   
+                                </apex:pageBlockSection>     
+                         </apex:pageBlock>
+                          
+                        </apex:form>
+                        
+                        <apex:form id="frmIns">
+                 <br></br>
+                        <c:WarrantyHeaderComponent PartnerLanguage="{!IF(contact.Contact_Language__c  != '', contact.Contact_Language__c, currentLoginUser.Contact.Account.Contact_Language__c)}" countryName="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2)}" warranty="{!warranty}" edit="true" customer="{!customer}" />
+                      
+                        <apex:actionFunction action="{!searchSalesOrders}" name="searchSalesOrders" rerender="salesOrders" onComplete="lockScreen(false);">
+                            <apex:param name="sortField" assignTo="{!salesOrderFilter.sortField}" value="" />
+                        </apex:actionFunction>
+                        <apex:actionFunction action="{!sortProductList}" name="sortProducts" rerender="orderLineItems" onComplete="lockScreen(false);">
+                            <apex:param name="sortField" assignTo="{!productsortField}" value="" />
+                        </apex:actionFunction>
+                        <apex:actionFunction action="{!sortSelectedProductList}" name="sortSelectedProduct" rerender="selectedItems" onComplete="lockScreen(false);">
+                            <apex:param name="sortField" assignTo="{!selectedProductSortField}" value="" />
+                        </apex:actionFunction>   
+                        <apex:actionFunction action="{!sortSalesOrders}" name="sortSalesOrders" rerender="salesOrders" onComplete="lockScreen(false);">
+                            <apex:param name="sortField" assignTo="{!salesOrderFilter.sortField}" value="" />
+                        </apex:actionFunction>                                                                     
+                        <apex:actionFunction action="{!checkUncheckAllSalesOrders}" name="checkUncheckAllSalesOrders" rerender="salesOrders" onComplete="lockScreen(false);" />
+                        <apex:actionFunction action="{!checkUncheckAllLineItems}" name="checkUncheckAllLineItems" rerender="orderLineItems" onComplete="lockScreen(false);" />
+                        <apex:actionFunction action="{!checkUncheckAllSelectedItems}" name="checkUncheckAllSelectedItems" rerender="selectedItems" onComplete="lockScreen(false);" />
+                        <apex:actionFunction action="{!next}" name="saveProductSelection" rerender="registrationWizard" onComplete="lockScreen(false);">
+                            <apex:param name="requestedTabName" assignTo="{!requestedTabName}" value="" />
+                        </apex:actionFunction>
+                        <apex:pageBlockSection columns="5" onkeydown="handleReturnKey(event,'{!$Component.sblockSection.find}')" id="pbSecIns">
+                            <apex:pageBlockSectionItem helpText="{!$Label.Multiple_Search_Hint}" id="pbsecItem">
+                                <apex:selectList value="{!salesOrderFilter.numberType}" size="1" id="pklSO" onchange="changeSalesOrderLabel(this.value);">
+                                    <apex:selectOption itemLabel="{!$Label.Customer_PO}" itemValue="Purchase order" />
+                                    <apex:selectOption itemLabel="{!$Label.Sales_Order}" itemValue="Sales Order" />
+                                    <apex:selectOption itemLabel="{!$Label.Packing_List}" itemValue="Packing List" rendered="{!currentLoginUser.Contact.Account.Theater__c != 'North America'}"/>
+                                    <apex:selectOption itemLabel="{!$Label.Serial_Number}" itemValue="Serial Number" />
+                                </apex:selectList>
+                                <apex:inputText value="{!salesOrderFilter.numberValue}" id="numValId"/>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem id="pbSecItemStDateIns">
+                                <apex:outputText >
+                                    <nobr style="font-family: 'Arial','Verdana',sans-serif; font-size: 11px; font-weight: 400;">{!$Label.Start_Date_of_Delivery}</nobr>
+                                </apex:outputText> 
+                                <apex:inputField value="{!dumyStartDate.Delivery_Date__c}" id="startDeliveryDateId"/>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem id="pbSecItemEndDateIns">
+                                <apex:outputText >
+                                    <nobr style="font-family:'Arial','Verdana',sans-serif;font-size:11px;font-weight:400"> {!$Label.End_Date_of_Delivery}</nobr>
+                                </apex:outputText>
+                                <apex:inputField value="{!dumyEndDate.Delivery_Date__c}" id="endDeliveryDateId"/>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem id="sblockSection">
+                                <apex:commandButton id="find" value="{!$Label.Find}" style="margin-top: 4px;" rerender="pageMessage,salesOrders,orderLineItems,searchMsg" onclick="lockScreen(true);" onComplete="lockScreen(false);" title="Remove" action="{!searchSalesOrders}" />
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <table>
+                            <tr>
+                                <td>{!$Label.Purchase_Orders}<br />
+                                <apex:outputPanel id="searchMsg">
+                                    <b><label for="pklSO" id="salesOrderLabel">{!$Label.Sales_Order}</label></b>
+                                    <apex:outputText rendered="{!AND(salesOrderFilter.numberType =='Sales Order',salesOrderFilter.numberValue != '',salesOrderPaginator.totalRecords !=0)}">: {!$Label.Sales_Order}<I> {!salesOrderFilter.numberValue} </I>{!$Label.Contains_Packing_List} </apex:outputText>
+                                    <apex:outputText rendered="{!AND(salesOrderFilter.numberType =='Purchase order',salesOrderFilter.numberValue != '',salesOrderPaginator.totalRecords !=0)}">: {!$Label.Purchase_Order}<I> {!salesOrderFilter.numberValue}</I> {!$Label.Contains_Packing_List} </apex:outputText>
+                                    <apex:outputText rendered="{!AND(salesOrderFilter.numberType =='Serial Number',salesOrderFilter.numberValue != '',salesOrderPaginator.totalRecords !=0)}">: {!$Label.Serial_Number} <I>{!salesOrderFilter.numberValue}</I> {!$Label.Found_in_Packing_List} </apex:outputText>
+                                    <apex:outputText rendered="{!AND(salesOrderFilter.numberType =='Packing List',salesOrderFilter.numberValue != '',salesOrderPaginator.totalRecords !=0)}">: {!$Label.Packing_List} <I>{!salesOrderFilter.numberValue} </I>{!$Label.found} </apex:outputText>
+                                    <br />
+                                </apex:outputPanel></td>
+                                <td></td> 
+                                <td>{!$Label.Items_at_Customer_Site} <br />
+                                <b>{!$Label.Products}</b> </td>
+                                <td></td>
+                                <td>{!$Label.Confirm_Selection}<br/><b>{!$Label.Selected_Items}
+                                    <apex:outputPanel ID="btnSection">
+                                        <apex:outputPanel style="float:right;margin-right:110px;display:inline;" rendered="{!selectedProductPaginator.records.size > 20}">
+                                            <!-- <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel" /> -->
+                                            <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='InstallationData';handleSwitchTab('Home')" />
+                                            <apex:commandButton value="{!$Label.Back}" action="{!Back}" immediate="true" />
+     
+                                                                               <apex:commandButton value="{!$Label.Next}" action="{!next}" />
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                </b> </td>
+                            </tr>
+                            <tr>
+                                <td><apex:outputPanel id="salesOrders" layout="block">
+                                    <apex:outputPanel style="text-align:center;" rendered="{!AND(NOT(ISBLANK(salesOrderPaginator)),IF(salesOrderPaginator.totalRecords !=0,true,false))}">
+                                        <div class="paginator"><span class="prevNextLinks" > <span class="left" style="color:black"> {!pageSalesOrderList.size} {!$Label.Of} {!salesOrderPaginator.totalRecords} {!$Label.Records}</span> <span class="prevNext"> <apex:commandLink rendered="{!salesOrderPaginator.hasPrevious}" action="{!salesOrderPaginator.first}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.First}" styleClass="first" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.First}" title="First" styleClass="firstoff" rendered="{!NOT(salesOrderPaginator.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!salesOrderPaginator.hasPrevious}" action="{!salesOrderPaginator.previous}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prev" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prevoff" rendered="{!NOT(salesOrderPaginator.hasPrevious)}" /> </span>      <span class="prevNext"> <apex:commandLink rendered="{!salesOrderPaginator.hasNext}" action="{!salesOrderPaginator.next}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="next" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="nextoff" rendered="{!NOT(salesOrderPaginator.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!salesOrderPaginator.hasNext}" action="{!salesOrderPaginator.last}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="last" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="lastoff" rendered="{!NOT(salesOrderPaginator.hasNext)}" /> </span> <span class="right" style="color:black">{!$Label.Page} {!salesOrderPaginator.currentPage}</span> </span></div>
+                                    </apex:outputPanel>
+                                    <div style="overflow: auto;"><apex:pageBlockTable value="{!pageSalesOrderList}" var="salesOrderWrapper">
+                                        <apex:column >                                           
+                                            <apex:inputCheckbox value="{!salesOrderWrapper.isSelected}" id="ctRadio" />
+                                            <apex:facet name="header">
+                                                <apex:inputcheckbox onClick="lockScreen(true);checkUncheckAllSalesOrders()" id="salesorderCheckBox" value="{!IsAllSalesOrdersChecked}"/>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column >
+                                            <nobr> {!salesOrderWrapper.salesOrder.Purchase_Order__c} </nobr>
+                                            <apex:facet name="header">
+                                                <apex:outputPanel >
+                                                    <apex:outputLink rendered="{!pageSalesOrderList.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);searchSalesOrders('Purchase_Order__c')">{!$Label.Customer_PO}<img src="{!IF(salesOrderFilter.sortField = 'Purchase_Order__c', IF(salesOrderFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                    </apex:outputLink>
+                                                    <apex:outputText rendered="{!pageSalesOrderList.size == 0}">{!$Label.Customer_PO}</apex:outputText>
+                                                </apex:outputPanel>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column > 
+                                {!salesOrderWrapper.salesOrder.Sales_Order__c}
+                                  <apex:facet name="header">
+                                                <apex:outputPanel >
+                                                    <apex:outputLink rendered="{!pageSalesOrderList.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);searchSalesOrders('Sales_Order__c')">{!$Label.Sales_Order}<img src="{!IF(salesOrderFilter.sortField = 'Sales_Order__c', IF(salesOrderFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                    </apex:outputLink>
+                                                    <apex:outputText rendered="{!pageSalesOrderList.size == 0}">{!$Label.Sales_Order}</apex:outputText>
+                                                </apex:outputPanel>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column >
+                                                {!salesOrderWrapper.packingSlip}
+                                                  <apex:facet name="header">
+                                                                <apex:outputPanel >
+                                                                    <apex:outputLink rendered="{!pageSalesOrderList.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);searchSalesOrders('Packing_Slip__c')">{!$Label.Packing_List}<img src="{!IF(salesOrderFilter.sortField = 'Packing_Slip__c', IF(salesOrderFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                                    </apex:outputLink>
+                                                                    <apex:outputText rendered="{!pageSalesOrderList.size == 0}">{!$Label.Packing_List}</apex:outputText>
+                                                                </apex:outputPanel>
+                                                   </apex:facet>
+                                        </apex:column> 
+                                        <apex:column >
+                                            <!-- <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                <apex:param value="{!salesOrderWrapper.salesOrder.So_Created__c}" />
+                                            </apex:outputText> -->
+                                            <apex:outputField value="{!salesOrderWrapper.salesOrder.So_Created__c}" />
+                                            <apex:facet name="header">
+                                                <apex:outputPanel >
+                                                    <apex:outputLink rendered="{!pageSalesOrderList.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);searchSalesOrders('So_Created__c')">{!$Label.Date_SO}<img src="{!IF(salesOrderFilter.sortField = 'So_Created__c', IF(salesOrderFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                    </apex:outputLink>
+                                                    <apex:outputText rendered="{!pageSalesOrderList.size == 0}">{!$Label.Date_SO}</apex:outputText>
+                                                </apex:outputPanel>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column rendered="{!AND(salesOrderFilter.numberType == 'Serial Number',salesOrderFilter.numberValue != '')}">
+                                                {!salesOrderWrapper.serialNum}  
+                                              <apex:facet name="header">
+                                                            <apex:outputPanel >
+                                                                <apex:outputLink rendered="{!pageSalesOrderList.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortSalesOrders('serialNum')">{!$Label.Serial_Number}<img src="{!IF(salesOrderFilter.sortField = 'serialNum', IF(salesOrderFilter.isAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                                </apex:outputLink>
+                                                                <apex:outputText rendered="{!pageSalesOrderList.size == 0}">{!$Label.Serial_Number}</apex:outputText>
+                                                            </apex:outputPanel>
+                                               </apex:facet>                                                
+                                         </apex:column>
+                                </apex:pageBlockTable></div>
+                                </apex:outputPanel></td>
+                                <td><br />
+                                <br />
+                                <br />
+                                <br /> 
+                                <strong><center>{!$Label.Add}</center></strong>
+                                <apex:commandButton rerender="orderLineItems,pageMessage" onclick="lockScreen(true);" onComplete="lockScreen(false);" action="{!selectSalesOrder}" style="width:60px;" value=" >> " /> <br />
+                                <br />
+                                <apex:commandButton onclick="lockScreen(true);" onComplete="lockScreen(false);" rerender="orderLineItems,pageMessage" action="{!removeProducts}" style="width:60px;" value="<< "/> <br />
+                                <strong><center>{!$Label.Remove}</center></strong><br/>
+                                <!-- Clear/All is removed
+                                <apex:commandButton value=" {!$Label.All} " action="{!selectAllSalesOrder}" style="width:60px;" rerender="orderLineItems" onclick="lockScreen(true);" onComplete="lockScreen(false);" /> <br />
+                                <br />
+                                <apex:commandButton value=" {!$Label.Clear} " action="{!clearSalesOrder}" style="width:60px;" rerender="orderLineItems" onclick="lockScreen(true);" onComplete="lockScreen(false);" /> <br />
+                                 -->
+                                </td>
+                                <td><apex:outputPanel id="orderLineItems" layout="block">
+                                    <apex:outputPanel style="text-align:center;" rendered="{!AND(NOT(ISBLANK(productsPaginator)),IF(productsPaginator.ResultSize !=0,true,false))}">
+                                        <div class="paginator"><span class="prevNextLinks"> <span class="left" style="color:black"> {!productsPaginator.Records.size} {!$Label.Of} {!productsPaginator.ResultSize} {!$Label.Records}</span> <span class="prevNext"> <apex:commandLink rendered="{!productsPaginator.hasPrevious}" action="{!productsPaginator.first}" rerender="orderLineItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.First}" styleClass="first" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.First}" title="First" styleClass="firstoff" rendered="{!NOT(productsPaginator.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!productsPaginator.hasPrevious}" action="{!productsPaginator.previous}" rerender="orderLineItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prev" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prevoff" rendered="{!NOT(productsPaginator.hasPrevious)}" /> </span>      <span class="prevNext"> <apex:commandLink rendered="{!productsPaginator.hasNext}" action="{!productsPaginator.next}" rerender="orderLineItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="next" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="nextoff" rendered="{!NOT(productsPaginator.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!productsPaginator.hasNext}" action="{!productsPaginator.last}" rerender="orderLineItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="last" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="lastoff" rendered="{!NOT(productsPaginator.hasNext)}" /> </span> <span class="right" style="color:black">{!$Label.Page} {!productsPaginator.currentPage}</span> </span></div>
+                                    </apex:outputPanel>
+                                    <div style="overflow: auto;">
+                                        <apex:pageBlockTable value="{!productsPaginator.Records}" var="OrderLinesWrapper">
+                                        <apex:column >
+                                            <apex:inputCheckbox value="{!OrderLinesWrapper.ISselected__c}" id="lineitem" rendered="{!NOT(OrderLinesWrapper.WR_FDS_Product__r.Converted_To_Asset__c) && NOT(OrderLinesWrapper.IsDrafted__c)}"/>
+                                             <apex:image value="{!$Resource.Black_lockIcon}" rendered="{!OrderLinesWrapper.isRegistered__c}" title="{!$Label.Registered_To} {!OrderLinesWrapper.Customer_Name__c}" />
+                                            <!-- Case#:00190505 :: No need for the popup so taking out the Help Icon Image from Link
+                                            <apex:outputLink rendered="{!OrderLinesWrapper.isRegistered__c}" onclick="openPopup('/{!OrderLinesWrapper.WR_Line_Item__r.Warranty_Registration__c}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;"> 
+                                                <apex:image value="{!$Resource.Black_lockIcon}" title="{!$Label.Registered_To} {!OrderLinesWrapper.Customer_Name__c}" />
+                                            </apex:outputLink>
+                                            -->
+                                            <apex:image value="{!$Resource.Gray_lockIcon}" rendered="{!OrderLinesWrapper.IsDrafted__c}" title="{!$Label.Draft_TO} {!OrderLinesWrapper.Customer_Name__c}" />
+                                            <!-- Case#: 00190505 :: No need for the popup so taking out the Help Icon Image from Link
+                                            <apex:outputLink rendered="{!OrderLinesWrapper.IsDrafted__c}" onclick="openPopup('/{!OrderLinesWrapper.WR_Line_Item__r.Warranty_Registration__c}','',300, 480,'width=480,height=300,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no',true);return false;">; 
+                                                <apex:image value="{!$Resource.Gray_lockIcon}" title="{!$Label.Draft_TO} {!OrderLinesWrapper.Customer_Name__c}" />
+                                            </apex:outputLink>
+                                            -->
+                                            <apex:outputText rendered="{!OrderLinesWrapper.isManuallyRegistered__c}" > 
+                                                <apex:image value="{!$Resource.Blue_lockIcon}" title="{!$Label.Converted_to_Asset_Manually}" />
+                                            </apex:outputText>   
+                                                                                  
+                                            <apex:facet name="header">
+                                               <apex:inputcheckbox onClick="lockScreen(true);checkUncheckAllLineItems()" id="selectedItemCheckBox" value="{!IsAllLineItemsChecked}"/>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column >
+                                            <nobr> {!OrderLinesWrapper.WR_FDS_Product__r.Product_Name__c} </nobr>
+                                                 <apex:facet name="header">
+                                                    <apex:outputPanel >
+                                                        <apex:outputLink rendered="{!productsPaginator.Records.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortProducts('WR_FDS_Product__r.Product_Name__c')">{!$Label.Product_Name}<img src="{!IF(productsortField = 'WR_FDS_Product__r.Product_Name__c', IF(isProductAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                        </apex:outputLink>
+                                                        <apex:outputText rendered="{!productsPaginator.Records.size == 0}">{!$Label.Product_Name}</apex:outputText>
+                                                    </apex:outputPanel>
+                                                </apex:facet>                                             
+                                        </apex:column>
+                                        <apex:column >
+                                                {!OrderLinesWrapper.WR_FDS_Product__r.Serial_Number__c}  
+                                                 <apex:facet name="header">
+                                                    <apex:outputPanel >
+                                                        <apex:outputLink rendered="{!productsPaginator.Records.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortProducts('WR_FDS_Product__r.Serial_Number__c')">{!$Label.Serial_Number}<img src="{!IF(productsortField = 'WR_FDS_Product__r.Serial_Number__c', IF(isProductAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                        </apex:outputLink>
+                                                        <apex:outputText rendered="{!productsPaginator.Records.size == 0}">{!$Label.Serial_Number}</apex:outputText>
+                                                    </apex:outputPanel>
+                                                </apex:facet>                                                   
+                                        </apex:column>
+                                        <apex:column >
+                                            <nobr> {!OrderLinesWrapper.WR_FDS_Product__r.WR_ORACLE_SalesOrder__r.Purchase_Order__c} </nobr>
+                                                 <apex:facet name="header">
+                                                    <apex:outputPanel >
+                                                        <apex:outputLink rendered="{!productsPaginator.Records.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortProducts('WR_FDS_Product__r.WR_ORACLE_SalesOrder__r.Purchase_Order__c')">{!$Label.Customer_PO}<img src="{!IF(productsortField = 'WR_FDS_Product__r.WR_ORACLE_SalesOrder__r.Purchase_Order__c', IF(isProductAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                        </apex:outputLink>
+                                                        <apex:outputText rendered="{!productsPaginator.Records.size == 0}">{!$Label.Customer_PO}</apex:outputText>
+                                                    </apex:outputPanel>
+                                                </apex:facet>                                            
+                                        </apex:column>
+                                    </apex:pageBlockTable></div>
+                                </apex:outputPanel></td>
+                                <td><br />
+                                <br />
+                                <br />
+                                <br />
+                                <strong><center>{!$Label.Add}</center></strong>
+                                <apex:commandButton action="{!selectSalesOrderLineItem}" onclick="lockScreen(true);" oncomplete="lockScreen(false);" style="width:60px;" rerender="selectedItems,orderLineItems,btnSection,pageMessage" value=" >> " /> <br />
+                                
+                                <br />
+                                <apex:commandButton onclick="lockScreen(true);" onComplete="lockScreen(false);" rerender="selectedItems,orderLineItems,btnSection,pageMessage" action="{!deselectSalesOrderLineItem}" style="width:60px;" value="<< "/> <br />
+                                <strong><center>{!$Label.Remove}</center></strong><br/>
+                                   <!--  All/Clear Buttons are removed 
+                                   <br /> 
+                                    <apex:commandButton onclick="lockScreen(true);" onComplete="lockScreen(false);" rerender="selectedItems,orderLineItems,btnSection" value=" {!$Label.All} " action="{!selectAllSalesOrderLineItem}" style="width:60px;" />
+                                    <br />
+                                    <br />
+                                    <apex:commandButton onclick="lockScreen(true);" onComplete="lockScreen(false);" value=" {!$Label.Clear} " action="{!clearSalesOrderLineItem}" style="width:60px;" rerender="selectedItems,orderLineItems,btnSection" />
+                                    <br />
+                                    --> 
+                               </td> 
+                                <td><apex:outputPanel id="selectedItems">
+                                    <apex:outputPanel style="text-align:center;" rendered="{!AND(NOT(ISBLANK(selectedProductPaginator)),IF(selectedProductPaginator.ResultSize != 0,true,false))}">
+                                        <div class="paginator"><span class="prevNextLinks"> <span class="left" style="color:black"> {!selectedProductPaginator.records.size} {!$Label.Of} {!selectedProductPaginator.ResultSize} {!$Label.Records}</span> <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasPrevious}" action="{!selectedProductPaginator.first}" rerender="selectedItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.First}" styleClass="first" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.First}" title="First" styleClass="firstoff" rendered="{!NOT(selectedProductPaginator.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasPrevious}" action="{!selectedProductPaginator.previous}" rerender="selectedItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prev" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prevoff" rendered="{!NOT(selectedProductPaginator.hasPrevious)}" /> </span>      <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasNext}" action="{!selectedProductPaginator.next}" rerender="selectedItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="next" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="nextoff" rendered="{!NOT(selectedProductPaginator.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasNext}" action="{!selectedProductPaginator.last}" rerender="selectedItems" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                            <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="last" />
+                                        </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="lastoff" rendered="{!NOT(selectedProductPaginator.hasNext)}" /> </span> <span class="right" style="color:black">{!$Label.Page} {!selectedProductPaginator.currentPage}</span> </span></div>
+                                    </apex:outputPanel>
+                                    <div style="overflow: auto;">
+                                    <apex:pageBlockTable value="{!selectedProductPaginator.records}" var="solinesel">
+                                        <apex:column >
+                                            <apex:inputCheckbox value="{!solinesel.ISselected__c}" id="selectedItem" />
+                                            <apex:facet name="header">
+                                                <apex:inputcheckbox onClick="lockScreen(true);checkUncheckAllSelectedItems()" id="selectedItemCheckBox" value="{!IsAllSelectedItemsChecked}"/>
+                                            </apex:facet>
+                                        </apex:column>
+                                        <apex:column >
+                                            <nobr>{!solinesel.WR_FDS_Product__r.Product_Name__c} </nobr>
+                                                <apex:facet name="header">
+                                                    <apex:outputPanel >
+                                                        <apex:outputLink rendered="{!selectedProductPaginator.records.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortSelectedProduct('WR_FDS_Product__r.Product_Name__c')">{!$Label.Product_Name}<img src="{!IF(selectedProductSortField = 'WR_FDS_Product__r.Product_Name__c', IF(isSelectedProductAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                        </apex:outputLink>
+                                                        <apex:outputText rendered="{!selectedProductPaginator.records.size == 0}">{!$Label.Product_Name}</apex:outputText>
+                                                    </apex:outputPanel>
+                                                </apex:facet>                                            
+                                        </apex:column>
+                                        <apex:column >
+                                            <nobr> {!solinesel.WR_FDS_Product__r.Product_Type__c} </nobr>
+                                                <apex:facet name="header">
+                                                    <apex:outputPanel >
+                                                        <apex:outputLink rendered="{!selectedProductPaginator.records.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortSelectedProduct('WR_FDS_Product__r.Product_Type__c')">{!$Label.Product_Type}<img src="{!IF(selectedProductSortField = 'WR_FDS_Product__r.Product_Type__c', IF(isSelectedProductAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                        </apex:outputLink>
+                                                        <apex:outputText rendered="{!selectedProductPaginator.records.size == 0}">{!$Label.Product_Type}</apex:outputText>
+                                                    </apex:outputPanel>
+                                                </apex:facet>                                             
+                                        </apex:column>
+                                        <apex:column > 
+                                                {!solinesel.WR_FDS_Product__r.Serial_Number__c}
+                                                <apex:facet name="header">
+                                                    <apex:outputPanel >
+                                                        <apex:outputLink rendered="{!selectedProductPaginator.records.size != 0}" value="javascript:void(0);" onclick="lockScreen(true);sortSelectedProduct('WR_FDS_Product__r.Serial_Number__c')">{!$Label.Serial_Number}<img src="{!IF(selectedProductSortField = 'WR_FDS_Product__r.Serial_Number__c', IF(isSelectedProductAscending = true, '/img/sort_asc_arrow.gif','/img/sort_desc_arrow.gif'),'/s.gif')}" />
+                                                        </apex:outputLink>
+                                                        <apex:outputText rendered="{!selectedProductPaginator.records.size == 0}">{!$Label.Serial_Number}</apex:outputText>
+                                                    </apex:outputPanel>
+                                                </apex:facet>                                                  
+                                        </apex:column>
+                                    </apex:pageBlockTable></div>
+                                </apex:outputPanel></td>
+                            </tr>
+                        </table>
+                        <apex:pageBlockSection columns="1" dir="RTL">
+                            <apex:outputPanel style="float:right;margin-right:110px;margin-top:50px;">
+                                <input value="2" name="step" type="hidden" />
+                                <!-- Passing step in request parameter -->
+                                <apex:commandButton value="{!$Label.Next}" action="{!saveProductSelection}" />
+                                <apex:commandButton value="{!$Label.Back}" action="{!Back}" immediate="true" />
+                                <!--<input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel'" />  -->
+                                <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='InstallationData';handleSwitchTab('Home')" />
+                            </apex:outputPanel>
+                        </apex:pageBlockSection>
+                    </apex:form>
+                </apex:pageBlock>
+            </apex:tab>
+            <!-- Tab contents end -->
+
+            <apex:tab label="{!$Label.Generate_Warranty}" name="WarantyDetails" id="details" disabled="false" ontableave="if('{!warranty.Status__c}' != 'Completed'){previousTab='WarantyDetails'}" ontabenter="if('{!warranty.Status__c}' != 'Completed'){handleSwitchTab('WarantyDetails')}">
+                <apex:pageBlock >
+                    <apex:form >
+                        <br></br> 
+                        <c:WarrantyHeaderComponent PartnerLanguage="{!IF(contact.Contact_Language__c  != '', contact.Contact_Language__c, currentLoginUser.Contact.Account.Contact_Language__c)}" countryName="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2)}" warranty="{!warranty}" edit="false" customer="{!customer}" userLang="{!currentLoginUser.LanguageLocaleKey}"/>
+                        <b>{!$Label.Product_Registration_Items}</b>
+                        <apex:outputPanel id="productList">
+                            <apex:outputPanel style="text-align:center;" rendered="{!AND(NOT(ISBLANK(selectedProductPaginator)),IF(selectedProductPaginator.ResultSize != 0,true,false))}">
+                                <div class="paginator"><span class="prevNextLinks"> <span class="left" style="color:black"> {!selectedProductPaginator.records.size} {!$Label.Of} {!selectedProductPaginator.ResultSize} {!$Label.Records}</span> <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasPrevious}" action="{!selectedProductPaginator.first}" rerender="productList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="{!$Label.First}" styleClass="first" /> 
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.First}" title="First" styleClass="firstoff" rendered="{!NOT(selectedProductPaginator.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasPrevious}" action="{!selectedProductPaginator.previous}" rerender="productList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prev" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prevoff" rendered="{!NOT(selectedProductPaginator.hasPrevious)}" /> </span>      <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasNext}" action="{!selectedProductPaginator.next}" rerender="productList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="next" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="nextoff" rendered="{!NOT(selectedProductPaginator.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!selectedProductPaginator.hasNext}" action="{!selectedProductPaginator.last}" rerender="productList" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                                    <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="last" />
+                                </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="lastoff" rendered="{!NOT(selectedProductPaginator.hasNext)}" /> </span> <span class="right" style="color:black">{!$Label.Page} {!selectedProductPaginator.currentPage}</span> </span></div>
+                            </apex:outputPanel>
+
+ 
+                            <apex:pageBlockTable value="{!selectedProductPaginator.records}" var="productWrapper">
+                                <apex:column headerValue="{!$Label.Product_Name}" value="{!productWrapper.WR_FDS_Product__r.Product_Name__c}" />
+                                <apex:column headerValue="{!$Label.Product_Type}" value="{!productWrapper.WR_FDS_Product__r.Product_Type__c}" />
+                                <apex:column headerValue="{!$Label.Serial_Number}" value="{!productWrapper.WR_FDS_Product__r.Serial_Number__c}" />
+                            </apex:pageBlockTable>
+                        </apex:outputPanel>
+                        <apex:pageBlockSection columns="1" dir="RTL">
+                            <apex:outputPanel style="float:right;margin-right:110px;margin-top:20px;">
+                                <apex:outputPanel rendered="{!warranty.Status__c == 'Completed'}">
+                                    <!--  <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel'" /> -->
+                                    <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='WarantyDetails';handleSwitchTab('Home')" />
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!warranty.Status__c!='Completed'}">
+                                    <apex:outputPanel rendered="{!currentLoginUser.Contact.Account.Theater__c == 'North America'}">
+                                        <apex:commandButton value="{!$Label.Finalize}"  action="{!next}" />
+                                        <input value="4" name="step" type="hidden" />
+                                    </apex:outputPanel>
+                                    <!--cdevarapalli -  Warranty Registration Process - SSE - Delete button to delete the Warranty Registration-->
+                                    <apex:outputPanel >
+                                        <input type="button" class="btn" value="Delete" onclick="deleteWarReg()" />
+                                    </apex:outputPanel>
+                                    <!--  NA Partner will have to finish registration on this page -->
+                                    <apex:outputPanel rendered="{!currentLoginUser.Contact.Account.Theater__c != 'North America'}">
+                                        <apex:commandButton value="{!$Label.Next}" action="{!next}" />
+                                        <input value="3" name="step" type="hidden" />
+                                    </apex:outputPanel>
+                                    <!-- Passing step in request parameter -->
+                                    <!--<apex:commandButton value="{!$Label.Back}" action="{!back}" immediate="true" />-->
+                                    <apex:commandButton value="{!$Label.Back}" action="{!backToProdList}" rerender="registrationWizard"/>
+                                    <!--  <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel'" /> -->
+                                    <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='WarantyDetails';handleSwitchTab('Home')" />
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:pageBlockSection>
+                    </apex:form>
+                </apex:pageBlock>
+                <!-- End of generate warranty tab -->
+            </apex:tab>
+            <apex:tab label="{!$Label.Contact_Preferences}" name="optin" id="opt-in" disabled="fales" ontableave="if('{!warranty.Status__c}' != 'Completed'){previousTab='optin'}"  ontabenter="if('{!warranty.Status__c}' != 'Completed'){handleSwitchTab('optin')}" rendered="{!AND(currentLoginUser.Contact.Account.Theater__c != 'North America', RIGHT(currentLoginUser.CountryDomainText__c,2) != 'au')}">
+                <apex:pageBlock >
+                    <apex:form >
+                        <apex:inputHidden value="{!customerOpportunity.Warranty_Signed_Italy__c}" id="hddnSigned" />
+                        <apex:inputHidden value="{!customerOpportunity.Quality_Inspection_opt_in__c}" id="hddnQuality_Inspection" />
+                        <apex:inputHidden value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}" id="cSatifaction" />
+                        <apex:inputHidden value="{!customerOpportunity.Marketing_opt_in__c}" id="marketingOptin" />
+                        <apex:actionFunction action="{!saveOptinPreference}" name="saveOptinPreference" rerender="registrationWizard" onComplete="lockScreen(false);">
+                            <apex:param name="requestedTabName" assignTo="{!requestedTabName}" value="" />
+                        </apex:actionFunction>
+                    
+                        <input value="4" name="step" type="hidden" />
+                        <!-- Passing step in request parameter -->
+                        <apex:outputPanel id="italyPage" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'it'}">
+                            <!-- Italy page -->
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="60%" colspan="2">
+                                       <br></br>
+                                    <c:WarrantyHeaderComponent PartnerLanguage="{!IF(contact.Contact_Language__c  != '', contact.Contact_Language__c, currentLoginUser.Contact.Account.Contact_Language__c)}" countryName="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2)}" warranty="{!warranty}" edit="false" customer="{!customer}" userLang="{!currentLoginUser.LanguageLocaleKey}"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"> </td>
+                                </tr>
+                                <tr>
+                                    <td width="60%"><br />
+                                    1. {!$Label.Opt_in_Message} <br />
+                                    <br />
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td width="60%" colspan="2">
+                                    <apex:pageBlock title="{!$Label.Check_opt_in}" mode="edit">
+                                     <apex:pageBlockSection columns="1">
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputPanel >
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Marketing_opt_in__c}"/>
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Marketing_opt_in__c}" onclick="document.getElementById('pg:j_id963:j_id964:marketingOptin').value = this.checked" />
+                                            </apex:outputPanel>
+                                            <apex:outputLabel >{!$Label.Marketing_opt_in} </apex:outputLabel>
+                                        </apex:pageBlockSectionItem>                                     
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputPanel >
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Quality_Inspection_opt_in__c}" onclick="document.getElementById('pg:j_id963:j_id964:hddnQuality_Inspection').value = this.checked;" />
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Quality_Inspection_opt_in__c}"/>
+                                            </apex:outputPanel>
+                                            <apex:outputLabel >{!$Label.Quality_Inspection_opt_in} </apex:outputLabel>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputPanel >
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}"/>
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}" onclick="document.getElementById('pg:j_id963:j_id964:cSatifaction').value = this.checked" />
+                                            </apex:outputPanel>
+                                            <apex:outputLabel >{!$Label.Satisfaction_Survey_opt_in}</apex:outputLabel>
+                                        </apex:pageBlockSectionItem>
+                                    </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2"> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">2. {!$Label.Finalize_Message}({!$Label.Upload_Message})(<apex:commandLink title="Click here to download" value="{!$Label.Download_Warranty_document}" onclick="printWarranty('/apex/WROptinForm_italy?warrantyId={!warranty.id}');return false;"/>) <br />
+                                    <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="60%" colspan="2">
+                                    <apex:pageBlock title="{!$Label.Upload}" mode="edit">
+                                     <apex:outputPanel rendered="{!docList.size !=0 }">
+                                        <apex:dataTable style="margin-left: 10px;" value="{!docList}" var="doc" border="1" width="90%" headerClass="tableHeader" cellpadding="5" cellspacing="0" id="attachmentList">
+                                            <apex:column headerValue="{!$Label.Date_Uploaded}" headerClass="tableHeader">
+                                                <!-- <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                    <apex:param value="{!doc.createdDate}" />
+                                                </apex:outputText>-->
+                                                <apex:outputField value="{!doc.createdDate}" />
+                                                <apex:outputText value="{0,date,dd/MM/yyyy}" rendered="{!ISBLANK(doc.createdDate)}">
+                                                    <apex:param value="{!now()}" />
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="{!$Label.File_name} " headerClass="tableHeader">
+                                                <apex:outputText >
+                                                    <a style="color: #82CAFF;" href="#" onclick="downloadWarrantyCard('{!doc.id}')" title="Click to Download file"><nobr>{!doc.Name}</nobr></a>
+                                                </apex:outputText>
+                                            </apex:column>
+                                            <apex:column headerValue="{!$Label.Remove}" headerClass="tableHeader" style="text-align:center;" width="20px;">
+                                                <apex:commandlink action="{!removeAttachment}" immediate="true" id="rLink" title="Remove" onclick="if(!confirm('{!$Label.Remove_Warranty}')){return false;}" rendered="{!warranty.Status__c != 'Completed'}">
+                                                    <apex:param value="{!doc.id}" name="docID" id="docId" />
+                                                    <apex:image value="{!$Resource.Deleted}" height="20px;" width="20px;" alt="{!$Label.Remove}" />
+                                                </apex:commandlink>
+                                            </apex:column>
+                                        </apex:dataTable>
+                                        <br />
+                                    </apex:outputPanel> 
+                                    <apex:pageBlockSection columns="1">
+                                        <apex:inputFile value="{!homeownerDoc.body}" title="Upload File" filename="{!homeownerDoc.name}" />
+                                        <apex:outputPanel >
+                                            <br />
+                                            <apex:commandButton value="{!$Label.Attach_PDF_File}" action="{!attachPDF}" onclick="if({!docList.size} >= 5){alert('{!$Label.Upload_Limit}');return false;}" disabled="{!warranty.Status__c == 'Completed'}"/>
+                                        </apex:outputPanel>
+                                        <br />
+                                    </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    <br />
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td nowrap="nowrap">3. {!$Label.Confirm_Upload} <br />
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Warranty_Signed_Italy__c}" onclick="document.getElementById('pg:j_id963:j_id964:hddnSigned').value = this.checked;" />
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Warranty_Signed_Italy__c}" /> 
+                                                   <apex:outputText >{!$Label.Confirmed_Signed_Document}</apex:outputText></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><br />
+                                    <br />
+                                    <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                    <center><apex:outputPanel >
+                                        <!-- <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel'" /> -->
+                                        <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='optin';handleSwitchTab('Home')" />
+                                        <apex:commandButton Value="{!$Label.Back}" action="{!back}" />
+                                        <apex:commandButton value="{!$Label.Finalize}" action="{!next}" disabled="{!warranty.Status__c == 'Completed'}"/>
+                                    </apex:outputPanel></center>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:outputPanel>
+                        <!-- North America page -->
+                        <apex:outputPanel id="usPage" rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'us'}">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="60%" colspan="2">1. {!$Label.Opt_in_Message} <br />
+                                    <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="60%">
+                                    <apex:pageBlock title="{!$Label.Check_opt_in}" mode="edit"> 
+                                    <apex:pageBlockSection columns="1">
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputPanel >
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Quality_Inspection_opt_in__c}"/>
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Quality_Inspection_opt_in__c}" onclick="document.getElementById('pg:j_id966:j_id967:hddnQuality_Inspection').value = this.checked;" />
+                                            </apex:outputPanel>
+                                            <apex:outputLabel >  {!$Label.Quality_Inspection_opt_in} </apex:outputLabel>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputPanel >
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}"/>
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}" onclick="document.getElementById('pg:j_id966:j_id967:cSatifaction').value = this.checked" />
+                                            </apex:outputPanel>
+                                            <apex:outputLabel >{!$Label.Satisfaction_Survey_opt_in}</apex:outputLabel>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputPanel >
+                                                <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Marketing_opt_in__c}"/>
+                                                <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Marketing_opt_in__c}" onclick="document.getElementById('pg:j_id966:j_id967:marketingOptin').value = this.checked" />
+                                            </apex:outputPanel>
+                                            <apex:outputLabel >{!$Label.Marketing_opt_in} </apex:outputLabel>
+                                        </apex:pageBlockSectionItem>
+                                    </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><br />
+                                    <br />
+                                    <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                    <center><apex:outputPanel >
+                                        <!-- <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel'" /> -->
+                                        <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='optin';handleSwitchTab('Home')" />
+                                        <apex:commandButton Value="{!$Label.Back}" action="{!back}" />     
+                                        <apex:commandButton value="{!$Label.Finalize}" action="{!next}" disabled="{!warranty.Status__c == 'Completed'}"/>
+                                    </apex:outputPanel></center>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </apex:outputPanel>
+                        <!-- SPA/FRA/GER Opt-in Process  -->
+                        <apex:outputPanel id="otherPage" rendered="{!AND(RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'it',RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) != 'us')}">
+
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td width="60%" colspan="2">
+                                       <br></br> 
+                                    <c:WarrantyHeaderComponent PartnerLanguage="{!IF(contact.Contact_Language__c  != '', contact.Contact_Language__c, currentLoginUser.Contact.Account.Contact_Language__c)}"  countryName="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2)}" warranty="{!warranty}" edit="false" customer="{!customer}" userLang="{!currentLoginUser.LanguageLocaleKey}"/></td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2"> </td>
+                                </tr>
+                                <tr>
+                                    <td width="60%">1.{!$Label.Opt_in_Message} <br />
+                                    <br />
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td width="60%" colspan="2" style="white-space:nowrap;">
+                                    <apex:pageBlock title="{!$Label.Check_opt_in}" mode="edit">
+                                         <apex:pageBlockSection columns="1">
+                                            <apex:pageBlockSectionItem >
+                                                <apex:outputPanel >
+                                                    <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Quality_Inspection_opt_in__c}"/>
+                                                    <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Quality_Inspection_opt_in__c}" onclick="document.getElementById('pg:j_id966:j_id967:hddnQuality_Inspection').value = this.checked;" />
+                                                </apex:outputPanel>
+                                                <apex:outputLabel >{!$Label.Quality_Inspection_opt_in} </apex:outputLabel>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem >
+                                                <apex:outputPanel >
+                                                    <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}"/>
+                                                    <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Customer_Satisfaction_survey_opt_in__c}" onclick="document.getElementById('pg:j_id966:j_id967:cSatifaction').value = this.checked" />
+                                                </apex:outputPanel>
+                                                <apex:outputLabel >{!$Label.Satisfaction_Survey_opt_in}</apex:outputLabel>
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem >
+                                                <apex:outputPanel >
+                                                    <apex:outputField rendered="{!warranty.Status__c == 'Completed'}" value="{!customerOpportunity.Marketing_opt_in__c}"/>
+                                                    <apex:inputField rendered="{!warranty.Status__c != 'Completed'}" value="{!customerOpportunity.Marketing_opt_in__c}" onclick="document.getElementById('pg:j_id966:j_id967:marketingOptin').value = this.checked" />
+                                                </apex:outputPanel>
+                                                <apex:outputLabel >{!$Label.Marketing_opt_in} </apex:outputLabel>
+                                            </apex:pageBlockSectionItem>
+                                        </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2"> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">2. {!$Label.Finalize_Message}<br />
+                                    ({!$Label.Upload_Message})
+                                         <apex:outputText rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'es'}" >
+                                        <!-- Spain -->
+                                        (<apex:commandLink title="Click here to download" value="{!$Label.Download_Warranty_document}" onclick="printWarranty('/apex/WROptinForm_spain?warrantyId={!warranty.id}');return false;"/>)
+                                        </apex:outputText> 
+                                        <apex:outputText rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'fr'}">
+                                        <!-- France -->
+                                            (<apex:commandLink title="Click here to download" value="{!$Label.Download_Warranty_document}" onclick="printWarranty('/apex/WROptinForm_france?warrantyId={!warranty.id}');return false;"/>)
+                                         </apex:outputText> 
+                                         <apex:outputText rendered="{!RIGHT(currentLoginUser.Contact.Account.Country_Domain__c,2) == 'de'}">
+                                        <!-- Germany -->
+                                             (<apex:commandLink title="Click here to download" value="{!$Label.Download_Warranty_document}" onclick="printWarranty('/apex/WROptinForm_germany?warrantyId={!warranty.id}');return false;"/>)
+                                        </apex:outputText> 
+                                        <br />
+                                    <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="60%" colspan="2">
+                                    <apex:pageBlock title="{!$Label.Upload}" mode="edit">
+                                         <apex:outputPanel rendered="{!docList.size !=0 }">
+                                            <apex:dataTable style="margin-left: 10px;" value="{!docList}" var="doc" border="1" width="90%" headerClass="tableHeader" cellpadding="5" cellspacing="0">
+                                                <apex:column headerValue="{!$Label.Date_Uploaded}" headerClass="tableHeader">
+                                                    <!-- <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                        <apex:param value="{!doc.createdDate}" />
+                                                    </apex:outputText> -->
+                                                    <apex:outputField value="{!doc.createdDate}" />  
+                                                    <apex:outputText value="{0,date,dd/MM/yyyy}" rendered="{!ISBLANK(doc.createdDate)}">
+                                                        <apex:param value="{!now()}" />
+                                                    </apex:outputText>
+                                                </apex:column>
+                                                <apex:column headerValue="{!$Label.File_name} " headerClass="tableHeader">
+                                                    <apex:outputText >
+                                                        <a style="color: #82CAFF;" href="#" onclick="downloadWarrantyCard('{!doc.id}')" title="Click to Download file"><nobr>{!doc.Name}</nobr></a>
+                                                    </apex:outputText>
+                                                </apex:column>
+                                                <apex:column headerValue="{!$Label.Remove}" headerClass="tableHeader" style="text-align:center;" width="20px;">
+                                                    <apex:commandlink action="{!removeAttachment}" immediate="true" id="rLink" title="Remove" onclick="if(!confirm('{!$Label.Remove_Warranty}')){return false;}" rendered="{!warranty.Status__c != 'Completed'}">
+                                                        <apex:param value="{!doc.id}" name="docID" id="docId" />
+                                                        <apex:image value="{!$Resource.Deleted}" height="20px;" width="20px;" alt="{!$Label.Remove}" />
+                                                    </apex:commandlink>
+                                                </apex:column>
+                                            </apex:dataTable>
+                                            <br />
+                                        </apex:outputPanel>
+                                        <apex:pageBlockSection columns="1">
+                                            <apex:inputFile value="{!homeownerDoc.body}" title="Upload File" filename="{!homeownerDoc.name}" />
+                                            <apex:outputPanel >
+                                                <br />
+                                                <apex:commandButton value="{!$Label.Attach_PDF_File}" action="{!attachPDF}" onclick="if({!docList.size} >= 5){alert('{!$Label.Upload_Limit}');return false;}" disabled="{!warranty.Status__c == 'Completed'}"/>
+                                            </apex:outputPanel>
+                                        </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    <br />
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><br />
+                                    <br />
+                                    <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                    <center><apex:outputPanel >
+                                        <!-- <input type="button" class="btn" value="{!$Label.Home}" onclick="window.parent.location.href='apex/WarrantyRegistrationPanel'" /> -->
+                                        <input type="button" class="btn" value="{!$Label.Home}" onclick="previousTab='optin';handleSwitchTab('Home')" />
+                                        <apex:commandButton Value="{!$Label.Back}" action="{!back}" />
+                                        <apex:commandButton value="{!$Label.Finalize}" action="{!next}" disabled="{!warranty.Status__c == 'Completed'}"/>
+                                    </apex:outputPanel></center>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:outputPanel>
+                    </apex:form>
+                </apex:pageBlock>
+                <!-- End of optin tab  -->
+            </apex:tab>
+        </apex:tabPanel>
+    </apex:outputPanel>
+    </head>
+</apex:page>

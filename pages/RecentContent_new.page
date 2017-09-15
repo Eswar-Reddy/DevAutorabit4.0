@@ -1,0 +1,168 @@
+<apex:page id="pgRecentContent" standardController="Content__c" extensions="RecentContentController" showHeader="false" sidebar="false">
+
+<apex:pageBlock title="Important Announcement" id="AnnouncementBlock">
+ {!$Label.Important_Announcement}
+</apex:pageBlock>
+
+<apex:form id="rcPageform1">  
+<apex:pageBlock id="recentContentBlockID" >
+
+      <apex:pageBlockSection rendered="false" title="{!$Label.ContentAnnouncementsTab}"  columns="1" collapsible="true"  id="rcTabClipsPgBlockSection"> 
+        <apex:outputPanel id="rcPagepanel1">
+          <apex:repeat value="{!listClips}" var="la" id="rcPagerepeat1">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr style="height:15px">
+                <td>
+                  <apex:outputPanel rendered="{!isSunPowerSuperUser}" id="rcTabClipsOutPanel2">
+                    <apex:outputLink value="/{!la.Id}/e?retURL=/apex/ContentLibrary?retTab=Clips" style="COLOR: #151B8D;" >[{!$Label.RCEU_Edit}]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!la.Id}','Announcements');">[Delete]</a>&nbsp;
+                  </apex:outputPanel>
+                  <apex:outputLabel value="{!la.IsContentNew}" />&nbsp;<u style="COLOR: #EAC117;"><apex:outputLabel value="{!la.title}" style="COLOR: #EAC117;" /></u>
+                    <!-- <apex:outputLink value="{!la.detailPageLink}" style="COLOR: #EAC117;">{!la.title}</apex:outputLink>  -->
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel value="{!la.description}"/></td>
+              </tr>  
+              <tr>
+                <td>
+                  <apex:outputLabel value="{!la.eventSatrtDate}" />
+                </td>
+              </tr>
+              <tr>
+                 <td>
+                   <apex:outputLink value="{!la.location}" target="_blank">{!la.urlLink}</apex:outputLink>
+                 </td>
+              </tr>
+              <tr>
+                <td><hr/></td>  
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+            </table>    
+          </apex:repeat>
+          <apex:outputLink id="lnkContentLibrary" target="_top" value="/apex/partnercontent?retTab=Clips">{!$Label.RCEU_ShowAll}</apex:outputLink>
+        </apex:outputPanel> 
+      </apex:pageBlockSection>   
+ 
+
+      <apex:pageBlockSection title="{!$Label.contentForAnnouncementTab}" columns="1" collapsible="true" id="rcTabAnnouncePgBlockSection"> 
+        <apex:outputPanel id="rcPagepanel1Replica">
+          <apex:repeat value="{!listAnnouncements}" var="la" id="repeat1yeh">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr style="height:15px">
+                <td>
+                  <apex:outputPanel rendered="{!isSunPowerSuperUser}" id="rcTabAnnounceOutPanel">
+                    <apex:outputLink value="/{!la.Id}/e?retURL=/apex/ContentLibrary?retTab=tabAnnouncements" style="COLOR: #151B8D;" >[{!$Label.RCEU_Edit}]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!la.Id}','Announcements');">[Delete]</a>&nbsp;
+                  </apex:outputPanel>
+                  <apex:outputLabel value="{!la.IsContentNew}" />&nbsp;<u style="COLOR: #EAC117;"><apex:outputLabel value="{!la.title}" style="COLOR: #EAC117;" /></u>
+                    <!-- <apex:outputLink value="{!la.detailPageLink}" style="COLOR: #EAC117;">{!la.title}</apex:outputLink>  -->
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLabel value="{!la.description}"/></td>
+              </tr>  
+              <tr>
+                <td>
+                  <apex:outputLabel value="{!la.eventSatrtDate}" />
+                </td>
+              </tr>
+              <tr>
+                <td><apex:outputLink value="{!la.location}" target="_blank">{!la.urlLink}</apex:outputLink></td>
+              </tr>
+              <tr>
+                <td><hr/></td>  
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+            </table>    
+          </apex:repeat>
+          <apex:outputLink id="lnkContentLibrary" target="_top" value="/apex/partnercontent?retTab=Announcements">{!$Label.RCEU_ShowAll}</apex:outputLink>
+        </apex:outputPanel> 
+      </apex:pageBlockSection>    
+      
+                          
+      <apex:pageBlockSection title="{!$Label.ContentTrainingTab}" columns="1" collapsible="true"  id="rcTabTrainingPgBlockSection">
+        <apex:outputPanel id="rcPagepanel2">
+          <apex:pageBlockTable value="{!listTaining}" var="lt">   
+            <apex:Column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+              <apex:outputPanel id="rcTabTrainingOutPanel">
+                <apex:outputLink value="/{!lt.Id}/e?retURL=/apex/ContentLibrary?retTab=TrainingSchedule"  style="COLOR: #151B8D;">[{!$Label.RCEU_Edit}]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!lt.Id}','TrainingSchedule');">[{!$Label.RCEU_Delete}]</a>&nbsp;&nbsp;
+              </apex:outputPanel>
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentTraningTableHeading5}"  width="15%">    
+              {!lt.IsContentNew} &nbsp;
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentTraningTableHeading1}" width="40%"> 
+              <apex:outputLabel value="{!lt.description}" />
+                <!--  <apex:outputLink value="{!lt.detailPageLink}">{!lt.description} &nbsp;</apex:outputLink>  -->
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentTraningTableHeading2}"  width="12%"> 
+            {!lt.eventSatrtDate} &nbsp;
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentTraningTableHeading3}" width="12%">   
+             {!lt.eventEndDate} &nbsp;
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentTraningTableHeading4}" width="15%">   
+              {!lt.location} &nbsp;
+            </apex:Column>
+          </apex:pageBlockTable>
+          <br/>
+          <apex:outputLink id="lnkContentLibrary" target="_top" value="/apex/partnercontent?retTab=TrainingSchedule">{!$Label.RCEU_ShowAll}</apex:outputLink> 
+        </apex:outputPanel>     
+      </apex:pageBlockSection>
+
+
+      <apex:pageBlockSection title="{!$Label.ContentEventTab}"  columns="1" collapsible="true" id="rcTabEventsPgBlockSection"> 
+        <apex:outputPanel id="rcPagepanel3">
+          <apex:pageBlockTable value="{!listEvent}" var="le" columns="3">
+            <apex:Column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+              <apex:outputPanel id="rcTabEventsOutPanel">
+                <apex:outputLink value="/{!le.Id}/e?retURL=/apex/ContentLibrary?retTab=UpcomingEvents"    style="COLOR: #151B8D;" >[{!$Label.RCEU_Edit}]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!le.Id}','UpcomingEvents');">[Delete]</a>&nbsp;&nbsp;
+              </apex:outputPanel>
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentTraningTableHeading5}"  width="15%">    
+              {!le.IsContentNew} &nbsp;
+            </apex:Column> 
+            <apex:Column headerValue="{!$Label.ContentEventTableHeading1}" width="40%"> 
+            
+               <apex:outputLabel value="{!le.title}" rendered="{!ISNULL(le.location)}" />
+               <apex:outputLink value="{!le.location}" rendered="{!NOT(ISNULL(le.location))}">{!le.title}&nbsp;</apex:outputLink> 
+
+            </apex:Column>
+            <apex:Column headerValue="{!$Label.ContentEventTableHeading2}" width="20%">
+              {!le.eventSatrtDate} &nbsp;
+            </apex:Column>   
+            <apex:Column headerValue="{!$Label.ContentEventTableHeading3}" width="25%">   
+              {!le.targetAudience} &nbsp;
+            </apex:Column>
+          </apex:pageBlockTable>
+          <br/>
+          <apex:outputLink id="lnkContentLibrary" target="_top" value="/apex/partnercontent?retTab=UpcomingEvents">{!$Label.RCEU_ShowAll}</apex:outputLink>
+        </apex:outputPanel> 
+      </apex:pageBlockSection>
+   
+
+</apex:pageBlock>
+
+</apex:form>
+
+<script>
+  function deleteCurrent(Id, type) {
+    if(confirm("Are you sure?")) {
+      if(type == 'Announcements') {
+        removeAnnouncements(Id);
+      }
+      else if(type == 'TrainingSchedule'){
+        removeTrainingSchedule(Id);
+      }
+      else if(type == 'UpcomingEvents'){
+        removeUpcomingEvents(Id);
+      }        
+    }
+    else
+      return false;     
+  }
+</script>
+</apex:page>

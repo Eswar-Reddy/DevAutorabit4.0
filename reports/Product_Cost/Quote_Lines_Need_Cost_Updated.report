@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Quote.QuoteLineItems$Id</field>
+    </columns>
+    <columns>
+        <field>Quote$Name</field>
+    </columns>
+    <columns>
+        <field>Quote.QuoteLineItems$Name</field>
+    </columns>
+    <columns>
+        <field>Quote.QuoteLineItems$Cost__c</field>
+    </columns>
+    <columns>
+        <field>Quote$CurrencyIsoCode</field>
+    </columns>
+    <columns>
+        <field>Quote$Status</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Quote Lines Need Cost Updated</description>
+    <filter>
+        <criteriaItems>
+            <column>Quote.QuoteLineItems$Product2</column>
+            <operator>contains</operator>
+            <value>Q115,Q215,Q315,Q415,Q116,Q216,Q316,Q416,Q117,Q217,Q317,Q417,Q118,Q218,Q318,Q418,Q119,Q219,Q319,Q419</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote.QuoteLineItems$Product2</column>
+            <operator>notContain</operator>
+            <value>MEA,Korea,India,France,APAC,Generic,Spain,Israel,Italy,(,)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote$Status</column>
+            <operator>notEqual</operator>
+            <value>In Review,Approved</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Quote Lines Need Cost Updated</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Quotes_with_Quote_Line_Items_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Quote$Amendment_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

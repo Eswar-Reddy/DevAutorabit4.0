@@ -1,0 +1,70 @@
+<apex:page >
+</apex:page>
+<!-- *** Page added in Sunpower TPO Phase 1 -- 20/10/2013, to display design docs for partners in quote page layout --><!--
+<apex:page standardcontroller="Quote" extensions="TPO_DesignDocs" action="{!SolrifDesigndocs}">
+<style>
+.btnGo, .btnImportant, .btnSharing, .btnDisabled, .btn, .bEditBlock .btnGo, .bEditBlock .btnImportant, .bEditBlock .btnSharing, .bEditBlock .btnDisabled, .bEditBlock .btn, .btnCustomAction, .btnOverriddenAction {
+margin: 0 2px;
+padding: 5px 10px;
+}
+.btn, .button, .formulaButton, .btnWhatsNew {
+    background-image: url("/resource/goldtabBG");
+    background-position: left top;
+    background-repeat: repeat-x;
+    border-color: -moz-use-text-color rgb(92, 93, 97) rgb(92, 93, 97) -moz-use-text-color;
+    border-style: none solid solid none;
+    border-width: medium 1px 1px medium;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    display: inline;
+    font-family: 'Verdana','Geneva',sans-serif;
+    font-size: 65%;
+    font-weight: normal;
+    padding: 1px 2px;
+}
+</style>
+
+
+<apex:form id="formid">
+<apex:pageBlock id="pbdesignrev">
+
+    <apex:pageBlockSection title="{!$Label.TPO_Design_Documents}" columns="1" rendered="{!documentSection}" collapsible="false">
+          
+            <apex:dataTable value="{!ContentversLst}" var="cont" columns="3" rendered="{!contentSection}" style="font-size:12px;" cellpadding="1" >
+                 <apex:column headerValue="{!$Label.TPO_Download}" style="font-size:14px;width:250px;line-height:30px;">
+                    <apex:commandButton value="{!$Label.TPO_Download}"  onclick="window.open('/sfc/servlet.shepherd/version/download/{!cont.Id}?asPdf=false&operationContext=CHATTER')"  id="theButton1"/>
+                </apex:column>         
+                <apex:column value="{!cont.Title}" style="font-size:12px;width:350px;line-height:30px;" headerValue="Nom Document"/>
+                 <apex:column headerValue="Création Date" value="{!Quote.CreatedDate}" style="font-size:12px;width:350px;line-height:30px;" />
+            </apex:dataTable>
+       
+            
+             <apex:dataTable value="{!AttachmentLst}" var="attlst" columns="3" cellpadding="1" rendered="{!contentSection}" style="font-size:12px;margin:-8px 0 0 0;">
+         
+
+                <apex:column headerValue="" style="font-size:14px;width:250px;line-height:30px;">
+                    <apex:commandButton value="{!$Label.TPO_Download}" onclick="window.open('/servlet/servlet.FileDownload?file={!attlst.Id}')"  id="theButton1"/>
+                </apex:column> 
+                 <apex:column value="{!attlst.Name}"  headerValue="" style="font-size:12px;width:350px;line-height:30px;"/>
+                 <apex:column headerValue="" value="{!attlst.CreatedDate}" style="font-size:12px;width:350px;line-height:30px;" />
+       
+            </apex:dataTable>
+
+             <apex:dataTable value="{!AttachmentLst}" var="attlst" columns="3" cellpadding="1" rendered="{!IF(contentSection, false, true)}"> style="font-size:12px;margin:-8px 0 0 0;">
+         
+
+                <apex:column headerValue="{!$Label.TPO_Download}" style="font-size:14px;width:250px;line-height:30px;">
+                    <apex:commandButton value="{!$Label.TPO_Download}" onclick="window.open('/servlet/servlet.FileDownload?file={!attlst.Id}')" id="theButton1"/>
+                </apex:column> 
+                 <apex:column value="{!attlst.Name}"  headerValue="Nom Document" style="font-size:12px;width:350px;line-height:30px;"/>
+                 <apex:column headerValue="Création Date" value="{!attlst.CreatedDate}" style="font-size:12px;width:350px;line-height:30px;" />
+       
+            </apex:dataTable>          
+          </apex:pageBlockSection>
+          
+          <apex:outputLabel value="No Documents Available for this quote" style="font-size: 18pt;color:#f3901d;" rendered="{!IF(documentSection, false, true)}"></apex:outputLabel>
+</apex:pageBlock>
+</apex:form>
+
+
+</apex:page>-->

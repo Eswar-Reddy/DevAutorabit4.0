@@ -1,0 +1,88 @@
+<apex:page sidebar="false" showHeader="false">
+
+    <style type="text/css">
+        .prodcol1 {width:66%; padding-bottom:75px; padding-left:30px; }
+        .prodcol2 {padding-bottom:75px;}
+    </style>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.crmportal, '/crmSunpower.css')}" />
+    
+    <apex:stylesheet value="{!$Resource.PartnerPortalSiteLoginCSS}" />
+    <c:sunpowerHeader />
+    
+    
+    
+    
+    <c:welcomeSalesforce />
+    
+    <apex:form >
+    <div id="mainDiv">
+    <div id="prodDiv" style="display:block; font-size: .9em; padding-left:100px;">
+    <apex:panelGrid id="prodDiv" style="padding-top:0px;" columnClasses="prodcol1,prodcol2" rowClasses="row1" columns="2" width="100%">
+            <apex:panelGroup >
+                <div style="margin-top:0px;">
+                <p><b>NOTE to SunPower Employees:</b> </p>
+                <ul>
+                <li>Please click on the cloud tile to log-in.</li>
+                <li>Please use the <i>Sunpower network login credentials</i> if prompted.
+                    <ul style="font-size:90%">
+                        <li><b>Username:</b> <i>sunpowercorp\&lt;yourusername&gt;</i></li>
+                        <li><b>Password:</b> <i>&lt;Your network password&gt;</i></li>
+                    </ul>
+                </li>
+                <li>If you have difficulty signing in, please submit a help ticket to <a href="mailto:help@sunpowercorp.com">help@sunpowercorp.com</a> or call x10600.</li>
+                <li>Send an email with screenshot and details to @DIGITAL if you experience issues after logging in. </li>
+                </ul>
+                </div>
+            </apex:panelGroup>
+    
+    <!--Production-->
+            <apex:panelGroup >
+                <div style=" width:auto; float:left;">
+                    <apex:outputLink value="https://login.sunpowercorp.com/sfdc" styleClass="tile">
+                        <apex:image title="Prod" id="prodImage" url="{!URLFOR($Resource.crmportal, '/img/ProdForce.jpg')}" width="250" height="200"/>
+                    </apex:outputLink>
+                </div>
+            </apex:panelGroup>
+    
+    
+    <!--CRM Help Site--><!--
+    <apex:image id="supportImage" url="{!URLFOR($Resource.crmportal, '/img/SupportForce.jpg')}" width="275" height="221"/>-->
+    
+    </apex:panelGrid>
+    </div>
+    
+    
+        <!--<div style="clear:both;">-->
+            <c:crmSandboxLinks />
+            <!--</div>-->
+    </div>
+    
+        <div class="linkDiv">
+            <p id="linkP" style="font-size: .7em;">For <span id="sandBoxLink">Sandbox Environments: </span><a href="javascript:eToggle();" style="font-size: 1.2em;">Click here</a></p>
+        </div>
+    
+    
+    </apex:form>
+    
+
+    
+    <script>
+    function eToggle() {
+        var prodSec = document.getElementById("prodDiv");
+        var sandboxSec = document.getElementById("sandboxDiv");
+        var linkText =  document.getElementById("sandBoxLink");
+        if(prodSec.style.display == "block"){
+            prodSec.style.display = "none";
+            sandboxSec.style.display = "block";
+            linkText.innerHTML = "Production Environment: ";
+        }
+        else{
+            prodSec.style.display = "block";
+            sandboxSec.style.display = "none";
+            linkText.innerHTML = "Sandbox Environments: ";
+        }
+    }
+    </script>
+
+</apex:page>

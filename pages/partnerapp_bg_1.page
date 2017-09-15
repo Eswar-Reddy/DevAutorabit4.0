@@ -1,0 +1,289 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false">
+
+<apex:form >
+ <c:Header id="header"/><br/>
+ <apex:pageMessages />
+ <table width="100%" style="background-color:#FBB917" border="0">
+     <tr>
+         <td width="100%" align="center" ><font color="#000000" size="5"><B>Aanvraagformulier SunPower Partner</B></font>
+         </td> 
+
+     </tr>
+     <tr>
+         <td align="center"><font color="#000000" size="5"><B></B></font>
+         </td>
+     </tr>
+ </table>
+<apex:outputPanel style="padding-left:5px;padding-top5px" layout="block">
+   <table width="100%"  border="0">
+     <tr>
+        <td>
+            <b>Aanwijzingen: Na het invullen van dit formulier ook de balans en resultaatrekening van uw bedrijf versturen naar het volgende e-mailadres sunpowerbelgie@sunpowercorp.com
+            </b>
+        </td>
+     </tr>
+     <tr>
+        <td>
+             Totale inkomsten (voer de gegevens van uw totale inkomsten als volgt in: 10.000; 100.000; 1,000.000)
+        </td>
+     </tr>
+   </table>
+
+</apex:outputPanel>
+
+<apex:pageBlock >    
+
+<apex:pageBlockButtons >
+        <apex:commandButton value="Volgende" action="{!step2_bg}"/>
+        <apex:commandButton value="Annuleren" action="{!cancelPartner_bg}"/>
+    </apex:pageBlockButtons>
+
+        <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="4">
+                    <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Algemene informatie</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+           <tr>
+
+               <td align="left" width="25%"style="padding-left:5px"><apex:outputlabel value="Bedrijfsnaam"/></td>
+
+               <td width="25%"><apex:inputField style="width:75%" value="{!partnerApp.Company_Name__c}"/></td>
+
+               <td align="left" width="30%" style="padding-left:5px">Datum</td>
+
+               <td width="20%"><apex:inputField style="width:40%" value="{!partnerApp.Application_Date__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">Eigenaar</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner__c}"/></td>
+
+               <td align="left" style="padding-left:5px">Ervaring in PV (jaren)</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Experience_years__c}"/></td>
+
+           </tr>           
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">Juridische naam</td>
+
+               <td colspan="3"><apex:inputField style="width:94%" value="{!partnerApp.Legal_Name__c}" /></td>
+
+           </tr>           
+        </table>     
+
+       
+
+        <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Bedrijfsgroei</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:25px">
+                <td colspan="4" style="padding-left:5px">
+                    Vul in dit deel de omzetcijfers in van uw bedrijf uitgedrukt in kW, euro’s en aantal werknemers op het einde van het jaar.  
+                </td>
+            </tr>
+          
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right">Jaar</td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">PV watts verkocht</td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Totale inkomsten</td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Aantal werknemers op het einde van het jaar</td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right"><!-- {!YEAR(TODAY()) - 3} -->Sinds drie jaren</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_3_years_ago__c}"/></td>
+
+               <td align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_3_years_ago__c}" /></td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_3_years_ago__c}"/></td>
+
+           </tr>
+
+          <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right"><!--  {!YEAR(TODAY()) - 2}-->Sinds twee jaren</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_2_years_ago__c}"/></td>
+
+               <td align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_2_years_ago__c}" /></td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_2_years_ago__c}"/></td>
+
+           </tr>
+              <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="right"><!--  {!YEAR(TODAY()) - 1}-->Verleden jaar</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_last_year__c}"/></td>
+
+               <td  align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_last_year__c}" /></td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_last_year__c}"/></td>
+
+           </tr>
+           <tr style="height:20px">
+              <td colspan="4" style="padding:5px">Voorziening voor dit jaar <!-- {!YEAR(TODAY())} -->
+               </td>
+           </tr>    
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">1e kwartaal</td>
+
+                  <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q1__c}"/></td>
+
+                  <td align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q1__c}" /></td>
+
+                 <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q1__c}"/></td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">2e kwartaal</td>
+
+                  <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q2__c}"/></td>
+
+                  <td align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q2__c}" /></td>
+
+                 <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q2__c}"/></td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">3e kwartaal</td>
+
+                  <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q3__c}"/></td>
+
+                  <td align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q3__c}" /></td>
+
+                 <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q3__c}"/></td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;padding-left:5px" align="right">4e kwartaal</td>
+
+                  <td><apex:inputField style="width:75%" value="{!partnerApp.PV_Watts_Sold_Q4__c}"/></td>
+
+                  <td align="left"><apex:inputField style="width:75%" value="{!partnerApp.Total_Revenue_MM_Q4__c}" /></td>
+
+                 <td><apex:inputField style="width:75%" value="{!partnerApp.Number_of_Employees_Q4__c}"/></td>
+            </tr>
+        </table>
+    <!-- Number of Employees at present  -->    
+         <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="8">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B> Huidige aantal werknemers </B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr style="height:25px">
+                <td colspan="8" style="padding-left:5px">
+                    Vul de informatie hieronder aan met het aantal werknemers actief in elk van de volgende categorieën en niveaus
+                </td>
+            </tr>
+            
+            <tr>
+
+                <td>Algemeen <br/> management</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                
+            </tr>    
+            
+            <tr style="font-weight:bold;">
+
+                <td></td>
+
+                <td align="center">Verkoop</td>
+
+                <td align="center">Marketing</td>
+
+                <td align="center">Installatie</td>
+
+                <td align="center">Operations management</td>
+
+                <td align="center">Ontwerp</td>
+
+                <td align="center">Financiën</td>
+
+                <td align="center">Overig</td>
+
+            </tr>
+
+            <tr>
+
+                <td style="white-space:nowrap;" align="center">Managers of supervisors</td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Sales_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Marketing_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Installation_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Operations_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Design_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Finance_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Other_Employees__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td style="white-space:nowrap;" align="center">Werknemers</td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Sales_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Marketing_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Installation_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Operations_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Design_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Finance_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Other_Employees__c}"/></td>
+
+            </tr>
+           
+      
+        </table>
+<!-- Number of Employees at present  END--> 
+</apex:pageBlock>
+
+</apex:form>
+
+</apex:page>

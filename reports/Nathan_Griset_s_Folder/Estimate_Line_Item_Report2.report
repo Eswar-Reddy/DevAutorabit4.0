@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Estimate__c$Opportunity__c.Sub_Region__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c$Opportunity_Name__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c$Name</field>
+    </columns>
+    <columns>
+        <field>Estimate__c$Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c$Estimate_Complete_Date__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c$Commercial_Operation_Date__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c.Quote_Line_Items__r$System_Size_BOS__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c.Quote_Line_Items__r$Cost__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>BOS Reports</description>
+    <filter>
+        <criteriaItems>
+            <column>Estimate__c.Quote_Line_Items__r$Product_Family__c</column>
+            <operator>notEqual</operator>
+            <value>PV Module</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Estimate__c$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA COmmercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Estimate__c.Quote_Line_Items__r$Cost__c</column>
+            <operator>greaterThan</operator>
+            <value>USD 0</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Estimate__c.Quote_Line_Items__r$Product2</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Estimate Line Item Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Estimates_and_Quote_Line_Items__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Estimate__c$Name</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Estimate__c$Estimate_Complete_Date__c</dateColumn>
+        <interval>INTERVAL_PREVFY</interval>
+    </timeFrameFilter>
+</Report>

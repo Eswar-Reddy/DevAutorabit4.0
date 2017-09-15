@@ -1,0 +1,40 @@
+<apex:component controller="NotesTable">
+	<apex:attribute name="parentAtt" description="The Id of record to pull the Notes from" type="Id" required="true" assignTo="{!objectParentId}"/>
+
+<!-- <body class="detail-container"> -->
+<div class="sunpower-style container-fluid" style="margin-top: 1rem; margin-left:10px; max-width: 1180px;">
+	<div class="row">
+        <div class="col-xs-11 col-md-11">
+            <H5>Notes</H5>
+        </div>
+        <div class="col-xs-1 col-md-1">
+	        <a href="/apex/NoteNew?parentId={!objectParentId}" style="float: left; margin-bottom: 1rem;">New Note</a>
+		</div>
+	</div>
+	<div class="row">
+		<table class="table " id="tableId">
+			<thead>
+				<th></th>
+				<th>Title</th>
+				<th>Last Modified</th>
+				<th>Created By</th>
+			</thead>
+			<tbody>
+				<apex:repeat value="{!notes}" var="note" >
+					<tr>
+						<td><a href="/apex/NoteNew?parentId={!objectParentId}&existingNoteId={!note.Id}">Edit</a></td>
+						<td><a href="/apex/NoteView?id={!note.Id}">{!note.Title}</a></td>
+						<td>
+						<apex:outputText value="{0,date,MM'/'dd'/'yyyy hh:mm a}">
+							    <apex:param value="{!note.LastModifiedDate}" /> 
+							</apex:outputText>
+						</td>
+						<td>{!note.CreatedBy.Name}</td>
+					</tr>
+				</apex:repeat>
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- </body> -->
+</apex:component>

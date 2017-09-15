@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>STAGE_NAME</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Net_Present_Value__c.CONVERT</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NPV_W__c.CONVERT</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 or 2) AND 3</booleanFilter>
+        <criteriaItems>
+            <column>Opportunity.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FULL_NAME</column>
+            <operator>equals</operator>
+            <value>john murnin,Mike Whatley,Bob Redlinger</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <operator>equals</operator>
+            <value>03 – Binding Offer,03 - Mid Development,03 - Firm Offer,04 - Advance Development,04 - Late Development,04 – Negotiate Contract,04 - Negotiate Binding Contract,05 - Finalize Assets,05 – Agreements Finalized</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Stage 3+ and NPV</name>
+    <params>
+        <name>role_territory</name>
+        <value>role</value>
+    </params>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Opportunity.NPV_W__c.CONVERT</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-01-01</startDate>
+    </timeFrameFilter>
+</Report>

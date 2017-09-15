@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Business_Unit__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Country__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Sub_Region__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Site_Status__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Site_City__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Notary_Option_Signed_On__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Notary_Option_Expiry_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>SIF Report</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.R00N30000000t6dPEAQ__r$Site_Status__c</column>
+            <operator>equals</operator>
+            <value>Abandoned,Active,Comm. Letter signed,Inactive,Lost,On hold,Optioned,Prospect,Purchased/Leased,Qualified,Under evaluation/negotiation</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$RecordType</column>
+            <operator>equals</operator>
+            <value>Opportunity.Development</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>notContain</operator>
+            <value>Lost</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>SIF Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Sites_and_Surfaces__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity.R00N30000000t6dPEAQ__r$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

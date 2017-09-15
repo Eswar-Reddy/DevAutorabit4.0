@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Roof_Attachment__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Roof_Type__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.System_Adders__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Number_of_Panels__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>((1 AND 2) or (3 AND 4)) AND 5</booleanFilter>
+        <criteriaItems>
+            <column>Residential_Project__c.Roof_Attachment__c</column>
+            <operator>equals</operator>
+            <value>SunModo - Rafter</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c.System_Adders__c</column>
+            <operator>includes</operator>
+            <value>Over Tile Install</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c.Number_of_Panels__c</column>
+            <operator>lessOrEqual</operator>
+            <value>12</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c.System_Adders__c</column>
+            <operator>includes</operator>
+            <value>AC Sub Panel</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NH Adders Exception Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Residential_Project__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>CUST_NAME</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Residential_Project__c.AddtlBuilderServicesWODateofReceipt__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$Name</field>
+    </columns>
+    <columns>
+        <field>Lead$Address</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Community_Name__c</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Name</field>
+    </columns>
+    <columns>
+        <field>Lead$Lead_Qualification_Notes__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Owner.Name</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Closed_Won_Date__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.System_Size_KwP__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Module_Quantity__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Module_Model_Number__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 AND (2 or 3) AND 4 AND 5)</booleanFilter>
+        <criteriaItems>
+            <column>Lead$Name</column>
+            <operator>notContain</operator>
+            <value>test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Owner</column>
+            <operator>equals</operator>
+            <value>ross karcher,ryan camperchioli,kevin cool,christian siewert,justin sheltraw,solar advisors new homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Owner.Name</column>
+            <operator>equals</operator>
+            <value>ross karcher,ryan camperchioli,kevin cool,christian siewert,justin sheltraw,chelsea mackie,walt rumpf</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Closed_Won_Date__c</column>
+            <operator>greaterThan</operator>
+            <value>1/1/2016</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Owner.Name</column>
+            <operator>notEqual</operator>
+            <value>Solar Advisors New Homes</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NA2/NA29 Orders Comparison</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_or_without_Campaign_and_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Lead$ConvertedOpportunity.Closed_Won_Date__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Lead$CreatedDate</dateColumn>
+        <endDate>2017-01-01</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2015-10-01</startDate>
+    </timeFrameFilter>
+</Report>

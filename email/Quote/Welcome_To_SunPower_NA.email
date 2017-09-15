@@ -1,0 +1,181 @@
+<messaging:emailTemplate subject="Welcome To SunPower" recipientType="Contact" relatedToType="Quote">
+<messaging:htmlEmailBody >
+<html>
+    <style type="text/css">
+    body {
+        background-color: #FFFFFF;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        font-family: Arial, Futura;
+        color: #555555;
+    }
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    table {
+        margin-top: 0pt;
+    }
+    p,table{
+        font-size: 11pt;
+    }
+    a { color:#0070c0; text-decoration:none}
+    a:visited { color:#0070c0; text-decoration:none}
+    a:link { color:#0070c0; text-decoration:none}
+    a:hover { color:#0070c0; text-decoration:none}
+
+    li {
+        line-height:20px;
+        margin-bottom: 10pt;
+        display: list-item;
+        padding-bottom:5px;
+    }
+    
+    </style>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="960px"><img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+            <tr>
+                <td align="right"  style="padding-top:20px; padding-right:50px; outline:none">
+                    <!-- Company Name Merge Field-->
+                    <span style="text-align:right;color:#739DD2;font-family:Avenir Next;font-size:24pt;"><b>{!relatedTo.Opportunity.Partner_Account_text__c}</b></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <td align="right"  style="padding-top:10px; padding-right:50px; outline:none">
+                   <p>A Proud Representative of SunPower</p>
+                </td>
+            </tr>
+            
+            <!-- JAJA May 29, 2015 added based on case 00516346 - START --> 
+            <tr>
+            <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            
+                <tr>
+                    <td align="right"  style="padding-top:10px; padding-right:50px; outline:none">
+                        <p style="margin-top: 0px;margin-bottom: 0px;"> Name: {!relatedTo.Opportunity.Primary_Contact_First_Name__c} {!relatedTo.Opportunity.Primary_Contact_Last_Name__c}</p>           
+                    </td>
+                </tr>            
+                <tr>
+                    <td align="right"  style="padding-top:10px; padding-right:50px; padding-bottom:10px; outline:none">
+                        <p style="margin-top: 0px;margin-bottom: 0px;"> Contract No.: {!relatedTo.Consolidated_Lease_Number__c}</p>           
+                    </td>
+                    
+                </tr>
+            </table>
+            </tr>
+            <!-- JAJA May 29, 2015 added based on case 00516346 - END --> 
+            
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px;" style="text-decoration:none; outline:none;">
+                    <table width="960px;">
+                        <tr>
+                            <td width="700px" style="padding-left:50px;">
+                                <h2>WELCOME!</h2>                   
+                                <p style="margin-top:20px">Hello <font color="#555555">{!relatedTo.Opportunity.Primary_Contact_First_Name__c}</font>,</p>
+                                <p style="margin-right:20px">
+                                    Welcome to the SunPower<sup>&reg;</sup> family! We look forward to providing your home with clean, renewable energy in the years ahead.
+                                </p>
+                                <p style="margin-right:20px">
+                                    At SunPower, we believe good communication builds strong relationships. That’s why, from time to time, we’ll send you updates about the 
+                                    progress of your solar system installation. There is nothing you need to do at this time – we just want to keep you informed with a list 
+                                    of major milestones you can expect moving forward. Should you have any questions during the process, your install partner 
+                                    <font color="#0070c0"><a href = "{!relatedTo.Opportunity.Partner_Address__c}" ><b>{!relatedTo.Opportunity.Partner_Account_text__c}</b></a></font> 
+                                    will be delighted to assist. While every solar project is different, the time from signing up until the system is interconnected
+                                    to the grid and producing power takes an average of 3 to 6 months.
+                                </p>
+                                
+                                <!--Table-->
+                                <table width="98%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#FDB723;border-spacing:0;">
+                                <tr>
+                                    <td style="background: #FDB723;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                                        <span style="font-size:16px;font-weight:bold;">Tips as your installation progresses:</span>
+                                    </td>
+                                </tr>
+                                <tr style="vertical-align:top;">
+                                    <td style="padding-top:20px;padding-right:30px;"> 
+                                        <ul>
+                                          <li>
+                                            <p> 
+                                                During the system design phase be sure to review and approve the location where the inverter will be installed.<br/><br/>
+                                            </p>
+                                          </li> 
+                                          <li>       
+                                            <p> 
+                                                Work with your sales representative to identify your main point of contact during the installation process.<br/><br/>
+                                            </p>
+                                          </li>
+                                          <li>       
+                                            <p> 
+                                                We recommend a site walkthrough with your installer before construction begins to ensure your installation proceeds smoothly.<br/><br/>
+                                            </p>
+                                          </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                </table>
+                                <p  style="margin-top:20px">
+                                    If you have any questions, don’t hesitate to reach out to <font color="#0070c0"><a href= "{!relatedTo.Opportunity.Partner_Address__c}" ><b>{!relatedTo.Opportunity.Partner_Account_text__c}</b></a></font>  at
+                                    <font color="#0070c0"><b>{!relatedTo.Opportunity.Partner_Phone__c}</b></font>.
+                                </p>
+                                <p style="margin-top:20px;">
+                                    Thank you, we’re very excited to work on your project installing clean, renewable solar on your home!
+                                </p>
+                                <p style="margin-top:20px;">Warmly,</p>
+                                <p style="margin-top:20px;">
+                                    <b>The SunPower Team</b><br/>
+                                    1-800-SUNPOWER
+                                </p>
+                                <!-- Breaks are added to ensure Image and Text alignment at the top -->
+                                <br/><br/><br/><br/><br/>                   
+                            </td>
+                            
+                            <td width="260px" valign="top" style="padding-left:65px; padding-right:45px;">
+                                <!-- WELCOME Progress Bar Vertical in PROD -->
+                                <img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlTF&oid=00D80000000ZF1L&lastMod=1396244807000" />    
+                                <br/>
+                                <p style="margin-left:40px; font-family: Futura;font-size: 8pt;margin-top: 10px;float: left;padding-left: 35px;width: 182px;line-height: 10pt;">
+                                    * SunPower Provides Communication. <br/>&nbsp; All other communication provided by <br/>&nbsp; your partner.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>    
+                </td>    
+            </tr>
+            
+            <tr>
+                <td>
+                    <!-- WELCOME IMAGE we can't put this as a background, if we made it as a background image, it will work on gmail but not on MS Outlook -- in PROD -->
+                    <img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOy&oid=00D80000000ZF1L&lastMod=1395962974000" width="960px"/>
+                </td>
+            </tr>
+            
+            <!--Footer Wrapper-->
+            <tr>
+                <td  style="padding-top:20px; padding-left:50px; padding-right:50px; outline:none; margin-bottom:0pt;line-height:normal;margin-left:18pt;margin-right:17pt;font-size:8pt;" align="center">
+                    <p style="font-size: 8pt">
+                        We do not share your information outside of SunPower and your Dealer Partner. 
+                        <u>Privacy Statement</u>
+                    </p>
+                    <p style="font-size: 8pt">
+                        © 2014 SunPower Corporation. All Rights Reserved. SUNPOWER, the SUNPOWER logo, and MORE ENERGY. FOR LIFE. are trademarks or registered trademarks of SunPower Corporation in the U.S. and other countries.
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

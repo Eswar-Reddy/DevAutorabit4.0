@@ -1,0 +1,100 @@
+<apex:page controller="LiveChatPostSurveyController" language="{!language}" showHeader="false">
+    <style type="text/css">
+        .center {
+            margin: 5px;
+            border:1px solid black;
+            padding: 5px;
+        }
+    </style>
+    
+    <apex:form >
+        <apex:outputPanel rendered="{!AND(surveyEnabled, surveyRendered)}" id="surveyPanel" style="width:600px" styleClass="center" layout="block">
+        <table>
+            <tr>
+                <td align="center">
+                    <c:LiveChatSunpowerImage />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">{!$Label.Live_Chat_Survey_Thank_you_to_complete}</td>
+            </tr>
+            <tr>
+                <td>{!$Label.Live_Chat_Survey_Rate_Representative}</td>
+            </tr>
+        </table>
+        <table>
+            <apex:repeat value="{!lineWrapperList}" var="W">
+                <tr>
+                    <td>{!W.rowNum}.{!W.question.Question__c}</td>
+                </tr>
+                <tr>
+                    <td>
+                    <apex:selectRadio value="{!W.selectedAnswer}" rendered="{!W.question.Type__c = 'Single Choice'}">
+                        <apex:selectOptions value="{!W.answerOptions}">
+                        </apex:selectOptions>
+                    </apex:selectRadio>
+                    <apex:inputtextarea value="{!W.selectedAnswer}" style="width:400px;height:50px"
+                        rendered="{!W.question.Type__c = 'Text Area'}"/>
+                    </td>
+                </tr>
+            </apex:repeat>
+        </table>
+        
+        <table>
+            <tr>
+                <td>
+                    <apex:commandButton value="Submit" action="{!submitSurvey}"/>
+                </td>
+            </tr>
+        </table>
+        
+        <apex:outputText value="{!message}" id="message"></apex:outputText>
+        
+        </apex:outputPanel>
+        
+        <apex:outputPanel rendered="{!AND(surveyEnabled, thankYouRendered)}" id="thankYouPanel" style="width:600px" styleClass="center" layout="block">
+        <table>
+            <tr>
+                <td align="center">
+                    <c:LiveChatSunpowerImage />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">{!$Label.Live_Chat_Survey_Thank_you_to_participate}</td>
+            </tr>
+            <tr>
+                <td align="center">{!$Label.Live_Chat_Survey_Your_opinions}</td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <apex:outputLink onclick="window.close();return false">
+                        {!$Label.Live_Chat_Survey_close_window}
+                    </apex:outputLink>
+                </td>
+            </tr>
+        </table>
+        
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!NOT(surveyEnabled)}" id="thankYouPanel2" style="width:600px" styleClass="center" layout="block">
+        <table>
+            <tr>
+                <td align="center">
+                    <c:LiveChatSunpowerImage />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">{!$Label.Live_Chat_Survey_Thank_you_for_participating}</td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <apex:outputLink onclick="window.close();return false">
+                        {!$Label.Live_Chat_Survey_close_window}
+                    </apex:outputLink>
+                </td>
+            </tr>
+        </table>
+        
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

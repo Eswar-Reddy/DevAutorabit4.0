@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<script type="text/javascript" src="/js/functions.js"></script>
+		<script  src="/soap/ajax/13.0/connection.js" type="text/javascript"></script>
+		<script  src="/soap/ajax/13.0/apex.js" type="text/javascript"></script>
+    <script type="text/javascript" >
+    function updateLatLong(){
+	    var LS = '{!Lead.LeadSource}';
+		var city =  '{!Lead.City}' ;
+		var state = '{!Lead.State}' ; 
+		var country =  '{!Lead.Country}' ;
+		var street = '{!Lead.Street}' ;
+		var refId = '{!Lead.Referrer_ID__c}' ; 
+		var refName = '{!Lead.Lead_Referral_Name__c}' ;
+        if( LS =='Partner'){
+			var result = sforce.connection.query('select id,country from Lead where id = \'{!Lead.Id}\' limit 1');
+			if(result != null){
+				var records = result.getArray("records");
+                                 if(records == null || records.length == 0) return; 
+				country=records[0].Country;
+			}else return;
+	        if( country != '' && state != '' && city != '' &&   street != ''){
+			    if( refId != '' ||  refName != ''){ 
+			        var cordinates = sforce.apex.execute("FindLatitudeLongitude","getLatitudeLongitudeOfAddress",{country:country, state:'{!Lead.State}',city:'{!Lead.City}',street:'{!Lead.Street}'});
+					var lead = new sforce.SObject('Lead'); 
+                                        lead.id = '{!Lead.Id}' ;
+					lead.Latitude__c = cordinates[2];
+					lead.Longitude__c = cordinates[3];
+					cordinates = sforce.apex.execute("FindLatitudeLongitude","getLatitudeLongitude",{leadrefId:'{!Lead.Referrer_ID__c}', leadrefName:'{!Lead.Lead_Referral_Name__c}'});
+					lead.RefLatitude__c = cordinates[2];
+					lead.RefLongitude__c  = cordinates[3];
+					sforce.connection.update([lead]);
+				}
+			}
+		}
+	}
+	window.onload = updateLatLong; 
+    </script>
+</head>
+
+<body>
+</body>
+</html>

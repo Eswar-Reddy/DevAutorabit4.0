@@ -1,0 +1,62 @@
+<apex:page standardController="LeasePayment__c" extensions="InvoiceDocumentSummary" showHeader="false" standardStylesheets="false">
+
+<head>
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_11_3)}"/>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <style>
+         
+         
+         .table-striped>tbody>tr:nth-child(odd)>td, 
+         .table-striped>tbody>tr:nth-child(odd)>th {
+           background-color: #D1DEEF;
+         }
+         .table-striped>tbody>tr:nth-child(odd)>td, 
+         .table-striped>tbody>tr:nth-child(odd)>th {
+           background-color: ##EAEFF7;
+         }
+         
+         .table>thead>tr>th{
+            background-color: #579AD4;
+         }
+    </style>
+    <script>
+         $(document).ready(function () {
+              (function ($) {
+                  $('#filter').keyup(function () {
+                    var rex = new RegExp($(this).val(), 'i');
+                    $('.searchable tr').hide();
+                    $('.searchable tr').filter(function () {
+                        return rex.test($(this).text());
+                    }).show();
+                })
+            }(jQuery));
+
+         });
+    </script>
+</head>
+<div class="input-group"> <span class="input-group-addon">Filter</span>
+        <input id="filter" type="text" class="form-control" placeholder="Type here..."/>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>MileStone</th>
+            <th>Responsible Vendor</th>
+            <th>Total Document Expected</th>
+            <th>Total Document Submitted</th>
+            <th>Total Document Approved</th>
+        </tr>
+    </thead>
+    <tbody class="searchable">
+          <apex:repeat value="{!lst_invoiceDocumentWrapper}" var="lstDocs">
+              <tr>
+                  <td>{!lstDocs.sMilestone}</td>
+                  <td>{!lstDocs.sReponsibleVendor}</td>
+                  <td>{!lstDocs.iTotalDocsExpected}</td>
+                  <td>{!lstDocs.iTotalDocsSubmitted}</td>
+                  <td>{!lstDocs.iTotalDocsApproved}</td>  
+              </tr>
+          </apex:repeat>
+    </tbody>
+</table>
+</apex:page>

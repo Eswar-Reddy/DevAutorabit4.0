@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>QuoteLineItem.Product__c</field>
+    </columns>
+    <columns>
+        <field>QLI.QUANTITY</field>
+    </columns>
+    <columns>
+        <field>QuoteLineItem.Cost_Full__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Completed Estimates by Product</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>QuoteLineItem.Product_Family__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Current &amp; Previous Quarter Estimates</name>
+    <params>
+        <name>role_territory</name>
+        <value>role</value>
+    </params>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>QuoteProduct@QuoteLineItem.Estimate__c</reportType>
+    <roleHierarchyFilter>SPWR_Global</roleHierarchyFilter>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>FK_$Estimate__c.Estimate_Complete_Date__c</dateColumn>
+        <interval>INTERVAL_CURPREV1</interval>
+    </timeFrameFilter>
+</Report>

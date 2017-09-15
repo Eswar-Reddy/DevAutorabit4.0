@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Site_Information_Form__c.Opportunity_del__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Final_Environmental_Impact_EI_Asst__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Design_Engineering_Comments__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Development_Owner__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Status__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Site_Information_Form__c.Total_Size_Capability_kWp__c</field>
+    </columns>
+    <currency>EUR</currency>
+    <description>List of all sites under development by the EU PP Team</description>
+    <filter>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Development_Owner__c</column>
+            <operator>equals</operator>
+            <value>Emmanuel Barry,Xavier Messing,Vincent Mathely,Francois LeNy,Imad Jabbour,Annabelle Le Bris,Adrien Alexandre,Paul Azibert</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Site_Information_Form__c.Development</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Development_Sta__c</column>
+            <operator>notEqual</operator>
+            <value>7 - Closed - Development Abandoned</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Site_Information_Form__c.Development_Sta__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Site_Information_Form__c.Site_Country__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>EU PP Development Sites Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Site_Information_Form__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Site_Information_Form__c.Biological_Cultural_Survey_Tracking_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

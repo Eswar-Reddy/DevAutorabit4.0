@@ -1,0 +1,226 @@
+<!-- Created By - Debasish Paul
+**** Created Date - 10/10/2016
+**** Case 00505731-Pivotal #114607243- Release - 45
+**** Description - Ability to export Dealer Program Funds list into excel/csv 
+-->
+
+<apex:page id="MDTF_MultipleTab_Excel" standardStylesheets="false" controller="MDTF_MultipleTab_ExcelController" contenttype="application/vnd.ms-excel#DPFReport.xls">
+{!xmlheader1}
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+      xmlns:html="http://www.w3.org/TR/REC-html40">
+    
+      <!--<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+          <Author></Author>
+          <LastAuthor></LastAuthor>
+          <Company></Company>
+          <Version>11.6360</Version>
+      </DocumentProperties>
+    
+      <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+        <WindowHeight>8535</WindowHeight>
+        <WindowWidth>12345</WindowWidth>
+        <WindowTopX>480</WindowTopX>
+        <WindowTopY>90</WindowTopY>
+        <ProtectStructure>False</ProtectStructure>
+        <ProtectWindows>False</ProtectWindows>
+      </ExcelWorkbook>-->
+    
+    <Styles>
+        <Style ss:ID="Default" ss:Name="Normal">
+            <Alignment ss:Vertical="Bottom"/>
+            <Borders/>
+            <Font/>
+            <Interior/>
+            <NumberFormat/>
+            <Protection/>
+        </Style>
+        <Style ss:ID="s23">
+            <Font x:Family="Swiss" ss:Bold="1"/>
+        </Style>
+        <Style ss:ID="s22">
+            <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
+        </Style>
+    </Styles>
+
+  		<Worksheet ss:Name="Fund Summary">
+            <Table ss:ExpandedColumnCount="7">
+                <Column ss:Width="150"/>
+                <!--<Row ss:StyleID="s23">
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value= "<b>Fund Period</b>"/></Data></Cell>
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value="Accrual"/></Data></Cell>
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value="Advertising Claims"/></Data></Cell>
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value="MRC Purchase"/></Data></Cell>
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value="LMS Spent"/></Data></Cell>
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value="Available Balance"/></Data></Cell>
+                    <Cell><Data ss:Type="String"><apex:outputText escape="false" value="Expiry Date"/></Data></Cell>
+                </Row>-->
+                <Row ss:StyleID="s23">
+                    <Cell><Data ss:Type="String">Fund Period</Data></Cell>
+                    <Cell><Data ss:Type="String">Accrual</Data></Cell>
+                    <Cell><Data ss:Type="String">Advertising Claims</Data></Cell>
+                    <Cell><Data ss:Type="String">MRC Purchase</Data></Cell>
+                    <Cell><Data ss:Type="String">LMS Spent</Data></Cell>
+                    <Cell><Data ss:Type="String">Available Balance</Data></Cell>
+                    <Cell><Data ss:Type="String">Expiry Date</Data></Cell>
+                </Row>
+         
+         
+         		<!-- Repeat and create data rows -->
+                <apex:repeat value="{!mdtfFundSummary}" var="fs">
+                  <Row>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Promotion_Description__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Allowance__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Claimed_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Smart_Store_Purchase__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Spent__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Balance__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!fs.Expiration__c}</Data></Cell>
+                  </Row>
+                </apex:repeat>
+            </Table>
+          </Worksheet>
+    	  
+    	  <Worksheet ss:Name="Transaction">
+            <Table ss:ExpandedColumnCount="4">
+                <Column ss:Width="150"/>
+                <Row ss:StyleID="s23">
+                    <Cell><Data ss:Type="String">Fund Period</Data></Cell>
+                    <Cell><Data ss:Type="String">Description</Data></Cell>
+                    <Cell><Data ss:Type="String">Transaction Date</Data></Cell>
+                    <Cell><Data ss:Type="String">Sum of Transaction Amount</Data></Cell>
+                </Row>
+                
+         		<!-- Repeat and create data rows -->
+                <apex:repeat value="{!mdtfActivities}" var="ac">
+                  <Row>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!ac.Promotion_Description__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!ac.Comment__c}</Data></Cell>
+                      <Cell ss:StyleID="s22"><Data ss:Type="String">{!ac.Transaction_Month__c}/{!ac.Transaction_Year__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!ac.Sum_of_Transaction_Amt__c}</Data></Cell>
+                  </Row>
+                </apex:repeat>
+            </Table>
+          </Worksheet>
+    
+    <Worksheet ss:Name="Claims">
+            <Table ss:ExpandedColumnCount="7">
+                <Column ss:Width="150"/>
+                <Row ss:StyleID="s23">
+                    <Cell><Data ss:Type="String">Process Date</Data></Cell>
+                    <Cell><Data ss:Type="String">Claimed</Data></Cell>
+                    <Cell><Data ss:Type="String">Approved</Data></Cell>
+                    <Cell><Data ss:Type="String">Paid</Data></Cell>
+                    <Cell><Data ss:Type="String">Claim Number</Data></Cell>
+                    <Cell><Data ss:Type="String">Description</Data></Cell>
+                    <Cell><Data ss:Type="String">Comment</Data></Cell>
+                </Row>
+         
+         
+         		<!-- Repeat and create data rows -->
+                <apex:repeat value="{!mdtfClaim}" var="cl">
+                  <Row>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Process_Date__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Claimed_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Approved_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Paid_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Claim_Number__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Activity_Description__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!cl.Comment__c}</Data></Cell>
+                  </Row>
+                </apex:repeat>
+            </Table>
+          </Worksheet>
+    
+    <Worksheet ss:Name="Training">
+            <Table ss:ExpandedColumnCount="7">
+                <Column ss:Width="150"/>
+                <Row ss:StyleID="s23">
+                    <Cell><Data ss:Type="String">Process Date</Data></Cell>
+                    <Cell><Data ss:Type="String">Claimed</Data></Cell>
+                    <Cell><Data ss:Type="String">Approved</Data></Cell>
+                    <Cell><Data ss:Type="String">Paid</Data></Cell>
+                    <Cell><Data ss:Type="String">Reference Number</Data></Cell>
+                    <Cell><Data ss:Type="String">Description</Data></Cell>
+                    <Cell><Data ss:Type="String">Comment</Data></Cell>
+                </Row>
+         
+         
+         		<!-- Repeat and create data rows -->
+                <apex:repeat value="{!mdtfTraining}" var="tr">
+                  <Row>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Process_Date__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Claimed_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Approved_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Paid_Amt__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Claim_Number__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Activity_Description__c}</Data></Cell>
+                    <Cell ss:StyleID="s22"><Data ss:Type="String">{!tr.Comment__c}</Data></Cell>
+                  </Row>
+                </apex:repeat>
+            </Table>
+          </Worksheet>
+    
+        <Worksheet ss:Name="Marketing Resource Center">
+                <Table ss:ExpandedColumnCount="8">
+                    <Column ss:Width="150"/>
+                    <Row ss:StyleID="s23">
+                        <Cell><Data ss:Type="String">Name</Data></Cell>
+                        <Cell><Data ss:Type="String">Product Name</Data></Cell>
+                        <Cell><Data ss:Type="String">Order Date</Data></Cell>
+                        <Cell><Data ss:Type="String">Order No.</Data></Cell>
+                        <Cell><Data ss:Type="String">Price</Data></Cell>
+                        <Cell><Data ss:Type="String">Purchase Type</Data></Cell>
+                        <Cell><Data ss:Type="String">Status</Data></Cell>
+                        <Cell><Data ss:Type="String">Tracking Number</Data></Cell>
+                    </Row>
+             
+             
+                    <!-- Repeat and create data rows -->
+                    <apex:repeat value="{!mdtfSmartStore}" var="mrc">
+                      <Row>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Name}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Product_Name__c}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Order_Date__c}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Order_Number__c}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Price__c}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Purchase_Type__c}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Status__c}</Data></Cell>
+                        <Cell ss:StyleID="s22"><Data ss:Type="String">{!mrc.Tracking_Number__c}</Data></Cell>
+                      </Row>
+                    </apex:repeat>
+                </Table>
+              </Worksheet>
+                    
+              <Worksheet ss:Name="Lead Generation Fee">
+                        <Table ss:ExpandedColumnCount="7">
+                            <Column ss:Width="150"/>
+                            <Row ss:StyleID="s23">
+                                <Cell><Data ss:Type="String">Opportunity Name</Data></Cell>
+                                <Cell><Data ss:Type="String">Opportunity Created Date</Data></Cell>
+                                <Cell><Data ss:Type="String">Campaign Name</Data></Cell>
+                                <Cell><Data ss:Type="String">Lead Generation Fee</Data></Cell>
+                                <Cell><Data ss:Type="String">Lead Handling Fee</Data></Cell>
+                                <Cell><Data ss:Type="String">Transaction Date</Data></Cell>
+                                <Cell><Data ss:Type="String">Reference Number</Data></Cell>
+                           </Row>
+                     
+                            <!-- Repeat and create data rows -->
+                            <apex:repeat value="{!mdtfLeadGenFee}" var="lgf">
+                              <Row>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Opportunity_Name__c}</Data></Cell>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Created_Date__c}</Data></Cell>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Campaign_Name__c}</Data></Cell>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Lead_Generation_Fee__c}</Data></Cell>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Lead_Handling_Fee__c}</Data></Cell>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Transaction_Date__c}</Data></Cell>
+                                <Cell ss:StyleID="s22"><Data ss:Type="String">{!lgf.Reference_Number__c}</Data></Cell>
+                              </Row>
+                            </apex:repeat>
+                        </Table>
+               </Worksheet>
+  </Workbook>
+<!--<apex:outputText value="{!endfile1}" escape="false"/>-->
+</apex:page>

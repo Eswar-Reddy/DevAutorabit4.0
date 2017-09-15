@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>NH_Community__c$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$SLA_Days_Aging__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c$AHJ__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</column>
+            <operator>contains</operator>
+            <value>Ship &amp; Upload</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</column>
+            <operator>equals</operator>
+            <value>In Progress</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Type_of_Design__c</column>
+            <operator>equals</operator>
+            <value>Individual Plot Plan,Individual Permit Package,Individual Plot &amp; Permit Package</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</column>
+            <operator>greaterThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Assigned_To__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Plot, Ship &amp; Upload</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_w_Residential_Proj_w_Proj_Tasks__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

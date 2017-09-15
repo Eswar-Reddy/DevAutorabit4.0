@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Design__c$Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$Actual_System_Size_MWp__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$X75_Percent_Briefing_Meeting__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$Project_Number__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$Probability__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Design__c$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Quote_Line_Items__r$Product__c.Family</column>
+            <operator>equals</operator>
+            <value>Mounting Systems - Parking</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c$RecordType</column>
+            <operator>equals</operator>
+            <value>Design__c.Project_Design</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Quote_Line_Items__r$Product__c.Family</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Parking projects</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Designs_with_and_without_Quote_Lines__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Design__c$Project_Number__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Design__c.Quote_Line_Items__r$CreatedDate</dateColumn>
+        <interval>INTERVAL_PREVCURFY</interval>
+    </timeFrameFilter>
+</Report>

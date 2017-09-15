@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>Commercial_PR1_Submitter_Group</submitter>
+        <type>group</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Status__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>PR2_approved_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>lindsey.wiedmann@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>marina.kourenkova@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>matt.white@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>michael.eyman@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>stephen.adelson@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>PR2 Contract Approval</description>
+        <entryCriteria>
+            <booleanFilter>1 AND 2</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Status__c</field>
+                <operation>equals</operation>
+                <value>Submitted for Contract Approval (PR2)</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.RecordType</field>
+                <operation>equals</operation>
+                <value>EPC Customer</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>PR2 Contract Approval</label>
+        <name>Step1</name>
+        <rejectionActions>
+            <action>
+                <name>PR2_rejected_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>PR2_approved_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>david.mcilhenny@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>lindsey.wiedmann@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>marina.kourenkova@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>matt.white@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>michael.eyman@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>stephen.adelson@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>PR2 Contract Approval Pocess</description>
+        <entryCriteria>
+            <booleanFilter>1 AND 2</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Status__c</field>
+                <operation>equals</operation>
+                <value>Submitted for Contract Approval (PR2)</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.RecordType</field>
+                <operation>equals</operation>
+                <value>Energy Off Taker (PPA)</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>PR2 Contract Approval Process</label>
+        <name>Step_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>PR2_rejected_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>PR2_approved_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>PR2 Contract Approval -Place Holder 1</description>
+        <entryCriteria>
+            <booleanFilter>1 AND 2</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Status__c</field>
+                <operation>equals</operation>
+                <value>Submitted for Firm Offer Approval (PR1)</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 1</label>
+        <name>Step3</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>PR2_rejected_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>PR2_approved_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>PR2 Contract Approval -Place Holder 2</description>
+        <entryCriteria>
+            <booleanFilter>1 AND 2</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Status__c</field>
+                <operation>equals</operation>
+                <value>Submitted for Contract Approval (PR2)</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Place Holder 2</label>
+        <name>Place_Holder_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>PR2_rejected_Update</name>
+                <type>FieldUpdate</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <description>PR2 Contract Approval Pocess</description>
+    <emailTemplate>Opportunity_Role/NAC_PR2_Submitted_w_Documents</emailTemplate>
+    <enableMobileDeviceAccess>true</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>(1 AND 2 AND 3 AND 8 AND 9 AND 10  AND 11 AND ((4 AND 5) OR (6 AND 7)))</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity.RecordType</field>
+            <operation>equals</operation>
+            <value>Systems</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.StageName</field>
+            <operation>notEqual</operation>
+            <value>07 – Closed Lost</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Energy Off Taker (PPA)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.SPWR_Deal_Type_text__c</field>
+            <operation>equals</operation>
+            <value>PPA (including EPC)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.SPWR_Deal_Type_text__c</field>
+            <operation>equals</operation>
+            <value>EPC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>EPC Customer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.PR_Req_Doc_Uploaded__c</field>
+            <operation>equals</operation>
+            <value>PR2 Upload Complete</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Status__c</field>
+            <operation>notEqual</operation>
+            <value>Approved (PR2)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Credit_Check_Status__c</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.CreatedDate</field>
+            <operation>greaterThan</operation>
+            <value>10/19/2016</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>PR2_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Update_Contract_Flag_on_PR2_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>PR2_Rejected_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>PR2_submitted_for_approval</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>PR2 Contract Approval Pocess</label>
+    <recallActions>
+        <action>
+            <name>PR1_PR2_Recalled</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>PR_Approval_Recalled</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>OPPORTUNITY.NAME</field>
+    </columns>
+    <columns>
+        <field>OWNER_FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>MEMBER_NAME</field>
+    </columns>
+    <columns>
+        <field>MEMBER_ROLE</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Contract_Closed_Date__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Expected_Commercial_Operation_Date__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Contract_Type__c</field>
+    </columns>
+    <columns>
+        <field>PROBABILITY</field>
+    </columns>
+    <columns>
+        <field>Opportunity.System_SizePV__c</field>
+    </columns>
+    <columns>
+        <field>AMOUNT</field>
+    </columns>
+    <columns>
+        <field>Opportunity.DirectMargin_per__c</field>
+    </columns>
+    <columns>
+        <field>STAGE_DURATION</field>
+    </columns>
+    <currency>USD</currency>
+    <description>for PM</description>
+    <filter>
+        <booleanFilter>(1 AND 4 AND (2 OR 3))</booleanFilter>
+        <criteriaItems>
+            <column>PROBABILITY</column>
+            <operator>greaterOrEqual</operator>
+            <value>4</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Americas</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OWNER_FULL_NAME</column>
+            <operator>equals</operator>
+            <value>riley saito,manuel tagle,chris baker,james diven,scott piscitello</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>MEMBER_ROLE</column>
+            <operator>equals</operator>
+            <value>Sales Analyst</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>STAGE_NAME</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <name>Utility Pipeline w/ Sales Analysts</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>include</name>
+        <value>open</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>OpportunityTeam</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2010-01-04</startDate>
+    </timeFrameFilter>
+</Report>

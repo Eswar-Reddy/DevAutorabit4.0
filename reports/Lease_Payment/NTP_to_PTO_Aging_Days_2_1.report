@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>number</bucketType>
+        <developerName>BucketField_53572877</developerName>
+        <masterLabel>NTP-PTO Aging</masterLabel>
+        <nullTreatment>z</nullTreatment>
+        <sourceColumnName>LeasePayment__c$Aging_Days_CS_PISE__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <to>30</to>
+            </sourceValues>
+            <value>30 Days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>30</from>
+                <to>60</to>
+            </sourceValues>
+            <value>31-60 Days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>60</from>
+                <to>90</to>
+            </sourceValues>
+            <value>61-90 Days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>90</from>
+            </sourceValues>
+            <value>Greater than 90 Days</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Name__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Funding_Tranche__c</field>
+    </columns>
+    <columns>
+        <field>BucketField_53572877</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Aging_Days_CS_PISE__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$PTO_Ltr_Rcvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Notice_to_Proceed_Sent__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$RSM__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>For 10% Invoice Package follow-up</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Cancellation,Terminated,Transferred</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$PTO_Ltr_Rcvd__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$CM_Pymnt_Rqustd__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Install_Inv_Rcvd__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NTP to PTO Aging Days 2.1</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Notice_to_Proceed_Sent__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2011-01-01</startDate>
+    </timeFrameFilter>
+</Report>

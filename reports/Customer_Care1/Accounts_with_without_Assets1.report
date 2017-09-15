@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Account$Id</field>
+    </columns>
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Assets$Id</field>
+    </columns>
+    <columns>
+        <field>Account.Assets$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Assets$Product2</field>
+    </columns>
+    <columns>
+        <field>Account.Assets$SerialNumber</field>
+    </columns>
+    <columns>
+        <field>Account.Assets$InstallDate</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Report used to validate SunPower Warranty Upload</description>
+    <filter>
+        <criteriaItems>
+            <column>Account$Theater__c</column>
+            <operator>equals</operator>
+            <value>North America,Central America and the Caribbean</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Assets$Id</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>Accounts with/without Assets</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_and_without_Assets__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

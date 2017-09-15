@@ -1,0 +1,159 @@
+<apex:page showHeader="false" sidebar="false" standardController="Opportunity" extensions="InlineDesignRequestController" standardStylesheets="false">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+    <apex:stylesheet value="{!URLFOR($Resource.StyleguideExpansion_CSS)}"/> <!-- for dropdown button -->
+
+    <style type="text/css">
+        .sunpower-style .btn {
+            line-height: 1;         
+        }
+        .sunpower-style .btn.disabled, 
+        .sunpower-style .btn:disabled {
+        pointer-events: none !important;
+        }
+        .sp-blue {
+            color: #0076be;
+        }
+    </style>
+
+
+    <div class="sunpower-style" style="width: 95%">
+
+        <div class="modal" role="dialog" id="blockerOverlay" aria-labeledby="buttonBlockModalLabel" tabindex="-1">
+            <div class="row">
+                <div id="docListSpinner" class="spinner spinner--center"></div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 1.25rem;">
+            <div class="col-xs-12">
+                <apex:outputLink value="/apex/HelixDesignRequest?opptyId={!record.Id}" target="_parent" styleClass="btn btn-primary btn--small" style="float: right;" onclick="showOverlay();">New Site</apex:outputLink>
+            </div>
+        </div>
+
+        <div style="font-size: 14px;">
+            <apex:repeat value="{!siteToDesignMap}" var="site">
+                <div class="row" style="margin-bottom: .5rem; align-items: baseline;">
+                    <div class="col-xs-4">
+                        <h4 style="margin-bottom: 0px;">{!IF(NOT(ISBLANK(siteInfoMap[site].Site_Name__c)), siteInfoMap[site].Site_Name__c, site)}</h4>
+                    </div>
+                    <div class="col-xs-8">
+                        <table style="float: right;">
+                            <tr>
+                                <td style="padding-right: .5rem;">
+                                    <apex:outputPanel rendered="{!auroraUser}">
+                                        <apex:outputLink value="/apex/AuroraRedirect?siteId={!siteInfoMap[site].Id}" target="_blank" styleClass="btn btn-secondary btn--small" style="float: right;">Launch Design Tool</apex:outputLink>
+                                    </apex:outputPanel>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="dropdown-btn btn btn-secondary btn--small" onclick="myFunction('myDropdown_{!siteInfoMap[site].Id}')" >
+                                            HELIX DESIGN REQUEST
+                                            <span class="icon-container">    
+                                                <i class="icon icon-chevron-thin-down"></i>
+                                            </span> 
+                                        </button>
+                                        <div id="myDropdown_{!siteInfoMap[site].Id}" class="dropdown-content">
+                                            <apex:outputLink styleClass="dropdown-item" value="/apex/HelixDesignRequest?siteId={!siteInfoMap[site].Id}" target="_parent" onclick="showOverlay();" >New</apex:outputLink>
+                                            <apex:outputLink styleClass="dropdown-item" value="/apex/HelixDesignRequest?siteId={!siteInfoMap[site].Id}&revision=Y" target="_parent" onclick="showOverlay();" rendered="{!siteToRevisionMap[site]}">Revision</apex:outputLink>
+                                        </div>
+                                    </div>
+                                                                    
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                </div>
+                
+                <table class="table">                           
+                    <thead>
+                        <td width="14%" style="font-weight: bold;">Design</td>
+                        <td width="14%" style="font-weight: bold;">Status</td>                       
+                        <td width="14%" style="font-weight: bold;">Product</td>
+                        <td width="14%" style="font-weight: bold;">Design Level</td>
+                        <td width="14%" style="font-weight: bold;">System Size (kWp)</td>                        
+                        <td width="10%" style="font-weight: bold;">Submitted</td>
+                        <td width="14%" style="font-weight: bold;">Designed by</td>
+                        <td width="6%"></td>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!siteToDesignMap[site]}" var="design"> 
+                            <tr>
+                                <td width="14.25%">
+                                    <apex:outputPanel rendered="{!AND(NOT(ISBLANK(design.Roof_Design__r.Design_DesignId__c)),design.Design_Originated_By__c == 'Indirect')}">
+                                        <apex:outputLink value="/apex/AuroraRedirect?designId={!design.Id}" target="_blank">{!design.Name}</apex:outputLink>
+                                    </apex:outputPanel>
+
+                                    <apex:outputPanel rendered="{!design.Design_Originated_By__c != 'Indirect'}">
+                                        <apex:outputPanel rendered="{! ((design.Step_Number__c == 1 || design.Step_Number__c == '') && (design.Dealer_Status__c != 'More Information Needed' && design.Dealer_Status__c != 'Design Delivered' ))}">
+                                            <apex:outputLink value="/apex/HelixDesignRequest?siteId={!design.Site__c}&designId={!design.Id}" target="_parent">{!design.Name}</apex:outputLink>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!design.Step_Number__c == 2 && (design.Dealer_Status__c != 'More Information Needed' && design.Dealer_Status__c != 'Design Delivered')}">
+                                            <apex:outputLink value="/apex/HelixDesignRequest_ProductInfo?siteId={!design.Site__c}&designId={!design.Id}" target="_parent" onclick="showOverlay();">{!design.Name}</apex:outputLink>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!design.Step_Number__c == 3 && (design.Dealer_Status__c != 'More Information Needed' && design.Dealer_Status__c != 'Design Delivered')}">
+                                            <apex:outputLink value="/apex/HelixDesignRequest_Attachments?siteId={!design.Site__c}&designId={!design.Id}" target="_parent">{!design.Name}</apex:outputLink>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!design.Dealer_Status__c == 'More Information Needed' || design.Dealer_Status__c == 'Design Delivered'}">
+                                            <apex:outputLink value="/apex/HelixDesignRequest_Attachments?siteId={!design.Site__c}&designId={!design.Id}" target="_parent">{!design.Name}</apex:outputLink>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!design.Step_Number__c == 4 && (design.Dealer_Status__c != 'More Information Needed' && design.Dealer_Status__c != 'Design Delivered')}">
+                                            <apex:outputLink value="/apex/HelixDesignRequest_Disclaimer?siteId={!design.Site__c}&designId={!design.Id}" target="_parent">{!design.Name}</apex:outputLink>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                </td>
+                                <!-- <td width="14%">{!design.Dealer_Status__c}</td> -->
+                                <td width="14%">{!design.Export_Status__c}</td>
+                                <td width="14%">{!design.HelixDesignType__c}</td>
+                                <td width="14%">{!design.Design_Package_Type__c}</td>
+                                <td width="14%">
+                                    <apex:outputText value="{0, number, ###,###.00}">
+                                        <apex:param value="{!design.Actual_System_Size__c}" />
+                                    </apex:outputText>
+                                </td>
+                                <td width="10%">
+                                    <apex:outputText id="designSubmitted" value="{!IF(design.Submitted__c, 'Yes', 'No')}"/>
+                                </td>
+                                <td width="14%">
+                                    {!IF(OR(design.Design_Originated_By__c == 'Request', design.Design_Originated_By__c == 'Direct'), 'SunPower', design.Site__r.Opportunity_del__r.Partner_Account_id__r.name)}
+                                </td>
+                                <td width="6%">
+                                    <apex:outputPanel rendered="{!design.Design_Originated_By__c == 'Indirect' && design.Export_Status__c != 'Export in Progress'}">
+                                        <a href="/apex/HelixDesignSummary?id={!design.Id}" target="_parent"><i class="fa fa-eye sp-blue" aria-hidden="true"></i></a>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>                        
+            </apex:repeat>
+        </div>
+    </div>
+
+    <c:SPCommunityAppResources_JS />
+    <apex:includeScript value="{!URLFOR($Resource.StyleguideExpansion_JS)}"/> <!-- for dropdown button -->
+    <script type="text/javascript">
+        
+        function showOverlay() {
+            $( '#blockerOverlay' ).show();
+            $( '.btn' ).addClass('disabled');
+        }
+
+        function hideOverlay() {
+            $( '#blockerOverlay' ).hide();
+            $( '.btn' ).removeClass('disabled');
+        }
+
+        $( document ).ready(function() {
+            $( '#blockerOverlay' ).hide();
+        })
+        
+        function myFunction(myDropdownId) {
+            document.getElementById(myDropdownId).classList.toggle("dropdown-show");
+        }
+    </script>
+
+</apex:page>

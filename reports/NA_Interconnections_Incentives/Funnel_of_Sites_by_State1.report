@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Site_Status__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Probability</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Contract_Type__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Utility__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$CloseDate</field>
+    </columns>
+    <currency>USD</currency>
+    <description>a look at active sites, that we might need to support in the upcoming months.  PPA projects at 50% = EPC projects at 100%.  Report can be used to get an idea of how many new interconnections or incentives work may be coming during a time periods.</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>notEqual</operator>
+            <value>01 – Assess Opportunity,06 – Closed Won,07 – Closed Lost</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.R00N30000000t6dPEAQ__r$Site_Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity.R00N30000000t6dPEAQ__r$Site_State__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Funnel of Sites by State</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Sites_and_Surfaces__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Opportunity$Probability</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-12-29</startDate>
+    </timeFrameFilter>
+</Report>

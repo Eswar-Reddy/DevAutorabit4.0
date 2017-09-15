@@ -1,0 +1,1107 @@
+<!--
+* OrderShipping - Systems Order shipping information page for cash based ordering system
+* SFDC Release - https://na29.salesforce.com/a5B34000000xp2Y
+* Pivotal Tracker Updates:
+* #114921295 - Remove Shipping Method Selection - WW32
+*
+*
+*
+*
+*
+-->
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" docType="html-5.0" title="Shipping" cache="true" showHeader="{!IF(isPartnerUser,false,true)}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <link href="https://code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" rel="stylesheet"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+    <style>
+
+        span.dateFormat{
+            display:none;
+        }
+
+        #conTable tr {
+            cursor: pointer;
+        }
+
+        #siteTable tr {
+            cursor: pointer;
+        }
+
+        .bs a.disabled{
+            pointer-events: none;
+            color:gray; !important
+        }
+
+        .bs .a {
+            cursor: pointer; !important
+        }
+        .bs .label {
+            font-size: .90em;
+        }
+
+        .bs .body {
+            font-size: .90em;
+        }
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+            font-size: .90em;
+        }
+        .nopadding {
+           padding: 0 !important;
+        }
+        .modal-dialog{
+            position: relative;
+            display: table; //important
+            overflow-y: initial !important;
+            overflow-x: auto;
+            width: auto;
+            min-width: 300px;
+        }
+        .bs .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }
+    </style>
+
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 90%">
+
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+
+            <ol class="breadcrumb" style="margin-bottom:0px;">
+                <li><a href="#" onclick="toOrderType();">{!$Label.Home}</a></li>
+                <li><a href="#" onclick="toOpportunity();">{!$Label.Opportunity}</a></li>
+                <li style="color: #f7921e;">{!$Label.POWizardShippingLabel}</li>
+                <li>{!$Label.Configure}</li>
+                <li>{!$Label.Finalize}</li>
+            </ol>
+            <apex:form styleClass="form-horizontal">
+
+                <div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                    <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>&nbsp;&nbsp;{!$Label.POWizardPendingStatusText}</span>
+                 </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>{!$Label.POWizardShippingInfoTitle}</h4>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="crdDateInputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}
+                                                        <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                                    </label>
+                                                    <div id="crdDateInputDiv" class="col-sm-8">
+                                                        <apex:inputText id="crdDateInput" styleClass="form-control" value="{!reqDeliveryDate}" html-placeholder="Please select shipping address to enable delivery dates." onchange="enableNextStep();"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group" rendered="{!IF(purchaseOrder.Opportunity__c != null, true, false)}">
+                                                    <label for="oppOutputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</label>
+                                                    <div class="col-sm-8" id="oppOutputDiv">
+                                                        <apex:outputText id="oppOuput" value="{!opp.Name}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="orderNameInputDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Name.Label}
+                                                        <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                                    </label>
+                                                    <div id="orderNameInputDiv" class="col-sm-8">
+                                                        <apex:inputField styleClass="form-control" id="orderNameInput" value="{!purchaseOrder.Name}" onchange="enableNextStep();" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shippingContactDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Contact__c.Label}
+                                                        <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                                    </label>
+                                                    <div id="shippingContactDiv" class="col-sm-8">
+                                                        <span id="shippingContact"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="shipToAddressOutputDiv" class="col-sm-4">{!$Label.POWizardShipToAddress}
+                                                        <span class="text-muted"><em><span style="color:red;" >*</span></em></span>
+                                                    </label>
+                                                    <div id="shipToAddressOutputDiv" class="col-sm-8">
+                                                        <span id="shipToAddressOutput"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <hr/>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6" style="margin-top: .4em !important;">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {!$Label.POWizardShippingContactsTitle}&nbsp;&nbsp;
+                                                <img height="14" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="tooltip" data-placement="bottom" title="{!$Label.Cash_Orders_Contact_Help_Text}"/><!--help text here-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 nopadding " >
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="col-sm-3 nopadding" style="margin-top: .4em !important;">
+                                                        {!$Label.POWizardSelectShipToAddressTitle}
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <div class="input-group" style="width: 100%;" >
+                                                            <select id="shipTypeSelect" class="form-control" style="border-radius: 4px;">
+                                                                <option>{!$Label.Dealer_Warehouse}</option>
+                                                                <option>{!$Label.Installation_Site}</option>
+                                                                <option>{!$Label.POWizardOpportunityLabel}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 nopadding" style="margin-top: .4em !important;" id="newSiteModalDiv">
+                                                        <span class="badge" style="background-color: #f7921e;" role="button" data-toggle="modal" data-target="#shippingSiteModal" data-backdrop="static">{!$Label.New}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:1em;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <input id="conFilter" type="text" class="form-control" placeholder="{!$Label.Filter_Contacts}" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <table class="table table-bordered table-condensed table-hover">
+                                                        <thead>
+                                                            <th>{!$Label.Name}</th>
+                                                            <th>{!$Label.Phone}</th>
+                                                        </thead>
+                                                        <tbody id="conTable">
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                 <div class="row">
+                                                    <div class="col-sm-6 pageinate" style="font-size: .75em;">
+                                                        <a href="#" id="previousPage">&lt;{!$Label.Previous_Page} </a>|<a href="#" id="nextPage"> {!$Label.Next_Page}&gt;</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <input id="siteFilter" type="text" class="form-control" placeholder="{!$Label.Search}" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <table class="table table-bordered table-condensed table-hover">
+                                                <tr>
+                                                    <thead>
+                                                        <th>{!$Label.POWizardShipToAddress}</th>
+                                                        <th>{!$Label.City}</th>
+                                                        <th>{!$Label.State}</th>
+                                                        <th>{!$ObjectType.Lead.Fields.PostalCode.Label}</th>
+                                                        <th></th>
+                                                    </thead>
+                                                </tr>
+                                                <tr>
+                                                    <tbody id="siteTable">
+
+                                                    </tbody>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6 pageinate" style="font-size: .75em;">
+                                                <a href="#" id="previousPageSite">&lt;{!$Label.Previous_Page} </a>|<a href="#" id="nextPageSite"> {!$Label.Next_Page}&gt;</a>
+                                            </div>
+                                        </div>
+                                    </div><!--end shipping right col-->
+                                </div>
+                            </div>
+                            <apex:inputHidden value="{!purchaseOrder.Ship_To_Contact__c}" id="hiddenContactId" />
+                            <apex:inputHidden value="{!purchaseOrder.Ship_to_Site__c}" id="hiddenSiteId"/>
+                            <script type="text/javascript">
+                                var hiddenContactElement = document.getElementById('{!$Component.hiddenContactId}');
+                                var hiddenSiteElement = document.getElementById('{!$Component.hiddenSiteId}');
+                            </script>
+                            <apex:actionFunction name="toConfiguration" action="{!ToSystemsConfig}"/>
+                            <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+                        </div>
+                        <div id="deliveryDetials">
+                            <div class="row hidden" id="okToShip">
+                                <hr/>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h4 style="font-weight: bold;color: red;">{!$Label.DeliveryInstructionsMustAdd}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h5>{!$Label.Delivery_Services_and_Equipment}&nbsp;</h5><small>(Change the delivery details for this address by clicking the edit button (pencil icon) on the selected address in the list above.)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1em;">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>{!$ObjectType.Ship_to_Site__c.Fields.DeliverySiteType__c.Label}</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span id="dst"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>{!$ObjectType.Ship_to_Site__c.Fields.DriverAssist__c.Label}</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span id="da"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>{!$ObjectType.Ship_to_Site__c.Fields.SpecialEquipment__c.Label}</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span id="se"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>{!$ObjectType.Ship_to_Site__c.Fields.DropTrailer__c.Label}</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span id="dt"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <!-- <label>{!$ObjectType.Ship_to_Site__c.Fields.DeliveryTimeStart__c.Label}</label> -->
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <!-- <span id="dts"></span> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>{!$ObjectType.Ship_to_Site__c.Fields.LiftGatePalletJack__c.Label}</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span id="lgpj"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <!-- <label>{!$ObjectType.Ship_to_Site__c.Fields.DeliveryTimeEnd__c.Label}</label> -->
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <!-- <span id="dte"></span> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <label for="specialInstructionsInputDiv" class="col-sm-4" style="padding-top:8px;">{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}&nbsp;
+                                        <img height="16" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="tooltip" data-placement="bottom" title="{!$Label.Special_Shipping_Instructions_Help}"/>
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <apex:inputTextarea rows="2" styleClass="form-control" id="specialInstructionsInput" value="{!purchaseOrder.Special_Instructions__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--end panel-->
+                </div>
+                <div class="row" style="text-align: center;">
+                    <apex:outputPanel id="buttonPanel">
+                        <a href="#" class="btn btn-primary" onclick="toOpportunity();" role="button">{!$Label.POWizardPrevStep}</a>
+                        <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+
+                        <a id="nextStepButton" href="#" class="btn btn-primary disabled" onClick="saveFromShipping();" role="button">{!$Label.POWizardNextStep}</a>
+                        <apex:actionFunction name="saveFromShipping" action="{!saveFromShipping}"/>
+                    </apex:outputPanel>
+                </div>
+                <apex:actionFunction name="saveSite" action="{!callComponent1ControllerMethod}"/>
+            </apex:form>
+        </div><!--end container-->
+
+        <!-- ShippingSiteModal -->
+        <div class="modal fade" id="shippingSiteModal" tabindex="-1" role="dialog" aria-labelledby="shippingSiteModalLabel" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title" id="shippingSiteModalLabel">{!$Label.POWizardNewShipToSite}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <c:ShippingSiteComponent controllerForPage="{!this}" componentName="shippingComponent"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal" style="color: #f7921e; border-color: darkgray;" role="button">{!$Label.Cancel}</a>
+                        <a href="#" id="saveButton" class="btn btn-primary disabled" data-dismiss="modal" onClick="save();" role="button">{!$Label.Save}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- DeliveryDetailModal -->
+        <div class="modal fade" id="deliveryDetailModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title">{!$Label.Delivery_Services_and_Equipment}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.DeliveryTimeStart__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="dts" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:8px;">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.DeliveryTimeEnd__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="dte" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.DeliverySiteType__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="dst" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:8px;">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.DriverAssist__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="da" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:8px;">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.DropTrailer__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="dt" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:8px;">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.LiftGatePalletJack__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="lgpj" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:8px;">
+                            <div class="col-sm-12">
+                                <div class="col-sm-6">
+                                    {!$ObjectType.Ship_to_Site__c.Fields.SpecialEquipment__c.Label}
+                                </div>
+                                <div class="col-sm-6">
+                                    <select name="se" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:8px;">
+                            <div class="col-sm-12 text-center">
+                                <small>These delivery details will be included as part of this order. The details for this address will be saved and available the next time this site is selected. Changing the details with the next order will only impact that order, not orders in the backlog.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal" style="color: #f7921e; border-color: darkgray;" role="button">{!$Label.Cancel}</a>
+                        <a href="#" id="saveButton" class="btn btn-primary" data-dismiss="modal" onClick="saveDeliveryDetails();" role="button">{!$Label.Save}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var accId = '{!opp.AccountId}';
+        var partnerAccId = '{!currentUser.Contact.AccountID}';
+        var optOutOkToShip = '{!currentUser.Contact.Account.Partner_Opt_Out_Ok_To_Ship__c}';
+        var consToDisplay = [];
+        var allCons = [];
+        var allSites = [];
+        var sitesToDisplay = [];
+        var filteredSites = [];
+        var selectedConId = '';
+        var consCurrentPage = [];
+        var pageSize = 5;
+        var currentPage = 1;
+        var currentPageSite = 1;
+        var selectedAddress = {};
+        var selectedRecordType = '';
+        var deliveryTimeStartList = [];
+        var deliveryTimeEndList = [];
+        var deliverySiteTypeList = [];
+        var driverAssistList = [];
+        var dropTrailerList = [];
+        var liftGatePalletJackList = [];
+        var specialEquipmentList = [];
+        var defaultDeliverySelectOptions = [];
+        var validSTS = false;
+
+        $( document ).ready(function() {
+            if(hiddenSiteElement && !hiddenSiteElement.value) {
+                $('#deliveryDetials').hide();
+            }
+
+        $('[id$=crdDateInput]').prop("disabled",true);
+        $('#ajaxLoading').hide();
+
+     // var x = document.getElementById("orderNameInput");
+
+            OrderAppController.getShippingContacts(function(result, event){
+                if(event.status){
+                    if(result.success){
+                        allCons = result.payloadMap.queriedRecords;
+                        //add opportunity as first in list
+                        if("{!opp.Name}"){
+                            allCons.unshift({Name: "{!opp.Name} (Home Owner)", Phone: "{!opp.Account.Phone}", Id: "{!opp.Primary_Contact__c}"});
+                        }
+                        for (var i = allCons.length - 1; i >= 0; i--) {
+                            if(hiddenContactElement && hiddenContactElement.value && allCons[i].Id == hiddenContactElement.value){
+                                $('#shippingContact').html(allCons[i].Name);
+                            }
+                         };
+                        consToDisplay = result.payloadMap.queriedRecords;
+                        updateConTablePaged(allCons, 1);
+                    }else{
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    alert(event.message);
+                }
+            });
+
+            OrderAppController.getDealerWarehouses(accId, function(result, event){
+                if(event.status){
+                    var shipType = $('#shipTypeSelect').val();
+                    if(result.success){
+                        allSites = result.payloadMap.queriedRecords;
+
+                        for (var i = 0; i < allSites.length; i++) {
+                            if(allSites[i].RecordType.Name == shipType){
+                                sitesToDisplay.push(allSites[i]);
+                                filteredSites.push(allSites[i]);
+                            }
+                            //Set already existing address
+                            if(hiddenSiteElement && hiddenSiteElement.value && hiddenSiteElement.value == allSites[i].Id){
+                                selectedAddress = allSites[i];
+                                setDeliveryDetails(selectedAddress);
+                                if(allSites[i].Address__c){
+                                    $('#shipToAddressOutput').html(allSites[i].Address__c);
+                                }else{
+                                    $('#shipToAddressOutput').html(allSites[i].Address1__c+' '+allSites[i].City__c+', '+allSites[i].State__c+' '+allSites[i].Zip__c+' '+allSites[i].Country__c);
+                                }
+                            }
+                        };
+                        updateSiteTablePaged(sitesToDisplay, shipType, 1);
+                    }else{
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    alert(event.message);
+                }
+            });
+
+            OrderAppController.getDeliveryServicesSelectOptions(function(result, event) {
+                if(event.status) {
+                    defaultDeliverySelectOptions = result.Defaults;
+                    deliveryTimeStartList = result.DeliveryTimeStart;
+                    setSelectOptions('dts', deliveryTimeStartList, '');
+                    deliveryTimeEndList = result.DeliveryTimeEnd;
+                    setSelectOptions('dte', deliveryTimeEndList, '');
+                    deliverySiteTypeList = result.DeliverySiteType;
+                    setSelectOptions('dst', deliverySiteTypeList, '');
+                    driverAssistList = result.DriverAssist;
+                    setSelectOptions('da', driverAssistList, '');
+                    dropTrailerList = result.DropTrailer;
+                    setSelectOptions('dt', dropTrailerList, '');
+                    liftGatePalletJackList = result.LiftGatePalletJack;
+                    setSelectOptions('lgpj', liftGatePalletJackList, '');
+                    specialEquipmentList = result.SpecialEquipment;
+                    setSelectOptions('se', specialEquipmentList, '');
+                } else {
+                    console.log('event', event);
+                }
+            });
+
+            $('#conFilter').keyup(function() {
+                filterDisplayedCons(this.value);
+            });
+
+            $('#siteFilter').keyup(function() {
+                filterDisplayedSites(this.value);
+            });
+
+            $('#shipTypeSelect').change(function(){
+                var shipType = $(this).val();
+                selectedRecordType = shipType;
+
+                //PT ID#115992845 - show/hide new site creation if is opportunity
+                if(shipType.toString() == 'Opportunity') {
+                    $('#newSiteModalDiv').hide();
+                }
+                else {
+                    $('#newSiteModalDiv').show();
+                }
+                sitesToDisplay = [];
+                filteredSites = [];
+                for (var i = 0; i < allSites.length; i++) {
+                    if(allSites[i].RecordType.Name == shipType){
+                        sitesToDisplay.push(allSites[i]);
+                        filteredSites.push(allSites[i]);
+                    }
+                };
+                $('#siteFilter').val('');
+                currentPageSite = 1;
+                updateSiteTablePaged(sitesToDisplay, shipType, 1);
+            });
+
+            $( "#conTable" ).on( "click", "tr", function( event ) {
+                //set controller prop
+                hiddenContactElement.value = this.id;
+                //set page display
+                $('#shippingContact').html(this.getAttribute("name"));
+                //highlight row
+                $(this).addClass('bg-info').siblings().removeClass('bg-info');
+                enableNextStep();
+            });
+
+            $( "#siteTable" ).on( "click", "tr", function( event ) {
+                // set address
+                selectedAddress = getAddressDetails(this.id);
+                // load address values
+                setDeliveryDetails(selectedAddress);
+                // set controller prop
+                hiddenSiteElement.value = this.id;
+                // set page display
+                $('#shipToAddressOutput').html(getSelectedAddress(this.id));
+                // highlight row
+                $(this).addClass('bg-info').siblings().removeClass('bg-info');
+                // display delivery details
+                $('#deliveryDetials').show();
+               // CRD disable dates
+                callCRDDates($(this).closest("tr").find('td:eq(3)').text());
+
+                checkOkToShip();
+                enableNextStep();
+            });
+
+
+
+            $('#nextPage').click(function(){
+                currentPage++;
+                updateConTablePaged(consToDisplay, currentPage);
+            });
+
+            $('#previousPage').click(function(){
+                currentPage--;
+                updateConTablePaged(consToDisplay, currentPage);
+            });
+
+            $('#nextPageSite').click(function(){
+                currentPageSite++;
+                updateSiteTablePaged(filteredSites, $('#shipTypeSelect').val(), currentPageSite);
+            });
+
+            $('#previousPageSite').click(function(){
+                currentPageSite--;
+                updateSiteTablePaged(filteredSites, $('#shipTypeSelect').val(), currentPageSite);
+            });
+
+
+
+            function updateConTablePaged(cons, pageNumber){
+                if(pageNumber == 1){
+                    $('#previousPage').addClass('disabled');
+                }else {
+                    $('#previousPage').removeClass('disabled');
+                }
+
+                if(pageNumber == Math.ceil(cons.length / pageSize)){
+                    $('#nextPage').addClass('disabled');
+                }else {
+                    $('#nextPage').removeClass('disabled');
+                }
+
+                var newTableString = '';
+                for (var i = pageSize*pageNumber - pageSize; i < pageSize*pageNumber; i++) {
+                    if(cons[i]){
+                        if(cons[i].Id == hiddenContactElement.value){ //already selected contact
+                            newTableString += '<tr class="bg-info" id="'+cons[i].Id+'" name="'+cons[i].Name+'"><td>'+cons[i].Name+"</td><td>"+(cons[i].Phone || '')+"</td></tr>";
+                            //Set page display values (for reloading on error, etc)
+                            $('#shippingContact').html(cons[i].Name);
+                        }else{
+                            newTableString += '<tr id="'+cons[i].Id+'" name="'+cons[i].Name+'"><td>'+cons[i].Name+"</td><td>"+(cons[i].Phone || '')+"</td></tr>"
+                        }
+                    }else{
+                        break;
+                    }
+                };
+                $( "#conTable" ).html(newTableString);
+
+            }
+
+            function filterDisplayedCons(filter){
+                consToDisplay = [];
+
+                for (var i = 0; i < allCons.length; i++) {
+                    if(allCons[i].Name.toLowerCase().indexOf(filter.toLowerCase()) >= 0){
+                        consToDisplay.push(allCons[i]);
+                    }
+                };
+
+                updateConTablePaged(consToDisplay, 1);
+            }
+
+            function filterDisplayedSites(filter){
+                filteredSites = [];
+
+                for (var i = 0; i < sitesToDisplay.length; i++) {
+                    if(sitesToDisplay[i].Address1__c.toLowerCase().indexOf(filter.toLowerCase()) >= 0){
+                        filteredSites.push(sitesToDisplay[i]);
+                    }
+                };
+                updateSiteTablePaged(filteredSites, $('#shipTypeSelect').val(), 1);
+            }
+            enableNextStep();
+        });
+
+        function setDeliveryDetails(selectedAddress) {
+            if(selectedAddress.DeliveryTimeStart__c) {
+                setSelectOptions('dts', deliveryTimeStartList, selectedAddress.DeliveryTimeStart__c);
+                $('#dts').html(selectedAddress.DeliveryTimeStart__c);
+            } else {
+                setSelectOptions('dts', deliveryTimeStartList, '');
+                $('#dts').html('');
+            }
+
+            if(selectedAddress.DeliveryTimeEnd__c) {
+                setSelectOptions('dte', deliveryTimeEndList, selectedAddress.DeliveryTimeEnd__c);
+                $('#dte').html(selectedAddress.DeliveryTimeEnd__c);
+            } else {
+                setSelectOptions('dte', deliveryTimeEndList, '');
+                $('#dte').html('');
+            }
+
+            if(selectedAddress.DeliverySiteType__c) {
+                setSelectOptions('dst', deliverySiteTypeList, selectedAddress.DeliverySiteType__c);
+                $('#dst').html(selectedAddress.DeliverySiteType__c);
+            } else {
+                setSelectOptions('dst', deliverySiteTypeList, '');
+                $('#dst').html('');
+            }
+
+            if(selectedAddress.DriverAssist__c) {
+                setSelectOptions('da', driverAssistList, selectedAddress.DriverAssist__c);
+                $('#da').html(selectedAddress.DriverAssist__c);
+            } else {
+                setSelectOptions('da', driverAssistList, '');
+                $('#da').html('');
+            }
+
+            if(selectedAddress.DropTrailer__c) {
+                setSelectOptions('dt', dropTrailerList, selectedAddress.DropTrailer__c);
+                $('#dt').html(selectedAddress.DropTrailer__c);
+            } else {
+                setSelectOptions('dt', dropTrailerList, '');
+                $('#dt').html('');
+            }
+
+            if(selectedAddress.LiftGatePalletJack__c) {
+                setSelectOptions('lgpj', liftGatePalletJackList, selectedAddress.LiftGatePalletJack__c);
+                $('#lgpj').html(selectedAddress.LiftGatePalletJack__c);
+            } else {
+                setSelectOptions('lgpj', liftGatePalletJackList, '');
+                $('#lgpj').html('');
+            }
+
+            if(selectedAddress.SpecialEquipment__c) {
+                setSelectOptions('se', specialEquipmentList, selectedAddress.SpecialEquipment__c);
+                $('#se').html(selectedAddress.SpecialEquipment__c);
+            } else {
+                setSelectOptions('se', specialEquipmentList, '');
+                $('#se').html('');
+            }
+            // check details for valid delivery instructions
+            if(selectedAddress.DeliverySiteType__c && selectedAddress.DriverAssist__c && selectedAddress.DropTrailer__c && selectedAddress.LiftGatePalletJack__c && selectedAddress.SpecialEquipment__c) {
+                validSTS = true;
+            } else validSTS = false;
+            checkOkToShip();
+        }
+
+        //PT ID #115992845 - pass record type string from input to component
+        function getRecordTypeString() {
+            return selectedRecordType;
+        }
+
+        function save(){
+            shipToSite.Dealer_Account__c = partnerAccId;
+            var recordType = shipToSite.RecordType;
+            if(!recordType) {
+                recordType = 'Dealer Warehouse';
+            }
+            delete shipToSite.RecordType;
+            var record = JSON.stringify(shipToSite);
+            ShippingSiteComponentController.saveShippingSite(record, recordType, function(result, event){
+                if(event.status){
+                    if(result.success){
+                        var newSite = result.payloadMap.savedRecord;
+                        selectedAddress = newSite;
+                        setDeliveryDetails(selectedAddress);
+                        newSite.RecordType = {Name: recordType};
+                        allSites.unshift(newSite);
+                        hiddenSiteElement.value = newSite.Id;
+                        $('#shipTypeSelect').val(recordType);
+                        sitesToDisplay = [];
+                        filteredSites = [];
+                        for (var i = 0; i < allSites.length; i++) {
+                            if(allSites[i].RecordType.Name == recordType){
+                                sitesToDisplay.push(allSites[i]);
+                                filteredSites.push(allSites[i]);
+                            }
+                        };
+                        $('#siteFilter').val('');
+                        currentPageSite = 1;
+                        updateSiteTablePaged(sitesToDisplay, recordType, 1);
+                        enableNextStep();
+                    }else{
+                        alert(result.payload[0]);
+                    }
+                }else{
+                    alert(event.message);
+                }
+            });
+        }
+
+        function enableNextStep(){
+            if(hiddenSiteElement.value && hiddenContactElement.value && $('[id$=crdDateInput]').val() != '' && $('[id$=orderNameInput]').val() != '' && (optOutOkToShip == 'false' || validSTS)) {
+                $('#nextStepButton').removeClass('disabled');
+            } else if(!$('#nextStepButton').hasClass('disabled')) {
+                $('#nextStepButton').addClass('disabled');
+            }
+        }
+
+        function getSelectedAddress(addressId){
+            for (var i = allSites.length - 1; i >= 0; i--) {
+                if(allSites[i].Id == addressId){
+                    if(allSites[i].Address__c){
+                        return allSites[i].Address__c;
+                    }else{
+                        var ad1 = allSites[i].Address1__c ? allSites[i].Address1__c : '';
+                        var ad2 = allSites[i].Address2__c ? allSites[i].Address2__c : '';
+                        var ad3 = allSites[i].Address3__c ? allSites[i].Address3__c : '';
+                        var city = allSites[i].City__c ? allSites[i].City__c : '';
+                        var st = allSites[i].State__c ? allSites[i].State__c : '';
+                        var zip = allSites[i].Zip__c ? allSites[i].Zip__c : '';
+                        var country = allSites[i].Country__c ? allSites[i].Country__c : '';
+
+                        return ad1 +' '+ ad2 +' '+ ad3 +' '+ city +', '+ st +'  '+ zip +' '+ country;
+                    }
+                }
+            };
+        }
+
+        function getAddressDetails(addressId){
+            for (var i = allSites.length - 1; i >= 0; i--) {
+                if(allSites[i].Id == addressId){
+                    return allSites[i];
+                }
+            };
+        }
+
+        function updateSiteTablePaged(siteList, shipType, pageNumber){
+
+            if(pageNumber == 1){
+                $('#previousPageSite').addClass('disabled');
+            }else {
+                $('#previousPageSite').removeClass('disabled');
+            }
+
+            if(pageNumber == Math.ceil(siteList.length / pageSize)){
+                $('#nextPageSite').addClass('disabled');
+            }else {
+                $('#nextPageSite').removeClass('disabled');
+            }
+            var newTableString = '';
+
+            var numberOnPage = 0;
+            for (var i = pageSize*pageNumber - pageSize; i < pageSize*pageNumber; i++) {
+                if(siteList[i]){
+                    if(siteList[i].Id == hiddenSiteElement.value){ //already selected site
+                        newTableString += '<tr class="bg-info" id="'+siteList[i].Id+'"><td>'+siteList[i].Address1__c+"</td><td>"+siteList[i].City__c+"</td><td>"+siteList[i].State__c+"</td><td>"+siteList[i].Zip__c+"</td><td><button type='button' class='btn btn-default btn-xs' data-toggle='modal' data-target='#deliveryDetailModal' data-backdrop='static'><i class='fa fa-pencil fa-fw'></i></button></td></tr>";
+                        //Set page display values (for reloading on error, etc)
+                        $('#shipToAddressOutput').html(getSelectedAddress(siteList[i].Id));
+                    }else{
+                        newTableString += '<tr id="'+siteList[i].Id+'"><td>'+siteList[i].Address1__c+"</td><td>"+siteList[i].City__c+"</td><td>"+siteList[i].State__c+"</td><td>"+siteList[i].Zip__c+"</td><td><button type='button' class='btn btn-default btn-xs' data-toggle='modal' data-target='#deliveryDetailModal' data-backdrop='static'><i class='fa fa-pencil fa-fw'></i></button></td></tr>";
+                    }
+                    numberOnPage++;
+                    if(numberOnPage > pageSize){
+                        break;
+                    }
+                }
+            }
+            $('#siteTable').html(newTableString);
+        }
+
+        function setSelectOptions(con, vals, curVal) {
+            var optionsString = '';
+            if(curVal == '') {
+                optionsString = '<option value="" selected></option>';
+            }
+            for (var i = 0; i < vals.length; i++) {
+                if(vals[i] == curVal) {
+                    optionsString += "<option value='" + vals[i] + "' selected>" + vals[i] + "</option>";
+                } else {
+                    optionsString += "<option value='" + vals[i] + "'>" + vals[i] + "</option>";
+                }
+            }
+            $('select[name="' + con + '"]').find('option').remove().end().append(optionsString);
+        }
+
+        function saveDeliveryDetails() {
+            var update = false;
+
+            if(selectedAddress.DeliveryTimeStart__c !== $('select[name="dts"]').val()) {
+                update = true;
+                selectedAddress.DeliveryTimeStart__c = $('select[name="dts"]').val()
+            }
+            if(selectedAddress.DeliveryTimeEnd__c !== $('select[name="dte"]').val()) {
+                update = true;
+                selectedAddress.DeliveryTimeEnd__c = $('select[name="dte"]').val()
+            }
+            if(selectedAddress.DeliverySiteType__c !== $('select[name="dst"]').val()) {
+                update = true;
+                selectedAddress.DeliverySiteType__c = $('select[name="dst"]').val()
+            }
+            if(selectedAddress.DriverAssist__c !== $('select[name="da"]').val()) {
+                update = true;
+                selectedAddress.DriverAssist__c = $('select[name="da"]').val()
+            }
+            if(selectedAddress.DropTrailer__c !== $('select[name="dt"]').val()) {
+                update = true;
+                selectedAddress.DropTrailer__c = $('select[name="dt"]').val()
+            }
+            if(selectedAddress.LiftGatePalletJack__c !== $('select[name="lgpj"]').val()) {
+                update = true;
+                selectedAddress.LiftGatePalletJack__c = $('select[name="lgpj"]').val()
+            }
+            if(selectedAddress.SpecialEquipment__c !== $('select[name="se"]').val()) {
+                update = true;
+                selectedAddress.SpecialEquipment__c = $('select[name="se"]').val()
+            }
+
+            // check details for valid delivery instructions
+            if(selectedAddress.DeliverySiteType__c && selectedAddress.DriverAssist__c && selectedAddress.DropTrailer__c && selectedAddress.LiftGatePalletJack__c && selectedAddress.SpecialEquipment__c) {
+                validSTS = true;
+            } else validSTS = false;
+            checkOkToShip();
+
+            if(update) {
+                setDeliveryDetails(selectedAddress);
+                delete selectedAddress.RecordType;
+                var sa = JSON.stringify(selectedAddress);
+                OrderAppController.updateDeliveryDetails(sa, function(result, event){
+                    if(!event.status) {
+                        console.log('event', event);
+                    }
+                });
+            }
+            enableNextStep();
+        }
+
+        function checkOkToShip() {
+            // set for ok to ship
+            var ok2Ship = $('#okToShip');
+            if(optOutOkToShip == 'false' || (validSTS && !ok2Ship.hasClass('hidden'))) {
+                ok2Ship.addClass('hidden');
+            } else if(optOutOkToShip == 'true' && !validSTS && ok2Ship.hasClass('hidden')) {
+                ok2Ship.removeClass('hidden');
+            }
+        }
+		
+        function createCalender (disabledDates,earliest_crd_date){
+			earliest_crd_date = earliest_crd_date.split("-");
+			$('[id$=crdDateInput]').datepicker({
+				beforeShowDay: function(date){
+					var string = $.datepicker.formatDate('yy-mm-dd', date);
+					// return [ (disabledDates.indexOf(string) != -1 && $.datepicker.noWeekends(date))];
+					//return [$.datepicker.noWeekends(date)];
+					if(disabledDates.indexOf(string) != -1)
+					return [false];
+					var weekenddate = $.datepicker.noWeekends(date);
+					return weekenddate;
+				},
+				minDate : new Date(earliest_crd_date[0],earliest_crd_date[1] - 1,earliest_crd_date[2])
+			});
+        }
+
+        function callCRDDates(zipCode) {
+            $('[id$=crdDateInput]').val("");
+            $('[id$=crdDateInput]').prop("disabled",true).attr('placeholder', 'please wait..');;
+            $('#ajaxLoading').show();
+         Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.OrderAppController.getCRDDates}',
+            zipCode,
+            function(result, event){
+                $('#ajaxLoading').hide();
+                if (event.status) {
+                    console.log('---result from Oracle-----' + JSON.stringify(result));
+                    $('[id$=crdDateInput]').prop("disabled",false).attr('placeholder', '');
+                    $('[id$=crdDateInput]').datepicker( "destroy" );
+                    createCalender(result.query_order_response.exception_dates,result.query_order_response.earliest_crd_date);
+                } else if (event.type === 'exception') {
+                      console.log('--Event---' + event);
+                } else {
+                    console.log('--event message--' + event.message);
+                }
+            },
+            {escape: true}
+        );
+     }
+    </script>
+</apex:page>

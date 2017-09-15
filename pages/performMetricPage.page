@@ -1,0 +1,26 @@
+<apex:page standardController="Performance_Metric__c" extensions="performMetricPageCls" showHeader="true" tabStyle="Performance_Metrics__tab" >
+  <apex:sectionHeader title="Performance Metric"/>
+     <apex:form >
+          <apex:pageBlock mode="Edit" >
+              <apex:pageBlockSection >
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+              </apex:pageBlockSection>
+                 <SPAN CLASS="color">
+                    <!--<apex:commandLink style="color: #3B9C9C" action="{!SysAdminLink}" value="Navigate to System Admin Page"/>-->
+                    <apex:commandButton rendered="{!showAdminView}" action="{!URLFOR($Action.Performance_Metric__c.New)}" value="New"/> <!--{!SysAdminLink}-->
+                 </SPAN> 
+              <apex:pageBlockSection title="Performance Metric Records" columns="1">
+                  <apex:pageBlockTable value="{!PMlist}" var="PM">
+                      <apex:column >
+                           <apex:outputLink rendered="{!showAdminView}" value="/{!PM.id}">
+                               Admin View
+                           </apex:outputLink>
+                           &nbsp;|&nbsp;&nbsp;
+                          <apex:outputLink rendered="{!IF(PM.Channel__c != 'Commercial', true, false)}" value="/apex/setupPerformanceMetrics?id={!PM.id}">{!PM.Peformance_Metric_Name__c}</apex:outputLink>
+                          <apex:outputLink rendered="{!IF(PM.Channel__c == 'Commercial', true, false)}" value="/apex/setupPerformanceMetricsComm?id={!PM.id}">{!PM.Peformance_Metric_Name__c}</apex:outputLink>
+                      </apex:column>
+                  </apex:pageBlockTable>
+              </apex:pageBlockSection>
+          </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,78 @@
+<apex:page standardController="Opportunity" extensions="DeclineOpportunityCX">
+    
+    <style>
+        #spacing{
+            height:4px;
+        }     
+    </style>
+    
+    <script type = "text/javascript">
+        function RedirectToObject(){
+            if( (typeof sforce != 'undefined') && (sforce != null) && (sforce.one != null)) {
+                //sforce.one.navigateToSObject('{!opp.Id}');
+                sforce.one.back(true);
+                //sforce.one.navigateToURL("/one/one.app");
+            } else {            
+                window.location.href = '{!URLFOR($Action.Opportunity.View, opp.Id)}';
+            }
+        }
+    </script>
+
+    <apex:form id="declineopp" >
+        <apex:pageMessages />
+        
+        <apex:sectionHeader title="Decline Opportunity"/>
+        
+        <apex:outputPanel rendered="{!IF(isEligible, true, false)}">            
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="1">
+                    <apex:panelGrid columns="1">
+                        <apex:outputText ><b>Opportunity Name</b></apex:outputText>
+                        <apex:outputText value="{!opp.Name}" ></apex:outputText>
+                        <div id = "spacing"></div>
+                        
+                        <apex:outputText ><b>Decline Reason</b></apex:outputText>
+                        <apex:outputPanel >
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div> 
+                                <apex:selectList value="{!selectedDeclineReason}" multiselect="false" size="1">
+                                    <apex:selectOptions value="{!DeclineReasons}"/>
+                                </apex:selectList> 
+                            </div>
+                        </apex:outputPanel>    
+                        <apex:outputPanel id="err" >
+                            <apex:outputlabel rendered="{!error}" value="Error: Select decline reason" style="font-weight:bolder;color:red"/>
+                        </apex:outputPanel>
+                                     
+                        <div id = "spacing"></div>
+                        <div style="height:8px;"></div>
+                        
+                        <apex:outputpanel >
+                            <apex:actionstatus id="status">
+                                <apex:facet name="start">
+                                    <img src="/img/loading.gif"/> &nbsp; <span>Please wait...</span>
+                                </apex:facet>
+                            </apex:actionstatus>
+                        </apex:outputpanel>           
+                       
+                        <apex:outputPanel >
+                            <apex:commandButton status="status" action="{!declineOpportunity}" value="Submit" style="width: 100px; height: 25px;" onComplete="{!IF(isDeclineReasonNull == false,'RedirectToObject()','')}" reRender="err"/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <apex:commandButton value="Cancel" style="width: 100px; height: 25px;" onComplete="RedirectToObject();"/>
+                        </apex:outputPanel>                       
+                    </apex:panelGrid>
+                </apex:pageBlockSection>            
+            </apex:pageBlock>
+        </apex:outputPanel>   
+        
+        <apex:outputPanel >   
+            <apex:pageBlock rendered="{!IF(isEligible, false, true)}">
+                <b> The opportunity stage is "{!opp.StageName}" and is no longer eligible for Decline. </b> <br/><br/>
+                <apex:commandButton value="OK" style="width: 100px; height: 25px;" onComplete="RedirectToObject();"/>
+            </apex:pageBlock>         
+        </apex:outputPanel>
+    </apex:form>
+    
+    
+
+</apex:page>

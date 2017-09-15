@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CASE_NUMBER</field>
+    </columns>
+    <columns>
+        <field>CREATED_BY</field>
+    </columns>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>CASE_OWNER</field>
+    </columns>
+    <columns>
+        <field>CASE_TYPE</field>
+    </columns>
+    <columns>
+        <field>CASE_RECORDTYPE</field>
+    </columns>
+    <columns>
+        <field>Activity.If_Complaints_SLA__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>InputComplTasks in Complaints template</description>
+    <filter>
+        <criteriaItems>
+            <column>Activity.If_Complaints_SLA__c</column>
+            <operator>equals</operator>
+            <value>P1 – Initial Response,P5 – Follow up update,P30 - Close</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case.Complaint__c</column>
+            <operator>equals</operator>
+            <value>Against Partner,Against SunPower</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>KPI/SLA01-All-Complaints report Tasks</name>
+    <params>
+        <name>closed</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>te</value>
+    </params>
+    <params>
+        <name>units</name>
+        <value>m</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CaseActivity</reportType>
+    <roleHierarchyFilter>SunpowerCorporation</roleHierarchyFilter>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-06-01</startDate>
+    </timeFrameFilter>
+</Report>

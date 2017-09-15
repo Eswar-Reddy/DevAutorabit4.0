@@ -1,0 +1,207 @@
+<apex:page standardcontroller="Price_List__c" extensions="PriceListManageController">
+    <script>
+        var date1 = '{!dateString}';
+    </script>
+    <apex:form >
+        <apex:actionFunction action="{!filterItemsByDate}"
+                name="filterItemsByDate" reRender="detailPanel,alaCartaPanel,smartPackPanel" status="statusPending">
+        </apex:actionFunction>
+        <apex:pageBlock title="{!$Label.PriceListDetailTItle}">
+            <apex:pageBlockSection columns="2">
+                <apex:pageBlockSectionItem dataStyle="text-align:left;align:left;" labelStyle="text-align:left;align:left;" >
+                    <apex:outputLabel for="dt" value="{!$Label.PriceListSelectDateFilter}"></apex:outputLabel>
+                    <apex:inputField value="{!objectForDate.Effective_Start_Date__c}" id="dt" onchange="return callFilter()" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem dataStyle="text-align:right;align:right;"> 
+            <a href="javascript:openPDF();" style="text-decoration:none;">View PDF <img height="17" width="17" title="pdf doc" class="pdfIcon" alt="pdf doc" src="/img/pdf17.gif" /></a>
+<!--                <img height="17" width="17" title="{!$Label.POWizardTextPdfDoc}" class="pdfIcon" alt="{!$Label.POWizardTextPdfDoc}" src="/img/pdf17.gif"> -->
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:outputPanel layout="block" style="text-align:center;">   &nbsp;
+                    <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                        startText="{!$Label.POWizardPendingStatusText}" id="statusPending" />
+            </apex:outputPanel>
+            <apex:outputPanel id="detailPanel">
+                <script>
+                        date1 = '{!dateString}';
+                    </script>
+                <apex:pageBlockSection title="{!$Label.PriceListDetails}" columns="2">
+                    <apex:outputField value="{!priceList.Name}" />
+                    <apex:outputField value="{!priceList.Oracle_Operating_Unit__c}" />
+                    <apex:outputField value="{!priceList.Expedite_Fee__c}" />
+                    <apex:outputField value="{!priceList.Will_Call_Fee__c}" />
+                    <apex:outputField value="{!priceList.Shipping_Codes__c}" />
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="dt1" value="{!$Label.PriceLIstSelectedDate}"></apex:outputLabel>
+                        <apex:outputField value="{!objectForDate.Effective_Start_Date__c}" />
+                    </apex:pageBlockSectionItem>    
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            <apex:outputPanel id="alaCartaPanel">
+                <apex:pageBlockSection title="{!$Label.PriceListAlaCarteItemsTitle}" columns="1">
+                    <apex:outputPanel rendered="{!alaCartaList.size ==0}">
+                        <center><b><I>{!$Label.PriceListNoRecordsFound}</I></b></center>
+                    </apex:outputPanel>
+                    <apex:pageBlockTable rendered="{!alaCartaList.size !=0}" value="{!alaCartaList}" var="alaItem">
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_Description__c.Label}</apex:facet>
+                            {!alaItem.Item_Description__c}   
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_ID__c.Label}</apex:facet>
+                            {!alaItem.Item_ID__r.Name}    
+                        </apex:column>
+                        <apex:column style="text-align:right;align:right;">
+                            <apex:facet name="header">{!$Label.PriceListPricingHeading}</apex:facet>
+                            <apex:outputText value="{0,Number,#,000.00#}" >
+                                <apex:param value="{!alaItem.Pricing_1__c}" />
+                            </apex:outputText>                            
+<!--                            {!alaItem.Pricing_1__c} 
+-->                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header" >{!$ObjectType.Price_List_Item__c.Fields.Effective_Start_Date__c.Label}</apex:facet>
+                               <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+                                   <apex:param value="{!alaItem.Effective_Start_Date__c}" />
+                               </apex:outputText>
+<!--                            {!alaItem.Effective_Start_Date__c}  
+-->                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_End_Date__c.Label}</apex:facet>
+                               <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+                                   <apex:param value="{!alaItem.Effective_End_Date__c}" />
+                               </apex:outputText>                                                           
+<!--                            {!alaItem.Effective_End_Date__c}    
+-->                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+            <apex:outputPanel id="smartPackPanel">
+                <apex:pageBlockSection title="{!$Label.PriceListSmartPackItemsTitle}" columns="1">
+                <apex:outputPanel rendered="{!smartPackItems.size == 0}">
+                        <center><b><I>{!$Label.PriceListNoRecordsFound}</I></b></center>
+                </apex:outputPanel>
+                <apex:pageBlockTable rendered="{!smartPackItems.size != 0}" value="{!smartPackItems}" var="smartItem" >
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_Description__c.Label}</apex:facet>
+                        {!smartItem.Item_Description__c} 
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Item_ID__c.Label}</apex:facet>
+                        {!smartItem.Item_ID__r.Name}  
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Type_2__c.Label}</apex:facet>
+                        {!smartItem.Type_2__c}  
+                    </apex:column>
+                    <apex:column rendered="{!IF(recType=='EU',true,false)}">
+                        <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Type_3_Criteria__c.Label}</apex:facet>
+                        {!smartItem.Type_3_Criteria__c} 
+                    </apex:column>
+                        <apex:column rendered="{!smartItem.Pricing_1__c != null}">
+                            <apex:facet name="header" ><center>Pricing 1</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+<!--                                    <b>&nbsp; {!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor} <= {!smartItem.Quantity_1__c}&nbsp;</b>
+-->                                    <b>&nbsp;{!$Label.PriceListTextFor} <= {!smartItem.Quantity_1__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+<!--                                        <b>{!smartItem.Pricing_1__c}</b>
+-->                            <b>
+                                <apex:outputText value="{0,Number,#,000.00#}" >
+                                    <apex:param value="{!smartItem.Pricing_1__c}" />
+                                </apex:outputText>
+                            </b>                                          
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column rendered="{!recType == 'EU'}">
+                            <apex:facet name="header"><center>Pricing 2</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+<!--                                    <b>&nbsp;{!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor} {!smartItem.Quantity_1__c} > {!$Label.PriceListTextAnd} <= {!smartItem.Quantity_2__c}&nbsp;</b>
+-->                                    <b>&nbsp;{!$Label.PriceListTextFor} {!smartItem.Quantity_1__c} > {!$Label.PriceListTextAnd} <= {!smartItem.Quantity_2__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+<!--                                        <b>{!smartItem.Pricing_2__c}</b>
+-->                                <b><apex:outputText value="{0,Number,#,000.00#}" >
+                                    <apex:param value="{!smartItem.Pricing_2__c}" />
+                                </apex:outputText></b>                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column rendered="{!IF(recType=='EU',false,true)}">
+                            <apex:facet name="header"><center>Pricing 2</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+<!--                                    <b>&nbsp;{!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor}  > {!smartItem.Quantity_1__c}&nbsp;</b>
+-->                                    <b>&nbsp;{!$Label.PriceListTextFor}  > {!smartItem.Quantity_1__c}&nbsp;</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+<!--                                        <b>{!smartItem.Pricing_2__c}</b>
+-->                                <b><apex:outputText value="{0,Number,#,000.00#}" >
+                                    <apex:param value="{!smartItem.Pricing_2__c}" />
+                                </apex:outputText></b>                                         
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column rendered="{!IF(recType=='EU',true,false)}">
+                            <apex:facet name="header"><center>Pricing 3</center></apex:facet>
+                            <table>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(163, 159, 159);white-space:nowrap;">
+<!--                                    <b>&nbsp;{!$Label.PriceListPricingHeading}&nbsp;{!$Label.PriceListTextFor}  > {!smartItem.Quantity_2__c}&nbsp;</b>
+-->                                    <b>&nbsp;{!$Label.PriceListTextFor}  > {!smartItem.Quantity_2__c}&nbsp;</b>
+                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color:white;background-color:rgb(194, 190, 190);white-space:nowrap;align:center;text-align:center;">
+<!--                                        <b>{!smartItem.Pricing_3__c}</b>
+-->                                <b><apex:outputText value="{0,Number,#,000.00#}" >
+                                    <apex:param value="{!smartItem.Pricing_3__c}" />
+                                </apex:outputText></b>                                         
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_Start_Date__c.Label}</apex:facet>
+                               <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+                                   <apex:param value="{!smartItem.Effective_Start_Date__c}" />
+                               </apex:outputText>                             
+<!--                            {!smartItem.Effective_Start_Date__c}    
+-->                        </apex:column>
+                        <apex:column >
+                            <apex:facet name="header">{!$ObjectType.Price_List_Item__c.Fields.Effective_End_Date__c.Label}</apex:facet>
+                               <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+                                   <apex:param value="{!smartItem.Effective_End_Date__c}" />
+                               </apex:outputText>                               
+<!--                            {!smartItem.Effective_End_Date__c}  
+-->                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    <script>
+        function callFilter(){
+            filterItemsByDate();
+            return false;
+        }   
+        function openPDF(){
+            window.open('/apex/PriceListManagePDFPage?id='+"{!priceList.ID}"+'&date='+date1,'','width=1500,height=800');
+        }
+    </script>
+</apex:page>

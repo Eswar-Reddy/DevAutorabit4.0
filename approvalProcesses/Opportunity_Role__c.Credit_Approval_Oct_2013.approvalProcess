@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Credit_Check_Status__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>jb.colonna@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>First Level Credit Approval - UPPi/EUC/Comm Intl</description>
+        <entryCriteria>
+            <booleanFilter>(1 OR 2 OR 3) AND 4 AND 5</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.RLC_Type__c</field>
+                <operation>equals</operation>
+                <value>EUC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe,MEA,APAC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Contract_Type__c</field>
+                <operation>notEqual</operation>
+                <value>Smart Energy</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>First Level Credit Approval - UPPi/EUC/Com Intl</label>
+        <name>First_Level_Credit_Approval_UPPi</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>vickie.dudley@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Credit Approval - Americas</description>
+        <entryCriteria>
+            <booleanFilter>1 OR 2</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Americas</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>NA Commercial</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Credit Approval - Americas</label>
+        <name>Credit_Approval_Americas</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>philippe.querbes@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Final Credit Approval - UPPi/EUC/Comm Intl</description>
+        <entryCriteria>
+            <booleanFilter>1 AND (2 OR 3 OR 4) AND 5 AND 6</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.RLC_Type__c</field>
+                <operation>equals</operation>
+                <value>EUC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe,MEA</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Contract_Type__c</field>
+                <operation>notEqual</operation>
+                <value>Smart Energy</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Final Credit Approval - UPPi/EUC/Comm Intl</label>
+        <name>Final_Credit_Approval_UPPi_EUC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>kristen.hingle@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Final Credit Approval - Americas</description>
+        <entryCriteria>
+            <booleanFilter>1 AND (2 OR 3)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Americas</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>NA Commercial</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Final Credit Approval - Americas</label>
+        <name>Final_Credit_Approval_Americas</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joanne.endow@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Final Credit Approval - APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl,Commercial Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Final Credit Approval - APAC</label>
+        <name>Final_Credit_Approval_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 1</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 1</label>
+        <name>Placeholder_1</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 2</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 2</label>
+        <name>Place_Holder_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 3</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 3</label>
+        <name>Place_Holder_3</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 4</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 4</label>
+        <name>Place_Holder_4</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 5</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 5</label>
+        <name>Place_Holder_5</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 6</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 6</label>
+        <name>Place_Holder_6</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 7</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 7</label>
+        <name>Place_Holder_7</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 8</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 8</label>
+        <name>Place_Holder_8</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 9</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Place Holder 9</label>
+        <name>Place_Holder_9</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>joshua.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Place Holder 10</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Place Holder 10</label>
+        <name>Place_Holder_10</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Credit Approval - Oct 2013 (SOX APPROVAL)</description>
+    <emailTemplate>Opportunity_Role/Credit_Check_Request</emailTemplate>
+    <enableMobileDeviceAccess>true</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>((1 AND 2 AND 3) AND((4 AND 5) OR (12 AND 13) OR (6 AND 7 AND 10 AND 11) OR (8 AND 9 AND 10 AND 11) OR (10 AND 14 AND 15 AND 16 AND 17)))</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Credit_Check_Required__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Credit_Check_Status__c</field>
+            <operation>notEqual</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Type_of_Request__c</field>
+            <operation>equals</operation>
+            <value>Final Credit Check</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Components,Framework Master Agreement,EPC Customer,Energy Off Taker (PPA)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Business_Unit__c</field>
+            <operation>notEqual</operation>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Energy Off Taker (PPA)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.SPWR_Deal_Type_text__c</field>
+            <operation>equals</operation>
+            <value>PPA (including EPC)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>EPC Customer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.SPWR_Deal_Type_text__c</field>
+            <operation>equals</operation>
+            <value>EPC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Status__c</field>
+            <operation>equals</operation>
+            <value>Approved (PR1)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.CreatedDate</field>
+            <operation>lessThan</operation>
+            <value>12/15/2016</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>EPC Customer,Energy Off Taker (PPA)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.RecordType</field>
+            <operation>equals</operation>
+            <value>Systems</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.SPWR_Deal_Type_text__c</field>
+            <operation>equals</operation>
+            <value>BOS Only</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Components</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>Smart Energy</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Credit_Approved_on_Opportunity_Role</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Credit_Check_Status_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Credit_Check_Status_Declined</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Credit_Declined_on_Opportunity_Role</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Credit_Check_Request_Sent_for_Approval</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Credit_Check_Status_In_Review</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Credit Approval - Oct 2013</label>
+    <recallActions>
+        <action>
+            <name>Credit_Check_Status_Null</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Credit_Recalled_on_Opportunity_Role</name>
+            <type>Alert</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,16 @@
+<html>
+<head>
+<script src="/soap/ajax/8.0/connection.js">
+</script>
+<script>
+var application = new sforce.SObject("Credit_Application__c");
+application.Status__c= "Ready for Review";
+application.Id = "{!Credit_Application__c.Id}";
+sforce.connection.update([application]);
+this.parent.location.href="{!URLFOR(   $Action.Account.View  ,   Credit_Application__c.AccountId__c   )}"
+
+</script>
+</head>
+<body>
+</body>
+</html>

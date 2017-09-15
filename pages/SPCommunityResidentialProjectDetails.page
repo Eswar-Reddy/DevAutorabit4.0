@@ -1,0 +1,19 @@
+<apex:page showHeader="false" sidebar="false" standardController="Residential_Project__c">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Residential Projects" />
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>
+    <div style="max-width: 1200px; margin: auto;">
+        <chatter:feedWithFollowers entityId="{!Residential_Project__c.Id}"/>
+        <apex:detail subject="{!Residential_Project__c.Id}" inlineEdit="true" relatedListHover="false" />
+        <c:AttachmentUploadComponent parentId="{!Residential_Project__c.Id}"/>
+        <c:NotesTable parentAtt="{!Residential_Project__c.Id}" />
+    </div>
+    <c:SPCommunityAppResources_JS />
+    
+    <script>
+    window.onload = function() {
+        UserRedirect();
+    }
+    </script>
+</apex:page>

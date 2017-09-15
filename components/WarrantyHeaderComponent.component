@@ -1,0 +1,80 @@
+<apex:component >
+    <apex:attribute name="warranty" type="Warranty_Registration__c" description="Contains warranty object"/>
+    <apex:attribute name="customer" type="Account" description="Customer Object refrance"/>
+    <apex:attribute name="edit" type="boolean" description="Contains edit mode warranty delivery date"/>
+    <apex:attribute name="countryName" type="String" description="Country Name"/>
+    <apex:attribute name="PartnerLanguage" type="String" description="Partner Language"/>
+    <!-- added for Case#00082691-->  
+    <apex:attribute name="userLang" type="String" description="User Language"/>
+
+    <!-- Component Body -->    
+    <apex:pageBlock >
+  
+           <apex:pageBlockButtons location="top" rendered="{!Not(edit)}">
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'it'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_italy?warrantyId={!warranty.id}');return false;"/>
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'fr'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_france?warrantyId={!warranty.id}');return false;"/>
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'es'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_spain?warrantyId={!warranty.id}');return false;"/>
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'de'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_germany?warrantyId={!warranty.id}');return false;"/>
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'us'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_us?warrantyId={!warranty.id}');return false;"/>
+               <!-- added for Case#00082691-->  
+               <!-- <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'be'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_BELGIUM?warrantyId={!warranty.id}');return false;"/>  -->
+              
+              <!-- <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!AND(countryName == 'be', userLang == 'nl_NL')}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_BELGIUM?warrantyId={!warranty.id}');return false;"/>
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!AND(countryName == 'be', userLang == 'fr')}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_BELGIUM_FR?warrantyId={!warranty.id}');return false;"/>                -->
+
+              <!--  <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!AND(countryName == 'be')}" value="{!$Label.Print}" onclick="CallingPdftoprint(PartnerLanguage);"/>-->
+              
+            <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!And((countryName == 'be'), OR(PartnerLanguage == 'Dutch', AND(userLang == 'nl_NL', PartnerLanguage='')))}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_BELGIUM?warrantyId={!warranty.id}');return false;"/>
+            
+            <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!And((countryName == 'be'), OR(PartnerLanguage == 'French', AND(userLang == 'fr', PartnerLanguage='')))}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_BELGIUM_FR?warrantyId={!warranty.id}');return false;"/>
+            
+              
+               <!-- added for Case#00082691-->
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'uk'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_UK?warrantyId={!warranty.id}');return false;"/>
+               <!-- added for Case#00546729-->
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" rendered="{!countryName == 'nl'}" value="{!$Label.Print}" onclick="printWarranty('/apex/WROptinForm_NL?warrantyId={!warranty.id}');return false;"/>
+               <apex:commandButton title="{!$Label.CSV_Pop_Up_Blocker}" onclick="exportWarranty('/apex/WarrantyRegistrationCSV?warrantyId={!warranty.id}');return false;" value="{!$Label.Export}"/>
+           </apex:pageBlockButtons>   
+          
+           <apex:pageBlockSection columns="2" >
+                                
+               <apex:pageblockSectionItem >
+                   <apex:outputLabel value="{!$Label.Warranty_Number}" style="font-family: 'Arial','Verdana',sans-serif; font-size: 11px; font-weight: 400;"/>
+                  {!warranty.Name} 
+               </apex:pageblockSectionItem>
+               
+               <apex:pageblockSectionItem >
+                   <apex:outputLabel value="{!$Label.Status}" for="WRStatus" style="font-family: 'Arial','Verdana',sans-serif; font-size: 11px; font-weight: 400;"/>
+                    <apex:outputPanel id="WRStatus">
+                   <apex:outputText rendered="{!IF(warranty.Status__c == 'Draft',true,false)}">
+                        <font color="red"> <nobr>{!$Label.In_Process}</nobr> </font>
+                    </apex:outputText> 
+                    <apex:outputText rendered="{!IF(warranty.Status__c == 'Completed',true,false)}">
+                        <nobr>{!$Label.Completed} </nobr>
+                    </apex:outputText> 
+                    </apex:outputPanel>
+               </apex:pageblockSectionItem>
+               
+               <apex:pageblockSectionItem >
+                   <apex:outputLabel value="{!$Label.Name}" for="WRName" style="font-family: 'Arial','Verdana',sans-serif; font-size: 11px; font-weight: 400;"/>
+                   <apex:outputField id="WRName" value="{!customer.Name}"/>  
+               </apex:pageblockSectionItem>
+               
+               <apex:pageBlockSectionItem helpText="{!$Label.Delivery_Date_Note}">
+                   <apex:outputLabel style="font-family: 'Arial','Verdana',sans-serif; font-size: 11px; font-weight: 400;">{!$Label.Delivery_Date}</apex:outputLabel>
+                   <apex:outputPanel layout="block">
+                        <apex:outputPanel rendered="{!IF(edit=false,true,false)}">  
+                           <!--<apex:outputText value="{0,date,MM/dd/yy}" style="text-align: left;">
+                                    <apex:param value="{!warranty.Delivery_Date__c}" />
+                            </apex:outPutText>--> 
+                            <apex:outputField value="{!warranty.Delivery_Date__c}" style="text-align: left;" />
+                        </apex:outputPanel>
+                        <div class="requiredInput"><div class="requiredBlock"> </div>                    
+                           <apex:inputField value="{!warranty.Delivery_Date__c}" rendered="{!edit}" />                     
+                        </div>
+                   </apex:outputPanel>   
+               </apex:pageblockSectionItem>
+           </apex:pageBlockSection>
+           </apex:pageBlock>
+           <apex:componentBody />
+</apex:component>

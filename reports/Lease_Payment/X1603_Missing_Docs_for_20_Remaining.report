@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Placed_In_Service__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$PIS_Entry_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Cancellation,Pending Termination,Terminated</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>equals</operator>
+            <value>PTO Letter,Commissioning Report,Design Plan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Lease__c</column>
+            <operator>equals</operator>
+            <value>131884,162289,166055,167546,182191,183614,188409,189878,20441,204576,23977,24054,24768,25205,25409,258623,260949,26498,26657,25401</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Placed_In_Service__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r$Partner_Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>1603 Remaining Leases</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$Workers_Comp_Exp__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

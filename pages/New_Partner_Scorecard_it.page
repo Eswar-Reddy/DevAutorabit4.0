@@ -1,0 +1,278 @@
+<apex:page id="pgNewPartnerScorecard" standardController="Partner_Application__c" extensions="NewPartnerScorecardController" sidebar="false" showHeader="false">
+ <script>
+ function showPopUp(){
+      if(confirm("La scheda sarà auto-compilati. Sei sicuro?")) {
+            return true;
+      }
+      else {
+            return false;
+      }
+  }
+ function openPDF(){
+     window.open('/apex/New_Partner_Scorecard_Pdf_it?id='+'{!id}','_blank','width=700,height=650');;
+ }
+ function IsNumeric(sText)
+    {
+        var ValidChars = "0123456789.";
+        var IsNumber=true;
+        var Char;
+        for (i = 0; i < sText.length && IsNumber == true; i++) 
+          { 
+          Char = sText.charAt(i); 
+          if (ValidChars.indexOf(Char) == -1) 
+             {
+             IsNumber = false;
+             }
+          }
+       return IsNumber;
+   }
+
+   function validateValue(elem, val){
+        if(IsNumeric(elem.value)){
+            if(elem.value > val){
+                alert('Il valore deve essere inferiore o uguale a '+val);
+                elem.value='0';
+                elem.focus();
+            }
+        }else{
+            elem.value='0';
+            return;
+        
+        }
+    }
+ </script>
+<apex:form >
+
+ <table width="100%">
+    <tr style="height:55px">
+        <td width="100%" align="center"><font color="#FF0000" size="5"><b><u>SOLO PER USO INTERNO</u></b></font></td>
+      </tr>  
+  </table>  
+  <br/>
+<apex:pageBlock >
+  <apex:pageBlockButtons >
+    <apex:commandButton action="{!savePartnerApp}" value="Salvare e uscire"/>    
+    <apex:commandButton action="{!quickSavePartnerApp_IT}" value="Salvare"/>
+    <apex:commandButton action="{!cancel}" value="Annulla"/> 
+    <apex:commandButton action="{!calculateFieldValues_it}" value="Completamento automatico" onclick="return showPopUp();" rendered="{!autoComplete}"/>      
+    <apex:commandButton value="Creare PDF" onclick="openPDF();return false;" />
+  </apex:pageBlockButtons>  
+   
+ <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="3"><font color="#333399" size="4">Elementi organizzativi</font></td>
+      </tr>
+      <tr>
+          <td>Area</td>
+          <td>Item</td>
+          <td>X</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td rowspan="6" style="background-color:white;">Fondamenti</td> 
+          <td style="text-align:left;">Impiegati a tempo pieno: manager/proprietà, ingegnere, installatore, amministrativo e finanaza</td>          
+          <td><apex:inputField value="{!partnerObj.Full_time_employees__c}"/></td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Qualificati per approvazione credito almeno € 50.000</td>          
+          <td><apex:inputField value="{!partnerObj.Qualifies_for_100000_credit_limit__c}"/></td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Coperture assicurative dipendenti e cantieri (XXXX EUR)</td>          
+          <td><apex:inputField value="{!partnerObj.Relevant_Insurance__c}"/></td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">No cause civili e penali in corso e/o pregresse</td>          
+          <td><apex:inputField value="{!partnerObj.No_major_partner_faulted_litigation__c}"/></td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Ufficio / laboratorio / magazzino</td>          
+          <td><apex:inputField value="{!partnerObj.Formal_office_workshop_warehouse__c}"/></td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Azienda o Business unit focalizzata al Fotovoltaico</td>          
+          <td><apex:inputField value="{!partnerObj.Business_focused_on_PV__c}"/></td>          
+      </tr>   
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="2" style="background-color:white;">Sviluppo</td>
+          <td style="text-align:left;">Tasso di crescita annuo del fatturato nei 2 anni passati maggiore del 20%</td>          
+          <td><apex:inputField value="{!partnerObj.Greater_than_30_CAGR_over_last_2_years__c}"/></td>          
+      </tr>   
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Almeno tre livelli manageriali (General manager, Director, i.e. Sales Manager)</td>          
+          <td><apex:inputField value="{!partnerObj.At_least_one_mid_level_employee__c}"/></td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">
+          <td style="background-color:white;">Vendite</td>
+          <td style="text-align:left;">Almeno una persona che si dedica esclusivamente alla vendita</td>          
+          <td><apex:inputField value="{!partnerObj.At_least_one_dedicated_salesperson__c}"/></td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="3" style="background-color:white;">Marketing</td>
+          <td style="text-align:left;">Almeno una persona (full time o part time) dedicata al marketing</td>          
+          <td><apex:inputField value="{!partnerObj.At_least_one_marketing_person__c}"/></td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Basic sales collateral</td>          
+          <td><apex:inputField value="{!partnerObj.Basic_sales_collateral__c}"/></td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sito WEB</td>          
+          <td><apex:inputField value="{!partnerObj.Basic_Website__c}"/></td>          
+      </tr>    
+       <tr style="background-color:#99ffcc;">
+          <td rowspan="2" style="background-color:white;">Abilitazioni</td>
+          <td style="text-align:left;">Tabelle e abilitazioni all’impiantistica (es. 46/90)</td>          
+          <td><apex:inputField value="{!partnerObj.Tabelle_e_abilitazioni_es_46_90__c}"/></td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Certificazioni di qualità</td>          
+          <td><apex:inputField value="{!partnerObj.Quality_Certification__c}"/></td>          
+      </tr>       
+  </table>
+  <br/>
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="9"><font color="#333399" size="4">Piano di Sviluppo</font></td>
+      </tr>
+      <tr>
+          <td width="15%">&nbsp;</td>
+          <td>Q-3</td>
+          <td>Q-2</td>
+          <td>Q-1</td>
+          <td>Q0</td>
+          <td>Q 1</td>
+          <td>Q 2</td>
+          <td>Q 3</td>
+          <td>Q 4</td>         
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td>Vendite totali in kWp</td>
+          <td><apex:inputField value="{!partnerObj.Q_minus_3_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_minus_2_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_minus_1_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q0_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_1_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_2_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_3_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_4_Total_Partner_Sales_kW__c}" style="width:100%"/></td>          
+      </tr>
+  </table>
+  <br/>
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="6"><font color="#333399" size="4">Punteggio</font></td>
+      </tr>
+       <tr>
+          <td>Area</td>
+          <td>Tematica</td>
+          <td>Punteggio</td>
+          <td>Max Punti</td>
+          <td width="12%">Punti</td>
+          <td width="12%">Commento</td>                
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="7" style="background-color:white;">Fondamenti</td>
+          <td style="text-align:left;">Impiegati</td>
+          <td style="text-align:left;">1 pt ogni manager intermedio</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Employees_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Employees_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Cause legali</td>
+          <td style="text-align:left;">NO =</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Litigation_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Litigation_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Ingegneri</td>
+          <td style="text-align:left;">1 full time</td>
+          <td>5</td>
+          <td><apex:inputField value="{!partnerObj.Engineering_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,5)"/></td>
+          <td><apex:inputField value="{!partnerObj.Engineering_Details__c}" style="width:100%"/></td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Showroom</td>
+          <td style="text-align:left;">Visitabile dai clienti</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Showroom_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Showroom_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Veicoli aziendali</td>
+          <td style="text-align:left;">Almeno 1</td>
+          <td></td>
+          <td><apex:inputField value="{!partnerObj.Branded_sales_vehicle_Score__c}" style="width:100%;text-align:center;"/></td>
+          <td><apex:inputField value="{!partnerObj.Branded_sales_vehicle_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Mezzi (veicoli) installativi</td>
+          <td style="text-align:left;">Maggiori di 1 attrezzati</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Install_truck_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Install_truck_Details__c}" style="width:100%"/></td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Esperienza in PV</td>
+          <td style="text-align:left;">1 pt per anno</td>
+          <td>8</td>
+          <td><apex:inputField value="{!partnerObj.History_in_PV_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,8)"/></td>
+          <td><apex:inputField value="{!partnerObj.History_in_PV_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;"> 
+          <td rowspan="2" style="background-color:white;">Crescita</td>
+          <td style="text-align:left;">Crescita storica</td>
+          <td style="text-align:left;">Omogenea 80% max, 30% zero pt</td>
+          <td>5</td>
+          <td><apex:inputField value="{!partnerObj.Historic_growth_rate_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,5)"/></td>
+          <td><apex:inputField value="{!partnerObj.Historic_growth_rate_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Well capitalized</td>
+          <td style="text-align:left;">3 points for assets > liab, 2 points for proof of >$50k of avail capital (on balance sheet or proof of open line of credit.</td>
+          <td>4</td>
+          <td><apex:inputField value="{!partnerObj.Well_capitalized_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,4)"/></td>
+          <td><apex:inputField value="{!partnerObj.Well_capitalized_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="2" style="background-color:white;">Vendite</td>
+          <td style="text-align:left;">Sales manager</td>
+          <td style="text-align:left;">Produce reports, binary</td>
+          <td>4</td>
+          <td><apex:inputField value="{!partnerObj.Sales_manager_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,4)"/></td>
+          <td><apex:inputField value="{!partnerObj.Sales_manager_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">CRM</td>
+          <td style="text-align:left;">Alcuni software base avviati, binary</td>
+          <td>2</td>
+          <td><apex:inputField value="{!partnerObj.CRM_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,2)"/></td>
+          <td><apex:inputField value="{!partnerObj.CRM_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td  style="background-color:white;">Marketing</td>
+          <td style="text-align:left;">Marketing Manager</td>
+          <td style="text-align:left;">Full time</td>
+          <td>4</td>
+          <td><apex:inputField value="{!partnerObj.Marketing_Manager_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,4)"/></td>
+          <td><apex:inputField value="{!partnerObj.Marketing_Manager_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td  style="background-color:white;">Abilitazioni</td>
+          <td style="text-align:left;"></td>
+          <td style="text-align:left;">Tabelle e abilitazioni all’impiantistica da più di 5 anni?</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Abilitazioni_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+           <td><apex:inputField value="{!partnerObj.Abilitazioni_Details__c}" style="width:100%;text-align:center;"/></td>
+      </tr>
+      <tr>
+        <td colspan = "3"></td>
+        <td>47</td>
+        <td><apex:outputField id="scorecard" value="{!partnerObj.Scorecard_Score__c}" style="text-align:center;"/></td>
+        <td>&nbsp;</td>
+      </tr>
+  </table>
+</apex:pageBlock>
+</apex:form>  
+</apex:page>

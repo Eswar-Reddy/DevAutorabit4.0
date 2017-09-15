@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Utility__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Utility_Comments__c</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_PROBABILITY</field>
+    </columns>
+    <currency>USD</currency>
+    <description>for PR2 level - we need to know in advance what the utility is</description>
+    <filter>
+        <criteriaItems>
+            <column>FK_OPP_PROBABILITY</column>
+            <operator>greaterThan</operator>
+            <value>4</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Site_Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Utility names for active sites</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Site_Information_Form__c@Site_Information_Form__c.Opportunity_del__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>FK_NAME</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>FK_OPP_CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-10-01</startDate>
+    </timeFrameFilter>
+</Report>

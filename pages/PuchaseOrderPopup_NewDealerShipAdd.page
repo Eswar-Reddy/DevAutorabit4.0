@@ -1,0 +1,60 @@
+<apex:page standardController="Ship_to_Site__c" extensions="PuchaseOrderDealerShipAddController" showHeader="false" sidebar="false">  
+  <apex:form >     
+    <apex:sectionHeader title="{!$Label.POWizardShipToSiteEditTitle}" subtitle="{!$Label.POWizardNewShipToSite}"/>
+     <apex:PageMessages />
+    <apex:pageblock id="pgBlk" title="{!$Label.POWizardShipToSiteEditTitle}">        
+        <apex:pageBlockButtons >
+            <apex:CommandButton action="{!saveShipToSite}" value="{!$Label.POWizardSaveBtnLabel}" />
+            <apex:CommandButton value="{!$Label.POWizardCancelBtnLabel}" onclick="window.close(); return false;"/>            
+        </apex:pageBlockButtons>  
+        <apex:pageBlockSection columns="2" title="{!$Label.POWizardAccountInfoTitle}">
+            <apex:outputField value="{!shipToSite.Dealer_Account__c}"/>
+            <apex:pageBlockSectionItem />
+            <apex:inputField value="{!shipToSite.Residential_Customer_Account__c}" rendered="{!IF(dealerAccType=='Residential Installer', 'false', 'true')}"/>
+            <apex:pageBlockSectionItem rendered="{!IF(dealerAccType=='Residential Installer', 'false', 'true')}" />
+        </apex:pageBlockSection>       
+        <apex:pageBlockSection columns="2" title="{!$Label.POWizardAddressInfoTitle}">
+            <apex:inputField style="width:250px;" value="{!shipToSite.Address1__c}"/>            
+            <apex:pageBlockSectionItem />
+            <apex:inputField style="width:250px;" value="{!shipToSite.Address2__c}"/>
+            <apex:pageBlockSectionItem />
+            <apex:inputField style="width:250px;" value="{!shipToSite.Address3__c}"/>
+            <apex:pageBlockSectionItem />
+            <apex:inputField value="{!shipToSite.City__c}"/>
+            <apex:pageBlockSectionItem />
+            <apex:inputField onchange="showHideRequired(this.value);" value="{!shipToSite.Country__c}"/>
+            <apex:pageBlockSectionItem />
+            <apex:pageBlockSectionItem >
+            	<font weight="bold" >State</font>
+	            <apex:outputPanel >
+		            <div class="requiredInput"><div id ='requiredBlk' class="requiredBlock"></div>  
+			        <span><apex:inputField value="{!shipToSite.State__c}"/> </span>   
+			        </div>	            
+	            </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem />
+            <apex:inputField value="{!shipToSite.Zip__c}"/>
+            <apex:pageBlockSectionItem />            
+        </apex:pageBlockSection>
+    </apex:pageblock>
+    <script>
+    window.onload = new function(){
+        if({!isSucceeded}){
+            parent.opener.selectExisitingShipToSite('{!shipToSite.ID}');
+            window.close();
+        }
+        showHideRequired('{!shipToSite.Country__c}');
+    }
+    
+    function showHideRequired(country){       		
+    	if(country=='United States of America'){
+    		document.getElementById('requiredBlk').style.display='block';
+    	}
+    	else{
+    		document.getElementById('requiredBlk').style.display='none';
+    	}
+    }
+    
+    </script>
+  </apex:form> 
+</apex:page>

@@ -1,0 +1,336 @@
+<apex:page controller="SOA2SearchTransactionsController" id="pg" >
+ <script>
+    var prePageNumber = 0;
+    var recordId = '';
+    var recordName = '';
+    var selectedAttachmentPartnerId = '';
+    
+    function displayPDF(id,name,partnerId){
+       recordId = id;
+       recordName = name;
+       selectedAttachmentPartnerId  = partnerId;
+       openDocument(recordId,recordName,selectedAttachmentPartnerId);
+    }
+    function displayPDFInWindow(){
+       var newURL = '/servlet/servlet.FileDownload?file=' + recordId;
+       window.open(newURL,'_blank','height=600,width=900,scrollbars=auto,toolbar=no,menubar=no,status=no');
+    }
+    
+    function moveToOtherPage(totalPage,pageNumber,actionBtn){
+        var selectedIndex = 1;
+        
+        if(actionBtn == 'N'){
+          selectedIndex = (pageNumber + 1 > totalPage) ? pageNumber : pageNumber + 1 ;
+        }else if(actionBtn == 'B'){
+          selectedIndex = (pageNumber - 1 < 1) ? pageNumber : pageNumber - 1 ;
+        }else if(actionBtn == 'NG'){
+           /* var recLimit = {displayRecordLimit}; */
+           var recLimit = 10;
+           selectedIndex  = (pageNumber + recLimit > totalPage) ? pageNumber : pageNumber + recLimit ;
+        }else if(actionBtn == 'BG'){
+          /* var recLimit = {displayRecordLimit}; */
+           var recLimit = 10;
+           selectedIndex  = (pageNumber - recLimit < 1) ? pageNumber : pageNumber - recLimit ;
+        }else if(actionBtn == 'F'){
+           selectedIndex  = 1 ;
+        }else if(actionBtn == 'E'){
+           selectedIndex  = totalPage ;
+        }else{
+          selectedIndex = pageNumber;  
+        }
+       /* alert(totalPage + ' ***** '+ selectedIndex +'****Pre' + {!selectedPageIndex}); */
+        if(prePageNumber == selectedIndex) return;
+        prePageNumber = selectedIndex;
+        filterIndexToDisplay(selectedIndex);
+    }
+ </script>
+<style>
+ .body{
+   background-color:#FFF;
+   font-size:9px;
+ }
+ .blk_t3 {
+    background-color: #000;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+    padding: 2px;
+    text-align:left;
+}
+.datatable-std {
+    border:1px solid #C8C8C8;
+    background-color:#CCC;
+}
+.data-text-bold {
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    color:#000;
+}
+.sc_data-text-bold-fieldset {
+    font-family:Arial,Verdana, Helvetica, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    color:#333333;
+    border-left:1px solid #272727;
+    border-right:1px solid #272727;
+    border-bottom:1px solid #272727;
+    border-top:1px solid #000000;
+    -o-border-radius:10px;
+    -moz-border-radius:12px;
+    -webkit-border-radius:10px;
+    -webkit-box-shadow:0 3px 7px #adadad;
+    border-radius:10px;
+    padding:0 0 7px 7px;
+}
+.action-command {
+    background-color : #EFAB00;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 11px;
+    font-style : normal;
+    font-weight : 700;
+    color : #FFF;
+    text-decoration : none;
+    border-style : none;
+    border-width : 0;
+    padding : 3px;
+}
+.datatable-std-row-odd {
+    background-color:#FFFFFF;
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+
+.datatable-std-row-even {
+    background-color:#F4F4F4;
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+.datatable-std-col {
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+.waitingSearchDiv .waitingHolder {
+    font-weight:bold;
+    font-size:1.20em;
+    position:relative;
+    padding:0.5em;
+    white-space:nowrap;
+    margin: auto;
+    background-color:#fff;
+    border:0px;
+}
+ <!--
+   width: 40%;
+   top: 45%;
+   background-color:#fff;
+   border: 1px solid #333;
+ -->
+</style>
+<apex:form id="frm" style="background-color:#FFF;">
+  <apex:actionFunction name="searchDocNo" action="{!searchDocNo}" reRender="searchArea,pnlError" status="status"/>
+  <apex:actionFunction name="filterIndexToDisplay" action="{!filterIndexToDisplay}" reRender="searchArea" status="status">
+    <apex:param name="a" value="" assignTo="{!selectedPageIndex}"/>
+  </apex:actionFunction>
+  <apex:actionFunction name="sortSearchResults" action="{!sortSearchResults}" reRender="searchArea" status="status">
+    <apex:param name="a" value="" assignTo="{!sortOnColumn}"/>
+    <apex:param name="b" value="" assignTo="{!sortOrder}"/>
+  </apex:actionFunction>
+  <apex:actionFunction name="openDocument" action="{!openDocument}" reRender="searchArea" status="status" oncomplete="displayPDFInWindow();">
+     <apex:param name="a" value="" assignTo="{!selectedAttachmentId}"/>
+     <apex:param name="b" value="" assignTo="{!selectedAttachmentName}"/>
+     <apex:param name="c" value="" assignTo="{!selectedAttachmentPartnerId}"/>
+  </apex:actionFunction>
+  <table width="100%"> 
+    <tr>
+     <td>
+        <br/>
+        <span class="data-text-bold"> {!$Label.SOA2SearchPDFTitle}</span>
+        <br/>
+         {!$Label.SOA2SearchPDFSubTitle}
+      </td>
+    </tr>
+ </table>
+ 
+ <fieldset style="background-color: rgb(255, 255, 255); ;margin-top:20px;" class="sc_data-text-bold-fieldset">
+ <legend>{!$Label.SOA2InputData}</legend>
+ <table width="100%" cellspacing="0" cellpadding="5">   
+   <tr>
+       <td colspan="2" align="center" class="data-text-bold" id="saveMSG" >
+              <apex:outputPanel id="pnlError">
+              <div style="background-color:#fff;color:#FF0000;">
+                 {!IF(ERROR != '',IF(ERROR == 'OLDFILE',$Label.SOA2NoOldRecordFound,$Label.SOA2NoRecordFound),ERROR)}
+              </div>
+              </apex:outputPanel>
+       </td>
+   </tr>
+   <tr>
+        <td class="data-text-bold">
+            {!$Label.SOA2DocNo}
+        </td>
+        <td width="60%">&nbsp;</td>
+        <td>
+           <apex:outputPanel >
+             <apex:inputText value="{!trnDetails.Doc_No__c}"/> 
+           </apex:outputPanel>
+        </td>
+   </tr>
+   <tr>
+        <td class="data-text-bold">
+            {!$Label.SOA2TrnType}
+        </td>
+        <td>&nbsp;</td>
+        <td>
+           <apex:outputPanel >
+             <apex:inputField value="{!trnDetails.Transaction_Type__c}" style="width:145px;"/>
+           </apex:outputPanel>
+        </td>
+   </tr>
+   <tr>
+        <td class="data-text-bold">
+             {!$Label.SOA2TrnDate}:
+        </td>
+        <td align="right">From:</td>
+        <td>
+           <apex:outputPanel >
+             <apex:inputField value="{!trnDetails.Transaction_Date__c}"/>  
+           </apex:outputPanel>
+        </td>
+   </tr>
+   <tr>
+        <td>&nbsp;</td>
+        <td align="right">To:</td>
+        <td>
+           <apex:outputPanel >
+             <apex:inputField value="{!toDate.Transaction_Date__c}"/>
+           </apex:outputPanel>
+        </td>
+   </tr>
+   <tr>
+        <td colspan="3">
+           <apex:outputPanel >
+             <input type="button" value="{!$Label.SOA2Search}" class="action-command" onclick="searchDocNo();"/>
+           </apex:outputPanel>
+        </td>
+   </tr>
+ </table>
+</fieldset>
+ <br/>
+<apex:outputPanel id="searchArea">
+<span id="status">
+       <span style="display: none;" id="status.start">
+         <div style="width: 100%;" class="waitingSearchDiv" id="enhancedList_loading">
+            <div class="waitingHolder" style="top: 150px;width: 180px;" >
+               <img src="/img/loading.gif" class="waitingImage" title="Please Wait..."/>
+               <span class="waitingDescription">Loading...</span>
+            </div>
+         </div>
+       </span>
+       <span id="status.stop"></span>
+</span>
+ <table width="100%" cellspacing="0" cellpadding="0">  
+   <tr>
+     <td>
+       <apex:outputPanel styleClass="data-text-bold">
+          {!totalSearchResult} {!$Label.SOA2Trn} {!$Label.SOA2Found}, {!$Label.SOA2Displaying} {!displayRecordLimit} {!$Label.SOA2Trn}(s), {!$Label.SOA2From} ({!displayResultStartIndex} - {!displayResultEndIndex}). {!$Label.SOA2Page} {!selectedPageIndex} / {!totalPage}
+       </apex:outputPanel>
+    </td>
+    <td>
+      <apex:outputPanel rendered="{!IF(totalPage > 1,true,false)}">
+       <table>
+           <tr>
+            <td>
+              <a href="#" onclick="moveToOtherPage({!totalPage},1,'F');"> 
+                  <img  src="{!URLFOR($Resource.SOA2Img,'SOA2Img/arrow_front.gif')}" />
+              </a>  
+           </td>
+           <td>
+              <a href="#" onclick="moveToOtherPage({!totalPage},{!selectedPageIndex},'B');"> 
+                  <img  src="{!URLFOR($Resource.SOA2Img,'SOA2Img/arrow_back.gif')}" />
+              </a>  
+           </td>
+           <td>
+              <a href="#" onclick="moveToOtherPage({!totalPage},{!selectedPageIndex},'BG');"> 
+                  <img  src="{!URLFOR($Resource.SOA2Img,'SOA2Img/arrow_back_group.gif')}" />
+              </a>  
+           </td>
+           <td>
+            <apex:outputPanel >
+             <apex:repeat value="{!pageNumbers}" var="pgNo">
+               <a href="#" onclick="moveToOtherPage({!totalPage},{!pgNo},'P');" style="font-weight:bold;color:{!IF((pgNo == selectedPageIndex),'#0000FF','#000')};" > {!pgNo}</a> &nbsp;
+             </apex:repeat>
+            </apex:outputPanel>
+           </td>
+           <td>
+              <a href="#" onclick="moveToOtherPage({!totalPage},{!selectedPageIndex},'NG');"> 
+                  <img  src="{!URLFOR($Resource.SOA2Img,'SOA2Img/arrow_next_group.gif')}" />
+              </a>  
+           </td>
+           <td>
+              <a href="#" onclick="moveToOtherPage({!totalPage},{!selectedPageIndex},'N');"> 
+                  <img  src="{!URLFOR($Resource.SOA2Img,'SOA2Img/arrow_next.gif')}" />
+              </a>  
+           </td>
+           <td>
+              <a href="#" onclick="moveToOtherPage({!totalPage},{!selectedPageIndex},'E');"> 
+                  <img  src="{!URLFOR($Resource.SOA2Img,'SOA2Img/arrow_end.gif')}" />
+              </a>  
+           </td>
+           </tr>
+         </table> 
+      </apex:outputPanel>
+    </td>
+   </tr>
+  </table> 
+  <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+         <th class="blk_t3">
+            <a href="#" class="blk_t3" onclick="sortSearchResults('Doc_No__c','{!IF(sortOrder == 'ASC','DESC','ASC')}');" >
+                    {!$Label.SOA2DocNo} 
+                    <apex:outputPanel rendered="{!IF(AND(sortOrder == 'DESC',sortOnColumn == 'Doc_No__c'),true,false)}">&darr;</apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(AND(sortOrder == 'ASC',sortOnColumn == 'Doc_No__c'),true,false)}">&uarr;</apex:outputPanel></a>
+         </th>
+         <th class="blk_t3">
+           <a href="#" class="blk_t3" onclick="sortSearchResults('Transaction_Type__c','{!IF(sortOrder == 'ASC','DESC','ASC')}');" >
+              {!$Label.SOA2TrnType} 
+              <apex:outputPanel rendered="{!IF(AND(sortOrder == 'DESC',sortOnColumn == 'Transaction_Type__c'),true,false)}">&darr;</apex:outputPanel>
+              <apex:outputPanel rendered="{!IF(AND(sortOrder == 'ASC',sortOnColumn == 'Transaction_Type__c'),true,false)}">&uarr;</apex:outputPanel></a>
+         </th>
+          <th class="blk_t3">
+            <a href="#" class="blk_t3" onclick="sortSearchResults('Transaction_Date__c','{!IF(sortOrder == 'ASC','DESC','ASC')}');" >
+              {!$Label.SOA2TrnDate} 
+              <apex:outputPanel rendered="{!IF(AND(sortOrder == 'DESC',sortOnColumn == 'Transaction_Date__c'),true,false)}">&darr;</apex:outputPanel>
+              <apex:outputPanel rendered="{!IF(AND(sortOrder == 'ASC',sortOnColumn == 'Transaction_Date__c'),true,false)}">&uarr;</apex:outputPanel> </a>
+         </th>
+        </tr> 
+      <apex:repeat value="{!lstSearchResult}" var="sr">
+        <tr class="{!sr.backColor}">
+         <td class="datatable-std-col">
+            <apex:outputpanel >
+              <a href="javascript:void(0);" onclick="displayPDF('{!sr.soa2TranDetail.Attachment_Id__c}','{!sr.soa2TranDetail.Doc_No__c}','{!sr.soa2TranDetail.Partner__c}');" >
+                {!sr.soa2TranDetail.Doc_No__c}
+              </a> 
+             </apex:outputpanel> 
+         </td>
+         <td class="datatable-std-col">
+             {!sr.soa2TranDetail.Transaction_Type__c}
+         </td>
+          <td class="datatable-std-col">
+             {!sr.trnDate}
+         </td>
+        </tr> 
+      </apex:repeat>  
+  </table>
+ </apex:outputPanel> 
+</apex:form>
+</apex:page>

@@ -1,0 +1,460 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false" id="page1">
+
+<apex:form id="form1">
+ <c:Header id="header"/><br/>
+ <apex:pageMessages />
+<apex:pageBlock >      
+
+    <apex:pageBlockButtons >
+         <apex:commandButton value="Return" action="{!step1_uk}"/>
+        <apex:commandButton value="Submit" action="{!step3_uk}"/>
+        <apex:commandButton value="Cancel" action="{!cancelPartner_uk}"/>
+    </apex:pageBlockButtons>
+     
+
+     <table border="1" cellspacing="0px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="4">
+                    <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Business Segments</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr> 
+            
+            <tr>
+                <td colspan="8" style="padding-left:5px">
+                  If your company is currently in the PV market, please specify the percentage of your business in each of the following categories and the average size of each kind of project (Kw).
+                </td>
+            </tr>
+           
+           <tr>
+
+               <td align="left" width="25%" style="padding-left:5px">% Residential Projects</td>
+
+               <td width="25%"><apex:inputField style="width:75%" value="{!partnerApp.Percentage_Residential_Projects__c}"/>&nbsp;<B>%</B></td>
+
+               <td align="left" width="30%" style="padding-left:5px">Average size Residential projects</td>
+
+               <td width="20%"><apex:inputField style="width:75%" value="{!partnerApp.Average_Size_Residential_Projects__c}"/>&nbsp;kW</td>
+
+           </tr>
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">% Commercial Projects</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Percentage_Commercial_Projects__c}"/>&nbsp;<B>%</B></td>
+
+               <td align="left" style="padding-left:5px">Average size Commercial projects </td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Average_Size_Commercial_Projects__c}"/>&nbsp;kW</td>
+
+           </tr>            
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">% Grounds Projects  </td>
+
+              <td><apex:inputField style="width:75%" value="{!partnerApp.Percentage_Ground_Projects__c}" />&nbsp;<B>%</B></td> 
+              <td align="left" style="padding-left:5px">Average size Ground projects</td>
+         
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Average_Size_Ground_Projects__c}"/>&nbsp;kW</td>
+                
+           
+           </tr>       
+        </table>   
+
+          <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Geographic Coverage</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Please indicate the location of your main offices, number of employees in each one of them and your main competitor.
+                </td>
+            </tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="25%">Location</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="25%">Number of Employees</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="25%">
+                    Main Competitor
+                </td>
+                <td width="25%">&nbsp;</td>
+                
+            </tr>  
+
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_1__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_1_Number_of_Employees__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_1_Primary_Competition__c}"/></td>
+                <td width="25%">&nbsp;</td>
+                
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_2__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_2_Number_of_Employees__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_2_Primary_Competition__c}"/></td>
+                <td width="25%">&nbsp;</td>
+                
+            </tr>  
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_3__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_3_Number_of_Employees__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_3_Primary_Competition__c}"/></td>
+                <td width="25%">&nbsp;</td>
+                
+            </tr>  
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_4__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_4_Number_of_Employees__c}"/></td>
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Location_4_Primary_Competition__c}"/></td>
+                <td width="25%">&nbsp;</td>
+                
+            </tr>    
+
+            
+        </table>
+        <!-- Product Start -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Products </B></font>
+                            </td> 
+                        </tr>
+                     </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Please indicate below the 4 main manufacturers you work with in each of the product lines.</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Modules</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Inverter</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Racking</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Monitoring</td>
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Product_1__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Product_1__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Product_1__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Product_1__c}"/></td>                
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Product_2__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Product_2__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Product_2__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Product_2__c}"/></td>                
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Product_3__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Product_3__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Product_3__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Product_3__c}"/></td>                
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Product_4__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Product_4__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Product_4__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Product_4__c}"/></td>                
+
+            </tr> 
+
+           
+        </table>
+        <!--  Product End -->
+        
+        <!-- Distributor sor Manufacturers -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Distributors or Manufacturers</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Please mention below the 4 main distributors your company buys from (or name the manufacturers if you buy direct from them)</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Modules</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Inverter</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Racking</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Monitoring</td>
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Distributor_1__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Distributor_1__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Distributor_1__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Distributor_1__c}"/></td>                
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Distributor_2__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Distributor_2__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Distributor_2__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Distributor_2__c}"/></td>                
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Distributor_3__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Distributor_3__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Distributor_3__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Distributor_3__c}"/></td>                
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.PV_Distributor_4__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Inverter_Distributor_4__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Racking_Distributor_4__c}"/></td>
+                
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Monitoring_Distributor_4__c}"/></td>                
+
+            </tr> 
+
+            
+        </table>
+        <!-- Distributor sor Manufacturers END-->  
+        
+        <!-- Insurance Start -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Insurance</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Insurance Type</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Insurance Company</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Insurance Amount</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Insurance Number</td>
+            </tr> 
+
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Type_1__c}"/></td>
+
+                <td> <apex:inputField style="width:97%" value="{!partnerApp.Insurance_Carrier_1__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Coverage_1__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Policy_Number_1__c}"/></td>               
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Type_2__c}"/></td>
+
+                <td> <apex:inputField style="width:97%" value="{!partnerApp.Insurance_Carrier_2__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Coverage_2__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Policy_Number_2__c}"/></td>               
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Type_3__c}"/></td>
+
+                <td> <apex:inputField style="width:97%" value="{!partnerApp.Insurance_Carrier_3__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Coverage_3__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Policy_Number_3__c}"/></td>               
+
+            </tr> 
+            
+            <tr>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Type_4__c}"/></td>
+
+                <td> <apex:inputField style="width:97%" value="{!partnerApp.Insurance_Carrier_4__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Coverage_4__c}"/></td>
+
+                <td><apex:inputField style="width:97%" value="{!partnerApp.Insurance_Policy_Number_4__c}"/></td>               
+
+            </tr> 
+       </table>
+
+        <!-- Insurance End -->
+        
+        <!-- Bank Guarantee Start -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Bank Guarantee </B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">If your company does not fulfill the requisites of SunPower in terms of credit, would you be able to provide us with a minimum guarantee of £ 45.000  ?</td></tr>
+
+            <tr>
+
+                <td style="width:25%" align="right"><apex:inputField value="{!partnerApp.Bank_Guarantee__c}">Yes</apex:inputField></td>
+                <td style="width:75%">&nbsp;</td>
+                
+            </tr> 
+       </table>
+        
+       <!-- Bank Guarantee  End -->
+       
+       <!-- Divers Start  -->
+        <table border="1" cellspacing="0px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Miscellaneous</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company have  its own office, warehouse?</td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Formal_office_workshop_warehouse__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr>
+
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company have its own web page? </td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Web_Page__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+            
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company have its own marketing material?  </td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Marketing_Material__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company have its own showroom?  </td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Showroom__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company have its own installation vehicle Fleet?  </td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Installation_Vehicle_Fleet__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company use a CRM?  </td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.CRM__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Has your company any open or past litigation?</td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Existing_Pending_Litigation__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+            <tr>
+                <td style="white-space:nowrap;padding:7px;" align="left" colspan="2">Does your company have vehicle with logo?</td>
+                <td style="width:25%"><apex:inputField value="{!partnerApp.Vehicle_with_Logo__c}">Yes</apex:inputField></td>
+                <td style="width:25%">&nbsp;</td>
+            </tr> 
+       </table>
+        
+       <!-- Divers  End -->
+       
+</apex:pageBlock>
+
+</apex:form>
+ <script>
+        function removeWarningMsg(){
+               try{
+                    var ctrl = document.getElementById("page1:form1");
+                    var pTags = document.getElementById("page1:form1").getElementsByTagName('div');
+                    for(i=0;pTags != null && i < pTags.length; i++ ){
+                        var pHTML =pTags[i].innerHTML;
+                        if(pHTML != null && pHTML.indexOf('Warning:') >=0){
+                            pTags[i].innerHTML='&nbsp;';
+                            pTags[i].className='&nbsp;';
+                        }   
+                    }
+                                    
+                }catch(e){}
+            }
+            removeWarningMsg();
+            
+      </script>
+</apex:page>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Expected_Rebate__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Date_Countersigned__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Number_of_Times_Rejected__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>((1 AND 2 AND (3 OR 4)) AND 5) AND 6</booleanFilter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Status__c</column>
+            <operator>notContain</operator>
+            <value>Cancellation with RMA,Cancelled with RMA,Cancelled,Contract Pending,Duplicate,Expired,Pending Cancellation,Pending Termination,Terminated,Buyout,Disposed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>contains</operator>
+            <value>Completed ICF,Countersigned Rebate Reservation,Confirmed Rebate Reservation,Rebate Award Letter</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Document_Submitted__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>4/3/2017</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Document_Submitted__c</column>
+            <operator>lessOrEqual</operator>
+            <value>6/30/2017</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Not Submitted</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Expected_Rebate__c</column>
+            <operator>notEqual</operator>
+            <value>USD 0</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Rebate_VSM</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Financial_Payments_with_Invoice_Documents__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$LastActivityDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

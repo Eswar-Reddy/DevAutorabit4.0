@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Design__c.Activities$Subject</field>
+    </columns>
+    <columns>
+        <field>Design__c$Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$Description</field>
+    </columns>
+    <columns>
+        <field>Design__c$Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Design__c$Project_Number__c</field>
+    </columns>
+    <columns>
+        <field>Design__c.Activities$CreatedBy</field>
+    </columns>
+    <columns>
+        <field>Design__c$Name</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Shows all Significant, Low, and Critical work week updates collected throughout the quarter.</description>
+    <filter>
+        <criteriaItems>
+            <column>Design__c$RecordType</column>
+            <operator>equals</operator>
+            <value>Design__c.Project_Design</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c$Opportunity__c</column>
+            <operator>notEqual</operator>
+            <value>313542_A Test Oppty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Activities$Subject</column>
+            <operator>contains</operator>
+            <value>ww</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Activities$Description</column>
+            <operator>contains</operator>
+            <value>&quot; &quot;</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Activities$IsTask</column>
+            <operator>notEqual</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Activities$Severity__c</column>
+            <operator>equals</operator>
+            <value>P2 - Significant,P4 - Low,P1 - Critical</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Activities$Severity__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Quarterly High/Low Summary</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Designs_with_Activities_w_w_o_Opportunities_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Design__c.Activities$Subject</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Design__c.Activities$CreatedDate</dateColumn>
+        <interval>INTERVAL_PREVQ</interval>
+    </timeFrameFilter>
+</Report>

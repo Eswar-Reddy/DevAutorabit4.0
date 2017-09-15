@@ -1,0 +1,1252 @@
+<!--
+    date            type        developer_name  company         general_purpose
+   -----------------------------------------------------------------------------------
+    2011-10-18:     feature     Troy Conquer    Bluewolf        4 step order wizard to allow partners to create lease orders
+ -->
+<apex:page standardController="Purchase_Order__c" extensions="LeaseOrderWizardController" id="page" action="{!updatePOOnAction}">
+    <script>
+
+        var recordSep=';';
+        var dataSep='~';
+        var QtyMAP = function(count){
+            //Properties
+            var editQtyID = new Array();
+            var editQtyVal = new Array();
+            var counter =count;
+        }
+            //Methods
+            QtyMAP.prototype.put = function(id,val){
+                if(this.counter == 0){
+                    this.editQtyID[0] = id;
+                    this.editQtyVal[0]= val;
+                    this.counter++;
+                }else{
+                    var pos = this.getIndex(id);
+                    if(pos == -1){
+                        this.editQtyID[this.counter] = id;
+                        this.editQtyVal[this.counter]= val;
+                        this.counter++;
+                    }else{
+                        this.editQtyVal[pos]= val;
+                    }
+                }
+            }
+            QtyMAP.prototype.getIndex = function(id){
+                if(this.counter == 0) return -1;
+                for(var i =0;i < this.counter;i++){
+                    if(this.editQtyID[i] == id) return i;
+                }
+                return -1; //if not exists
+            }
+            QtyMAP.prototype.clear = function(){
+                this.counter=0;
+                this.editQtyID = new Array();
+                this.editQtyVal = new Array();
+            }
+
+            QtyMAP.prototype.remove = function(id){
+                if(this.counter == 0) return;
+                for(var i=0;i < this.counter;i++){
+                    if(this.editQtyID[i]==id){
+                        isEnter =true;
+                        for(var j=i; j < this.counter-1;j++){
+                            this.editQtyID[j] = this.editQtyID[j+1];
+                            this.editQtyVal[j] = this.editQtyVal[j+1];
+                        }
+                        this.counter--;
+                        break;
+                    }
+                }
+            }//function ends
+            QtyMAP.prototype.convertToString= function(){
+                var retStr='';
+                if(this.counter <=0) return null;
+                for(var i=0;i < this.counter; i++){
+                    retStr +=   this.editQtyID[i] + dataSep + this.editQtyVal[i] + recordSep;
+                }
+                return retStr;
+            }
+            var mapJS = new QtyMAP(0);
+            mapJS.clear();
+    </script>
+    <style>
+    .linkText {
+    color : blue;
+    aLink:blue;
+    font-family : arial;
+    font-size : 11px;
+    font-weight : bold;
+    text-decoration : none;
+    }</style>
+    <!-- This output panel is rendered if
+         1) user is partner but not authorized.
+         2) user is partner and showErrorBlock is true or not partner and showErrorBlock is true.
+         The Back button inside is rendered if
+         1) user is partner but not authorized.
+         2) user is non-partner and isNewOrder is true
+         3) user is authirized and designId is not null and selectedDesign is null(design contains any inactive item).
+     -->
+    <apex:outputPanel id="pnlMessage">
+    <apex:outputPanel rendered="{!IF(OR(AND(isPartnerUser,NOT(isUserAuthorized)),OR(AND(isPartnerUser,showErrorBlock),AND(NOT(isPartnerUser),showErrorBlock))), 'true', 'false')}">
+        <apex:form >
+            <apex:pageBlock >
+                <apex:PageMessages rendered="{!IF(errorOnTab==0, 'true', 'false')}"/>
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton action="{!cancel}" value="{!$Label.POWizardBackBtnLabel}" rendered="{!IF(OR(AND(isPartnerUser,NOT(isUserAuthorized)), AND(NOT(isPartnerUser),isNewOrder), AND(isUserAuthorized,NOT(ISNULL(designId)),ISNULL(selectedDesign))), 'true', 'false')}"/>
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+    </apex:outputPanel>
+    <!-- TabPanel is rendered if
+         1) user is authorised and designId is null
+         2) user is authorised and designId is not null and selectedDesign is also not null
+         3) user is non-partner and isNewOrder is false
+     -->
+    <apex:tabPanel switchType="client" selectedTab="step1"
+        id="theStepTabPanel" rendered="{!IF((isUserAuthorized && ISNULL(designId)) || (isUserAuthorized && NOT(ISNULL(designId)) && NOT(ISNULL(selectedDesign))) || (!isPartnerUser && !isNewOrder),'true','false')}">
+
+        <apex:tab name="step1" id="tab_step1" rendered="{!IF(isOrderSubmitted==true, 'false', 'true')}" onclick="setDisabledNextTabs('1');">
+            <apex:facet name="label">
+                    <apex:outputText >{!$Label.POWizardAddProducts}</apex:outputText>
+            </apex:facet>
+            <apex:PageMessages rendered="{!IF(errorOnTab==1, 'true', 'false')}"/>
+            <apex:form id="tab2frm" onkeydown="checkEnter(event);">
+
+            <!-- put all input hiddens in a panel Case#00058280 -->
+            <apex:outputpanel id="hdnInputs">
+            <input type="hidden" id="focusElement"/>
+            <apex:inputHidden value="{!changedQty}" id="changedQty"/>
+            <apex:inputHidden value="{!inputQuantity}" id="inputQuantity"/>
+            <apex:inputHidden value="{!singleAddedprodId}" id="singleAddedprodId"/>
+            <apex:inputHidden value="{!hdnDelProdLineId}" id="hdnDelProdLineId"/>
+            </apex:outputpanel>
+
+            <apex:actionFunction action="{!addItemToList}"
+                name="addItemToList" reRender="selectedprod" status="statusPending">
+            </apex:actionFunction>
+            <apex:actionFunction action="{!updateQuantity}"
+                name="updateQuantity" reRender="selectedprod,hdnInputs" status="statusPending" >
+            </apex:actionFunction>
+            <apex:actionFunction action="{!delItemFromList}"
+                name="delItemFromList" reRender="selectedprod" status="statusPending">
+            </apex:actionFunction>
+
+            <apex:actionFunction action="{!moveProductsShowLink}"
+                name="moveProductsShowLink" reRender="out,pagination,pagination1" status="statusMove">
+            </apex:actionFunction>
+
+            <apex:actionFunction action="{!moveAccordingToFilter}"
+                name="moveAccordingToFilter" reRender="out,pagination,pagination1" status="statusMove">
+            </apex:actionFunction>
+            <apex:actionFunction action="{!getQunatityMessage}" status="statusPending"
+                name="getErrormssg" reRender="pnlMessage" >
+                <apex:param name="a" value="" assignTo="{!showQuantityMessage}"/>
+            </apex:actionFunction>
+            <apex:pageBlock id="tab2pblock1">
+                <apex:pageBlockButtons location="both">
+                <!--  Done for Case# 00057947-->
+                        <apex:commandButton action="{!showDesignPagebyButton}" value="{!$Label.POWizardPrevStep}" rendered="{!isSmartPack}"/>
+                        <apex:commandButton action="{!showPage2byButton}" value="{!$Label.POWizardNextStep}" onclick="return setValueOfChangedQty()"  />
+                </apex:pageBlockButtons>
+                <apex:pageBlock title="{!$Label.POWizardNewOrderWizardTitle}" id="tab2pblock1_1">
+                    <apex:pageBlockSection columns="2" id="pgSection">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="accName">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</apex:outputLabel>
+                            <!-- <apex:outPutLink value="/{!dealerAccount.ID}" id="accName">{!dealerAccount.Name}</apex:outPutLink> -->
+                            {!dealerAccount.Name}
+                        </apex:pageBlockSectionItem>
+                        <!--  Done for Case# 00078223-->
+                        <apex:inputField value="{!purchaseOrder.Lease_Number__c}" id="leaseNumber" rendered="{!isNAUser}"/>
+                        <apex:outputField value="{!purchaseOrder.OwnerId}" id="purchaseOwner" rendered="{!isNAUser}" />
+                        <apex:outputField value="{!purchaseOrder.Lease__c}" id="lease" rendered="{!isNAUser}"/>
+                        <apex:inputField value="{!purchaseOrder.End_Customer_Account__c}" id="leaseEndCustomerAccountField" rendered="{!isNAUser && ISBLANK(purchaseOrder.End_Customer_Account__c)}"/>
+                        <apex:outputField value="{!purchaseOrder.End_Customer_Account__c}" id="leaseEndCustomerAccountName" rendered="{!isNAUser && NOT(ISBLANK(purchaseOrder.End_Customer_Account__c))}"/>
+                        <apex:inputField value="{!purchaseOrder.Projected_Install__c}" id="leaseProjectedInstall" rendered="{!isNAUser}"/>
+                        <apex:inputField value="{!purchaseOrder.Dealer_Fees__c}" id="leaseDealerFee" rendered="{!isNAUser}">
+                            <apex:actionSupport event="onchange" action="{!addLeaseItemsToList}" rerender="selectedprod, pnlMessage" status="statusPending"/>
+                        </apex:inputField>
+<!-- Added by Paritosh for Financier field- START -->
+                        <!--apex:inputField value="{!purchaseOrder.Financier__c}" id="financier1" rendered="{!isNAUser}">
+                            <apex:actionSupport event="onchange" action="{!updatefinancier}"/>
+                        </apex:inputField>
+<!-- Added by Paritosh for Financier field- END -->
+                        <!--  Done for Case# 00078223-->
+                       <apex:pageBlockSectionItem rendered="{!IF(AND(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),isEUUser),'true','false')}">
+                                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.SmartPack_Mounting_Type__c.Label}</apex:outputLabel>
+                                {!selectedDesign.EU_Mounting_Type__c}
+                       </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+                <apex:pageBlock title="{!$Label.POWizardNewOrderWizardTitle}" id="tab2pblock2">
+                <apex:outputPanel layout="block" style="text-align:center;">   &nbsp;
+                    <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                        startText="{!$Label.POWizardPendingStatusText}" id="statusPending" />
+                </apex:outputPanel>
+                    <!-- Table Here -->
+                    <apex:outputPanel id="selectedprod">
+                        <apex:pageBlockTable value="{!selectedProductsToShow}" var="item">
+                        <apex:column width="5%">
+                            <apex:facet name="header">
+                            {!$Label.POWizardActionHeading}
+                            </apex:facet>
+                            <apex:OutputPanel rendered="{!IF(OR(item.isSmartPack==TRUE,item.isChild),'false','true')}">
+                            <span style="padding-left:5px;">&nbsp;</span>
+                             <apex:outputLink Id="lnkRemove"  onclick="return removeLineItem('{!item.ID}')" style="text-decoration:none;" rendered="{!IF(item.itemID=='135176','false','true')}">
+                                <b>{!$Label.POWizardCrossHeading}</b>
+                             </apex:outputLink>
+                            </apex:OutputPanel>
+                        </apex:column>
+                        <apex:column width="35%">
+                            <apex:facet name="header">
+                            {!$Label.POWizardProductNameHeading}
+                            </apex:facet>
+                            {!item.Name}
+                        </apex:column>
+                        <!-- <apex:column width="15%">
+                            <apex:facet name="header">
+                            Type
+                            </apex:facet>
+                            {!item.prodType}
+                        </apex:column> -->
+                        <apex:column width="15%">
+                            <apex:facet name="header">
+                            {!$Label.LOWizardNetIDHeading}
+                            </apex:facet>
+                            {!item.itemID}
+                        </apex:column>
+                        <apex:column width="10%">
+                            <apex:facet name="header">
+                            {!$Label.POWizardQuantityHeading}
+                            </apex:facet>
+                            <apex:outputPanel rendered="{!NOT(OR(item.isSmartPack==TRUE,item.isChild,item.itemID=='135176',CONTAINS(autolineItemIds,item.itemId)))}" layout="none">
+                                <div id="orig_quan_{!item.ID}" style="display:block;text-decoration:none;">
+                                    <div id ="contDiv" style="width:100px;" ondblclick="showHideEdit('{!item.ID}','{!item.Qty}')">
+                                        <div id="td1_{!item.ID}" style="display:inline;width:70px">{!item.Qty}</div>
+                                        <div id="td2_{!item.ID}" style="padding-left:15px;display:inline;width:30px;">
+                                            <img src="/img/func_icons/util/pencil12.gif"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inlineEditDiv" id="change_quan_{!item.ID}" style="display:none">
+                                    <input id="txt_{!item.ID}" type="text" maxlength="5" size="5" onblur="hideMeandResetValue('{!item.ID}','{!item.Qty}','{!item.perUnitPrice}')" onkeypress="return CaptureEvt(event,'{!item.ID}','{!item.Qty}','{!item.perUnitPrice}');" />
+                                    <a class="inlineEditUndoLink" href="javascript:resetFieldByValue('{!item.ID}','{!item.Qty}','{!item.perUnitPrice}');" style="display: inline;">
+                                        <img class="inlineEditUndo" height="16px" width="16px" alt="Undo" src="/s.gif"/>
+                                    </a>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!OR(item.isSmartPack==TRUE,item.isChild,item.itemID=='135176',CONTAINS(autolineItemIds,item.itemId))}" layout="none">
+                                {!item.Qty}
+                            </apex:outputPanel>
+                        </apex:column>
+                        <!--
+                        <apex:column rendered="{!IF(item.isSmartPack==TRUE,'true','false')}" width="10%">
+                            <apex:facet name="header">
+                            {!$Label.POWizardIsSmartPackHeading}
+                            </apex:facet>
+                            <img height="16" width="21" title="{!$Label.POWizardCheckedText}" class="checkImg" alt="{!$Label.POWizardCheckedText}" src="/img/checkbox_checked.gif"/>
+                        </apex:column>
+                        <apex:column rendered="{!IF(item.isSmartPack==TRUE,'false','true')}" width="10%">
+                            <apex:facet name="header">
+                                {!$Label.POWizardIsSmartPackHeading}
+                            </apex:facet>
+                            <img height="16" width="21" title="{!$Label.PoWizardNotCheckedText}" class="checkImg" alt="{!$Label.PoWizardNotCheckedText}" src="/img/checkbox_unchecked.gif"/>
+                        </apex:column>
+                        -->
+                        <!--
+                        <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;">
+                            <apex:facet name="header">
+                            <div style="text-align:right;">{!$Label.POWizardUnitPriceHeading}</div>
+                            </apex:facet>
+
+                            <apex:outputPanel rendered="{!NOT(AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID))}">
+                              {!purchaseOrder.CurrencyIsoCode}&nbsp;{!item.pOrderLine.Unit_Price__c}
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID)}">
+                              {!purchaseOrder.CurrencyIsoCode}&nbsp;-{!item.pOrderLine.Unit_Price__c}
+                            </apex:outputPanel>
+                        </apex:column>
+                        -->
+                        <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;">
+                            <apex:facet name="header" >
+                            <div style="text-align:right;">{!$Label.LOWizardReimbursementPriceHeading}</div>
+                            </apex:facet>
+
+                            <apex:outputPanel rendered="{!NOT(AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID))}">
+                              {!purchaseOrder.CurrencyIsoCode}&nbsp;
+                              <apex:outputText value="{0,number,#0.00}">
+                                <apex:param value="{!item.pOrderLine.Price__c}"/>
+                              </apex:outputText>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID)}">
+                              {!purchaseOrder.CurrencyIsoCode}&nbsp;-
+                              <apex:outputText value="{0,number,#0.00}">
+                                <apex:param value="{!item.pOrderLine.Price__c}"/>
+                              </apex:outputText>
+                            </apex:outputPanel>
+                               <!-- <div id="totalPrice{!item.ID}">{!item.totalPrice}</div>  -->
+                        </apex:column>
+                        </apex:pageBlockTable>
+                    </apex:outputPanel>
+                    <!--  <div id="prodItem" style="display:none" >
+                        <apex:pageBlockSection title="Edit Product Line Item" columns="2" id="tab2pblock1Sec11">
+                            <label id="prodEditName"><b>Test Name : </b></label>
+                            <input type="text" size="5" maxlength="5" id="prodEditQty" value="1"/>
+
+                        </apex:pageBlockSection>
+                    </div>
+                    -->
+                    <apex:pageBlockSection title="{!$Label.POWizardAddProductItem}" columns="1" id="tab2pblock1Sec1">
+                        <apex:pageBlockSectionItem dataStyle="text-align:left;align:left;" >
+                            <apex:outputLabel for="categoryFilter" style="font-weight:bold;"><b>{!$ObjectType.Price_List_Item__c.Fields.Category__c.Label}</b></apex:outputLabel>
+                            <apex:selectList value="{!selectedCategory}" onChange="changeFilter()" multiselect="false" size="1">
+                                <apex:selectOptions value="{!categories}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem dataStyle="text-align:left;align:left;" labelStyle="text-align:left;align:left;">
+                         <apex:outputpanel >
+                         <apex:outputLabel for="prodDescFilter" style="font-weight:bold;"><b>{!$Label.POWIzardFilterByDesc}<!-- {!$Label.POWIzardFilterBy} {!$ObjectType.Item__c.Fields.Description__c.Label} -->:&nbsp;</b></apex:outputLabel>
+                         <apex:inputText value="{!prodDescFilter}" id="prodDescFilter" />
+                            <apex:commandButton value="{!$Label.POWIzardGo}" onclick="return changeFilter();"/>
+                         </apex:outputpanel>
+                     </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                           <apex:outputPanel id="pagination" layout="block" style="text-align:right;" >
+                                    <apex:outputPanel layout="block" style="text-align:center;">   &nbsp;
+                                        <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                                            startText="{!$Label.POWizardPendingStatusText}" id="statusMove" />
+                                    </apex:outputPanel>
+                                    <!-- <apex:outputLink rendered="{!setCon.hasPrevious}" styleClass="linkText" onClick="return moveProdlist(true)" >&lt;&lt;&nbsp;{!$Label.POWizardNavPrevious}</apex:outputLink>&nbsp;&nbsp;&nbsp;
+                                    <apex:outputLink onClick="return moveProdlist(false)"
+                                            rendered="{!setCon.hasNext}" styleClass="linkText" >{!$Label.POWizardNavNext}&nbsp;&gt;&gt;
+                                    </apex:outputLink>
+                                    -->
+                                </apex:outputPanel>
+
+                             </apex:pageBlockSectionItem>
+                         <apex:pageBlockSectionItem >
+                                <apex:outputPanel id="out">
+                                <apex:pageBlockTable value="{!products}" var="prodObj">
+                                    <apex:column headerValue="{!$Label.POWizardAddProductLineItem}">
+                                        <apex:outputLink onClick="return fillValue('{!prodObj.ID}')">
+                                            <img align="MIDDLE" src="{!$Resource.next_step_button}" />
+                                            <!-- to be changed to Item_Description__c -->
+                                            {!prodObj.Item_Description__c}
+                                            </apex:outputLink>
+                                    </apex:column>
+                                    <!-- to be changed for Item_Id__r.Name  -->
+                                    <apex:column headerValue="{!$Label.LOWizardNetIDHeading}" value="{!prodObj.Item_ID__r.Name}"  />
+                                    <apex:column value="{!prodObj.Category__c}"  />
+                                    <apex:column >
+                                        <apex:outputField value="{!prodObj.Pricing_1__c}"  />
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                                <hr/>
+                            </apex:outputPanel>
+                         </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                           <apex:outputPanel id="pagination1" layout="block" style="text-align:left;" >
+                                <apex:outputLink onClick="return showLinkFun()"
+                                        rendered="{!setCon.hasNext}" styleClass="linkText" >{!$Label.POWizardshowLabel} ({!PAGINATION_COUNTERONPAGE}) {!$Label.POWizardmoreLabel}&nbsp;&gt;&gt;
+                                </apex:outputLink>
+                            </apex:outputPanel>
+                         </apex:pageBlockSectionItem>
+                      </apex:pageBlockSection>
+                    </apex:pageBlock>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:tab>
+
+        <apex:tab name="step3" id="tab_step3"
+              rendered="{!IF(isOrderSubmitted==true, 'false', 'true')}"
+              disabled="{!IF((isOrderSubmitted == true || wizardStepInt < 3), 'true', 'false')}"  onclick="setDisabledNextTabs('3');">
+
+            <apex:facet name="label">
+                    <apex:outputText >{!$Label.POWizardShippingLabel}</apex:outputText>
+            </apex:facet>
+            <apex:outputPanel id="PnlMssg3">
+            <apex:PageMessages rendered="{!IF(errorOnTab==3, 'true', 'false')}" />
+            </apex:outputPanel>
+            <apex:form id="tab3frm">
+            <apex:inputHidden value="{!selectedShipToSiteID}" id="selectedShipToSiteID"/>
+            <apex:inputHidden value="{!selectedShipToSiteConID}" id="selectedShipToSiteConID"/>
+             <apex:actionFunction action="{!setOppShippingAddressToShipToSite}"
+                name="setOppShippingAddressToShipToSite" reRender="tab3ShippingInfo,selectShipToAddress,selectShipToAddress2" status="statusPendingTab3">
+            </apex:actionFunction>
+             <apex:actionFunction action="{!setOppBillingAddressToShipToSite}"
+                name="setOppBillingAddressToShipToSite" reRender="tab3ShippingInfo,selectShipToAddress,selectShipToAddress2" status="statusPendingTab3">
+            </apex:actionFunction>
+
+             <apex:actionFunction action="{!setDealerAddressToShipToSite}"
+                name="setDealerAddressToShipToSite" reRender="tab3ShippingInfo,selectShipToAddress,selectShipToAddress2,PnlMssg3" status="statusPendingTab3">
+            </apex:actionFunction>
+             <apex:actionFunction action="{!setEndUserAddressToShipToSite}"
+                name="setEndUserAddressToShipToSite" reRender="tab3ShippingInfo,selectShipToAddress,selectShipToAddress2,PnlMssg3" status="statusPendingTab3">
+            </apex:actionFunction>
+            <apex:actionFunction action="{!setPOShipToSite}"
+                name="setPOShipToSite" reRender="tab3ShippingInfo,selectShipToAddress,selectShipToAddress2,PnlMssg3" status="statusPendingTab3">
+            </apex:actionFunction>
+            <apex:actionFunction action="{!setPOShipToSiteContact}"
+                name="setPOShipToSiteContact" reRender="tab3ShippingInfo,shipToCon,pbBlockShippingCon" status="statusPendingTab3">
+            </apex:actionFunction>
+            <apex:actionFunction action="{!calcDayDifference}"
+                name="calcDayDifference" reRender="tab3ShippingInfo" status="statusPendingTab3">
+            </apex:actionFunction>
+            <apex:pageBlock >
+            <apex:pageBlockButtons location="both">
+                        <apex:commandButton action="{!showPage2byButtonFrom3}"
+                            value="{!$Label.POWizardPrevStep}"/>
+                        <apex:commandButton action="{!showPage4byButtonFrom3}" value="{!$Label.POWizardNextStep}" />
+                 </apex:pageBlockButtons>
+                <apex:pageBlock title="{!$Label.POWizardNewOrderWizardTitle}" id="tab2pblock1">
+                    <apex:pageBlockSection columns="2">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel for="accName">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</apex:outputLabel>
+                            <!-- <apex:outPutLink value="/{!dealerAccount.ID}" id="accName">{!dealerAccount.Name}</apex:outPutLink>-->
+                            {!dealerAccount.Name}
+                        </apex:pageBlockSectionItem>
+                        <!--  Done for Case# 00078223-->
+                            <apex:outputField value="{!purchaseOrder.Lease__c}" rendered="{!isNAUser}"/>
+                            <apex:outputField value="{!purchaseOrder.End_Customer_Account__c}" rendered="{!isNAUser}"/>
+                            <apex:outputField value="{!purchaseOrder.Lease_Number__c}" rendered="{!isNAUser}"/>
+                            <!--  Done for Case# 00078223-->
+                        <apex:pageBlockSectionItem rendered="{!IF(AND(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),isEUUser),'true','false')}">
+                                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.SmartPack_Mounting_Type__c.Label}</apex:outputLabel>
+                                {!selectedDesign.EU_Mounting_Type__c}
+                        </apex:pageBlockSectionItem>
+                        <!--
+                            <apex:pageBlockSectionItem rendered="{!IF(AND(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),isNAUser),'true','false')}">
+                                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.SmartMount__c.Label}</apex:outputLabel>
+                                    <apex:inputCheckbox value="{!purchaseOrder.SmartMount__c}" disabled="true"/>
+                            </apex:pageBlockSectionItem>
+                         -->
+                        <apex:pageBlockSectionItem rendered="{!IF(selectedOpportunity == null || isDealerResidential == true,'false','true')}">
+                            <apex:outputLabel for="custOpp">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</apex:outputLabel>
+                            <!-- <apex:outPutLink value="/{!selectedOpportunity.ID}" id="custOpp">{!selectedOpportunity.Name}</apex:outPutLink>-->
+                            {!selectedOpportunity.Name}
+                        </apex:pageBlockSectionItem>
+
+                        <apex:outputField value="{!purchaseOrder.Dealer_Fees__c}" rendered="{!isNAUser}"/>
+<!-- Paritosh Added the new financier field on confirmation page - START -->
+                        <apex:outputField value="{!purchaseOrder.Financier__c}" rendered="{!isNAUser}"/>
+<!-- Paritosh Added the new financier field on confirmation page - END -->
+
+<!--
+Changed by Rob - 10/19
+To show how to define field labels instead of hard-coded label
+  this is required to support label language translation
+                           <apex:outputLabel for="sysSize">System Size</apex:outputLabel>
+-->
+                        <apex:pageBlockSectionItem rendered="{!IF(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),'true','false')}">
+                            <apex:outputLabel for="sysSize">{!$ObjectType.Purchase_Order__c.Fields.System_Size__c.Label}</apex:outputLabel>
+                            <apex:outputLabel id="sysSize">{!purchaseOrder.System_Size__c}</apex:outputLabel>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                           <apex:outputLabel >{!$Label.LOWizardReimbursementTotalHeading}</apex:outputLabel>
+
+<!--
+Changed by rob - 10/12
+We need the currency code USD, EUR when displaying the subtotal
+                            <apex:outputText value="{0,currency,#0.00#}" style="text-align:right;align:right;">
+                                <apex:param value="{!purchaseOrder.Order_Total__c}" />
+                            </apex:outputText>
+-->
+                           <apex:outputText id="totalOnShipping" value="{0,number,#0.00}">
+                            <apex:param value="{!purchaseOrder.Order_Total__c}"/>
+                           </apex:outputText>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Notes__c.Label}
+                            &nbsp;&nbsp;<img height="16" width="21" class="checkImg" src="{!$Resource.customhelp_disabled}" onmouseover="callHelpText('notes',this,true);" onmouseout="callHelpText('notes',this,false);"/>
+                            </apex:outputLabel>
+                            <apex:inputTextArea value="{!purchaseOrder.Notes__c}"/>
+                        </apex:pageBlockSectionItem>
+                        <apex:outputField id="shipToCon" value="{!purchaseOrder.Ship_To_Contact__c}" rendered="{!isNAUser}"/>
+                        <!-- <apex:pageBlockSectionItem rendered="{!isNAUser}">
+                            <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Is_Taxible_Order__c.Label}
+                            &nbsp;&nbsp;<img height="16" width="21" class="checkImg" src="{!$Resource.customhelp_disabled}" onmouseover="callHelpText('taxable',this,true);" onmouseout="callHelpText('taxable',this,false);"/>
+                            </apex:outputLabel>
+                            <apex:inputCheckBox value="{!purchaseOrder.Is_Taxible_Order__c}"/>
+                        </apex:pageBlockSectionItem>-->
+                    </apex:pageBlockSection>
+                    <apex:outputPanel layout="block" style="text-align:center;">   &nbsp;
+                            <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                                    startText="{!$Label.POWizardPendingStatusText}" id="statusPendingTab3" />
+                    </apex:outputPanel>
+                    <apex:outputPanel id="tab3ShippingInfo">
+                     <script>
+                            if("{!IF(AND(isShowCheckbox==true,!isEUUser),'true', 'false')}" == "true" && '{!purchaseOrder.Accept_Expedited_Delivery_Charges__c}' != 'true')
+                        alert('{!$Label.POWizardValidationRequiredDeliveryCharges}');
+                    </script>
+                    <div style ="align:right;width:100%;" id="notes" style="display:none;background-color:yellow;color:black;font-size:10px;position:absolute;">
+                        Please add any addition notes required for SunPower. Such as any special tax charges or considerations.
+                    </div>
+                    <div style ="align:right;width:100%;" id="taxable" style="display:none;background-color:yellow;color:black;font-size:10px;position:absolute;">
+                        If un-checked, please fax a copy of tax exemption certificate.
+                    </div>
+                    <apex:pageBlockSection columns="2" title="{!$Label.POWizardShippingInfoTitle}">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel >{!$Label.POWizardShipToAddress}</apex:outputLabel>
+                            {!shipToSiteAddress}
+                        </apex:pageBlockSectionItem>
+                        <apex:inputField value="{!purchaseOrder.Requested_Delivery_Date__c}" onchange="validateCheckBox(this)"></apex:inputField>
+                        <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                            <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_First_Name__c.Label}</apex:outputLabel>
+                            {!shipSite.Contact_First_Name__c}
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                            <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Last_Name__c.Label}</apex:outputLabel>
+                            {!shipSite.Contact_Last_Name__c}
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                            <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Email__c.Label}</apex:outputLabel>
+                            {!shipSite.Contact_Email__c}
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                            <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Phone__c.Label}</apex:outputLabel>
+                            {!shipSite.Contact_Phone__c}
+                        </apex:pageBlockSectionItem>
+                        <apex:inputField value="{!purchaseOrder.Accept_Partial_Shipment__c}" ></apex:inputField>
+
+                         <apex:pageBlockSectionItem rendered="{!isNAUser}">
+                        <!-- commneted against the case-00011848 -->
+                            <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Shipping_Method__c.Label}&nbsp;&nbsp;<img height="16" width="21" class="checkImg" src="{!$Resource.customhelp_disabled}" onmouseover="callHelpText('shipmeth',this,true);" onmouseout="callHelpText('shipmeth',this,false);"/></apex:outputLabel>
+                            <apex:selectList value="{!purchaseOrder.Shipping_Method__c}" multiselect="false" size="1" >
+                                <apex:selectOptions value="{!shippingMethods}"/>
+                            </apex:selectList>
+                        </apex:pageBlockSectionItem>
+
+                        <!-- <apex:pageBlockSectionItem /> -->
+                        <!-- <apex:inputField value="{!purchaseOrder.Shipping_Method__c}"></apex:inputField> -->
+                        <!-- uncommented by shailendra for pr03721 -->
+                        <apex:outputPanel id="checkBoxDiv" rendered="{!IF(AND(isShowCheckbox==true,!isEUUser),'true', 'false')}" ><!--   && isEUUser==false removed by shailendra for pr 03721-->
+                            <apex:outputLabel for="expediteddeliverycharges">{!$ObjectType.Purchase_Order__c.Fields.Accept_Expedited_Delivery_Charges__c.Label}</apex:outputLabel>
+                            <apex:inputField value="{!purchaseOrder.Accept_Expedited_Delivery_Charges__c}" id="expediteddeliverycharges" />
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IF(AND(isShowCheckbox==false,!isEUUser) , 'true', 'false')}"><!--   && isEUUser==false removed by shailendra for pr 03721-->
+                            <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Accept_Expedited_Delivery_Charges__c.Label}</apex:outputLabel>
+                            <img height="16" width="21" class="checkImg" src="/img/checkbox_unchecked.gif"/>
+                        </apex:outputPanel>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}&nbsp;&nbsp;<img height="16" width="21" class="checkImg" src="{!$Resource.customhelp_disabled}" onmouseover="callHelpText('shipinst',this,true);" onmouseout="callHelpText('shipinst',this,false);"/></apex:outputLabel>
+                            <apex:inputTextArea value="{!purchaseOrder.Special_Instructions__c}"/>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem />
+                        <apex:pageBlockSectionItem >
+                        <div style ="align:right" id="shippinghelp" style="display:none;background-color:yellow;color:black;font-size:10px;position:absolute;">
+                            McCollister-Truck-DTH Liftgate option means Direct To Home Delivery, Liftgate Required.<br/>
+                            McCollister-Truck-DTH SunPack option means Direct to Home Delivery, in SunPack.<br/>
+                            McCollister-Truck-DTW option means Direct to Warehouse Delivery.<br/>
+                            Other option means other delivery methods required and not listed.<br/>
+                            Transport Via Truck option means Long Haul Delivery outside of warehouse 25 mile radius.<br/>
+                        </div>
+                        <div style ="align:right;width:100%;" id="shipinsthelp" style="display:none;background-color:yellow;color:black;font-size:10px;position:absolute;">
+                            Please enter any special shipping instructions that might be helpful for the shipper
+                        </div>
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                    </apex:outputPanel>
+                    <script>
+                    function callHelpText(what,ele,w){
+                        if({!isNAUser}){
+                        if(what=='shipmeth'){
+                                if(w){
+                                    ele.src = "{!$Resource.customhelp}";
+                                    document.getElementById('shippinghelp').style.display="block";
+
+                                    }
+                                else{
+                                    ele.src="{!$Resource.customhelp_disabled}";
+                                    document.getElementById('shippinghelp').style.display="none";
+                                    }
+                           }
+                       else if(what =='shipinst'){
+                       if(w){
+                                    ele.src = "{!$Resource.customhelp}";
+                                    document.getElementById('shipinsthelp').style.display="block";
+
+                                    }
+                                else{
+                                    ele.src="{!$Resource.customhelp_disabled}";
+                                    document.getElementById('shipinsthelp').style.display="none";
+                                    }
+
+                       }
+                       else if(what =='notes'){
+                            if(w){
+                                    ele.src = "{!$Resource.customhelp}";
+                                    document.getElementById('notes').style.display="block";
+
+                                    }
+                                else{
+                                    ele.src="{!$Resource.customhelp_disabled}";
+                                    document.getElementById('notes').style.display="none";
+                                    }
+
+                       }
+                       else if(what =='taxable'){
+                            if(w){
+                                    ele.src = "{!$Resource.customhelp}";
+                                    document.getElementById('taxable').style.display="block";
+
+                                    }
+                                else{
+                                    ele.src="{!$Resource.customhelp_disabled}";
+                                    document.getElementById('taxable').style.display="none";
+                                    }
+
+                       }
+                      }
+
+                    }
+                    </script>
+                </apex:pageBlock>
+            </apex:pageBlock>
+            </apex:form>
+        </apex:tab>
+
+<!--
+        <apex:tab name="step4" id="tab_step4" rendered="{!IF( wizardStepInt < 4, 'false', 'true')}">
+-->
+         <apex:tab name="step4" id="tab_step4"
+              disabled="{!IF((wizardStepInt < 4), 'true', 'false')}">
+
+            <apex:facet name="label">
+                    <apex:outputText >{!submitOrderLabel}</apex:outputText>
+            </apex:facet>
+            <apex:PageMessages rendered="{!IF(errorOnTab==4, 'true', 'false')}"/>
+            <apex:form id="tab4form">
+                <apex:pageBlock id="Panel1">
+                    <apex:pageBlockButtons location="both">
+                                <apex:commandButton action="{!showPage3byButtonFrom4}"
+                                    value="{!$Label.POWizardPrevStep}" rendered="{!IF(isOrderSubmitted==true, 'false', 'true')}"/>
+                                <apex:commandButton action="{!submitOrder}" value="{!$Label.POWizardSubmitButton}" rendered="{!IF( (!isOrderSubmitted  && isPartnerUser) || (purchaseOrder.Order_Status__c =='Error' && !isPartnerUser), 'true', 'false')}" />
+<!-- Paritosh - Button added for updating the Financier value on the PO -start -->
+                                <!-- apex:commandButton action="{!updatefinancier}" value="Update Financier" rendered="{!canupdatefinancier && (NOT(isPartnerUser)) && hasordersubmitted }" / -->
+<!-- Paritosh - Button added for updating the Financier value on the PO -end    -->                     
+                     </apex:pageBlockButtons>
+                    <apex:pageBlock title="{!submitOrderTitle}" id="tab2pblock5">
+                       <apex:pageBlockSection columns="1"><apex:pageBlockSectionItem dataStyle="text-align:right;align:right;"> <a href="javascript:openPDF();" style="text-decoration:none;">{!$Label.POWizardPrintViewLabel}&nbsp;<img height="17" width="17" title="{!$Label.POWizardTextPdfDoc}" class="pdfIcon" alt="{!$Label.POWizardTextPdfDoc}" src="/img/pdf17.gif"/> &nbsp;</a>
+                       <a href="javascript:openCsv();" style="text-decoration:none;">{!$Label.POWizardCsvLabel}&nbsp;<img height="17" width="17" title="{!$Label.POWizardCsvDoc}" class="pdfIcon" alt="{!$Label.POWizardCsvDoc}" src="{!$Resource.csvfile}"/> &nbsp;</a>
+                       </apex:pageBlockSectionItem></apex:pageBlockSection>
+                        <!-- <apex:pageBlockSection columns="2" title="Status" rendered="{!IF(!isPartnerUser && purchaseOrder.Order_Status__c != 'Error' , 'true', 'false')}"> -->
+                        <apex:pageBlockSection columns="2" title="{!$Label.POWizardStatusTitle}" rendered="{!(!isPartnerUser)}">
+                                <apex:outputField value="{!purchaseOrder.Order_Status__c}"/>
+                                <!--<apex:outputField value="{!purchaseOrder.Oracle_Order_Status__c}"/> -->
+                                <apex:outputField value="{!purchaseOrder.Order_Status_Interface_Message__c}"/>
+                                <apex:outputField value="{!purchaseOrder.Oracle_Order_Number__c}"/>
+                                <apex:outputField value="{!purchaseOrder.Order_Wizard_Step__c}"/>
+                                <apex:outputField value="{!purchaseOrder.CreatedDate}"/>
+                                <apex:outputField value="{!purchaseOrder.LastModifiedDate}"/>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel for="ownerName">{!$ObjectType.User.Fields.Name.Label}</apex:outputLabel>
+                                    <apex:outputField value="{!purchaseOrder.Owner.Name}"/>
+                                </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection columns="2" title="{!$Label.POWizardOrderInfoTitle}">
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel for="accName">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</apex:outputLabel>
+                                    <!-- <apex:outPutLink value="/{!dealerAccount.ID}" id="accName">{!purchaseOrder.Dealer_Account__r.Name}</apex:outPutLink> -->
+                                    {!purchaseOrder.Dealer_Account__r.Name}
+                                </apex:pageBlockSectionItem>
+                                <apex:outputField value="{!purchaseOrder.End_Customer_Account__c}"/>
+                                <!--  Done for Case# 00078223-->
+                                    <apex:outputField value="{!purchaseOrder.Lease_Number__c}" rendered="{!(isNAUser || !isPartnerUser)}"/>
+                                    <apex:outputField value="{!purchaseOrder.Lease__c}" rendered="{!(isNAUser || !isPartnerUser)}"/>
+                                <!--  Done for Case# 00078223-->
+                                <apex:pageBlockSectionItem rendered="{!(!isPartnerUser)}">
+                                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.SmartPack_Inverter_Type__c.Label}</apex:outputLabel>
+                                    {!selectedDesign.EU_Inverter_Type__c}
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem rendered="{!IF(AND(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),(isEUUser || (!isPartnerUser && orderUser == 'EU'))),'true','false')}">
+                                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.SmartPack_Mounting_Type__c.Label}</apex:outputLabel>
+                                    {!selectedDesign.EU_Mounting_Type__c}
+                                </apex:pageBlockSectionItem>
+                                <!--
+                                <apex:pageBlockSectionItem rendered="{!IF(AND(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),(isNAUser || (!isPartnerUser && orderUser =='NA'))),'true','false')}">
+                                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.SmartMount__c.Label}</apex:outputLabel>
+                                    <apex:inputCheckbox value="{!purchaseOrder.SmartMount__c}" disabled="true"/>
+                                </apex:pageBlockSectionItem>
+                                -->
+                                <apex:pageBlockSectionItem rendered="{!IF(selectedOpportunity == null || isDealerResidential == true,'false','true')}">
+                                    <apex:outputLabel for="custOpp">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</apex:outputLabel>
+                                  <!--   <apex:outPutLink value="/{!selectedOpportunity.ID}" id="custOpp">{!purchaseOrder.Opportunity__r.Name}</apex:outPutLink> -->
+                                  {!purchaseOrder.Opportunity__r.Name}
+                                </apex:pageBlockSectionItem>
+
+                                <apex:pageBlockSectionItem rendered="{!IF(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),'true','false')}">
+                                   <apex:outputLabel for="sysSize">{!$ObjectType.Purchase_Order__c.Fields.System_Size__c.Label}</apex:outputLabel>
+                                    <apex:outputLabel id="sysSize">{!purchaseOrder.System_Size__c}</apex:outputLabel>
+                                </apex:pageBlockSectionItem>
+                                <apex:outputField value="{!purchaseOrder.Dealer_Fees__c}" rendered="{!isNAUser && (NOT(isOrderSubmitted) || showOrderConfirmation)}"/>
+
+<!-- Added by Paritosh for Financier field- START -->
+             
+                                <!-- apex:pageBlockSectionItem rendered="{!canupdatefinancier && (NOT(isPartnerUser)) && hasordersubmitted }">
+                                    <apex:outputLabel for="financier">{!$ObjectType.Purchase_Order__c.Fields.Financier__c.Label}</apex:outputLabel>
+                                    <apex:selectList id="financier" size="1" value="{!Financier}">
+                                        <apex:selectOptions value="{!financierOptions}"/>
+                                    </apex:selectList>
+                                </apex:pageBlockSectionItem>
+
+                                <apex:outputField value="{!purchaseOrder.Financier__c}" rendered="{!(NOT(hasordersubmitted)) || isPartnerUser || (NOT(canupdatefinancier))}"/ -->
+
+<!-- Added by Paritosh for Financier field- END -->
+
+                                <apex:pageBlockSectionItem rendered="{!(NOT(isOrderSubmitted) || showOrderConfirmation)}">
+                                    <apex:outputLabel >{!$Label.LOWizardReimbursementTotalHeading}</apex:outputLabel>
+                                    <apex:outputText id="totalOnSubmitOrder" value="{0,number,#0.00}">
+                                        <apex:param value="{!purchaseOrder.Order_Total__c}"/>
+                                    </apex:outputText>
+
+
+                                    <!-- <apex:outputLabel rendered="{!IF(isPartnerUser == false,'true','false')}">
+                                    {!purchaseOrder.CurrencyIsoCode}&nbsp;{!purchaseOrder.Order_Total__c}
+                                    </apex:outputLabel> -->
+                                    <!-- <apex:outputPanel >
+                                        <apex:outputField id="totalOnSubmitOrder" value="{!purchaseOrder.Order_Total__c}" rendered="{!IF(isPartnerUser == true,'true','false')}"/>
+                                        <apex:outputLabel rendered="{!IF(isPartnerUser == false,'true','false')}">
+                                            {!purchaseOrder.CurrencyIsoCode}&nbsp;{!purchaseOrder.Order_Total__c}
+                                        </apex:outputLabel>
+                                     </apex:outputPanel> -->
+                                   <!-- <apex:outputText value="{0,number,#0.00#}" style="text-align:left;align:left;">
+                                        <apex:param value="{!purchaseOrder.Order_Total__c}" /> -->
+                                    <!-- <span style="display:{!IF(purchaseOrder.Accept_Expedited_Delivery_Charges__c,'inline','none')}"><b>&nbsp;&nbsp;(including delivery charges)</b></span> -->
+                                    <!--</apex:outputText>-->
+
+                                </apex:pageBlockSectionItem>
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Notes__c.Label}</apex:outputLabel>
+                                        {!purchaseOrder.Notes__c}
+                                </apex:pageBlockSectionItem>
+                                <apex:outputField value="{!purchaseOrder.Ship_To_Contact__c}" rendered="{!isNAUser}" />
+                                <!-- <apex:outputField value="{!purchaseOrder.Is_Taxible_Order__c}" rendered="{!isNAUser}"/> -->
+
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection columns="2" title="{!$Label.POWizardShippingInfoTitle}">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >{!$Label.POWizardShipToAddress}</apex:outputLabel>
+                                {!shipToSiteAddress}
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}</apex:outputLabel>
+                                {!purchaseOrder.Special_Instructions__c}
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                                <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_First_Name__c.Label}</apex:outputLabel>
+                                {!shipSite.Contact_First_Name__c}
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                                <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Last_Name__c.Label}</apex:outputLabel>
+                                {!shipSite.Contact_Last_Name__c}
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                                <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Email__c.Label}</apex:outputLabel>
+                                {!shipSite.Contact_Email__c}
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                                <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Phone__c.Label}</apex:outputLabel>
+                                {!shipSite.Contact_Phone__c}
+                            </apex:pageBlockSectionItem>
+
+                            <apex:pageBlockSectionItem >
+                            <!--
+                                <apex:outputLabel >Requested Delivery Date</apex:outputLabel>
+                                {!purchaseOrder.Requested_Delivery_Date__c}
+                              -->
+
+    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}</apex:outputLabel>
+     <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+           <apex:param value="{!purchaseOrder.Requested_Delivery_Date__c}" />
+       </apex:outputText>
+
+                            </apex:pageBlockSectionItem>
+                            <apex:outputField value="{!purchaseOrder.Accept_Partial_Shipment__c}"/>
+                            <!--<apex:outputField value="{!purchaseOrder.Accept_Expedited_Delivery_Charges__c}" />    -->
+                            <apex:pageBlockSectionItem rendered="{!purchaseOrder.Accept_Expedited_Delivery_Charges__c && NOT(isOrderSubmitted)}">
+                                 <apex:outputLabel for="deleveryCharges">{!$ObjectType.Purchase_Order__c.Fields.Delivery_Charges__c.Label}</apex:outputLabel>
+                                 <!--<apex:outputLabel id="deleveryCharges">{!purchaseOrder.Delivery_Charges__c}</apex:outputLabel> -->
+                                 <apex:outputField value="{!purchaseOrder.Delivery_Charges__c}"/>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem rendered="{!purchaseOrder.Accept_Expedited_Delivery_Charges__c && NOT(isOrderSubmitted)}"><!-- new added by shailendra for pr 03721 -->
+                                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Accept_Expedited_Delivery_Charges__c.Label}</apex:outputLabel>
+                                 <img height="16" width="21" class="checkImg" src="/img/checkbox_checked.gif"/>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem rendered="{!isNAUser}">
+                                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Shipping_Method__c.Label}</apex:outputLabel>
+                                {!purchaseOrder.Shipping_Method__c}
+                            </apex:pageBlockSectionItem>
+
+
+
+                        </apex:pageBlockSection>
+                        <apex:pageBlockSection columns="2" title="{!$Label.POWizardBillingInfoTitle}">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >{!$Label.POWizardBillToAddress}</apex:outputLabel>
+                                {!billToSiteAddress}
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                    <apex:pageBlock title="{!$Label.POWizardLineItemsHeading}">
+                        <apex:pageBlockTable value="{!selectedProductsToShow}" var="item">
+                            <apex:column width="10%" >
+                                <apex:facet name="header">
+                                {!$Label.POWizardLineNumberHeading}
+                                </apex:facet>
+                                {!item.lineNumber}
+                            </apex:column>
+                            <apex:column width="35%">
+                                <apex:facet name="header">
+                                {!$Label.POWizardProductNameHeading}
+                                </apex:facet>
+                                {!item.Name}
+                            </apex:column>
+                            <!-- <apex:column width="15%">
+                                <apex:facet name="header">
+                                Type
+                                </apex:facet>
+                                {!item.prodType}
+                            </apex:column> -->
+                            <apex:column width="15%">
+                                <apex:facet name="header">
+                                {!$Label.LOWizardNetIDHeading}
+                                </apex:facet>
+                                {!item.itemID}
+                            </apex:column>
+                            <apex:column width="10%">
+                                <apex:facet name="header">
+                                {!$Label.POWizardQuantityHeading}
+                                </apex:facet>
+                                {!item.Qty}
+                            </apex:column>
+                            <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;">
+                                <apex:facet name="header">
+                                <div style="text-align:right;">{!$Label.LOWizardReimbursementPriceHeading}</div>
+                                </apex:facet>
+
+                                <apex:outputPanel rendered="{!NOT(AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID))}">
+                                  {!purchaseOrder.CurrencyIsoCode}&nbsp;
+                                  <apex:outputText value="{0,number,#0.00}">
+                                    <apex:param value="{!item.pOrderLine.Price__c}"/>
+                                  </apex:outputText>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID)}">
+                                  {!purchaseOrder.CurrencyIsoCode}&nbsp;-
+                                  <apex:outputText value="{0,number,#0.00}">
+                                    <apex:param value="{!item.pOrderLine.Price__c}"/>
+                                  </apex:outputText>
+                                </apex:outputPanel>
+                                <!-- <apex:outputText value="{0,number,#0.00#}" style="text-align:right;align:right;">
+                                    <apex:param value="{!item.totalPrice}" />
+                                </apex:outputText> -->
+                            </apex:column>
+                        </apex:pageBlockTable>
+                    </apex:pageBlock>
+                </apex:pageBlock>
+            </apex:form>
+            <!-- Notes and Attachments Related List for Purchase Order-->
+            <apex:relatedList list="NotesAndAttachments" subject="{!purchaseOrder.id}" rendered="{!isOrderSubmitted}"/>
+        </apex:tab>
+
+    </apex:tabPanel>
+    <script>
+    function valTnC(){
+        if('{!isPartnerUser}'=='true' && document.getElementById("page:tab4form:Panel1:idTnC")){
+            if(document.getElementById("page:tab4form:Panel1:idTnC").checked){
+                return true;
+            }
+        }
+        if('{!isPartnerUser}'=='false' && document.getElementById("page:tab4form:Panel1:idTnCInternal")){
+            var image = document.getElementById("page:tab4form:Panel1:idTnCInternal").childNodes[0];
+            if(image.getAttribute('title')=='Checked'){
+                return true;
+            }
+        }
+        alert("{!$Label.POWizardTnC}");
+        return false;
+    }
+    function assignOppId(id){
+        if(id == null || id =='')
+            document.getElementById('page:tab1frm:selectedCustomerOpportunity').value = '';//null;
+        else
+            document.getElementById('page:tab1frm:selectedCustomerOpportunity').value = id;
+        return true;
+    }
+    //Tabs Movement
+    window.onLoad = new function(){
+       if({!wizardStepNumber} == 2){
+            RichFaces.switchTab('page:theStepTabPanel','page:tab_step2','step2');
+       }else if({!wizardStepNumber} ==3){
+            RichFaces.switchTab('page:theStepTabPanel','page:tab_step3','step3');
+       }else if({!wizardStepNumber} == 4){
+            RichFaces.switchTab('page:theStepTabPanel','page:tab_step4','step4');
+       }else{
+           // RichFaces.switchTab('page:theStepTabPane1','page:tab_step1','step1');
+       }
+
+       //alert("hi" + document.getElementById('focusElement').focus() +''+ document.getElementById('focusElement').focused);
+     }
+     function changeFilter(){
+        moveAccordingToFilter();
+        return false;
+    }
+
+    function fillValue(prodId){
+        document.getElementById('page:tab2frm:singleAddedprodId').value=prodId;
+        document.getElementById('page:tab2frm:inputQuantity').value=1;
+        document.getElementById('page:tab2frm:changedQty').value=mapJS.convertToString();
+        addItemToList();
+        mapJS.clear();
+        return false;
+    }
+
+    //When click on Del link of any Product Line Item
+        function removeLineItem(Id){
+            if(document.getElementById('page:tab2frm:hdnDelProdLineId')){
+                document.getElementById('page:tab2frm:hdnDelProdLineId').value = Id;
+                if(confirm('Are you sure you want to remove this Line Item?'))
+                {
+                    document.getElementById('page:tab2frm:changedQty').value=mapJS.convertToString();
+                    delItemFromList();
+                    mapJS.clear();
+                }
+                 return false;
+            }
+            return false;
+        }
+        function showLinkFunOpps(){
+            moveOppsShowLink();
+            return false;
+        }
+
+        function showLinkFun(){
+            moveProductsShowLink();
+            return false;
+        }
+        //Fuction call when cClick on previous
+        function moveProdlist(isPre){
+            if(isPre)
+                movePrevious();
+            else
+                moveNext();
+            return false;
+        }
+
+        /*function editLineItem(id,name,Qty){
+            document.getElementById('prodItem').style.display="block";
+            //document.getElementById('prodEditName').innerHTML='&nbsp;'+name;
+            document.getElementById('prodEditQty').value=Qty;
+            document.getElementById('prodEditQty').focus();
+            document.getElementById('page:tab2frm:editQuanitityForItem').value=id;
+            return false;
+        }*/
+        /*function updateEditLineItem(){
+            //IF Valid
+            var editQty = document.getElementById('prodEditQty');
+            if(!editQty || editQty ==null)
+                return false;
+            var qtyVal = editQty.value;
+            if(parseInt(qtyVal) == Number(qtyVal)){
+                document.getElementById('page:tab2frm:editQuanitityForItem').value += '~'+ document.getElementById('prodEditQty').value;
+                //document.getElementById('prodEditName').innerHTML='&nbsp;';
+                document.getElementById('prodEditQty').value='0';
+                document.getElementById('prodItem').style.display="none";
+                editLineItemQuantity();
+                return false;
+            }else{
+                alert ('!! Invalid Quantity !!');
+                return false;
+            }
+        }*/
+        function setOppShippingAddress(){
+            setOppShippingAddressToShipToSite();
+            return false;
+        }
+
+        function setOppBillingAddress(){
+            setOppBillingAddressToShipToSite();
+            return false;
+        }
+
+        function selectDealerAddress(){
+            setDealerAddressToShipToSite();
+            return false;
+        }
+
+        function addNewShipToSiteFromOpp(accId,oppId){
+            //Window Open for creating New ShipToSite Object
+            var win1 = null;
+            win1 = window.open('/apex/PuchaseOrderPopup_NewDealerShipAdd?dealerAccountID={!dealerAccount.ID}&oppId='+oppId+'&recType=OPPT','','width=500,height=550');
+            return false;
+        }
+        function addNewContact(accID){
+            var win1 = null;
+            win1 = window.open('/apex/POWizardCreateContact?accid='+accID,'','width=400,height=250');
+            return false;
+        }
+
+
+
+        function addNewShipToSite(accID,isWARE){
+            //Window Open for creating New ShipToSite Object
+            var win1 = null;
+            if(isWARE)
+                win1 = window.open('/apex/PuchaseOrderPopup_NewDealerShipAdd?dealerAccountID={!dealerAccount.ID}&recType=WARE','','width=500,height=550');
+            else
+                win1 = window.open('/apex/PuchaseOrderPopup_NewDealerShipAdd?dealerAccountID={!dealerAccount.ID}&recType=RESI','','width=500,height=550');
+            return false;
+        }
+        function selectExisitingShipToSite(shipID){
+            if(shipID == null || shipID =='')
+                return false;
+            if(document.getElementById('page:tab3frm:selectedShipToSiteID')){
+                document.getElementById('page:tab3frm:selectedShipToSiteID').value=shipID;
+                setPOShipToSite();
+            }
+            return false;
+        }
+        function selectShipToSiteContact(conid){
+        if(conid == null || conid =='')
+                return false;
+            if(document.getElementById('page:tab3frm:selectedShipToSiteConID')){
+                document.getElementById('page:tab3frm:selectedShipToSiteConID').value=conid;
+               setPOShipToSiteContact();
+            }
+            return false;
+        }
+        function showHideEdit(id,orQty){
+            var orig =document.getElementById('orig_quan_'+id);
+            var edt =document.getElementById('change_quan_'+id);
+            if(orig.style.display =='block'){
+                orig.style.display ='none';
+                edt.style.display = 'block';
+                var txtQty = document.getElementById('txt_'+id);
+                if(txtQty.value == null || txtQty.value =='')
+                 txtQty.value = orQty;
+            }
+            else{
+                edt.style.display = 'none';
+                orig.style.display ='block';
+            }
+        }
+        function hideMeandResetValue(id,val,unitPrice){
+            var orig =document.getElementById('orig_quan_'+id);
+            var edt =document.getElementById('change_quan_'+id);
+            var txtQty = document.getElementById('txt_'+id);
+            if(!txtQty || txtQty ==null)
+                return false;
+            var qtyVal = txtQty.value;
+            if(parseInt(qtyVal) == Number(qtyVal) && parseInt(qtyVal)>0){
+                orig.style.display ='block';
+                var td1_ID = document.getElementById('td1_'+id);
+                var td2_ID = document.getElementById('td2_'+id);
+                td1_ID.innerHTML = '<font color=red><b>'+ txtQty.value+'</b></font>';
+                mapJS.put(id,qtyVal);
+                var anchorTags = edt.getElementsByTagName('a');
+                if(anchorTags != null && anchorTags.length >0){
+                    td2_ID.innerHTML=getOuterHTML(anchorTags[0]);
+                }
+                edt.style.display = 'none';
+                getErrormssg(false);
+                //var totalPriceDiv = document.getElementById('totalPrice'+id);
+                //totalPriceDiv.innerHTML = new Number(qtyVal*unitPrice).toFixed(2);
+                //totalPriceDiv.innerHTML = formatCurrency(qtyVal*unitPrice);
+            }else{
+                //alert ('!! Invalid Quantity !!');
+                document.getElementById('txt_'+id).value = qtyVal;
+                document.getElementById('txt_'+id).focus();
+                getErrormssg(true);
+                return false;
+            }
+
+            document.getElementById('page:tab2frm:changedQty').value=mapJS.convertToString();
+            mapJS.clear();
+            updateQuantity();
+        }
+        function getOuterHTML(object) {
+            var element;
+            if (!object) return null;
+            element = document.createElement("div");
+            element.appendChild(object.cloneNode(true));
+            var t = element.innerHTML;
+            //document.deleteElement(element);
+            return t;
+        }
+        function resetFieldByValue(id, qty, unitPrice){
+            var orig =document.getElementById('orig_quan_'+id);
+            var edt =document.getElementById('change_quan_'+id);
+            orig.style.display ='block';
+            var td1_ID = document.getElementById('td1_'+id);
+            var td2_ID = document.getElementById('td2_'+id);
+            td1_ID.innerHTML =qty;
+            td2_ID.innerHTML= '<img src="/img/func_icons/util/pencil12.gif"/>';
+            orig.style.display ='none';
+            edt.style.display ='block';
+            var txtQty = document.getElementById('txt_'+id);
+            txtQty.value = qty;
+            edt.style.display ='none';
+            orig.style.display ='block';
+            //var totalPriceDiv = document.getElementById('totalPrice'+id);
+            //totalPriceDiv.innerHTML = new Number(qty*unitPrice).toFixed(2);
+            mapJS.remove(id);
+            getErrormssg(false);
+        }
+        function keepExistingQuantityValues(){
+            //
+        }
+        function openPDF(){
+            var windowUrl = '/apex/LeaseOrderWizardPDF?id='+"{!purchaseOrder.ID}"+'&orderConfirmation='+"{!showOrderConfirmation}";
+            window.open(windowUrl,'','width=800,height=800');
+        }
+        function setValueOfChangedQty(){
+            document.getElementById('page:tab2frm:changedQty').value=mapJS.convertToString();
+            mapJS.clear();
+            return true;
+        }
+        function validateCheckBox(ele){
+            //commented below function because the delivery charges field has been commented now
+            var strDate = ele.value;
+            myDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            dateArr = strDate.split('/');
+            //new Date(year, month, day)
+            if(dateArr.length == 3){
+                myDate=new Date(dateArr[2],dateArr[0]-1,dateArr[1]);
+            var weekDay = myDate.getDay();
+            if(weekDay == 0 && {!isNAUser}){
+                alert("Please contact your PSR.  Sunday delivery requires special handling.");
+                ele.value='';
+                ele.focus();
+            }else{
+                calcDayDifference();
+            }
+            //getTheDay(ele.value);
+            //calcDayDifference();//uncommented function by shailendra for pr03721.
+            }
+        }
+       /* function getTheDay(strDate){
+            myDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            dateArr = strDate.split('/');
+            //new Date(year, month, day)
+            if(dateArr.length == 3){
+                myDate=new Date(dateArr[2],dateArr[0]-1,dateArr[1]);
+            var weekDay = myDate.getDay();
+            if(weekDay == 0){
+                alert("Please contact your PSR.  Sunday delivery requires special handling.");
+            }
+        }
+    }*/
+
+        function setDisabledNextTabs(e){
+            if(e == '1'){
+                if(document.getElementById('page:tab_step2_shifted') != null){
+                    document.getElementById('page:tab_step2_shifted').onclick='';
+                }
+                if(document.getElementById('page:tab_step2_lbl') != null){
+                    document.getElementById('page:tab_step2_lbl').className ='dr-tbpnl-tb rich-tab-header dr-tbpnl-tb-dsbl rich-tab-disabled';
+                    document.getElementById('page:tab_step2_lbl').onmouseover='';
+                    document.getElementById('page:tab_step2_lbl').onmouseout='';
+                }
+                if(document.getElementById('page:tab_step2_cell') != null){
+                    document.getElementById('page:tab_step2_cell').className ='dr-tbpnl-tbcell-dsbld rich-tabhdr-cell-disabled';
+                }
+                document.getElementById('page:tab_step3_shifted').onclick='';
+                document.getElementById('page:tab_step3_cell').className ='dr-tbpnl-tbcell-dsbld rich-tabhdr-cell-disabled';
+                document.getElementById('page:tab_step3_lbl').onmouseover='';
+                document.getElementById('page:tab_step3_lbl').onmouseout='';
+                document.getElementById('page:tab_step3_lbl').className ='dr-tbpnl-tb rich-tab-header dr-tbpnl-tb-dsbl rich-tab-disabled';
+
+                document.getElementById('page:tab_step4_shifted').onclick='';
+                document.getElementById('page:tab_step4_lbl').className ='dr-tbpnl-tb rich-tab-header dr-tbpnl-tb-dsbl rich-tab-disabled';
+                document.getElementById('page:tab_step4_lbl').onmouseover='';
+                document.getElementById('page:tab_step4_lbl').onmouseout='';
+                document.getElementById('page:tab_step4_cell').className ='dr-tbpnl-tbcell-dsbld rich-tabhdr-cell-disabled';
+            }
+            else if(e == '2'){
+                document.getElementById('page:tab_step3_shifted').onclick='';
+                document.getElementById('page:tab_step3_cell').className ='dr-tbpnl-tbcell-dsbld rich-tabhdr-cell-disabled';
+                document.getElementById('page:tab_step3_lbl').onmouseover='';
+                document.getElementById('page:tab_step3_lbl').onmouseout='';
+                document.getElementById('page:tab_step3_lbl').className ='dr-tbpnl-tb rich-tab-header dr-tbpnl-tb-dsbl rich-tab-disabled';
+
+                document.getElementById('page:tab_step4_shifted').onclick='';
+                document.getElementById('page:tab_step4_lbl').className ='dr-tbpnl-tb rich-tab-header dr-tbpnl-tb-dsbl rich-tab-disabled';
+                document.getElementById('page:tab_step4_lbl').onmouseover='';
+                document.getElementById('page:tab_step4_lbl').onmouseout='';
+                document.getElementById('page:tab_step4_cell').className ='dr-tbpnl-tbcell-dsbld rich-tabhdr-cell-disabled';
+            }else if(e == '3'){
+                document.getElementById('page:tab_step4_shifted').onclick='';
+                document.getElementById('page:tab_step4_lbl').className ='dr-tbpnl-tb rich-tab-header dr-tbpnl-tb-dsbl rich-tab-disabled';
+                document.getElementById('page:tab_step4_lbl').onmouseover='';
+                document.getElementById('page:tab_step4_lbl').onmouseout='';
+                document.getElementById('page:tab_step4_cell').className ='dr-tbpnl-tbcell-dsbld rich-tabhdr-cell-disabled';
+
+            }
+            //return false;
+        }
+
+         window.onload = new function(){
+            var currency1 = document.getElementById('page:tab3frm:tab2pblock1:j_id211:j_id235:totalOnShipping');
+            var currency2 = document.getElementById('page:tab4form:tab2pblock5:j_id339:j_id363:totalOnSubmitOrder');
+            if('{!currentLocale}'=='de'||'{!currentLocale}'=='DE'){
+                if(currency1!=null){
+                    currency1.innerHTML = currency1.innerHTML.replace("USD","€");
+                }
+                if(currency2!=null){
+                    currency2.innerHTML = currency2.innerHTML.replace("USD","€");
+                }
+            }
+
+         }
+         function openCsv(){
+            window.open('/apex/LeaseOrderWizardcsv?id='+"{!purchaseOrder.ID}"+'&orderConfirmation='+"{!showOrderConfirmation}",'','width=1,height=1,top=1500,left=1500');
+        }
+
+       function CaptureEvt(evt,itemID,itemQty,perUnitPrice){
+        if(isEnterKeyPress(evt)) {
+            hideMeandResetValue(itemID,itemQty,perUnitPrice);
+            return false;
+        }
+        function checkEnter(evt)
+        {
+            if(isEnterKeypress(e)){
+                showPage2ByButton();
+                return false;
+            }
+        }
+        function isEnterKeypress(e)
+        {
+            var theEvent = (e) ? e : window.event;
+            var charCode = (theEvent.which) ? theEvent.which : theEvent.keyCode;
+            return charCode == 13;
+        }
+      }
+    </script>
+    <apex:relatedList list="ActivityHistories" rendered="{!AND(NOT(isNAUser),NOT(isEUUSer))}"/>
+    <script>
+      /* Removing Buttons */
+            var inputTags = document.getElementsByTagName("input");
+                for(var i=0; i < inputTags.length;i++){
+                if(inputTags[i].name == "new" && inputTags[i].type == "button" && inputTags[i].className == "btn"){
+                    inputTags[i].parentNode.removeChild(inputTags[i]);
+                    //break;
+                }
+                if(inputTags[i].name == "mm" && inputTags[i].type == "button" && inputTags[i].className == "btn"){
+                    inputTags[i].parentNode.removeChild(inputTags[i]);
+                    //break;
+                }
+                 if(inputTags[i].name == "email" && inputTags[i].type == "button" && inputTags[i].className == "btn"){
+                   var t = inputTags[i].onclick;
+                   var insConID ='p2_lkid='+ '{!orderOwnerContactID}'+'&';//'0038000000h4l6O'+'&';
+                   var part1= t.toString().substring(t.toString().indexOf('navigateToUrl')+15,t.toString().indexOf('?')+1);
+                   var part2 = t.toString().substring(t.toString().indexOf('?')+1);
+                   var str= part1+insConID+part2;
+                   inputTags[i].onclick = function(){
+                    window.location.href=str;
+                   }
+                    //break;
+                }
+
+            }
+    </script>
+</apex:page>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>OLDVAL</field>
+    </columns>
+    <columns>
+        <field>NEWVAL</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_ADDRESS1_STREET</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_ADDRESS1_CITY</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_ADDRESS1_STATE</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_ADDRESS1_ZIP</field>
+    </columns>
+    <currency>USD</currency>
+    <description>This reports is on the activity history of the Is Customer checkbox.</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Theater__c</column>
+            <operator>equals</operator>
+            <value>North America</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.DSE_IsCustomer__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CREATED_DATE</column>
+            <operator>greaterOrEqual</operator>
+            <value>12/14/2014 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Account.Home_Owner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>field_key</column>
+            <operator>contains</operator>
+            <value>Is Customer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ACCOUNT_ADDRESS1_COUNTRY</column>
+            <operator>notEqual</operator>
+            <value>CA,Canada,future</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ACCOUNT_ADDRESS1_COUNTRY</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Is Customer Activity History</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountAuditHistory</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>ACCOUNT_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>5% down-payment reminder and deadline</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Partner_Template</letterhead>
+    <name>5% Down-Payment Email</name>
+    <style>formalLetter</style>
+    <subject>Sunpower Down Payment Invoice #  {!Opportunity.Down_Payment_Invoice_Number__c} - {!Opportunity.Name}</subject>
+    <textOnly>{!Today}
+Dear {!Opportunity.OwnerFirstName} ,
+
+Thank you for submitting a Purchase Order for the following Commercial Project:
+
+PROJECT DETAILS
+Opportunity Name    {!Opportunity.Name}
+Quote Number  {!Opportunity.Quote__c}
+Sales Order #  {!Opportunity.Sales_Order_Number__c}
+Order Amount  {!Opportunity.Amount}
+
+System Size (kWp)  {!Opportunity.System_Size_KwP__c}
+System Type  {!Opportunity.Mounting_System__c}
+PV Type   {!Opportunity.PV_Type__c}
+Inverter(s)  {!Opportunity.Invertor__c}
+{!Opportunity.Inverter_2__c}
+{!Opportunity.Inverter_3__c}
+Utility Voltage {!Opportunity.Utility_Voltage__c}
+
+
+An order is only officially “accepted” after 1) SunPower receives a valid purchase order from the Dealer, 2) SunPower and the Dealer agree to the scheduled delivery date via email confirmations, and 3) the Dealer submits the required 5% non-refundable down payment.  Once accepted, orders cannot be canceled or changed without prior written approval by SunPower.
+
+
+
+Per the terms of SunPower&apos;s Commercial Program, a 5% down-payment is being invoiced at this time and will need to be paid with 5 business days in order to secure materials and prevent possible cancellation of your purchase order.  If you have already wired the required 5% [{!Opportunity.X5_Down_Payment__c}] down-payment for this order, we thank you.  Also note that your available credit must exceed the remaining invoice balance at the time of the scheduled shipment.  If  the invoice balance exceeds the Dealer’s available credit the Dealer must provide a payment to SunPower prior to delivery such that the Dealer’s available credit exceeds the shipment total.  All payments should be received, minimum of seven (7) days prior to shipment to ensure proper invoice processing. An Invoice for the balance of the order is sent upon proof of delivery with your account&apos;s default payment term.
+
+
+If you have any questions, please feel free to call or email me. You may also contact your Regional Sales Manager, {!Opportunity.CRSM__c}.
+
+
+
+
+Regards,
+{!Opportunity.Commercial_PSR_Name__c}
+Partner Support Representative
+
+{!Opportunity.Commercial_PSR_Email__c}
+1800-SUNPOWER</textOnly>
+    <type>html</type>
+</EmailTemplate>

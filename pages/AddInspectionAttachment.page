@@ -1,0 +1,35 @@
+<apex:page showHeader="false" StandardController="Inspection__c" Extensions="AddInspectionAttachmentController" sidebar="false" >
+<script>
+ 
+  if('{!isAttached}' == 'true')
+  {
+  	alert(' Attached successfully '); 
+  	window.opener.FillAccachName();
+    window.close();
+  }
+  
+  function  GetCloseWindow() {
+  	DeleteAllAttachments();
+  	window.opener.FillAccachName();
+  	window.close();
+  }
+</script>
+<apex:form id="frm" >
+	<apex:actionfunction action="{!AttachFile}" name="GetAttachfile" />
+	<apex:actionfunction action="{!DeleteAttachments}" name="DeleteAllAttachments" />
+    <apex:pagemessages />        
+	<apex:pageBlock id="pgblockImport" title="Attach File">
+           <apex:pageblockSection columns="2">
+            	<apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Attach file" />
+                        <apex:inputFile value="{!contentFile}" filename="{!nameFile}"  />  <!-- contentType="{!contentTypeFile}" -->
+                        
+                </apex:pageBlockSectionItem>
+                <apex:pageblockSectionItem >
+                   		<apex:commandbutton id="btnAttach" value="Attach"  onclick="GetAttachfile(); return false;" />  
+                        <input type="button" id="btnCancel" value="Close" onclick=" return GetCloseWindow();" class="btn" />  
+            	</apex:pageblockSectionItem>
+        </apex:pageblockSection>
+       </apex:pageBlock>
+  </apex:form>
+</apex:page>

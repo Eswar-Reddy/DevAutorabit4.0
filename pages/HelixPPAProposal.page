@@ -1,0 +1,242 @@
+<apex:page controller="HelixPPAProposalController" standardStylesheets="false" showHeader="false" >
+    <style>
+        .tdLabel {
+            font-weight: bold;
+            border-right: 1px solid #e5e5e5;
+        }
+    </style>
+    
+    <!-- messages -->
+    <div id="proposalMessages" style="display:none"></div>
+    
+    <!-- helix ppa financial summary-->
+    <div>
+        <h4>Helix PPA Financial Summary</h4>
+        <div class="divider"></div>
+
+    </div>    
+
+    <!-- buttons -->
+    <div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div style="float:right;">
+                <input type="button" id="downloadProposalButton" value="Download Proposal" 
+                    onclick="onclickDownloadProposalButton(); return false;"
+                    class="btn btn-secondary btn--small right1">
+                </input>
+                <input type="button" id="downloadTermSheetButton" value="Download Term Sheet" 
+                    onclick="onclickDownloadTermSheetButton(); return false;"
+                    class="btn btn-secondary btn--small">
+                </input>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- financial summary table --> 
+    <div class="grey-divider">
+        <div class="row lower2 upper2">
+        <table class="table" style="width:60%;margin:auto;border: 1px solid #e5e5e5;">
+            <tbody>
+                <tr>
+                    <td class="tdLabel">Utility Consumption Pre Solar</td>
+                    <td><div class="sp-blue" id="utilityConsPreSolar"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">Utility Bill Pre Solar</td>
+                    <td><div class="sp-blue" id="utilityBillPreSolar"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">Utility Bill Post Solar</td>
+                    <td><div class="sp-blue" id="utilityBillPostSolar"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">Avoided Utility Rate</td>
+                    <td><div class="sp-blue" id="avoidedUtilityRate"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">PV System Size</td>
+                    <td><div class="sp-blue" id="pvSystemSize"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">PPA Rate</td>
+                    <td><div class="sp-blue" id="ppaRate"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">PPA Escalator</td>
+                    <td><div class="sp-blue" id="ppaEscalator"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">PV Production Year 1</td>
+                    <td><div class="sp-blue" id="pvProductionYear1"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">1st Year Savings</td>
+                    <td><div class="sp-blue" id="year1NetSavings"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">20 Year Savings</td>
+                    <td><div class="sp-blue" id="sumNetSavings"></div></td>
+                </tr>
+                <tr>
+                    <td class="tdLabel">NPV of 20 Year Savings</td>
+                    <td><div class="sp-blue" id="npvOfSavings"></div></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    
+    <!-- buttons -->
+    <div class="grey-divider">
+        <div class="row lower2 upper2">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div style="float:right;">
+                <input type="button" id="backProposalButton" value="Back" onclick="onclickBackProposalButton(); return false;"
+                    class="btn btn-secondary right1">
+                </input>
+                <input type="button" id="saveProposalButton" value="Save & Quit" onclick="onclickSaveProposalButton(); return false;"
+                    class="btn btn-primary">
+                </input>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function onclickBackProposalButton() {
+            $('#proposalDiv').hide('fast', function() {
+                $('#savingsDiv').show();
+                setActiveTab('Savings');
+            });
+        }
+        function onclickSaveProposalButton() {
+            locker.lockAll('navItemProposal');
+            saveProposal();
+        }
+        function onclickDownloadProposalButton() {
+            downloadProposal();
+        }
+        function onclickDownloadTermSheetButton() {
+            downloadTermSheet();
+        }
+        
+        function showProposalError(errorMessage) {
+            $('#proposalMessages').html(errorMessage);
+            $('#proposalMessages').addClass('alert alert--danger');
+            $('#proposalMessages').show();
+        }
+        function clearProposalError() {
+            $('#proposalMessages').html('');
+            $('#proposalMessages').removeClass('alert alert--danger');
+            $('#proposalMessages').hide();
+        }
+    
+        function saveProposal() {
+            clearProposalError();
+            showSpinner('proposalTabSpinner');
+            var request = {};
+            var genericErrorMessage = 'There is a problem with the system. Please contact SunPower Administrator by sending an email to digital.support@sunpower.com';
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPAProposalController.saveProposal}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        if (response.isSuccess) {
+                            //kcm
+                            if({!isNewUIUser}){
+                                window.location.href = "{!newUIPage}" + "{!accountId}" + '/opportunity/' + quote.OpportunityId + '/quotes' ;
+                            } else {
+                                window.location = '/apex/SPCommunityOpportunityDetails?id=' + quote.OpportunityId;
+                            }
+                        } else {
+                            console.log('error: ' + response.errorMessage);
+                            showProposalError(genericErrorMessage);
+                            locker.unlockAll('navItemProposal');
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        console.log(errMsg);
+                        showProposalError(genericErrorMessage);
+                        locker.unlockAll('navItemProposal');
+                    }
+                    hideSpinner('proposalTabSpinner');
+                },
+                { escape: true }
+            );
+        }
+        
+        function downloadTermSheet() {
+            clearProposalError();
+            showSpinner('proposalTabSpinner');
+            var request = {};
+            request.quoteId = quote.Id;
+            var genericErrorMessage = 'There is a problem with the system. Please contact SunPower Administrator by sending an email to digital.support@sunpower.com';
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPAProposalController.downloadTermSheet}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                            //alert('response.requestAttachmentId: ' + response.requestAttachmentId);
+                            //alert('response.responseAttachmentId: ' + response.responseAttachmentId);
+                            var win = window.open('/servlet/servlet.FileDownload?file=' + response.responseAttachmentId, '_blank');
+                            if (win) win.focus();    // user need to disable popup blocker
+                        } else {
+                            console.log('error: ' + response.errorMessage);
+                            showProposalError(genericErrorMessage);
+                            locker.unlockAll('navItemProposal');
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        console.log(errMsg);
+                        showProposalError(genericErrorMessage);
+                        locker.unlockAll('navItemProposal');
+                    }
+                    hideSpinner('proposalTabSpinner');
+                },
+                { escape: true }
+            );
+        }
+        
+        function downloadProposal() {
+            clearProposalError();
+            showSpinner('proposalTabSpinner');
+            var request = {};
+            request.quoteId = quote.Id;
+            var genericErrorMessage = 'There is a problem with the system. Please contact SunPower Administrator by sending an email to digital.support@sunpower.com';
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPAProposalController.downloadProposal}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                            //alert('response.requestAttachmentId: ' + response.requestAttachmentId);
+                            //alert('response.responseAttachmentId: ' + response.responseAttachmentId);
+                            var win = window.open('/servlet/servlet.FileDownload?file=' + response.responseAttachmentId, '_blank');
+                            if (win) win.focus();    // user need to disable popup blocker
+                        } else {
+                            console.log('error: ' + response.errorMessage);
+                            showProposalError(genericErrorMessage);
+                            locker.unlockAll('navItemProposal');
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        console.log(errMsg);
+                        showProposalError(genericErrorMessage);
+                        locker.unlockAll('navItemProposal');
+                    }
+                    hideSpinner('proposalTabSpinner');
+                },
+                { escape: true }
+            );
+        }
+    
+    </script>
+</apex:page>

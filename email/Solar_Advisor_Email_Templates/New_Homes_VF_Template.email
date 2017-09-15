@@ -1,0 +1,138 @@
+<messaging:emailTemplate subject="{!relatedTo.FirstName}, your appointment information!" recipientType="Lead" relatedToType="Lead">
+<messaging:htmlEmailBody >
+<html>
+    <style type="text/css">
+    body {
+        background-color: #FFFFFF;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        font-family: Arial, Futura;
+        color: #555555;
+    }
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    table {
+        margin-top: 0pt;
+    }
+    p,table{
+        font-size: 11pt;
+    }
+    a { color:#0070c0; text-decoration:none}
+    a:visited { color:#0070c0; text-decoration:none}
+    a:link { color:#0070c0; text-decoration:none}
+    a:hover { color:#0070c0; text-decoration:none}
+
+    li {
+        line-height:20px;
+        margin-bottom: 10pt;
+        display: list-item;
+        padding-bottom:5px;
+    }
+    
+    </style>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="960px"><img src="https://c.na6.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px" style="padding-left:50px; padding-right:25px; text-decoration:none; outline:none;">
+                   
+                    <!--Table-->
+
+                    <tr>
+                        <td align="left" valign="top" bgcolor="#FFFFFF" width="960px" style="padding-left:50px; padding-right:25px; text-decoration:none; outline:none;">
+                            
+                                                
+                            <p style="margin-top:20px">Dear {!relatedTo.FirstName},</p>
+                            
+                            <p style="margin-right:20px">Below are the details of your appointment. Your consultation will only take 20-30 minutes. 
+                                                 Please review the date and time for accuracy. If you see any issues, please contact me with any changes.</p>
+                                               
+                            <!--Table-->
+                            <table width="98%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#F4AB4D;border-spacing:0;">
+                                <tr>
+                                    <td style="background: #F4AB4D;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                                        <span style="font-size:16px;font-weight:bold;"> Appointment Information:</span>
+                                    </td>
+                                </tr>
+                                <tr style="vertical-align:top;">
+                                    <td style="padding-top:20px;padding-right:30px;"> 
+                                        <ul>
+                                               <b>Appointment Date and Time: </b><apex:outputText value="{0,date,long}">
+                                                <apex:param value="{!relatedTo.Appointment_Date__c}" />
+                                                </apex:outputText> {!relatedTo.Appointment_Time__c}<br/>
+                                          <br/>
+                                                                                                                                                
+                                            <p><b>Instructions:</b></p>
+                                            
+                                                At the time of your appointment, simply click this <apex:outputLink value="{!relatedTo.Meeting_Link__c}" id="eventlink"> link</apex:outputLink>. Your Energy Consultant’s presentation will appear on your screen. You will receive a call from your Energy Consultant at this time to go over the presentation.<br/>
+                                                
+                                                <br/>
+                                                
+                                                <b>You will be meeting with {!relatedTo.Owner.Name}</b><br/> 
+                                                 
+                                                <b>Cell Phone:</b> {!relatedTo.Owner.Phone}<br/> 
+                                                 
+                                                <b>Email:</b> {!relatedTo.Owner.email} <br/><br/>
+                                                
+                                        </ul>
+                                           
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <p style="margin-top:20px"> 
+                        To ensure the most effective use of your time please try to be at a computer to review the online proposal with your energy consultant.
+                    </p>
+
+                    <p style="margin-top:20px"> 
+                        If you have any questions, please call me at the number below or reply back to this email.
+                    </p>
+
+                    <p style="margin-top:20px">Sincerely,</p>
+                    <p> New Home Solar Advisors <br/>
+                        <b>SunPower Corporation</b> <br/>
+                        <a href="http://www.sunpower.com" >www.sunpower.com</a>
+                        <br/>
+                    </p>
+                </td>
+                
+            </tr>
+            <tr>
+                <td>
+                    <!-- SUN IMAGE we can't put this as a background, if we made it as a background image, it will work on gmail but not on MS Outlook -- in PROD -->
+                    <img src="https://c.na6.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOy&oid=00D80000000ZF1L&lastMod=1395962974000" width="960px"/>
+                </td>
+            </tr>
+            <!--Footer Wrapper-->
+            <tr>
+                <td  style="padding-top:20px; padding-left:50px; padding-right:50px; outline:none; margin-bottom:0pt;line-height:normal;margin-left:18pt;margin-right:17pt;font-size:8pt;">
+                    <p style="font-size: 8pt">
+                        Disclaimers:
+                         
+                            <p>We do not share your information outside of SunPower and youe Dealer Partner. <a href="http://us.sunpower.com/privacy/">Privacy Statement</a></p>
+
+                       © 2015 SunPower Corporation.  All Rights Reserved.  SUNPOWER and the SUNPOWER logo are trademarks or registered trademarks of SunPower Corporation in the U.S. and other countries as well.  
+                    </p>
+                    
+                </td>
+            </tr>
+        </table>
+        
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

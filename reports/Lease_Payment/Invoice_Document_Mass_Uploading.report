@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$State__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Expected_Rebate__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Expected Rebate is Zero</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Expected_Rebate__c</column>
+            <operator>equals</operator>
+            <value>USD 0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$State__c</column>
+            <operator>equals</operator>
+            <value>CA,AZ,NV,NY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Duplicate,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination,Contract Pending</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>contains</operator>
+            <value>rebate,icf</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Invoice Document Mass Uploading</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payment_and_Invoice_Documents__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c.Invoice_Documents__r$Status__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$US_Cash_Grant_Submission_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

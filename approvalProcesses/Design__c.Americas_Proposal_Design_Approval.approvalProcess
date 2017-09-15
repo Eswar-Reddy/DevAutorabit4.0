@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>GlobalSupport</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Development_Engineer__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Development Engineer Approval</description>
+        <label>Development Engineer Approval</label>
+        <name>Development_Engineer_Approval</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>jason.claiborne@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval For All revisions &gt;A</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Design__c.Revision_Letter__c</field>
+                <operation>notEqual</operation>
+                <value>A</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Approval For All revisions &gt;A</label>
+        <name>Approval_For_All_revisions_A</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Americas Proposal Design Approval</description>
+    <emailTemplate>PSR/Design_Submission_Email_Template</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Design__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Proposal Design</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Design__c.Status__c</field>
+            <operation>equals</operation>
+            <value>In Progress,Active,Construction,Awaiting Approval,Not Started</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Design__c.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>NA Commercial,UPP Americas</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Americas_Design_Approved_Email</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Design_Status_Field_Change</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Update_Design_Completed_Date</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Design_Status_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Final_Rejection_Email</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Design_Approval_Submission</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Americas Proposal Design Approval</label>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,17 @@
+<apex:page showHeader="false" sidebar="false" >
+    <!-- Load stylesheets first -->
+    <c:SPCommunityAppResources_CSS />
+    <c:CommunitiesMainNavComponent activeTab="Warranty"/>
+
+    <body class="detail-container">
+        <h4 style="margin: 10px; display: inherit;">Warranty Registration</h4><p/>
+        <apex:variable var="custIdStr" 
+        	value="{!IF(NOT(ISNULL($CurrentPage.parameters.CustomerId)) && $CurrentPage.parameters.CustomerId != '',
+        	'?CustomerId='+$CurrentPage.parameters.CustomerId,'')}" />
+		
+		<apex:iframe src="/apex/SPCommunityWarrantyRegistrationIFrame{!custIdStr}" height="750" scrolling="true"/>
+    </body>
+
+    <!-- Load JS Scripts Last -->
+    <c:SPCommunityAppResources_JS />
+</apex:page>

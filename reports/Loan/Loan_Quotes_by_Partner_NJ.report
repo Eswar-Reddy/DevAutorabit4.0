@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Quote$Name</field>
+    </columns>
+    <columns>
+        <field>Quote$Total_Contract_Price__c</field>
+    </columns>
+    <columns>
+        <field>Quote$Financed_Amount__c</field>
+    </columns>
+    <columns>
+        <field>Quote$Down_Payment_formula__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Quote$QuoteType__c</column>
+            <operator>equals</operator>
+            <value>Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote$Dealer_Name__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote$Opportunity.Account.BillingState</column>
+            <operator>equals</operator>
+            <value>NJ</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Quote$Dealer_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Loan Quotes by Partner - NJ</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Quote_with_Credit_App_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Quote$Created_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

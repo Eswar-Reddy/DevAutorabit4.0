@@ -1,0 +1,1034 @@
+<apex:page controller="HelixPPASavingsController" showHeader="false" standardStylesheets="false">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+    <style>
+        @media only screen and (min-width: 1200px) {
+            .sunpower-style form .radio,
+            .sunpower-style form .toggle {
+                margin-left: 0.1rem;
+            }
+        }
+
+        #savingsDiv .image-icon-tooltip {
+            vertical-align: middle;
+        }
+        
+    </style>
+    <!-- messages -->
+    <div id="savingsMessages" style="display:none"></div>
+    
+    <!-- economics-->
+    <div class="lower1">
+        <h4>Economics</h4>
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="annualPPAEscalatorEdit">Annual PPA Escalator (%)</label>
+                    <div id="annualPPAEscalatorEditContainer" class="input-container">
+                        <input type="text" id="annualPPAEscalatorEdit" class="percentClass" />
+                        <div class="input__error-messages">
+                            <span id="annualPPAEscalatorEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3 col-lg-3">
+                <div class="form-group form-group--inline">
+                    <label for="dealerFeePerWattEdit">Dealer Fee</label>
+                    <span class="icon-container">
+                        <span class="image-icon image-icon-tooltip tooltip" data-tooltip="The cost of everything you need to procure excluding the cost of SunPower equipment <br/>(modules, inverters, monitoring, racking for Helix projects) and sales tax, plus your margin." data-tooltip-position="bottom center"></span>
+                    </span>
+                    <div id="dealerFeePerWattEditContainer" class="input-container">
+                        <input type="text" id="dealerFeePerWattEdit" style="width:50%" />&nbsp;Per Watt
+                        <div class="input__error-messages">
+                            <span id="dealerFeePerWattEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3 col-lg-3">
+                <div class="form-group form-group--inline">
+                    <label for="dealerFeeDollarValueEdit"><span>&nbsp;</span></label>
+                    <div id="dealerFeeDollarValueEditContainer" class="input-container">
+                        <input type="text" id="dealerFeeDollarValueEdit" style="width:50%" />&nbsp;Dollar Value
+                        <div class="input__error-messages">
+                            <span id="dealerFeeDollarValueEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="itcIneligibleCostEdit">ITC Ineligible Cost ($)</label>
+                    <span class="icon-container">
+                            <span class="image-icon image-icon-tooltip tooltip" data-tooltip="These are costs that are not part of the solar <br/>installation. For example: fences, signage, sprinklers, <br/>utility owned upgrades, landscaping and grading, <br/>carport underdecking or gutters, building sheds." data-tooltip-position="bottom center"></span>
+                    </span>
+                    <div id="itcIneligibleCostEditContainer" class="input-container">
+                        <input type="text" id="itcIneligibleCostEdit" class="dollarClass"/>
+                        <div class="input__error-messages">
+                            <span id="itcIneligibleCostEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="creditRatingEdit">Credit Rating</label>
+                    <span class="icon-container" id="creditRatingEditToolTip" style="z-index:99999">
+                        <span class="image-icon image-icon-tooltip tooltip" data-tooltip="Your default selection for private companies, should be Unrated Investment Grade. <br/>Select Rated Investment Grade only if you know that the entity is a publicly rated <br/>company with a credit rating of BBB or higher." data-tooltip-position="bottom center"></span>
+                    </span>
+                    <div id="creditRatingEditContainer" class="input-container input-container--icon icon-right" style="z-index:9">
+                        <div id="creditRatingEditDiv">
+                            <select id="creditRatingEdit" class="select-dropdown cs-skin-border">
+                                <apex:repeat value="{!creditRatingPicklist.options}" var="O">
+                                    <option value="{!O.value}">{!O.label}</option>
+                                </apex:repeat>
+                            </select>
+                            <i class="icon icon-chevron-down"></i>
+                        </div>                       
+                    </div>
+                    <div class="input__error-messages">
+                        <span id="creditRatingEditError"></span>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="ppaTermEdit">PPA Term</label>
+                    <div id="ppaTermEditContainer" class="input-container">
+                        <span class="sp-blue large-font">20 years</span>
+                    </div>
+                </div>
+            </div>
+        </div>    
+
+    </div>    
+
+    <!-- incentives-->
+    <div class="lower1">
+        <h4>Incentives</h4>
+        <div class="divider sp-blue"></div>
+
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="incentiveProgramEdit">Name of Local/State Incentive Program</label>
+                    <span class="icon-container">
+                            <span class="image-icon image-icon-tooltip tooltip" data-tooltip="Please include any incentives <br/>other than SRECs that might be applicable.<br/>If the facility is located in MA and plan to use SMART,<br/>please enter SMART Program in this section<br/>and select Yes under Customer will keep SRECs." data-tooltip-position="bottom center"></span>
+                    </span>
+                    <div class="input-container">
+                        <input type="text" id="incentiveProgramEdit"/>
+                    </div>                                   
+                </div>
+            </div>                                  
+            <div class="col-xs-3 col-md-3 col-lg-3">
+                <div class="form-group form-group--inline">
+                    <label for="incentiveUpfront">Value of Local/State Incentive</label>
+                    <div class="input-container">
+                        <i id="incentiveUpfront" class="sp-blue fa fa-square-o fa-lg designSelectIcon" style="padding-left: .1rem;" onclick="toggleIcon(this, 'upfrontRadioClass')"></i>
+                        <label for="incentiveUpfront" style="width: initial; padding-left: .25rem;">
+                            <span>Upfront</span>
+                        </label>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" id="incentiveUpfrontValueEdit" class="upfrontRadioClass dollarClass" disabled="disabled"/>
+                        <div class="input__error-messages">
+                            <span id="incentiveUpfrontValueEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3 col-lg-3">
+                <div class="form-group form-group--inline">
+                    <label>&nbsp;</label>
+                    <div class="input-container">
+                        <i id="incentiveDollar" class="sp-blue fa fa-square-o fa-lg designSelectIcon" style="padding-left: .1rem;" onclick="toggleIcon(this, 'ppwClass')"></i>
+                        <label for="incentiveDollar" style="width: initial; padding-left: .25rem;">
+                            <span>Dollars&nbsp;per&nbsp;kWh</span>
+                        </label>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" id="incentiveDollarValueEdit" class="ppwClass dollarExtended" disabled="disabled" />
+                        <div class="input__error-messages">
+                            <span id="incentiveDollarValueEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        <div class="row">
+            
+            <div class="col-xs-6 col-md-6 col-lg-6">
+               <div class="form-group form-group--inline">
+                   <div class="col-xs-6 col-md-6 col-lg-6">
+                        <div class="form-group form-group--inline">
+                            <label for="yesSREC">Customer will keep SRECs</label>                    
+                            <div class="input-container">
+                                <div class="radio">
+                                    <label for="yesSREC">
+                                        <input type="radio" id="yesSREC" style="width:20%" name="SRECradios"/>
+                                        <span>Yes</span>
+                                    </label>
+                                </div>
+                            </div>  
+                        </div> 
+                    </div>
+                    <div class="col-xs-6 col-md-6 col-lg-6">    
+                        <div class="form-group form-group--inline"> 
+                            <label for="noSREC"><span>&nbsp;</span></label>                
+                            <div class="input-container">
+                                <div class="radio">
+                                    <label for="noSREC">
+                                        <input type="radio" id="noSREC" style="width:20%" name="SRECradios" checked="checked"/>
+                                        <span>No</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="incentiveTermEdit"><span>Term of Local/State Incentive</span></label>
+                    <div class="input-container">
+                        <input type="number" onblur="isNegative(this.value, this.id);" id="incentiveTermEdit" class="ppwClass" disabled="disabled"/>
+                        <div class="input__error-messages">
+                            <span id="incentiveTermEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>    
+
+    <!-- utility-->
+    <div class="grey-divider">
+        <h4>Utility</h4>
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="utilityCompanyEdit">Utility Company</label>
+                    <div id="utilityCompanyEditContainer" class="suggest-holder input-container">
+                        <input type="text" id="utilityCompanyEdit" class="suggest-prompt" />
+                        <ul class="">
+                            <li>
+                                <span class="suggest-name"></span>
+                            </li>
+                        </ul>
+                        <div class="input__error-messages">
+                            <span id="utilityCompanyEditError" style="padding-top: 0em;"></span>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="utilityPriceInflationEdit">Utility Price Inflation Expectation (%)</label>
+                    <div id="utilityPriceInflationEditContainer" class="input-container">
+                        <input type="text" id="utilityPriceInflationEdit" class="percentClass"/>
+                        <div class="input__error-messages">
+                            <span id="utilityPriceInflationEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="consumedPrior12MonthsEdit">Total Electricity Consumed Prior 12 Months (kWh)</label>
+                    <div id="consumedPrior12MonthsEditContainer" class="input-container">
+                        <input type="number" min="0" id="consumedPrior12MonthsEdit" onblur="verifyConsumption(this.value,this.id)" />
+                        <div class="input__error-messages">
+                            <span id="consumedPrior12MonthsEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="billPrior12MonthsEdit">Total Electric Bill Prior 12 Months ($)</label>
+                    <div id="billPrior12MonthsEditContainer" class="input-container">
+                        <input type="text" id="billPrior12MonthsEdit" class="dollarClass"/>
+                        <div class="input__error-messages">
+                            <span id="billPrior12MonthsEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row lower1">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline">
+                    <label for="avoidedCostEdit">Avoided Cost of Power ($/kWh)</label>
+                        <span class="icon-container">
+                            <span class="image-icon image-icon-tooltip tooltip" data-tooltip="This is the value of solar. You should use Energy Toolbase <br/>to estimate the Avoided Cost of Power and ensure that you are <br/>always using the most up-to-date tariffs in the utility territory, <br/>where the project is located. If the ACP is different than what <br/>we estimated in Energy Toolbase, the project will not be financeable." data-tooltip-position="bottom center"></span>
+                        </span>
+                    <div id="avoidedCostEditContainer" class="input-container">
+                        <input type="text" id="avoidedCostEdit" class="dollarExtended"/>
+                        <div class="input__error-messages">
+                            <span id="avoidedCostEditError"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <!-- calculate savings-->
+    <div class="lower2">
+        <div class="row lower2">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="center-xs center-md center-lg">
+                    <input type="button" id="calculateSavingsButton" value="Calculate Savings" onclick="onclickCalculateSavingsButton(); return false;"
+                        class="btn btn-primary btn--small">
+                    </input>    
+                </div>
+            </div>
+        </div>
+        <!-- calculate savings errors -->
+        <div class="row">
+            <div id="calculateSavingsMessage" style="display:none">
+            </div>
+        </div>
+        
+        <div style="height:20px;"></div>
+        <div class="row grey-divider" id="ppaOutputDiv" style="display: none;">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="form-group form-group--inline center-xs center-md center-lg">
+                    <label for="year1Savings">YEAR 1 SAVINGS</label>
+                    <div class="input-container">
+                        <div id="year1Savings" class="sp-blue big-bold-center">$0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-6 lower4">
+                <div class="form-group form-group--inline center-xs center-md center-lg">
+                    <label for="year1PPAPrice">YEAR 1 PPA PRICE</label>
+                    <div class="input-container">
+                        <div id="year1PPAPrice" class="sp-blue big-bold-center">$0.00/kWh</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <!-- buttons -->
+    <div class="grey-divider upper2">
+        <div class="row lower2">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div style="float:right;">
+                <input type="button" id="backSavingsButton" value="Back" onclick="onclickBackSavingsButton(); return false;"
+                    class="btn btn-secondary right1">
+                </input>
+                <input type="button" id="viewProposalButton" value="View Proposal" onclick="onclickViewProposalButton(); return false;"
+                    class="btn btn-primary disabled">
+                </input>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var savings = savings || {};
+        var annualFinancialList = annualFinancialList || [];
+        var expirationDate;
+
+//---------------Click Actions----------------------------------        
+        function onclickCalculateSavingsButton() {
+            // validations
+            if (!isSavingsPageValid()) {
+                return;
+            }            
+            calculateSavings();
+        }
+
+        function onclickBackSavingsButton() {
+            $('#savingsDiv').hide('fast', function() {
+                $('#designDiv').show();
+                setActiveTab('Design');
+            });
+        }
+        function onclickViewProposalButton() {
+            // validations
+            if (!isSavingsPageValid()) {
+                return;
+            }
+            viewProposal();
+        }   
+
+//---------------Validations--------------------------------------        
+        function validate(element, message) {
+            var retValue = true;
+            if (myTrim(getValue(element)) == '' || myTrim(getValue(element)) == '--None--') {
+                appendError(element, message);
+                retValue = false;
+            } else {
+                removeError(element, message);
+            }
+            return retValue;
+        }
+
+        function appendError(element, message) {
+            $('#' + element + 'Error').html(message);
+            $('#' + element + 'Container').addClass('has-error');
+        }
+        function removeError(element, message) {
+            $('#' + element + 'Error').html('');
+            $('#' + element + 'Container').removeClass('has-error');
+        }
+        function isSavingsPageValid() { //for required fields
+            if(!verifyValidations()) {
+                $('html, body').animate({
+                    scrollTop: $('.has-error').eq(0).offset().top - 50 }, 200);
+                return false;
+            }  else return true;
+        }
+
+        function verifyValidations() {
+
+            var annualPPAEscalatorValid = validate('annualPPAEscalatorEdit', 'Annual PPA Escalator is mandatory to calculate savings');
+            var dealerFeePerWattValid = validate('dealerFeePerWattEdit', 'Dealer fee per watt is mandatory to calculate savings');
+            var dealerFeeDollarValueValid = validate('dealerFeeDollarValueEdit', 'Dollar Value is mandatory to calculate savings');
+            var itcIneligibleCostValid = validate('itcIneligibleCostEdit', 'ITC Ineligible Cost is mandatory to calculate savings');
+            var creditRatingValid = validate('creditRatingEdit', 'Credit Rating is mandatory to calculate savings');
+            var utilityCompanyValid = validate('utilityCompanyEdit', 'Utility Company is mandatory to calculate savings');
+            var utilityPriceInflationValid = validate('utilityPriceInflationEdit', 'Utility Price Inflation Expectation is mandatory to calculate savings');
+            var consumedPrior12MonthsValid = validate('consumedPrior12MonthsEdit', 'Total Electricity Consumed is mandatory to calculate savings');
+            var billPrior12MonthsValid = validate('billPrior12MonthsEdit', 'Total Electric Bill Prior 12 Months is mandatory to calculate savings');
+            var avoidedCostValid = validate('avoidedCostEdit', 'Avoided Cost of Power is mandatory to calculate savings');
+            var incentiveTermValid = true;
+            
+            if($(incentiveDollar).prop("checked")){
+                incentiveTermValid = validate('incentiveTermEdit','Term of Local/State Incentive is mandatory to calculate savings if Dollars per kwh is selected');
+            } else{
+                validate('incentiveTermEdit','');
+                incentiveTermValid = true;
+            }
+            
+            //special validations
+            var annualPPAEscalatorSpecial = false;
+            if(annualPPAEscalatorValid) {
+                var creditRatingSelection = getValue('creditRatingEdit');
+                var errString = 'Annual PPA Escalator must be between 0-2%';
+                if(creditRatingSelection) {
+                    errString += ' for ' + creditRatingSelection;
+                } else {
+                    errString += ' or 0-3% depending on credit rating'
+                }
+                /*if(creditRatingSelection === 'Rated Non-Investment Grade') {
+                    annualPPAEscalatorSpecial = isSpecialValidationValid('annualPPAEscalatorEdit', 'Annual PPA Escalator must be between 0-2% for Non-Investment Grade');
+                } else {
+                    annualPPAEscalatorSpecial = isSpecialValidationValid('annualPPAEscalatorEdit', errString);
+                }*/
+                if(creditRatingSelection === 'Rated Investment Grade') {
+                    annualPPAEscalatorSpecial = isSpecialValidationValid('annualPPAEscalatorEdit', 'Annual PPA Escalator must be between 0-3% for Rated Investment Grade');
+                } else {
+                    annualPPAEscalatorSpecial = isSpecialValidationValid('annualPPAEscalatorEdit', errString);
+                }
+            }
+            var utilityPriceInflationSpecial = false;
+            if(utilityPriceInflationValid) {
+                utilityPriceInflationSpecial = isSpecialValidationValid('utilityPriceInflationEdit', 'Utility price inflation expectation must be between 0% and 3%');
+            }
+
+            return annualPPAEscalatorValid && dealerFeePerWattValid && dealerFeeDollarValueValid && itcIneligibleCostValid && 
+                creditRatingValid && utilityCompanyValid && utilityPriceInflationValid && consumedPrior12MonthsValid && 
+                billPrior12MonthsValid && avoidedCostValid &&annualPPAEscalatorSpecial && utilityPriceInflationSpecial && incentiveTermValid;
+        }
+
+        function isSpecialValidationValid(element, message) {
+            var elemValue = myTrim(getValue(element));
+            if(elemValue && elemValue.indexOf('$') > -1) {
+                elemValue = unformatDollarField(element); 
+            } else if(elemValue && elemValue.indexOf('%') > -1) {
+                elemValue = unformatPercentField(element);
+            }
+
+            var returnValue = true;
+            if(element === 'utilityPriceInflationEdit') {
+                if(elemValue < 0 || elemValue > .03) {
+                    appendError(element, message);
+                    returnValue = false;
+                } else {
+                    removeError(element, message);
+                }
+            } else if(element === 'annualPPAEscalatorEdit') {
+                var creditRatingSelection = getValue('creditRatingEdit');
+
+                if(creditRatingSelection === 'Rated Investment Grade') {
+                    if(elemValue && (elemValue < 0 || elemValue > .03)) {
+                        appendError(element, message);
+                        returnValue = false;
+                    } else {
+                        removeError(element, message);
+                    }
+                } else {
+                    if(elemValue && (elemValue < 0 || elemValue > .02)) {
+                        appendError(element, message);
+                        returnValue = false;
+                    } else {
+                        removeError(element, message);
+                    }
+                }
+            } 
+            return returnValue;
+        }
+
+        function isNegative(cleanValue, fieldId) {
+            if(!isNaN(cleanValue) && cleanValue < 0) {
+                appendError(fieldId, 'Value must be greater than or equal to zero');
+            } else {
+                removeError(fieldId,'');
+            }
+        }
+        function verifyConsumption(cleanValue, fieldId) {
+            if(isNaN(cleanValue) || cleanValue < 0) {
+                appendError(fieldId, 'Value must be greater than or equal to zero and an integer value');
+            } else {
+                removeError(fieldId,'');
+            }
+            if(!isNaN(cleanValue)) $('#' + fieldId ).val(Math.round(cleanValue));
+        }
+
+
+//---------------FORMATTING-----------------------------------------
+        function unformatDollarField(fieldId) {
+            var retVal = ($('#' + fieldId).val() || '0').split(',').join('').split('$').join('');
+            if(isNaN(retVal)) return 0;
+            else return retVal;
+        }
+        function unformatPercentField(fieldId) {
+            var value = ($('#' + fieldId).val() || '0').split(',').join('').split('%').join('');
+            var fraction = (parseFloat(value, 10)/100).toString();
+            if(isNaN(fraction))
+                fraction = 0;
+            return fraction;
+        }
+        function unformatPercentWithoutScale(fieldId) {
+            var value = ($('#' + fieldId).val() || '0').split(',').join('').split('%').join('');
+            var fraction = parseFloat(value, 10).toString();
+            if(isNaN(fraction))
+                fraction = 0;
+            return fraction;
+        }
+        function formatNumber(value) {
+            var retVal = (value || '0').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return retVal;
+        }
+        function formatDollarsByDecimals(value, decimals) {
+            var retVal = parseFloat(value || '0', 10).toFixed(decimals);
+            if(isNaN(retVal))
+                retVal = 0;
+            retVal = retVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            var formattedValue = '$';
+            formattedValue += retVal;
+            return formattedValue;
+        }
+        function formatPercentByDecimals(value, decimals) {
+            var retVal = parseFloat(value || '0', 10).toFixed(decimals);
+            if(isNaN(retVal))
+                retVal = 0;
+            retVal = retVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            var formattedValue = '';
+            formattedValue += retVal;
+            formattedValue += '%';
+            return formattedValue;
+        }
+        function getFormatedDollarValue(value) {
+            value = value.split(',').join('').split('$').join('');
+            if(isNaN(value)) {
+                value = 0;
+            } 
+            value = '$' + Math.round(value || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return value;
+        }
+        function getFormatedFeePerWatt(value) {
+            value = value.split(',').join('').split('$').join('');
+            if(isNaN(value)) {
+                value = 0;
+            }
+            value = '$' + parseFloat(value || '0', 10).toFixed(3);
+            return value;
+        }
+
+//----------------FINENG CALLOUT---------------------------        
+        function calculateSavings() {
+            clearCalculateSavingsError();
+            locker.lockAll('navItemSavings');
+            showSpinner('savingsTabSpinner');
+            
+            var request = {};
+            request.quoteId = quote.Id;
+            var designIdList = [];
+            for (var key in designList) {
+                if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                if (designList[key].isSelected === true) {
+                    designIdList.push(key);
+                }
+            }
+            request.designIdList = designIdList;
+
+            request.finEngRequest = {};
+            request.finEngRequest.elements = [];
+            
+            var batch = {id: '1'};
+            batch.inputCommand = {name: 'APIInput'};
+            batch.inputCommand.elements = [];
+            batch.inputCommand.elements.push({name: 'Quote ID', value: quote.Id});
+            batch.inputCommand.elements.push({name: 'Utility', value: $('#utilityCompanyEdit').val()});
+            if ($('#utilityCompanyEdit').data('utility-code')) {
+                batch.inputCommand.elements.push({name: 'Utility ID', value: $('#utilityCompanyEdit').data('utility-code').rate});
+            } else {
+                batch.inputCommand.elements.push({name: 'Utility ID', value: ''});
+            }
+            batch.inputCommand.elements.push({name: 'Investment Type', value: $('#creditRatingEdit').val()});
+            batch.inputCommand.elements.push({name: 'Site Count', value: $('#totalNumberOfSites').html()});
+            batch.inputCommand.elements.push({name: 'PPA Esc', value: unformatPercentField('annualPPAEscalatorEdit')});
+            batch.inputCommand.elements.push({name: 'PPA Term', value: '20'});
+            batch.inputCommand.elements.push({name: 'DF', value: unformatDollarField('dealerFeeDollarValueEdit')});
+            
+            batch.inputCommand.elements.push({name: 'Utility Escalation', value: unformatPercentField('utilityPriceInflationEdit')});
+            batch.inputCommand.elements.push({name: 'Avoided Utility Cost', value: unformatDollarField('avoidedCostEdit')});
+            
+            //rebates
+            if( $( '#incentiveUpfront' ).prop("checked")) {
+                batch.inputCommand.elements.push({name: 'Upfront Rebate', value: unformatDollarField('incentiveUpfrontValueEdit')});
+            } else {
+                batch.inputCommand.elements.push({name: 'Upfront Rebate', value: '0'});
+            } 
+            if( $( '#incentiveDollar' ).prop("checked")) {
+                batch.inputCommand.elements.push({name: 'PBI Amount', value: unformatDollarField('incentiveDollarValueEdit')});
+                batch.inputCommand.elements.push({name: 'PBI Term', value: $('#incentiveTermEdit').val() || '0'});
+            } else {
+                batch.inputCommand.elements.push({name: 'PBI Amount', value: '0'});
+                batch.inputCommand.elements.push({name: 'PBI Term', value: '0'});
+            }
+            batch.inputCommand.elements.push({name: 'ITC Ineligibility', value: unformatDollarField('itcIneligibleCostEdit')});
+            if ($('#yesSREC').is(':checked')) {
+                batch.inputCommand.elements.push({name: 'Suppress SREC', value: '1'});
+            } else {
+                batch.inputCommand.elements.push({name: 'Suppress SREC', value: '0'});
+            }
+            batch.inputCommand.items = [];
+            
+            batch.outputCommand = {name: 'APIOutput'};
+            batch.outputCommand.options = [];
+            batch.outputCommand.options.push({value: 'option1'});
+            batch.outputCommand.options.push({value: 'option2'});
+            
+            request.finEngRequest.batches = [batch];
+            
+            var errString = 'There is a problem with the system. Please contact SunPower Administrator by sending an email to digital.support@sunpower.com';
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPASavingsController.calculateSavings}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        savings.customError = response.customError;
+                        if (response.isSuccess) {
+                            savings.isSaved = false;
+                            if(response.finEngResponse && response.finEngResponse.batchoutputs) {
+                                var netSavingsArray = response.finEngResponse.batchoutputs[0].netSavings;
+                                var year1Savings = formatDollarsByDecimals(netSavingsArray.values[0],2);
+                                $('#year1Savings').html(year1Savings);
+                                quote.Year_1_Savings__c = parseFloat(netSavingsArray.values[0]).toFixed(2);
+
+                                var ppaRateArray = response.finEngResponse.batchoutputs[0].ppaRate;
+                                var year1PPAPrice = formatDollarsByDecimals(ppaRateArray.values[0],3) + '/kWh';
+                                $('#year1PPAPrice').html(year1PPAPrice);
+                                quote.Year_1_PPA_Price__c = parseFloat(ppaRateArray.values[0]).toFixed(3);
+
+                                annualFinancialList.length = 0;    // clear array
+                                parsePPAResponseLines(response, annualFinancialList);
+                                setProposalFields(response);    
+                                
+                                expirationDate = new Date('{!Today() + 30}').toISOString();                                      
+                                
+                                recalculateSavings = false;
+                                
+                                $( "#ppaOutputDiv:hidden" ).toggle('slow');
+                                
+                                if ($('#creditRatingEdit').val() != 'Rated Investment Grade') {
+                                    var avoidedCostOfPower = parseFloat(getFieldValueAsNumber('avoidedCostEdit'));
+                                    var ppaPrice = parseFloat(ppaRateArray.values[0]).toFixed(3);
+                                    var savingsPercent = (avoidedCostOfPower - ppaPrice) * 100 / avoidedCostOfPower;
+                                    console.log('avoidedCostOfPower: ' + avoidedCostOfPower);
+                                    console.log('ppaPrice: ' + ppaPrice);
+                                    console.log('savingsPercent: ' + savingsPercent);
+                                    if (savingsPercent.toFixed(1) >= 9.5) {
+                                        enableViewProposalAccess();
+                                    } else {
+                                        disableViewProposalAccess();
+                                        showCalculateSavingsError('You cannot create a proposal for this quote since it does not generate at least 10% first-year savings.');
+                                    }
+                                } else {
+                                    enableViewProposalAccess();
+                                }
+                            } else {
+                                showCalculateSavingsError('successful callout, no response');//TO FIX
+                            } 
+                        } else {
+                            console.log('response.errorMessage',response);
+                            if(response.customError) {
+                                showCalculateSavingsError('There is a problem with this Helix Design Request. Our team has been notified and we will provide you with an update soon.'); //response.errorMessage
+                                disableCalculateSavingsAccess();
+                            } else {
+                                showCalculateSavingsError(errString);
+                            }
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        console.log(errMsg);
+                        showCalculateSavingsError(errString);
+                    }
+                    hideSpinner('savingsTabSpinner');
+                    locker.unlockAll('navItemSavings');
+                    resetOldDesignList();
+                },
+                { escape: true, timeout: 120000 }
+            );
+        }
+        
+        function resetOldDesignList() {
+            oldDesignList = [];
+            for (var key in designList) {
+                if (key === 'length' || !designList.hasOwnProperty(key)) continue;
+                oldDesignList[key] = jQuery.extend(true, {}, designList[key]);    // deep clone
+            }
+        }
+
+        function disableCalculateSavingsAccess() {
+            $('#calculateSavingsButton').addClass('disabled');
+            $('#viewProposalButton').addClass('disabled');
+            $('#navItemProposal').addClass('disable-btn');
+        }
+
+        function disableViewProposalAccess() {
+            $('#viewProposalButton').addClass('disabled');
+            $('#navItemProposal').addClass('disable-btn');
+        }
+
+        function enableViewProposalAccess() {
+            $('#viewProposalButton').removeClass('disabled');
+            $('#navItemProposal').removeClass('disable-btn');
+        }
+        
+        function setProposalFields(response) {
+            $('#utilityConsPreSolar').html(formatNumber($('#consumedPrior12MonthsEdit').val()) + '&nbsp;kWh');
+            $('#utilityBillPreSolar').html($('#billPrior12MonthsEdit').val());
+
+            var utilityBillPreSolar = parseFloat(unformatDollarField('billPrior12MonthsEdit') || '0', 10);
+            var utilityBillSavings = response.finEngResponse.batchoutputs[0].utilityBillSavings;
+            if (utilityBillSavings && utilityBillSavings.values) {
+                var utilityBillSavingsYear1 = parseFloat(utilityBillSavings.values[0] || '0', 10);
+                var utilityBillPostSolar = utilityBillPreSolar - utilityBillSavingsYear1;
+                $('#utilityBillPostSolar').html(formatDollarsByDecimals(utilityBillPostSolar.toString(), 2));
+            }
+            
+            $('#avoidedUtilityRate').html($('#avoidedCostEdit').val());
+            $('#pvSystemSize').html($('#totalSystemSizekW').html());
+            $('#ppaRate').html($('#year1PPAPrice').html());
+            $('#ppaEscalator').html($('#annualPPAEscalatorEdit').val());
+            $('#pvProductionYear1').html($('#totalAnnualProduction').html() + '&nbsp;kWh');
+        
+            var netSavings = response.finEngResponse.batchoutputs[0].netSavings;
+            if (netSavings && netSavings.values) {
+                $('#year1NetSavings').html(formatDollarsByDecimals(netSavings.values[0], 2));
+                var sumNetSavings = 0;
+                for (var i=0; i<netSavings.values.length; i++) {
+                    sumNetSavings += parseFloat((netSavings.values[i] || '0'), 10);
+                }
+                $('#sumNetSavings').html(formatDollarsByDecimals(sumNetSavings, 2));
+            }
+            
+            var netSavingsNPV5 = response.finEngResponse.batchoutputs[0].netSavingsNPV5;
+            if (netSavingsNPV5) {
+                $('#npvOfSavings').html(formatDollarsByDecimals(netSavingsNPV5.value, 2));
+            }
+        }        
+
+//----------------ERROR HANDLING---------------------------        
+        function showCalculateSavingsError(errorMessage) {
+            $('#calculateSavingsMessage').html(errorMessage);
+            $('#calculateSavingsMessage').addClass('alert alert--danger');
+            $('#calculateSavingsMessage').show();
+        }
+        function clearCalculateSavingsError() {
+            $('#calculateSavingsMessage').html('');
+            $('#calculateSavingsMessage').removeClass('alert alert--danger');
+            $('#calculateSavingsMessage').hide();
+        }
+
+//--------------------------------------------------------
+
+        function parsePPAResponseLines(response, annualFinancialList) {
+            var netSavings = response.finEngResponse.batchoutputs[0].netSavings;
+            var ppaRate = response.finEngResponse.batchoutputs[0].ppaRate;
+            var utilityBillSavings = response.finEngResponse.batchoutputs[0].utilityBillSavings;
+            var ppaPayment = response.finEngResponse.batchoutputs[0].ppaPayment;
+            
+            if(netSavings && netSavings.values) {
+                for(var i = 0; i < netSavings.values.length; i++) {
+                    var record = {};
+                    record.Quote__c = quote.Id;
+                    record.Response_Line_Type__c = 'PPA Rate';
+                    record.Row_Number__c = i+1;
+                    record.Annual_Base__c = netSavings.values[i];
+                    record.Guaranteed_Energy_Price_per_KWH__c = ppaRate.values[i];
+                    record.Utility_Bill_Savings__c = utilityBillSavings.values[i];
+                    record.PPA_Payment__c = ppaPayment.values[i];
+                    
+                    annualFinancialList.push(record);
+                }
+            }
+            
+            var npvRecord = {};
+            npvRecord.Quote__c = quote.Id;
+            npvRecord.Response_Line_Type__c = 'NPV';
+
+            var netSavingsNPV3 = response.finEngResponse.batchoutputs[0].netSavingsNPV3;
+            if (netSavingsNPV3) {
+                npvRecord.Net_Savings_NPV_3__c = netSavingsNPV3.value;
+            }
+            var netSavingsNPV5 = response.finEngResponse.batchoutputs[0].netSavingsNPV5;
+            if (netSavingsNPV5) {
+                npvRecord.Net_Savings_NPV_5__c = netSavingsNPV5.value;
+            }
+            var netSavingsNPV8 = response.finEngResponse.batchoutputs[0].netSavingsNPV8;
+            if (netSavingsNPV8) {
+                npvRecord.Net_Savings_NPV_8__c = netSavingsNPV8.value;
+            }
+            
+            annualFinancialList.push(npvRecord);
+        }
+
+
+//--------------------------------------------------------
+    
+//--------------------------------------------------------
+        function viewProposal() {
+            showSpinner('savingsTabSpinner');
+            var request = {};
+            request.quote = quote;
+            request.ExpirationDate = expirationDate;            
+            populateQuoteDetails(request.quote);
+            request.annualFinancialList = annualFinancialList;
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.HelixPPASavingsController.viewProposal}',
+                request,
+                function(response, event) {
+                    if(response && event.status) {
+                        //alert('response.isSuccess: ' + response.isSuccess);
+                        if (response.isSuccess) {
+                            $('#designDiv').hide();
+                            $('#savingsDiv').hide();
+                            $('#proposalDiv').show();
+                            setActiveTab('Proposal');
+                        } else {
+                            console.log('response',response);
+                        }
+                    } else {
+                        var errMsg = 'event.type: ' + event.type + '/' + 'event.message: ' + event.message;
+                        console.log(errMsg);
+                    }
+                    hideSpinner('savingsTabSpinner');
+                },
+                { escape: true }
+            );
+        }
+
+//----------TYPEAHEAD ACTIONS------------------
+        var typeaheadtypeaheadData = [];
+        
+        // Suggest section holder
+        var $suggestedHL = $( ".suggest-holder" );
+        // Suggestions UL
+        var $suggestedUL = $( "ul", $suggestedHL );
+        $suggestedUL.css( "width", ($suggestedHL[0].clientWidth + "px") );
+
+        // Suggestions LI
+        var $suggestedLI = $( "li", $suggestedHL );
+        // Selected Items UL
+        var $selectedUL = $( "#selected-suggestions" );
+        function addSuggestion(el){
+            var rateCode = el[0].id;
+            $( "#utilityCompanyEdit" ).val(el[0].textContent);
+            $( "#utilityCompanyEdit" ).data( "utility-code", { rate: String(rateCode) });
+            $suggestedUL.empty();
+            $suggestedUL.hide();
+        }
+    
+        $( '#utilityCompanyEdit', $suggestedHL).on({
+            keyup: function(e) {
+                
+                // Clear the ul
+                $suggestedUL.empty();            
+                // Cache the search term
+                $search = $(this).val();                
+
+                // Search regular expression
+                $search = new RegExp($search.replace(/[^0-9a-z_\s.,&;-]/i), 'i');
+
+                if($(this).val() == '') {
+                    $suggestedUL.hide();
+                } else {
+                
+                    // Loop through the array
+                    var counter;
+                    if(typeof typeaheadData != 'undefined' && typeaheadData.length && typeaheadData.length > 0) {
+                        counter = 0;
+                        for(var i = 0; i < typeaheadData.length; i++) {
+                            if(counter < 5 && typeaheadData[i].Utility_Name__c.match($search)) {
+                                $suggestedUL.append( $("<li id='" + typeaheadData[i].External_Id__c + "'><span class='suggest-name'>" + typeaheadData[i].Utility_Name__c + "</span></li>") );
+                                counter++;
+                            }
+                        }
+                        // Show the ul?
+                        if(!counter || counter == 0) {
+                            $suggestedUL.hide();
+                        }
+                        else {
+                            $suggestedUL.css( "width", $( "#utilityCompanyEdit" )[0].clientWidth );
+                            if($(window).width() < 1200) {
+                                $suggestedUL.css( "margin-top", $( "#utilityCompanyEdit" )[0].clientHeight + 2 );
+                            }
+                            $suggestedUL.show();
+                        }
+                    }
+                }
+            },
+            keydown: function(e) {
+                if(e.which == 38 || e.which == 40 || e.which == 13) {
+                    e.preventDefault();
+                }
+            },
+            focus: function(e) {
+                if( $(this).val() != '' ) {
+                    $suggestedUL.show();
+                }
+            }
+        });
+        
+        $suggestedHL.on('click', 'li', function(e) {
+            addSuggestion($(this));
+        });
+        
+        $( "body" ).on( "click", function(e) {
+            if ( !$(e.target).closest( ".suggest-holder li, .suggest-holder input" ).length) {
+                $suggestedUL.hide();
+            };
+        });
+
+//----------Ready Function------------------
+
+        $( document ).ready(function() {
+            //--------------------------------------------------------------------
+            // Utility Company type ahead
+            //--------------------------------------------------------------------
+            HelixPPASavingsController.fetchUtilityCodes('CA', function(result, event) {
+                if(event.status) {
+                    if(result && result.length && result.length > 0) {
+                        typeaheadData = result;
+                    }
+                }
+            },
+                { escape: false }
+            );
+            
+            //--------------------------------------------------------------------
+            // Dealer Fee. Per Watt and Dollar value changes
+            //--------------------------------------------------------------------
+            $('#dealerFeePerWattEdit').keyup(function () {
+                var totalSystemSizekW = parseFloat(replaceAll(($('#totalSystemSizekW').html() || '0'),',', ''), 10);
+                var dealerFeePerWatt = replaceAll((this.value || '0'),',', '');
+                dealerFeePerWatt = dealerFeePerWatt.split('$').join('');
+                dealerFeePerWatt = parseFloat(dealerFeePerWatt, 10); 
+                var dealerFeeDollarValue = totalSystemSizekW * dealerFeePerWatt * 1000;
+                var feeOutput = 0;
+                if(!isNaN(dealerFeeDollarValue))
+                    feeOutput = Math.round(dealerFeeDollarValue);
+
+                isNegative(feeOutput, 'dealerFeeDollarValueEdit');
+                feeOutput = feeOutput.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");   
+                $('#dealerFeeDollarValueEdit').val('$' + feeOutput);
+            });
+            $('#dealerFeeDollarValueEdit').keyup(function () {
+                var totalSystemSizekW = parseFloat(replaceAll(($('#totalSystemSizekW').html() || '0'),',', ''), 10);
+                var dealerFeeDollarValue = replaceAll((this.value || '0'),',', '');
+                dealerFeeDollarValue = dealerFeeDollarValue.split('$').join('');
+                dealerFeeDollarValue = parseFloat(dealerFeeDollarValue, 10);
+                var dealerFeePerWatt = dealerFeeDollarValue / (1000 * totalSystemSizekW);
+                var feeOutput = 0;
+                if(!isNaN(dealerFeePerWatt)) {
+                    feeOutput = dealerFeePerWatt.toFixed(3);
+                }
+                isNegative(dealerFeeDollarValue, 'dealerFeeDollarValueEdit');
+                $('#dealerFeePerWattEdit').val('$' + feeOutput);
+            });
+            $('#dealerFeePerWattEdit').focusout(function () {
+                this.value = getFormatedFeePerWatt(this.value);
+            });
+            $('#dealerFeeDollarValueEdit').focusout(function () {
+                this.value = getFormatedDollarValue(this.value);
+            });
+
+            $('.dollarClass').blur(function() {
+                var input = unformatDollarField(this.id);
+                isNegative(input, this.id);
+                this.value = formatDollarsByDecimals(input,2);
+
+            });
+            $('.percentClass').blur(function() {
+                var input = unformatPercentWithoutScale(this.id);
+                isNegative(input, this.id);
+                this.value = formatPercentByDecimals(input,2);
+            });
+            $('.dollarExtended').blur(function() {
+                var input = unformatDollarField(this.id);
+                isNegative(input, this.id);
+                this.value = formatDollarsByDecimals(input,3);
+            });
+            
+            //--------------------------------------------------------------------
+            // Next feature
+            //--------------------------------------------------------------------
+        });
+
+        //--------------------------------------------------------------------
+        // Incentive Interaction
+        //--------------------------------------------------------------------
+        function toggleIcon(row, toToggle) {
+            if ($( '.'+toToggle).attr("disabled")){
+                $( '.'+toToggle).removeAttr("disabled");           
+                
+            } else {
+                $( '.'+toToggle).attr("disabled",true);    
+            }
+        
+            if ($('#' + row.id).hasClass('fa-check-square')) {
+                $('#' + row.id).removeClass('fa-check-square');
+                $('#' + row.id).addClass('fa-square-o'); 
+                $('#' + row.id).prop('checked', false);               
+            } else if ($('#' + row.id).hasClass('fa-square-o')) {
+                $('#' + row.id).removeClass('fa-square-o');
+                $('#' + row.id).addClass('fa-check-square');
+                $('#' + row.id).prop('checked', true);
+            }
+        }
+    
+    </script> 
+</apex:page>

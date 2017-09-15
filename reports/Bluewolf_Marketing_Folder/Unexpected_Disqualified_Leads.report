@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>OWNER</field>
+    </columns>
+    <columns>
+        <field>FIRST_NAME</field>
+    </columns>
+    <columns>
+        <field>LAST_NAME</field>
+    </columns>
+    <columns>
+        <field>EMAIL</field>
+    </columns>
+    <columns>
+        <field>STATE</field>
+    </columns>
+    <columns>
+        <field>COUNTRY</field>
+    </columns>
+    <columns>
+        <field>Lead.Own_Lease__c</field>
+    </columns>
+    <columns>
+        <field>Lead.Average_Monthly_Electricity_Bill__c</field>
+    </columns>
+    <columns>
+        <field>Lead.Shading__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 AND 2 AND 3 AND 4 AND 5)</booleanFilter>
+        <criteriaItems>
+            <column>Lead.Lead_Data_Quality__c</column>
+            <operator>equals</operator>
+            <value>Disqualified</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Own_Lease__c</column>
+            <operator>equals</operator>
+            <value>Own</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Average_Monthly_Electricity_Bill__c</column>
+            <operator>equals</operator>
+            <value>$101 to $150,$151 to $200,$201 to $250,$251 to $300,Greater than $300,Not sure</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.Shading__c</column>
+            <operator>equals</operator>
+            <value>No Shade,Some Shade,Do Not Know</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>COUNTRY</column>
+            <operator>equals</operator>
+            <value>Australia,Austria,Belgium,Bulgaria,Czech Republic,Denmark,France,Germany,Greece,Israel,Italy,Japan,Luxembourg,Malta,Netherlands,Poland,Portugal,Slovenia,Sweden,Switzerland,US,United Kingdom,United States</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead.Lead_Data_Quality__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Unexpected Disqualified Leads</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>LeadList</reportType>
+    <scope>org</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LAST_NAME</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

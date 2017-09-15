@@ -1,0 +1,120 @@
+<apex:page showHeader="false" sidebar="false" standardController="Opportunity" extensions="SPCommunityInlineQuotesController" standardStylesheets="false">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+
+    <style type="text/css">
+        .sunpower-style .btn {
+            line-height: 1;         
+        }
+        
+        .sunpower-style .tooltip, .tooltip {
+            border-bottom: none;
+        }
+    </style>
+    
+    <apex:outputPanel rendered="{!NOT(ppaPartnerAcct)}">
+        <div class="alert alert--info">
+            <span>This section is not visible because you are not part of the Helix PPA program. If you want to learn more about our Helix PPA program, please contact your Regional Sales Manager.</span>
+        </div>
+    </apex:outputPanel>
+    <apex:outputpanel rendered="{!ppaPartnerAcct}">
+        <div class="sunpower-style" style="width: 95%">
+    
+            <div class="modal" role="dialog" id="blockerOverlay" aria-labeledby="buttonBlockModalLabel" tabindex="-1">
+                <div class="row">
+                    <div id="docListSpinner" class="spinner spinner--center"></div>
+                </div>
+            </div>
+            
+            <apex:outputPanel rendered="{!AND(ppaPartnerAcct, ppaUser, isSalesConfigActive)}">
+                <div class="row" style="margin-bottom: 1.25rem;">
+                    <div class="col-xs-12">
+                        <div id="newQuoteBtn" >
+                            <apex:outputlink value="/HelixPPA?opportunityId={!Opportunity.Id}" target="_parent" styleClass="btn btn-primary btn--small" style="float: right; " onclick="showOverlay();">New Quote</apex:outputLink>
+                        </div>    
+                        <span class="tooltip" data-tooltip="Please fill out the Commercial Operation and/or Installation Date on the Opportunity Detail section to create a new Quote." data-tooltip-position="left middle" id="tooltipDiv" style="float: right; display: none;">
+                            <button class="disabled btn btn-primary btn--small" style="float: right;">New Quote</button>
+                        </span>
+                    </div>
+                </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!NOT(isSalesConfigActive)}">
+                <div class="alert alert--info">
+                    <span>The state of this facility address ({!Opportunity.Facility_State1__c}) is not yet activated as part of our Helix PPA program. Please contact your Regional Sales Manager for further updates.</span>
+                </div>
+            </apex:outputPanel>
+            
+            <!--table of quote summary: quote name, total system size, total production, ppa price, ppa escalator-->
+            <div style="font-size: 14px;">                
+                <table class="table">                           
+                    <thead>
+                        <td width="20%" style="font-weight: bold;">Quote Name</td>
+                        <td width="15%" style="font-weight: bold;">Total System Size (kWp)</td>                       
+                        <td width="15%" style="font-weight: bold;">Total Production (kWh)</td>
+                        <td width="15%" style="font-weight: bold;">PPA Escalator (%)</td>   
+                        <td width="15%" style="font-weight: bold;">PPA Price ($/kWh)</td>
+                        <td width="10%" style="font-weight: bold;">Last Modified on</td>          
+                        <td width="10%" style="font-weight: bold;">Quote Expires on</td>          
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!quotes}" var="qS"> 
+                            <tr>
+                                <td>
+                                    <apex:outputLink value="{!URLFOR($Page.HelixPPA, null, [opportunityId=opportunity.Id, quoteId=qS.Id])}" target="_blank">{!qS.Name}</apex:outputLink>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{0, number, ###,###.00}">
+                                        <apex:param value="{!qS.System_Size_kWp__c}" />
+                                    </apex:outputText>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{0, number, ###,###}">
+                                        <apex:param value="{!qS.System_Production_Year_1__c}" />
+                                    </apex:outputText>
+                                </td>
+                                <td>{!IF(NOT(ISBLANK(qS.Escalator__c)),TEXT(qS.Escalator__c)+'%','')}</td>
+                                <td>{!IF(NOT(ISBLANK(qS.Year_1_PPA_Price__c)),'$'+TEXT(qS.Year_1_PPA_Price__c),'')}</td>
+                                <td>
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}"> 
+                                        <apex:param value="{!qS.LastModifiedDate}"/> 
+                                    </apex:outputText></td>
+                                <td class="{!if(qS.ExpirationDate != null, if (qS.ExpirationDate < Today(), 'sp-red', ''), '')}">
+                                    <apex:outputText value="{0,date,MM/dd/yyyy}"> 
+                                        <apex:param value="{!qS.ExpirationDate}"/> 
+                                    </apex:outputText></td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>                        
+            </div>
+        </div>
+    </apex:outputpanel>
+
+    <c:SPCommunityAppResources_JS />
+
+    <script type="text/javascript">
+        
+        function showOverlay() {
+            $( '#blockerOverlay' ).show();
+            $( '.btn' ).addClass('disabled');
+        }
+
+        function hideOverlay() {
+            $( '#blockerOverlay' ).hide();
+            $( '.btn' ).removeClass('disabled');
+        }
+
+        $( document ).ready(function() {
+            $( '#blockerOverlay' ).hide();
+                        
+            if ({!opportunity.Installation_Date__c == null} || {!opportunity.Commercial_Operation_Date__c == null}) {
+                //$( '.btn' ).addClass('disabled');
+                $( '#tooltipDiv').show();
+                $( '#newQuoteBtn' ).hide();
+            }  
+        })
+    </script>
+
+</apex:page>

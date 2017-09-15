@@ -1,0 +1,2214 @@
+<apex:page StandardController="Inspection__c" Extensions="InspectionReportNewExtension" sidebar="false"  renderAs="pdf">
+<head>
+<script type="text/javascript"  src="{!URLFOR($Resource.yui1,'yui/yahoo-min.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.yui1,'yui/event-min.js')}"></script>
+<script src="/static/102207/js/spch.js" type="text/javascript"></script>
+
+<style type="text/css">
+@page {
+    
+    @bottom-right { 
+         white-space: pre;
+         content: "Page " counter(page) " of " counter(pages);
+         vertical-align: top;
+         text-align : right; 
+         font-size: 16px; 
+         
+        }    
+
+}
+</style>
+
+
+ <style>
+.popupdiv {   
+       DISPLAY: none; 
+       Z-INDEX: 108;
+       WIDTH: 500px; 
+       LEFT: 250px; 
+       POSITION: absolute;
+       TOP: 280px; 
+       
+ }
+
+
+ 
+</style>
+
+<script>
+
+    window.onload = CallFunctionsOnPageLoad ;
+    
+    function CallFunctionsOnPageLoad() {
+        CheckScoreFillColor();
+    }
+    
+    function CheckScoreFillColor() {
+ 
+    var scoreRes = document.getElementById('inputResult').value;
+    var strResult = scoreRes.indexOf('PASS');
+    if( strResult >= 0) {
+        document.getElementById('inputScore').style.color = "Green";
+        document.getElementById('inputResult').style.color = "Green";
+    }
+    else{
+        document.getElementById('inputScore').style.color = "Red";
+        document.getElementById('inputResult').style.color = "Red";
+    }
+ }
+    
+</script>
+
+</head>    
+<body>
+
+
+        <apex:pageblock id="pb" title="Inspection Report " >
+            <apex:outputPanel id="pnlResidentialReport"  title="Inspection Report">
+               
+               <apex:pageblockSection id="pbResidential" columns="2">
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none">
+                        <apex:image id="theImage" value="{!URLFOR($Resource.ImgSunPower)}"
+                            width="400px" height="100px"/>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none" />
+
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none">
+                        <span
+                            style="text-align: left; padding-left: 10px; font-size: 20px; font-weight: lighter">
+                        {!IF(selectedInspectionType = 'quality assurance inspection', 'Inspection Report – Residential System  V1', 'Inspection Report – Residential System  V1')} </span>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none" />
+
+                    <apex:pageblockSectionItem >
+                     
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem id="sectionInspectionDate">
+                        <apex:outputLabel value="Inspection Date" />
+                        <apex:outputField id="txtInspectorDate" value="{!inspection.Inspection_Date__c}" />
+                    </apex:pageblockSectionItem>
+      
+
+                    <apex:pageblockSectionItem />
+
+                    <apex:pageblockSectionItem id="sectionTxtInspector">
+                        <apex:outputLabel value="Inspector" />
+                        <apex:outputtext id="txtInspector"  value="{!inspection.Contact__r.Name}" />
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem />
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Company" />
+                        <apex:outputText id="sectionInspectorCompany" value="{!Inspector_company}" />
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem />
+                    <apex:pageblockSectionItem id="sectionTxtReviewer">
+                        <apex:outputLabel value="Reviewed by" />
+                        <apex:outputField id="txtReviewer" value="{!inspection.Reviewer__c}" />
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem />
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:outputtext id="sectionReviewerEmail" value="{!Reviewer_Email}" /> 
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Street Address" />
+                        <apex:outputtext id="sectionSiteStreet" value="{!site_StreetAdd}" /> 
+                    </apex:pageblockSectionItem>
+                    
+                    
+                    <apex:pageblockSectionItem id="sectionTxtLeadInstaller">
+                        <apex:outputLabel value="Lead Installer" />
+                        <apex:outputField id="txtLeadInstaller" value="{!inspection.Partner_Contact__c}"  />
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem >
+                       <apex:outputLabel value="City / state / Zip" /> <!-- Address -->
+                        <apex:outputtext id="sectionSiteCityStateZip"  value="{!Site_CityStateZip}"  />
+                           
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Dealer Company" />
+                        <apex:outputtext id="sectionDealerCompany" value="{!Jobsupervisor_company}" />
+                    </apex:pageblockSectionItem>
+                                       
+                     <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Customer First Name" />
+                        <apex:outputtext id="sectionCustomerFirstName" value="{!site_ContactFirstName}"  />
+                    </apex:pageblockSectionItem>
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Dealer Tier" />
+                        
+                        <!--  need to modify -->
+                        <apex:outputText value="{!InspectionDealerTier}"  />
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >                    
+                        <apex:outputLabel value="Customer Last Name" />  
+                        <apex:outputPanel >                             
+                        <div class="requiredInput">                                                              
+                        <div class="requiredBlock"/>
+                          <apex:outputText id="sectionCustomerName" value="{!site_ContactLastName}" />                            
+                           
+                        </div>
+                        </apex:outputPanel>
+                    </apex:pageblockSectionItem> 
+                    
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="City / State / Zip" />
+                        <apex:outputText id="sectionJobSupCityStateZip" value="{!JobSupervisor_cityStateZip}"   />
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Telephone" />
+                        <apex:outputText id="sectionTelephone" value="{!site_phone}" />
+                    </apex:pageblockSectionItem>                    
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Telephone" />
+                        <apex:outputText id="sectionJobSupTelephone" value="{!JobSupervisor_phone}"  />
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:outputText id="sectionEmail" value="{!site_Email}" />
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:outputText id="sectionJobSupEmail" value="{!JobSupervisor_Email}"  />
+                    </apex:pageblockSectionItem>                
+                
+                    <apex:pageblockSectionItem id="sectionCommisonDate">
+                          <apex:outputlabel value="Commision Date" />
+                          <apex:outputField value="{!inspection.Residential_Commission_Date__c}" id="txtCommissionDate" />
+                    </apex:pageblockSectionItem>
+                </apex:pageblockSection>
+                <apex:pageblockSection columns="2">
+
+                    <apex:pageblockSection columns="1">
+                        <apex:outputLabel value="Customer Communication"
+                            style="text-align:left;font-weight:Bold;color:#cc0000" />
+                        <apex:pageblockSectionItem >
+                            <apex:outputField value="{!inspection.Customer_Communication__c}" id="inputCustomerComm" style="width:400px;height:70px;border:1px solid black;" />
+                        </apex:pageblockSectionItem>
+                    </apex:pageblockSection>
+
+                    <apex:pageblockSection columns="1" id="pbScore">
+                        <apex:pageBlockSectionItem />
+
+                        <apex:pageBlockSectionItem >
+                            <!--Score -->
+                            <apex:outputpanel >
+                                <apex:outputlabel value="Score"  style="font-weight:bold; vertical-align:middle;" />
+                            </apex:outputpanel>
+                            <apex:outputpanel >
+                            <apex:outputtext value="{0, number, 0.00}" style="width:120px;padding-left:15px;Height:50px;font-size:22px;font-weight: bold;border:1px solid black;" id="inputScore" >
+                              <apex:param value="{!inspection.Score__c}" />
+                            </apex:outputtext>%
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputlabel value=" " />
+                            <apex:outputlabel value="{!inspection.Residential_Result__c}" id="inputResult" style="text-align:center;width:100px;font-size:20px;font-weight:bold;"  />
+                        </apex:pageBlockSectionItem>
+                    </apex:pageblockSection>
+                </apex:pageblockSection>
+
+                <apex:outputPanel id="pnlArrayandMounting">
+                    <apex:outputLabel value="ARRAY & MOUNTING"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <span style="text-align: left; padding-left: 120px;">&nbsp;</span>
+                    <Label style="font-weight: bold; color: Blue"> Select the
+                    most appropriate answer below using the following key: </Label>
+                    <br />
+                    <span style="text-align: left; padding-left: 120px;">&nbsp;</span>
+                    <label style="font-weight: bold; color: Blue">No = Does NOT
+                    Meet Requirements </label> <span
+                        style="text-align: left; padding-left: 3px;">&nbsp;</span>
+                    <label style="font-weight: bold; color: Blue">Yes = Meets
+                    or Exceeds Requirements</label>
+                    <span style="text-align: left; padding-left: 3px;">&nbsp;</span>
+                    <label style="font-weight: bold; color: Blue">NA = Not
+                    Applicable</label>
+                    <span style="text-align: left; padding-left: 3px;">&nbsp;</span>
+                </apex:outputPanel>
+
+                <br />
+                <!-- Start of Array panel -->
+                <apex:outputPanel id="pnlArray">
+
+                    <apex:outputLabel value="ARRAY"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="11" id="theGrid" border="0">
+
+                        <apex:outputText value="" style="width:10px;padding-left:15px" />
+                        <apex:outputText value="Photos"
+                            style="font-style:italic;color:#cc0000" />
+                        <apex:outputText value="" style="padding-left:35px" />
+                        <label style="font-style: italic; color: #cc0000">Pathfinder</label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_Pathfinder__c}" />
+                        <label style="font-style: italic; color: #cc0000">Overall
+                        Array</label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_Overall__c}" />
+                        <label style="font-style: italic; color: #cc0000">Array
+                        Profile</label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_Profile__c}" />
+                        <label style="font-style: italic; color: #cc0000">Array J-
+                        Box</label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_J_Box__c}" />
+
+
+                        <apex:outputText value="" style="width:10px;padding-left:15px" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <label style="font-style: italic; color: #cc0000">Array
+                        Grounding </label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_Grounding__c}" />
+
+                        <label style="font-style: italic; color: #cc0000">Rooftop
+                        Conduit Routing and Support</label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_Rooftop__c}" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" style="" />
+                        <apex:outputText value="" style="width:10px;padding-left:15px" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <label style="font-style: italic; color: #cc0000">Problem
+                        Areas (shading, unprotected wires, etc.)</label>
+                        <apex:outputField value="{!inspection.Residential_ARRAY_Problem_Areas__c}" />
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="9" id="theGridQ1" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="1. Module Type :" />
+                        <apex:outputLabel value="SPR-" />
+                        <apex:outputField value="{!inspection.Residential_Q01_SPR1__c}"  id="inputSPR1"  />
+                        <apex:outputField value="{!inspection.Residential_Q01_SPR1_ChkBox__c}" />
+                        <apex:outputLabel value="SPR-" />
+                        <apex:outputField value="{!inspection.Residential_Q01_SPR2__c}" id="inputSPR2" />
+                        <apex:outputField value="{!inspection.Residential_Q01_SPR2_ChkBox__c}" />
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="9" id="theGridQ2_0" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="2. Quantity  :" />
+                        <label>&nbsp;&nbsp;&nbsp;</label>
+                        <apex:outputField value="{!inspection.Residential_Q02_Text1__c}"  id="inputQuantitySPR1" />
+                        <apex:outputField value="{!inspection.Residential_Q02_Text1_ChkBox__c}" />
+                        <label>&nbsp;&nbsp;&nbsp;</label>
+                        <apex:outputField value="{!inspection.Residential_Q02_Text2__c}" id="inputQuantitySPR2" />
+                        <apex:outputField value="{!inspection.Residential_Q02_Text2_ChkBox__c}" />
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ2_1" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q02_Comments__c}"
+                            style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="5" id="theGridQ2_2" border="0" style="padding-left:15px">
+                        <apex:outputLabel value="Array Power (DCSTC):" />
+                        <apex:outputText style="padding-left:10px" />
+                        
+                        <apex:outputText value="{!inspection.Residential_Q02_Array_Power__c}"  id="inputArrayPower" />
+
+                        <label>W</label>
+                        <apex:outputText style="padding-left:10px" />
+                        <apex:outputLabel value="System Size (AC) :" />
+                        <apex:outputText style="padding-left:10px" />
+                        <apex:outputText value="{!inspection.Residential_Q02_System_Size__c}"   id="inputSystemSize" />
+                        <label>(PTC Module Rating x CEC Weighted Inverter
+                        Efficiency)</label>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="10" id="theGridQ3_1" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="3. Array tilt angle :" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>A</label>
+                            <apex:outputField value="{!inspection.Residential_Q03_A__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>B</label>
+                            <apex:outputField value="{!inspection.Residential_Q03_B__c}"  style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>C</label>
+                            <apex:outputField value="{!inspection.Residential_Q03_C__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>D</label>
+                            <apex:outputField value="{!inspection.Residential_Q03_D__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="10" id="theGridQ4_1" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="4. Array azimuth angle :" />
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>A</label>
+                            <apex:outputField value="{!inspection.Residential_Q04_A__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>B</label>
+                            <apex:outputField value="{!inspection.Residential_Q04_B__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>C</label>
+                            <apex:outputField value="{!inspection.Residential_Q04_C__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>D</label>
+                            <apex:outputField value="{!inspection.Residential_Q04_D__c}" style="width:60px" />
+                            <label>degrees</label>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ4_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q04_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+
+                    <!--Q5  Start -->
+                    <apex:panelGrid columns="4" id="theGridQ5_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="5." />
+                        <apex:outputLabel value=" Is the array free of possible near object shading during the optimal 6hr window? (S=9am-3pm;W=11am-5pm)" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q05_Response__c}"  id="select_Q05" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ5_2" border="0">
+                        <apex:panelgroup >
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q05_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+
+
+                    <!--Q5  End -->
+  
+                    <apex:panelGrid columns="4" id="theGridQ6_1" border="0">
+                        
+                        <apex:outputLabel value="6. Are all array conductors properly secured above the roof surface and protected from damage?" />
+                         <apex:panelgroup >
+                           <span style="width:50px;padding-left:50px">&nbsp; </span>
+                         </apex:panelgroup>
+                         <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q06_Response__c}"  id="select_Q06" />
+                         </apex:panelgroup>
+                    </apex:panelGrid>
+ 
+                    <apex:panelGrid columns="4" id="theGridQ6_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q06_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ7_1" border="0">
+                        
+                        <apex:outputLabel value="7. Are all module interconnects securely connected? (ie no gaps)" />
+                        <apex:panelgroup >
+                           <span style="width:220px;padding-left:220px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q07_Response__c}"  id="select_Q07"   />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ7_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q07_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+ 
+                    <apex:panelGrid columns="4" id="theGridQ8_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="8." />
+                          <apex:outputLabel escape="false" value="Are all array conductors properly sealed, protected from sharp objects and sharp bends  %3E 90  and
+                           provided with strain relief as they enter the junction box? " />
+                       <apex:panelgroup >
+                          <apex:outputField value="{!inspection.Residential_Q08_Response__c}"     id="select_Q08"   />
+                          
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+ 
+                    
+ 
+                    <apex:panelGrid columns="4" id="theGridQ8_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q08_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ9_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="9." />
+                        <apex:outputLabel value="Are all modules AND racks properly grounded with an approved 
+                             grounding method [NEC 690.43]" />
+                        <apex:panelgroup >
+                           <span style="width:40px;padding-left:40px">&nbsp; </span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q09_Response__c}"     id="select_Q09"   />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                
+                    <apex:panelGrid columns="4" id="theGridQ9_2" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding-left: 20px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="and adequately sized? [NEC 690.45]" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q09_Picklist__c}" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ9_3" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q09_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ10_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="10." />
+                        <apex:outputLabel value="Is the conduit routing on the rooftop properly supported?    [ie NEC 358.30]" />
+                        <apex:panelgroup >
+                            <span style="width: 160px; padding-left: 160px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q10_Response__c}" id="select_Q10" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ10_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q10_Comments__c}" style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+                  </apex:outputPanel>
+                   <!-- End of Array panel -->
+                   
+                   <!-- START of MOunting panel -->
+                  <apex:outputPanel id="pnlMounting">
+
+                    <apex:outputLabel value="MOUNTING"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid_mounting" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">L Brackets, stanchions, flashings</label>
+                       <apex:outputField value="{!inspection.Residential_MOUNTING_L_Brackets__c}" />
+                       <label style="font-style: italic; color: #cc0000">Roof Penetrations (overall and close-up)</label>
+                       <apex:outputField value="{!inspection.Residential_MOUNTING_Roof_Penetrations__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000">  Problem Areas (Damage to roof, poor flashing or sealing</label>
+                       <apex:outputField value="{!inspection.Residential_MOUNTING_Problem_Areas__c}" />          
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ11_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="11." />
+                        <apex:outputLabel value="Mounting Location" />
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q11_Picklist__c}" /> 
+                             <apex:outputField value="{!inspection.Res_Mounting_Location_Other__c}" />        
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="3" id="theGridQ11_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q11_Comments__c}"
+                            style="width:700px;border:1px solid black;" />
+                    </apex:panelGrid>
+                  
+                  <apex:panelGrid columns="5" id="theGridQ13_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="12." />
+                        <apex:outputLabel value="Roofing Material:" />
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q13_Picklist__c}" /> 
+                             <apex:outputField value="{!inspection.Res_Roofing_Material_Other__c}" />        
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                     <apex:panelGrid columns="5" id="theGridQ14_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="13." />
+                        <apex:outputLabel value="Rack Type" />
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q14_Picklist__c}" />
+                             <apex:outputField value="{!inspection.Res_Rack_Type_Other__c}" />        
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ15_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="14." />
+                        <apex:outputLabel value="Mount Type:" />
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q15_Picklist__c}" />  
+                             <apex:outputField value="{!inspection.Res_Mount_Type_Other__c}" />       
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="3" id="theGridQ15_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputtext value="{!inspection.Residential_Q15_Comments__c}" style="min-width:700px;" />
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="4" id="theGridQ16_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="15." />
+                        <apex:outputLabel value="Are all roof mounting penetrations adequately sealed and flashed correctly?
+                                     (IBC 1503.2, IRC M2301.2.7)" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q16_Response__c}"  id="select_Q15" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ16_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q16_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ17_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="16." />
+                        <apex:outputLabel value="Are all roof electrical penetrations adequately sealed and 
+                        flashed correctly? (IBC 1503.2, IRC M2301.2.7)" />
+                        <apex:panelgroup >
+                           <span style="width:40px;padding-left:40px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q17_Response__c}"  id="select_Q16" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    
+                    
+                    <apex:panelGrid columns="4" id="theGridQ17_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q17_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ18_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="17." />
+                        <apex:outputLabel value="Are all mounting racks securely fastened to the roof or foundation?" />
+                        <apex:panelgroup >
+                           <span style="width:220px;padding-left:220px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q18_Response__c}"  id="select_Q17" />
+                          
+                        </apex:panelgroup>
+                     </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ18_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q18_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ19_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="18." />
+                        <apex:outputLabel value="Are sampled module mounting clips or bolts tightened to minimum torque specs?" />
+                        <apex:panelgroup >
+                           <span style="width:280px;padding-left:280px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q19_Response__c}"  id="select_Q18" />
+                           
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                   
+                    <apex:panelGrid columns="3" id="theGridQ19_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q19_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                  
+                   <apex:outputPanel id="pnlElectricalEquipment">
+                    <apex:outputLabel value="ELECTRICAL EQUIPMENT"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                  </apex:outputPanel>
+                  <br />
+                  
+                  
+                  <apex:outputPanel id="pnlInverterNew">
+
+                  <apex:outputLabel value="INVERTER"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                                     
+                    <apex:panelGrid columns="7" id="theGrid_Inverter" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">Inverter(s) Overview</label>
+                       <apex:outputField value="{!inspection.Residential_INVERTER_Overview__c}" />
+                       <label style="font-style: italic; color: #cc0000">Inverter Interior (AC/DC Terminals)</label>
+                       <apex:outputField value="{!inspection.Residential_INVERTER_Interior_AC_DC__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000">Inverter Interior (Grounding)</label>
+                       <apex:outputField value="{!inspection.Residential_INVERTER_Interior_Grounding__c}" />          
+                       <label style="font-style: italic; color: #cc0000"> DC System Grounding Electrode</label>
+                       <apex:outputField value="{!inspection.Residential_INVERTER_DC_System__c}" />          
+                    </apex:panelGrid>
+                    
+                    <br />
+                  
+                  <br />
+                   <!-- Start of 28 NEW NUMBER IS 19 -->
+                     <apex:panelGrid columns="10" id="pnlgrid_inverter" border="0">   
+                       <apex:outputText value="19." />
+                        <apex:outputLabel value=" Inverter Model :" />
+                        <apex:panelgroup >
+                            <span style="width: 5px; padding-left: 1px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputField value="{!inspection.Residential_Q28_1__c}"  id="inputInverterModel1" 
+                                style="width:130px" />
+                            <apex:outputField value="{!inspection.Residential_Q28_1_ChkBox__c}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputField value="{!inspection.Residential_Q28_2__c}" id="inputInverterModel2" 
+                                style="width:130px" />
+                         <apex:outputField value="{!inspection.Residential_Q28_2_ChkBox__c}" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputField value="{!inspection.Residential_Q28_3__c}" id="inputInverterModel3" 
+                                style="width:130px" />
+                            <apex:outputField value="{!inspection.Residential_Q28_3_ChkBox__c}"
+                                 />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputField value="{!inspection.Residential_Q28_4__c}" id="inputInverterModel4" 
+                                style="width:130px" />
+                            <apex:outputField value="{!inspection.Residential_Q28_4_ChkBox__c}"
+                                 />
+                       </apex:panelgroup>
+                        
+                       <!-- End of 28 -->
+                       
+                       <!-- Start of 29 NEW NUMBER IS 20 -->
+                       
+                       <apex:outputText value="20." />
+                        <apex:outputLabel value=" Inverter Serial Number :" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputField value="{!inspection.Residential_Q29_1__c}" id="inputInverterSerialNumber1"
+                                style="width:70px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputField value="{!inspection.Residential_Q29_2__c}" id="inputInverterSerialNumber2"
+                                style="width:70px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputField value="{!inspection.Residential_Q29_3__c}" id="inputInverterSerialNumber3"
+                                style="width:70px" /> 
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputField value="{!inspection.Residential_Q29_4__c}" id="inputInverterSerialNumber4"
+                                style="width:70px" />
+                       </apex:panelgroup>
+                       
+                       <!-- End of 29 -->
+                        
+                       <!-- Start of 30 NEW NUMBER IS 21 -->
+                       
+                       <apex:outputText value="21." />
+                        <apex:panelgroup >
+                        <apex:outputLabel value=" Module-Inverter String Configurations" />
+                        <apex:outputLabel value="(parallel X series) :" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_1_1__c}" id="inputParallel1" 
+                                style="width:20px" />
+                            <label>X</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_1_2__c}" id="inputSeries1" 
+                                style="width:20px" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_2_1__c}" id="inputParallel2" 
+                                style="width:20px" />
+                            <label>X</label> 
+                            <apex:outputField value="{!inspection.Residential_Q30_2_2__c}" id="inputSeries2" 
+                                style="width:20px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_3_1__c}" id="inputParallel3" 
+                                style="width:20px" />
+                            <label>X</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_3_2__c}" id="inputSeries3" 
+                                style="width:20px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_4_1__c}" id="inputParallel4" 
+                                style="width:20px" />
+                            <label>X</label>
+                            <apex:outputField value="{!inspection.Residential_Q30_4_2__c}" id="inputSeries4" 
+                                style="width:20px" />
+                       </apex:panelgroup>
+                       
+                       <!-- End of 30 -->
+                        </apex:panelGrid>
+                  </apex:outputPanel>
+                 
+                    <apex:outputLabel value="Auto Calculations:"
+                        style="font-weight:bold;font-size:12px;padding-left:15px;text-decoration:underline" />
+                    
+                    
+                   <apex:panelGrid columns="10" id="theGridAutoCalculation" border="0">
+                       <!-- 
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="Array DC Power (W):(Array V x A)" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_1_1__c}"  id="inputArrayDCPower1" 
+                                style="width:60px;background-color:gray; color: Black;"/>
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_1_2__c}" id="inputArrayDCPower2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_1_3__c}" id="inputArrayDCPower3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_1_4__c}" id="inputArrayDCPower4" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                       
+                       <apex:outputText value="" />
+                        <apex:outputLabel value="Inverter Efficiency (%): (AC Power/DC Power)" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_2_1__c}" id="inputInverterEfficiency1" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_2_2__c}" id="inputInverterEfficiency2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_2_3__c}" id="inputInverterEfficiency3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_2_4__c}" id="inputInverterEfficiency4" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>  -->
+                      <!--  End of 2 -->
+                      <!--  Start of 3-->
+                       <apex:outputText value="" />
+                       <apex:outputLabel value="System Performance Index: [Array DC Power / (((# parallel x Imp x irradiance/1000)) x (# series x Vmp + (temp coef. x (mod temp. - 25°C))))]"  />
+                       <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_3_1__c}"   id="inputSystemPerformance1" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_3_2__c}" id="inputSystemPerformance2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_3_3__c}" id="inputSystemPerformance3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_3_4__c}" id="inputSystemPerformance4" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                      <!--  End of 3-->
+                      
+                       <!--  Start of 4-->
+                       <apex:outputText value="" />
+                       <apex:outputLabel value="kWh / kWp(STC): (Total Cumulative Energy (kWh) / Days in Operation) / (System Size (DCSTC) / 1000)"  />
+                       <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_4_1__c}" id="inputKWH1" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_4_2__c}" id="inputKWH2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_4_3__c}" id="inputKWH3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputtext value="{!inspection.Residential_Auto_Calculations_4_4__c}" id="inputKWH4"  
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                      <!--  End of 4-->
+                    </apex:panelGrid>
+                   
+                    <apex:outputLabel value="Readings / Measurements"
+                        style="font-weight:bold;font-size:12px;padding-left:15px;text-decoration:underline" />
+                     <apex:outputLabel value="(Note if sky conditions are changing or if inverters are not functioning properly.)" />
+                     
+                     <apex:panelGrid columns="3" id="theGridInverterComment" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_ReadingsMeasurements_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                  
+                    <apex:panelGrid columns="10" id="theGridQ2021_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="22." />
+                        <apex:outputLabel value="Time" />
+                        <apex:outputField value="{!inspection.Residential_Q20_Time__c}" />
+                        <apex:outputField value="{!inspection.Residential_Q20_Time_Picklist__c}" />
+                        <apex:panelgroup >
+                         <span style="width:60px">&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                        <apex:outputlabel value="23." />
+                        <apex:outputLabel value="Ambient Temprature" />
+                        <apex:outputField value="{!inspection.Res_Ambrient__c}"  />  <!-- "{!inspection.Residential_Q21_Sky_Conditions__c}" -->
+                       
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="10" id="theGridQ23_1" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="24. Irradiance :" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputField value="{!inspection.Residential_Q23_1__c}" id="inputIrradiance1" 
+                                style="width:60px" />
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputField value="{!inspection.Residential_Q23_2__c}" id="inputIrradiance2" 
+                                style="width:60px" />
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputField value="{!inspection.Residential_Q23_3__c}" id="inputIrradiance3" 
+                                style="width:60px" />
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputField value="{!inspection.Residential_Q23_4__c}" id="inputIrradiance4" 
+                                style="width:60px" />
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                     <apex:panelGrid columns="3" id="theGridQ23_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q23_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                 </apex:outputPanel>
+                 <!-- End of  mounting panel -->
+                 
+                
+                <!-- Start of Inverter panel -->
+                <apex:outputPanel id="pnlReadingMeasurement">
+                    <apex:panelGrid columns="10" id="theGridQ24_1" border="0">
+                        <apex:outputText value="25." />
+                        <apex:outputLabel value=" Array Voltage / Vpv / PV Input (V) :" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputField value="{!inspection.Residential_Q24_1__c}" style="width:60px"  id="inputArrayVoltage1"  />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputField value="{!inspection.Residential_Q24_2__c}"  id="inputArrayVoltage2" style="width:60px"  />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputField value="{!inspection.Residential_Q24_3__c}" id="inputArrayVoltage3" 
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputField value="{!inspection.Residential_Q24_4__c}" id="inputArrayVoltage4"  
+                                style="width:60px" />
+                       </apex:panelgroup>
+                       <!-- End of 24 -->
+                       
+                       <!-- Start of 26 -->
+                       <apex:outputText value="26." />
+                        <apex:outputLabel value=" AC System Power / Pac (W): " />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputField value="{!inspection.Residential_Q26_1__c}" id="inputACSystemPower1" 
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputField value="{!inspection.Residential_Q26_2__c}" id="inputACSystemPower2" 
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputField value="{!inspection.Residential_Q26_3__c}" id="inputACSystemPower3" 
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputField value="{!inspection.Residential_Q26_4__c}" id="inputACSystemPower4" 
+                                style="width:60px" />
+                       </apex:panelgroup>
+                       <!-- End of 26 -->
+                       
+                       <!-- Start of Array Input (DC@STC) -->
+                        <apex:outputText value="" />
+                        <apex:outputLabel value=" Array Input (DC@STC) :" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>1</label>
+                            <apex:outputtext value="{!inspection.Residential_Q30_Array_Input_1__c}" id="inputArrayInput1"
+                                 style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>2</label>
+                            <apex:outputtext value="{!inspection.Residential_Q30_Array_Input_2__c}" id="inputArrayInput2"
+                                  style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>3</label>
+                            <apex:outputtext value="{!inspection.Residential_Q30_Array_Input_3__c}" id="inputArrayInput3"  style="width:60px"  />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>4</label>
+                            <apex:outputtext value="{!inspection.Residential_Q30_Array_Input_4__c}" id="inputArrayInput4" style="width:60px"  />
+                       </apex:panelgroup>
+                      
+                   </apex:panelGrid>
+                   
+                   <apex:panelGrid columns="4" id="theGridQ31_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="27." />
+                        <apex:outputLabel value="Is there an equipment ground path from the array to the inverter 
+                        [NEC 690.43] which has been adequately sized? [NEC 690.45]" />
+                        
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q31_Response__c}" id="select_Q27" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ31_2" border="0">
+                      <apex:panelgroup >
+                            <span style="width:100px;padding-left:90px">&nbsp;</span>
+                        </apex:panelgroup>
+                      <apex:outputlabel value="EGC Size" />
+                      <apex:outputField value="{!inspection.Residential_Q31_EGC_Size__c}" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ31_3" border="0">
+                        <apex:panelgroup >
+                       </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q31_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ32New_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="28." />
+                        <apex:outputLabel value="Is there an equipment ground path from the inverter to the main service panel (MSP)  [NEC 690.43] which has been adequately sized? [NEC 690.45]" />
+                        
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Res_GroundPath_Inverter_MSP__c}" id="select_Q28" /> <!-- "{!inspection.Residential_Q31_Response__c}" -->
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                   
+                    <apex:panelGrid columns="4" id="theGridQ32New_3" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Res_GroundPath_Inverter_MSP_Comment__c}" style="width:700px" /> <!-- "{!inspection.Residential_Q31_Comments__c}" -->
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ32_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="29." />
+                        <apex:outputLabel value="Is there a grounding electrode conductor (min # 8 AWG) continuous (or irreversibly spliced) from each inverter
+to the ground bus in the MSP (NEC 2008) or to the AC grounding electrode at the MSP? [NEC 690.47(C)]" />
+                        
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q32_Response__c}"  id="select_Q29" />
+                           
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ32_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q32_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="6" id="theGridQ33_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="30." />
+                        <apex:outputLabel value="If installed outdoors, Is the inverter(s) located out of direct midday sunlight? (11am - 3pm)" />
+                        <apex:panelgroup >
+                           <span style="width:260px;padding-left:260px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q33_Response__c}" id="select_Q30" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ33_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q33_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ34_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="31." />
+                        <apex:outputLabel value="Is there adequate spacing 
+                        around the inverter(s) per installation manual? 
+                        [SPRm - above (8), below (36), front (36), sides (8);
+                         SPRx - above (12), below (39), front (36), sides (0)]" />
+                        
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q34_Response__c}" id="select_Q31" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ34_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q34_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                
+                
+                </apex:outputPanel>
+                <!-- End of Inverter panel -->
+                
+                  <!-- Start of Monitoring -->
+                <apex:outputPanel id="pnlMonitoring">
+
+                    <apex:outputLabel value="MONITORING"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                
+                   <apex:panelGrid columns="5" id="theGridQ31_1Newmon" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="32." />
+                        <apex:outputLabel value="What type of performance monitoring system has been installed if any" />
+                        <apex:panelgroup >
+                           <span style="width:280px;padding-left:280px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Res_Per_Monitoring_Sys__c}"  id="select_Q32" /> <!-- "{!inspection.Residential_Q19_Response__c}"  -->
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                   
+                    <apex:panelGrid columns="4" id="theGridQ31_1Newcmnt" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Res_Per_Monitoring_Comments__c}" style="width:700px" /> <!-- {!inspection.Residential_Q19_Comments__c} -->
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridconsumption" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="33." />
+                        <apex:outputLabel value="Is there a consumption monitoring system installed?" />
+                        <apex:panelgroup >
+                           <span style="width:280px;padding-left:280px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Res_Consumtion_Monitoring_Sys__c}"  id="select_Q33" /> <!-- "{!inspection.Residential_Q19_Response__c}"  -->
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                   
+                    <apex:panelGrid columns="4" id="theGridQ31_2New" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Res_Consumtion_Monitoring_Comments__c}" style="width:700px" /> <!-- {!inspection.Residential_Q19_Comments__c} -->
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="5" id="theGridFlashingLights" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="34." />
+                        <apex:outputLabel value="Verify flashing lights on Wattnode while the inverter is Turned OFF." />
+                        <apex:panelgroup >
+                           <span style="width:280px;padding-left:280px">&nbsp; </span>
+                         </apex:panelgroup>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Res_flashing_lights__c}"  id="select_Q34" /> <!-- "{!inspection.Residential_Q19_Response__c}"  -->
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                   
+                    <apex:panelGrid columns="3" id="theGridQ31_3New" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Res_flashing_lights_Comments__c}" style="width:700px" /> <!-- {!inspection.Residential_Q19_Comments__c} -->
+                    </apex:panelGrid>
+                    
+                    
+                   </apex:outputPanel>
+                <!-- End of Monitoring panel -->
+                
+                 <!-- Start of Array to Invertor Wiring -->
+                 <apex:outputPanel id="pnlDCDisconnect"> <!-- pnlArraytoInvertor -->
+
+                    <apex:outputLabel value="DC DISCONNECT" style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                     <!-- ARRAY TO INVERTER WIRING -->
+                    <br />
+                    <br />
+                    
+                    <apex:panelGrid columns="7" id="theGrid_ArraytoInvertor" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">DC Conduit Routing Overview</label>
+                       <apex:outputField value="{!inspection.Residential_ARRAY_INVERTER_DC_Conduit__c}" />
+                       <label style="font-style: italic; color: #cc0000">PV Source  Circuit Fusing</label>
+                       <apex:outputField value="{!inspection.Residential_ARRAY_INVERTER_PV_Source__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000"> Problem Areas (Incorrect Conductor Type / Color, etc)</label>
+                       <apex:outputField value="{!inspection.Residential_ARRAY_INVERTER_Problem_Areas__c}" />          
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ36_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="35." />
+                        <apex:outputLabel value="Has each PV source circuit been fused if needed? (NA if fewer than 4 parallel strings)       [NEC 690.9(A)]" />
+                        <apex:panelgroup >
+                          <apex:outputField value="{!inspection.Residential_Q36_Response__c}"  id="select_Q35" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ36_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q36_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                 <apex:panelGrid columns="4" id="theGridQ37_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="36." />
+                        <apex:outputLabel value="Are all conductors properly color coded? (pos=white,gray; neg=black,red,blue; grd=green,bare)   [NEC 200.6(A),  NEC 250.119)]" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q37_Response__c}" id="select_Q36" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ37_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q37_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ38_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="37." />
+                        <apex:outputLabel value="Are all grounded conductors (pos=white, gray) unswitched & unfused from the array to the inverter? [NEC 690.13]" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q38_Response__c}"  id="select_Q37" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ38_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q38_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ39_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="38." />
+                        <apex:outputLabel value="Is the appropriate conductor type used? 
+                         (90°C; if Location is DAMP or WET, use -2,  ie THWN-2)  [NEC 100 - Location]"/>
+                        <apex:outputField value="{!inspection.Residential_Q39_Picklist__c}" />
+                        
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q39_Response__c}" id="select_Q38" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ39_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q39_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ40_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="39." />
+                        <apex:outputLabel value="If the conductors from the array are run inside a building, 
+                        are they contained in metal raceways from the  of the building to the first 
+                        readily accessible disconnect?  
+                        [NEC 690.31(E)]"/>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q40_Response__c}" id="select_Q39" />
+                           
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ40_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q40_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                  </apex:outputPanel>
+                 <!-- End of Array to Invertor Wiring -->
+                
+                 <!-- Start of DC disconnect And NEC -->
+                 <apex:outputPanel id="pnlexternalDCDisconnect"><!-- pnlDCdisconnectAndNEC -->
+
+                    <apex:outputLabel value=" EXTERNAL DC DISCONNECT "  style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <!-- value="DC DISCONNECT AND NEC LABELS" -->
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid_DCdisconnectandNEC" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">DC Disconnect Exterior</label>
+                       <apex:outputField value="{!inspection.Residential_DC_DISCONNECT_Exterior__c}" />
+                       <label style="font-style: italic; color: #cc0000">DC Disconnect Interior</label>
+                       <apex:outputField value="{!inspection.Residential_DC_DISCONNECT_Interior__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000"> DC Disconnect NEC Labels</label>
+                       <apex:outputField value="{!inspection.Residential_DC_DISCONNECT_NEC_Labels__c}" />          
+                       <label style="font-style: italic; color: #cc0000"> Problem Areas</label>
+                       <apex:outputField value="{!inspection.Residential_DC_DISCONNECT_Problem_Areas__c}" />          
+                    </apex:panelGrid>
+                     
+                    <apex:panelGrid columns="5" id="theGridQ41_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="40." />
+                        <apex:outputLabel value="If an external DC disconnect has been installed 
+                        (other than a SunPower integrated disc), is it rated to 600 VDC?"/>
+                        <apex:panelgroup >
+                          <apex:outputField value="{!inspection.Residential_Q41_Response__c}"  id="select_Q40" />
+                         </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ41_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q41_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ42_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="41." />
+                        <apex:outputLabel value="Are conductors from the array connected 
+                        to the LINE side of the DC disconnect? (NA for SunPower disc.)"/>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q42_Response__c}"  id="select_Q41" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ42_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q42_Comments__c}" style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQExternalBonding" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="42." />
+                        <apex:outputLabel value="Is there no external bonding between the DC grounded and equipment ground conductor other than the inverter?"/>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Res_External_Bonding__c}"  id="select_Q42" />
+                         </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQExt_Bnd_cmnt" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Res_External_Bonding_Comments__c}" style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="5" id="theGridQ43_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="43." />
+                        <apex:outputLabel value="Are all of the following system labels and warnings present at all DC disconnects if applicable?"/>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q43_Response__c}"  id="select_Q43" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ43_A" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_Q43_1__c}" />
+                        <apex:outputLabel value="1.  (A) Rated MPP Current  (B) Rated MPP Voltage (C) Max System Voltage   (D) Short Circuit Current  [NEC 690.53] "/>
+                    </apex:panelGrid>
+                     <apex:panelGrid columns="3" id="theGridQ43_B" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_Q43_2__c}" />
+                        <apex:outputLabel value="2.   WARNING ELECTRIC SHOCK HAZARD. DO NOT TOUCH TERMINALS. TERMINALS ON BOTH THE LINE AND LOAD SIDES ENERGIZED IN THE OPEN POSITION. 
+                                                    (NA for SunPower inverter integrated disconnects)  
+                                                [NEC 690.17]"/>
+                    </apex:panelGrid>
+                    
+                     <apex:panelGrid columns="3" id="theGridQ43_C" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_Q43_3__c}" />
+                        <apex:outputLabel value="3.  Permanent marking to indentify each photovoltaic system disconnecting means as a photovoltaic system disconnect. [NEC 690.14(C)2]"/>
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="3" id="theGridQ43_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q43_Comments__c}" style="width:700px" />
+                    </apex:panelGrid>
+                  </apex:outputPanel>
+                   <!-- End of DC disconnect And NEC -->
+                   
+                   <!-- Start of lNVERTER TO MSP WIRING-->
+                  <apex:outputPanel id="pnlACDisconnect"> <!-- pnlNVERTERTOMSPWIRING -->
+
+                    <apex:outputLabel value="INVERTER TO MSP WIRING" style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <!-- value="INVERTER TO MSP WIRING" -->
+                    <br />
+                    <br />
+                     
+                    <apex:panelGrid columns="7" id="theGrid_INVERTERTOMSPWIRING" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">Conduit Routing Overview</label>
+                       <apex:outputField value="{!inspection.Residential_INVERTER_TO_MSP_Conduit__c}" />
+                       <label style="font-style: italic; color: #cc0000">Problem Area (Incorrect Conductor Color)</label>
+                       <apex:outputField value="{!inspection.Residential_INVERTER_TO_MSP_Problem_Area__c}" />
+                    </apex:panelGrid>
+                    
+                   <apex:panelGrid columns="4" id="theGridQ45_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="44." />
+                        <apex:outputLabel value="Are all conductors properly color coded? 
+                                    (L1=Black, Red, ...; L2=Red, Black, ...; Ground=Green; Neutral=White)
+                                     [NEC 200.6, NEC 250.119]" />
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q45_Response__c}" id="select_Q44" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ45_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q45_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                       <apex:panelGrid columns="4" id="theGridQ46_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="45." />
+                        <apex:outputLabel value="Are all conduit runs (AC & DC) securely 
+                                               fastened in place and properly supported? 
+                                              [ie NEC 350.30, NEC 358.30]" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q46_Response__c}"  id="select_Q45" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ46_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q46_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                 </apex:outputPanel>
+                 <!-- End of lNVERTER TO MSP WIRING-->
+                 
+                  <!-- Start of AC DISCONNECT AND NEC LABELS -->
+                 <apex:outputPanel id="pnlACDISCONNECTANDNECLABELS">
+
+                    <apex:outputLabel value="AC DISCONNECT AND NEC LABELS"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid_ACDISCONNECTANDNECLABELS" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">AC Disconnect Exterior</label>
+                       <apex:outputField value="{!inspection.Residential_AC_DISCONNECT_Exterior__c}" />
+                       <label style="font-style: italic; color: #cc0000">AC Disconnect Interior</label>
+                       <apex:outputField value="{!inspection.Residential_AC_DISCONNECT_Interior__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000"> AC Disc NEC Labels</label>
+                       <apex:outputField value="{!inspection.Residential_AC_DISCONNECT_NEC_Labels__c}" />          
+                       <label style="font-style: italic; color: #cc0000"> Problem Areas</label>
+                       <apex:outputField value="{!inspection.Residential_AC_DISCONNECT_Problem_Areas__c}" />          
+                    </apex:panelGrid>
+                     
+                     <apex:panelGrid columns="4" id="theGridQ47_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="46." />
+                        <apex:outputLabel value="If an external AC disconnect has been installed (other 
+                        than a SunPower integrated disconnect or a PV breaker), 
+                        are  conductors from the inverter connected to the LOAD side of the AC disc? 
+                        (NA for SunPower disc & PV breaker)" />
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q47_Response__c}"  id="select_Q46" />
+                         </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ47_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q47_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="5" id="theGridQ48_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="47." />
+                        <apex:outputLabel value="  Are all of the following system labels and warnings present
+                                     at the Point of Interconnection if applicable?
+                                    (usually located at the main service panel (MSP) or AC disconnect)"/>
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q48_Response__c}"  id="select_Q47" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ48_A" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_Q48_1__c}" />
+                        <apex:outputLabel value="1. If the photovoltaic system disconnecting means 
+                                                      (PV breaker or separate AC disc) is NOT at the same location as the
+                                                       main service disconnect for the building,
+                                                        then is there a plaque or directory that shows the location of both the service
+                                                       disconnecting means and the photovoltaic disconnecting means. [NEC 690.56(B)] "/>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="3" id="theGridQ48_B" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_Q48_2__c}" />
+                        <apex:outputLabel value=" 2. Permanent marking to indentify each photovoltaic system 
+                                          disconnecting means as a photovoltaic 
+                                       system disconnect. [NEC 690.14(C)(2)]"/>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="3" id="theGridQ48_C" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_Q48_3__c}" />
+                        <apex:outputLabel value="3. Marking at an accessible location at the interactive system point of 
+                                           interconnection disconnecting means (ie PV breaker)
+                                           as a power source and with (A) Rated AC Output Current 
+                                           and (B) Nominal Operating AC Voltage. [NEC 690.54]"/>
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="4" id="theGridQ48_2" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q48_Comments__c}" style="width:700px" />
+                    </apex:panelGrid>
+                 
+                 </apex:outputPanel>
+                <!-- End of AC DISCONNECT AND NEC LABELS -->
+               
+               
+                <!-- Start of MAIN SERVICE PANEL  -->
+                  
+                 <apex:outputPanel id="pnlMAINSERVICEPANEL">
+
+                    <apex:outputLabel value="MAIN SERVICE PANEL (MSP)"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid_MAINSERVICEPANEL" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">MSP Exterior</label>
+                       <apex:outputField value="{!inspection.Residential_MSP_Exterior__c}" />
+                       <label style="font-style: italic; color: #cc0000">MSP Interior</label>
+                       <apex:outputField value="{!inspection.Residential_MSP_Interior__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000"> MSP NEC Labels</label>
+                       <apex:outputField value="{!inspection.Residential_MSP_NEC_Labels__c}" />          
+                   </apex:panelGrid>
+                
+                    <apex:panelGrid columns="5" id="theGridQ49_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="48." />
+                        <apex:outputLabel value="MSP Bus Bar / Max Current Rating (A)" />
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q49_Rating__c}" id="select_Q48" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    
+                    <apex:panelGrid columns="6" id="theGridQ50_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="49." />
+                        <apex:outputLabel value="Main Breaker Rating (A)" />
+                        <apex:panelgroup >
+                            <span style="width:65px; padding-left: 65px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q50_Rating__c}"  id="select_Q49" />        
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    
+                  <apex:panelGrid columns="6" id="theGridQ51_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="50." />
+                        <apex:outputLabel value="Solar Breaker Rating (A)" />
+                        <apex:panelgroup >
+                            <span style="width: 65px; padding-left: 65px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                             <apex:outputField value="{!inspection.Residential_Q51_Rating__c}" id="select_Q50" />     
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                
+                    <apex:panelGrid columns="4" id="theGridQ52_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="51." />
+                        <apex:outputLabel value="Does the Solar Breaker Rating meet the NEC 120% rule? [NEC 690.64]
+                                                  Maximum Allowable Solar Breaker Rating =" />
+                         <apex:outputLabel id="SolarBrealerValue" value="{!inspection.Res_SolarBreakerRating__c}" /> A
+                        <apex:panelgroup >
+                           <apex:outputField value="{!inspection.Residential_Q52_Response__c}"  id="select_Q51" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ52_2" border="0">
+                        <apex:panelgroup >
+                       </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q52_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="4" id="theGridQ53_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="52." />
+                        <apex:outputLabel value="Is the PV breaker or fuse sized properly 
+                        according to the inverter’s continuous max output rating? [NEC 690.8]
+                         Total Continuous Maximum Output Current x 1.25 = " />
+                        <apex:outputText value="{!maxOutputValue}" id="maxOutputValue" ></apex:outputText>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q53_Response__c}"  id="select_Q52" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="3" id="theGridQ53_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q53_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                 </apex:outputPanel>
+                 <!-- End  of MAIN SERVICE PANEL  -->
+                   
+                 <!-- Start  of SYSTEM SAFETY  -->
+                 <apex:outputPanel id="pnlSystemSafty">
+                   <apex:outputLabel value="SYSTEM SAFETY "
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="6" id="theGrid_SystemSafty" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="Photos" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">Safety Hazards (if they exist)</label>
+                       <apex:outputField value="{!inspection.Residential_SYSTEM_SAFETY_Hazards__c}" />
+                 </apex:panelGrid>
+                 
+                 <apex:panelGrid columns="5" id="theGridQ54_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="53." />
+                        <apex:outputLabel value="Is the installation free from all visible safety hazards that could lead to electric 
+                                             shock, fire or serious injury?   (ie. unsecured modules, unsafe wiring, ungrounded equipment)"/>
+                        <apex:panelgroup >
+                            <apex:outputField value="{!inspection.Residential_Q54_Response__c}"  id="select_Q53" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ54_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_Q54_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                      
+                     <apex:panelGrid columns="3" id="theGridQ54_A" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputField value="{!inspection.Residential_SYSTEM_SAFETY_ChkBox__c}" />
+                        <apex:outputLabel value="Check this box to confirm system was operational after completing inspection. "/>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ54_b" border="0">
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="comment" style="font-style:italic" />
+                        <apex:outputField value="{!inspection.Residential_SYSTEM_SAFETY_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                 </apex:outputPanel>
+                <!-- End  of SYSTEM SAFETY  -->
+                <!-- Start of Additional Comment  -->
+                <apex:outputPanel >
+                  <apex:outputLabel value="ADDITIONAL COMMENTS"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                  <apex:panelGrid columns="2" id="theGridAdditionalComment_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                        <apex:outputField value="{!inspection.Residential_ADDITIONAL_COMMENTS__c}" style="width:500px"/>
+                </apex:panelGrid>
+               </apex:outputPanel>
+               <!-- End  of Additional Comment   -->
+               
+      </apex:outputPanel>
+    </apex:pageblock>
+    
+ </body>  
+</apex:page>

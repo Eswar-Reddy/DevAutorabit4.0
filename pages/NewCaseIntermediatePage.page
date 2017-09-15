@@ -1,0 +1,32 @@
+<apex:page standardController="Case" extensions="NewCaseIntermediateController">
+
+  <script>
+  window.onload = setURLForFeedback;
+  
+  function setURLForFeedback(){
+     var newUrl='{!newUrl}';
+     var newU=replaceAll('%2FNEWLINE%2F','%0A',newUrl);
+
+     
+     //find url of current page and split into array to find and set the pod. - CASE#: 00461476 JT 1/30/2015
+     var url = document.URL;
+     var pod = url.split(".", 3);
+
+     //set new URL using the pod found from the current URL - CASE#: 00461476 JT 1/30/2015
+	 
+	 //Removed by Sysuser to fix the case edit page issue
+     //newU='https://'+pod[1]+'.salesforce.com'+newU;
+    
+       
+    console.log('===================================>'+newU);
+   
+    window.location=newU;//'{!newUrl}';   
+   }
+  
+   function replaceAll(find, replace, str) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
+  
+  
+  </script>
+</apex:page>

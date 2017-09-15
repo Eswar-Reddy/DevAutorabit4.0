@@ -1,0 +1,30 @@
+<apex:page controller="GenerateAndAttachACHpdfController">  
+    <apex:sectionHeader title="PDF Attachment" subtitle="Attach a PDF" 
+                        description="Create a Pdf file for ACH agreement and attach it to agreement record "/>
+    
+    <apex:form >
+        <apex:pageBlock title="Give Pdf name as input">
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!attachPDFtoRecord}" value="Attach Pdf to Agreement"/>
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            
+            <apex:pageBlockSection >
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="File Name" for="pdfName"/>
+                     <apex:outputPanel >
+                    <div class="requiredInput">
+                    <div class="requiredBlock"></div>
+                    <apex:inputText value="{!pdfName}" id="pdfName" required="true"/>
+                    </div>
+                     </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

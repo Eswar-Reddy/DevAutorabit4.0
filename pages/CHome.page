@@ -1,0 +1,311 @@
+<apex:page controller="CHomeController" standardStylesheets="false" sidebar="false" showHeader="false" cache="true" readOnly="true" action="{!redirect}">
+
+    <html lang="">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <!-- Load Google Fonts -->
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' />
+        <!-- sunpower style guide -->
+        <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+        
+        <style>
+        #phHeaderLogoImage {
+            max-width: 258px;
+        }
+        
+        .footer-list-block {
+            max-width: 16rem !important;
+        }
+        
+        .link-list {
+            position: relative !important;
+            left: 0px !important;
+        }
+        
+        .skiplink,
+        #footer {
+            display: none !important;
+        }
+        
+        #main-content {
+            padding-top: 2rem !important;
+        }
+        /* this is conflicting with the nav bar css styles. There shouldn't be this many !important properties anyway. not BP 11/17
+        .navigation-container {
+            border-bottom: 0px !important;
+        }
+        */
+        .footer-content {
+            position: relative !important;
+            top: 20px !important;
+        }
+
+        #home .link-list {
+            margin-bottom: 0rem !important;
+        }
+        
+        @media only screen and (min-width: 768px) {
+            #home .sidebar .sidebar-list-block {
+                padding-bottom: 0.50rem !important;
+                padding-top: 1.00rem !important;
+            }
+        }
+        
+        /*#home .sidebar .sidebar-list-block:last-of-type {
+            border-top: ;
+        }*/
+        
+        @media only screen and (min-width: 768px) {
+            #home .sidebar .sidebar-list-block:first-of-type {
+                background-color: #fbfbfb;
+            }
+        }
+        
+        #home footer .copyright {
+            padding-top: 1.5rem !important;
+        }
+        </style>
+    </head>
+
+    <body>
+        
+        <c:CommunitiesMainNavComponent activeTab="Home"/>
+        <div id="home">
+            <apex:outputPanel rendered="{!NOT(isNull(b1))}">
+                <div id="alert-messages">
+                    <div class="alert alert--info">
+                        <span><apex:outputText value="{!b1.APPR_PUB__Long_Description__c}" escape="false"/></span>
+                        <button type="button" class="alert__close"></button>
+                    </div>
+                </div>
+            </apex:outputPanel>
+            <div id="main-content" class="container">
+                <div class="row">
+                    <div class="main-content col-xs-12 col-md-8">
+                        <div id="product-announcements" class="hidden-mobile">
+                            <apex:outputPanel rendered="{!NOT(isNull(s1))}">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-megaphone"></span>
+                        {!s1.Display_Name__c}
+                    </h5>
+                                <p>
+                                    <apex:outputText value="{!s1.APPR_PUB__Long_Description__c}" escape="false" />
+                                </p>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="row">
+                            <apex:repeat value="{!MainSections}" var="m">
+                                <div class="content-block col-xs-12 col-lg-6">
+                                    <apex:outputPanel rendered="{!NOT(isNull(m))}">
+                                        <div class="text-image">
+                                            <img class="content-image" src="{!m.APPR_PUB__Image_Path__c}" alt="" />
+                                            <div class="text-image__caption">{!m.Display_Name__c}</div>
+                                        </div>
+                                        <p>
+                                            <apex:outputText value="{!m.APPR_PUB__Long_Description__c}" escape="false" />
+                                        </p>
+                                        <ul class="link-list">
+                                            <apex:repeat value="{!m.APPR_PUB__Headline_Links__r}" var="c">
+                                                <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                            </apex:repeat>
+                                        </ul>
+                                    </apex:outputPanel>
+                                </div>
+                            </apex:repeat>
+                        </div>
+                    </div>
+                    <div class="sidebar col-md-4">
+                        <div class="sidebar-list-block">
+                            <apex:outputPanel rendered="{!NOT(isNull(sr))}">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-clock"></span>
+                        Recent Items
+                    </h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!sr}" var="c">
+                                        <li><a href="/{!c.id}" target="_self">{!c.Name}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </apex:outputPanel>
+                        </div>
+                        <apex:outputPanel rendered="{!NOT(isNull(s8))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-clock"></span>
+                        {!s8.Display_Name__c}
+                    </h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s8.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(isNull(s9))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-bar-graph"></span>
+                        {!s9.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <li>
+                                        <apex:outputLink rendered="{!showMRC}" value="/apex/OnFulfillment?id={!CurrentUserId}" target="_blank">{!MRCDisplayName}</apex:outputLink>
+                                    </li>
+                                    <!--
+                                    <li>
+                                        <apex:outputLink rendered="{!showDPF}" value="/apex/applycustomheader?sURL=%2Fapex%2FMDTF_Account%3Fid={!userAccountId}" target="_self">{!DPFDisplayName}</apex:outputLink>
+                                    </li>
+                                    -->
+                                    <li>
+                                        <apex:outputLink rendered="{!showLPS}" value="/apex/applycustomheader?sURL=%2Fapex%2FDealerPerformanceScore%3Fid={!CurrentUserId}" target="_self">{!LPSDisplayName}</apex:outputLink>
+                                    </li>
+                                    <apex:repeat value="{!s9.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                             </div>
+                        </apex:outputPanel>    
+                        <apex:outputPanel rendered="{!NOT(isNull(s10))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-pie-chart"></span>
+                        {!s10.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s10.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(isNull(s11))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-graduation-cap"></span>
+                        {!s11.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                <!--
+                                    <li>
+                                        <apex:outputLink value="/apex/SunPowerUniversity?id={!CurrentUserId}" target="_blank">SunPower University</apex:outputLink>
+                                    </li>
+                                 -->
+                                    <apex:repeat value="{!s11.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(isNull(s12))}">
+                            
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-bar-graph"></span>
+                        {!s12.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <li>
+                                        <apex:outputLink rendered="{!showACC}" value="/{!userAccountId}" target="_self">{!ACCDisplayName}</apex:outputLink>
+                                    </li>
+                                    <li>
+                                        <apex:outputLink value="/apex/My_Subscriptions?id={!CurrentUserId}" target="_self">My Subscriptions</apex:outputLink>
+                                    </li>
+                                    <apex:repeat value="{!s12.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(isNull(s13))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                                <span class="home-icon icon icon-bar-graph"></span>
+                                {!s13.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s13.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(isNull(s14))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-bar-graph"></span>
+                        {!s14.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s14.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!NOT(isNull(s15))}">
+                            <div class="sidebar-list-block">
+                                <h5 class="icon-header">
+                        <span class="home-icon icon icon-bar-graph"></span>
+                        {!s15.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s15.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </div>
+                        </apex:outputPanel>
+                    </div>
+                </div>
+                <footer>
+                    <!--<h5 class="icon-header">
+                <span class="home-icon icon icon-news"></span>
+                Reports
+            </h5>-->
+                    <div class="footer-content">
+                       <!-- <div class="footer-list-block">
+                            <apex:outputPanel rendered="{!NOT(isNull(s4))}">
+                                <h5 class="footer-category">{!s4.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s4.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="footer-list-block">
+                            <apex:outputPanel rendered="{!NOT(isNull(s5))}">
+                                <h5 class="footer-category">{!s5.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s5.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="footer-list-block hidden-mobile">
+                            <apex:outputPanel rendered="{!NOT(isNull(s6))}">
+                                <h5 class="footer-category">{!s6.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s6.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="footer-list-block hidden-mobile">
+                            <apex:outputPanel rendered="{!NOT(isNull(s7))}">
+                                <h5 class="footer-category">{!s7.Display_Name__c}</h5>
+                                <ul class="link-list">
+                                    <apex:repeat value="{!s7.APPR_PUB__Headline_Links__r}" var="c">
+                                        <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                    </apex:repeat>
+                                </ul>
+                            </apex:outputPanel>
+                        </div>-->
+                    </div>
+                    <div class="copyright">&copy; SunPower Corporation. All rights reserved.</div>
+                </footer>
+            </div>
+            <div class="bar"></div>
+        </div>
+    </body>
+    <c:SPCommunityAppResources_JS />
+    </html>
+</apex:page>

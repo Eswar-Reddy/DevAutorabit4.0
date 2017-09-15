@@ -1,0 +1,57 @@
+<!--
+Modifed By : VG 
+Modified Purpose : To add order number in the form for advance logic and providing delete button for every qualification Rules 
+Modified Date : 1/28/2015
+ -->
+<apex:page standardController="Qualification__c" extensions="QualificationRulesControllerExt" showHeader="false">
+
+    <style type="text/css">
+        div.valueBlock { display: inline-block; padding: 4px; width: 30%; }
+        div.valueBlock:hover { background: url('/img/func_icons/remove12_on.gif') right no-repeat; border: 1px solid #999; box-shadow: 0 5px 3px 1px #777; cursor: pointer; padding: 3px; -webkit-box-shadow: 0 5px 3px 1px #777; -moz-box-shadow: 0 5px 3px 1px #777; }
+    </style>
+
+    <apex:form >
+        <apex:pageMessages id="messages"/>
+        <apex:pageBlock id="rulesTable">
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!addRule}" value="Add a New Rule" rerender="rulesTable, messages"/>
+                <apex:commandButton action="{!cancel}" value="Reset"/>
+                <apex:actionStatus id="saveStatus" startText="Saving...">
+                    <apex:facet name="stop">
+                        <apex:commandButton action="{!save}" value="Save" status="saveStatus" rerender="messages"/>
+                    </apex:facet>
+                </apex:actionStatus> 
+            </apex:pageBlockButtons>
+            <apex:actionStatus id="DeleteStatus" startText="Deleting..."/>
+            <apex:repeat value="{!rulesForQualification}" var="aRule">
+                <apex:pageBlockSection id="fieldSection" title="{!IF(NOT(ISBLANK(aRule.record.Id)),Text(aRule.record.Order__c)+'.'+aRule.record.Field_API_Name__c, 'New Field')}" columns="1">
+                    <apex:commandlink action="{!deleteRule}" value="Delete" reRender="theParam,rulesTable" status="DeleteStatus" >
+                        <apex:param name="theParam" assignTo="{!qualificationRuleid}" id="theParam" value="{!aRule.record.Id}"/>
+                    </apex:commandlink>
+                    <apex:selectList value="{!aRule.record.Field_API_Name__c}" size="1" rendered="{!ISBLANK(aRule.record.Id)}">
+                        <apex:selectOptions value="{!selectableFields}"/>
+                    </apex:selectList>
+                    <apex:inputField value="{!aRule.record.Eloqua_Field_Name__c}"/>
+                    <apex:inputField value="{!aRule.record.Disqualified_Reason__c}"/>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Qualification_Rule__c.Fields.Accepted_Values__c.Label}"/>
+                        <apex:inputTextArea value="{!aRule.incomingValues}" style="width: 100%;">
+                            <apex:actionSupport event="onblur" action="{!aRule.addValues}" rerender="fieldSection, messages"/>
+                        </apex:inputTextArea>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem id="ruleItem">
+                        <apex:outputLabel value=""/>
+                        <apex:repeat value="{!aRule.acceptedValues}" var="aValue">
+                            <apex:outputPanel layout="block" styleClass="valueBlock">
+                                <apex:outputText value="{!aValue}"/>
+                                <apex:actionSupport event="onclick" action="{!aRule.deleteValue}" rerender="fieldSection, messages">
+                                    <apex:param value="{!aValue}" assignTo="{!aRule.valueToDelete}" name="valueToDelete"/>
+                                </apex:actionSupport>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:repeat>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

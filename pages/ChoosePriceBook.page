@@ -1,0 +1,44 @@
+<apex:page contentType="" id="addOrder" Controller="PriceBookController"  
+standardStylesheets="true" tabStyle="Estimate__c" action="{!init}">
+<apex:sectionHeader title="Choose Price Book" />  
+<apex:outputLabel value="Select a price book for this Order." />
+<script>
+
+function comfirmToProceed(){
+	if('{!hasProducts}' == 'true'){
+		return confirm('Saving new price book will remove all associated products.Do you still want to continue?');
+	}
+}
+
+</script>
+<!--
+ Changing a selected price book will delete all existing products from this Order.
+ -->
+
+<apex:form id="theForm" target="_parent">
+
+<apex:outputPanel id="errorMessage" rendered="{!hasProducts}">
+<apex:pageMessages /> 
+</apex:outputPanel>
+
+     <apex:pageBlock id="pgblock" title="Choose Price Book">
+    
+     <apex:inputHidden value="{!estimateId}"/>         
+         <apex:pageBlockButtons id="buttons">
+                  <apex:commandButton id="save" value="Save" onClick="return comfirmToProceed();" action="{!save}"/> 
+                  <apex:commandButton id="cancel" immediate="true" value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            
+             <apex:pageBlockSection >
+             <apex:pageBlockSectionItem >
+              <apex:outputLabel value="Price Book" for="choosePriceBook"/>
+                  <apex:selectList title="Price Book" id="choosePriceBook" value="{!estimate.Price_Book__c}" size="1" >
+                   <apex:selectOptions value="{!PriceBook}"/>
+                </apex:selectList>           
+              </apex:pageBlockSectionItem>   
+        </apex:pageBlockSection>
+        
+    </apex:pageBlock>        
+</apex:form>
+
+</apex:page>

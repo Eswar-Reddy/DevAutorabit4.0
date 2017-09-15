@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>RECORDTYPE</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Country__c</field>
+    </columns>
+    <columns>
+        <field>CLOSE_DATE</field>
+    </columns>
+    <columns>
+        <field>Opportunity.System_SizePV__c</field>
+    </columns>
+    <columns>
+        <field>AMOUNT</field>
+    </columns>
+    <columns>
+        <field>EXP_AMOUNT</field>
+    </columns>
+    <columns>
+        <field>STAGE_NAME</field>
+    </columns>
+    <columns>
+        <field>PROBABILITY</field>
+    </columns>
+    <currency>USD</currency>
+    <description>UPPA Opportunity Summary</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Americas</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Opportunity_type__c</column>
+            <operator>notEqual</operator>
+            <value>Biz Dev Residential,ESP</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>PROBABILITY</column>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OPPORTUNITY_NAME</column>
+            <operator>notContain</operator>
+            <value>849868_SCE LCR RFO,0001105399_Consolidated_Edison_Company_NY,0001111047_PG&amp;E_2014_Storage_RFO,0001239787_High Voltage Panels for Stratos Oct 2015 - Prototypes,0001248542_SpaceX - thin cells Gen C,0001249241_PCB units - Space X,0001249263_PCB units - NRL,0001271059__DST_Tabs_Q116,Arable Labs Inc.- 41 cell,0001274522_Univ Minnesota 600 Gen E cells for Solar Car Team,0001276348_University of Missouri - Solar Car team,0001276529_High Voltage Panels for Stratos Feb 2016 - Prototypes,0001281477_Stanford Solar Car Team - 900 cell purchase Feb 2016,0001281637_University of Michigan Solar Car team-900 cells Gen E bin Me1,0001282068_University of Illinois - Solar Car team-,0001283160_Massachusetts Institute of Technology - Solar Car Team,0001286636_University of California,Berkeley_March 2016</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FULL_NAME</column>
+            <operator>notEqual</operator>
+            <value>Scott Mchugo,Zach Campeau</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OPPORTUNITY_NAME</column>
+            <operator>notContain</operator>
+            <value>sunpower development,site preparation,cells,cell,car team</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>UPPA Opportunity Pipeline Report</name>
+    <params>
+        <name>role_territory</name>
+        <value>role</value>
+    </params>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>OPPORTUNITY_NAME</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2016-01-04</startDate>
+    </timeFrameFilter>
+</Report>

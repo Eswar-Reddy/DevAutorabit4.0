@@ -1,0 +1,59 @@
+<apex:page standardController="opportunity" id="thepage" sidebar="false" showHeader="false" extensions="ForecastCategoryExtension" >
+<apex:form id="theform" >
+
+<apex:pageBlock >
+<apex:messages />
+<apex:pageBlockButtons >
+
+<apex:commandButton rendered="{!strshow}" status="wait1" value="Update"   action="{!Refresh}" oncomplete="return saveMsg('{!status}');" />
+<apex:commandButton value="Cancel" status="wait1" action="{!goBack}" />
+<apex:actionStatus id="wait1" startText="Please wait..." ></apex:actionStatus>
+<apex:actionFunction name="cancel" action="{!goBack}"/>
+</apex:pageBlockButtons> 
+
+
+<apex:outputPanel rendered="{!strshow}">
+<apex:pageBlockSection columns="1" >
+<apex:pageBlockSectionItem >
+<apex:outPutLabel value="Opportunity Name"  />
+<apex:outPutField value="{!opportunity.name}"  />
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:outputLabel style="font-style:Bold" value="{!$ObjectType.opportunity.fields.ForecastCategoryName.label}"></apex:outputLabel>
+
+<apex:inputField value="{!opportunity.ForecastCategoryName}" id="forcast" />
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!strHide}" >
+<apex:outputLabel value="You are not authorized to update forecast category,please contact administrator. " />
+</apex:outputPanel>
+
+
+</apex:pageBlock>
+
+
+</apex:form> 
+
+<script>
+   
+        function  toOpportunity(){
+     // window.opener.refresh;
+     self.close();
+        
+    }
+    function saveMsg(status){
+    
+        if(status =='true'){
+            alert("Forcast Category has been updated.");
+            cancel();
+        }
+        else{
+          // refreshMsg();
+        return false ;
+        } 
+    }
+        
+      </script> 
+</apex:page>

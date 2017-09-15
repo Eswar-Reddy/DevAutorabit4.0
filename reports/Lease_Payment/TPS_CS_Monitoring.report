@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Multiple_Meters__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>To get the TPS pipeline if its growing significantly</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>equals</operator>
+            <value>LeasePayment__c.TPS</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Name</column>
+            <operator>notContain</operator>
+            <value>dummy</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>equals</operator>
+            <value>Active,Transferred,Pending Transfer,Dealer Change</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>FiscalQuarter</dateGranularity>
+        <field>LeasePayment__c$Date_Countersigned__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>TPS CS Monitoring</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Closing_Request_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

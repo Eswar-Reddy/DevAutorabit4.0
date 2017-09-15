@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Uncond_Fin_LW_Approved__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Uncond_Fin_LW_Rcvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Funding_Tranche__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease_Type__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Tranche_2_Response_Date__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Name__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>number of leases UFLW approved/total number of leases UFLW received</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Duplicate,Cancellation with RMA,Terminated</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Name__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Uncond_Fin_LW_Rcvd__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>1/16/2016</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>SLA No. 5: UFLW Monitoring</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Uncond_Fin_LW_Rcvd__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Closing_Request_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

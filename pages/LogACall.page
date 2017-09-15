@@ -1,0 +1,95 @@
+<!--
+ @name - LogACall
+ @description - Custom VisualForce Page for Log A Call
+ @author - Michael Adrian Reyes
+ @date - February 26, 2014
+-->
+
+<apex:page standardController="Opportunity" extensions="OpportunityCallActionCC" action="{!updateOpp}">
+    <style>
+        #spacing{
+            height:4px;
+        }
+    </style>
+    
+    
+    <script type = "text/javascript">
+        function RedirectToObject(){
+            
+            if( (typeof sforce != 'undefined') && (sforce != null) && (sforce.one != null)) {
+                
+            // In Salesforce1, navigate to create account record standard page
+            //sforce.one.createRecord("Account");
+            //alert('SF1');
+            //sforce.one.navigateToURL("/apex/CF_CriteriaPage?criteria="+args);
+            //alert('mobile');
+            //sforce.one.navigateToSObject('{!o.Id}');
+            sforce.one.back(true);
+            //window.location.href = "/"+'{!o.Id}';
+            //gotoCriteria(args);
+            
+            }else{
+            //alert("desktop");
+            //navigate to vf page
+            //window.location.assign("/apex/CF_HomePage");
+            //window.location.href = "/"+'{!o.Id}';
+            window.location.href = '{!URLFOR($Action.Opportunity.View, o.Id)}';
+            //gotoCriteria(args);
+            //alert('vfPAGE');
+                
+            }
+        }
+    </script>
+    <apex:form id="logACall">
+    <apex:pageMessages />
+    <b>
+    <apex:sectionHeader title="Log a Call"/>
+    <apex:pageBlock >
+    <apex:pageBlockSection columns="1">
+    <apex:panelGrid columns="1">
+        <apex:outputLabel value="Call Outcome" for="sel"/>
+        <apex:outputPanel >
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <!--
+                <apex:selectList id="sel" value="{!callOutcome}" size="1" required="false" style="margin-left: 0px;">
+                    <apex:selectOptions value="{!soList}"/>
+                </apex:selectList>
+                -->
+                <apex:inputField value="{!o.Call_Outcome__c}" id="sel"/>            
+            </div>
+                <apex:outputlabel id="err" rendered="{!error}" value="Error: Select value for Call Outcome" style="font-weight:bolder;color:red"/>
+               
+        </apex:outputPanel>
+        <div id = "spacing"></div>
+        <apex:outputLabel value="Call Notes" for="notes"/>
+        <apex:inputTextarea id="notes" value="{!callNotes}" style="height: 50px; width: 200px"/>
+        <div id = "spacing"></div>
+        <apex:outputLabel value="Opportunity Stage" for="stage"/>
+        <apex:inputField id="stage" value="{!o.StageName}" />
+        <div id = "spacing"></div>
+        <apex:outputPanel >
+            <apex:outputLabel value="Reason Won/Lost" for="reason"/><br/>
+            <apex:inputField id="reason" value="{!o.Reason_Won_Lost__c}" />
+        </apex:outputpanel>
+        <br/>
+        <div id = "spacing"></div>
+        <apex:outputpanel >
+            <apex:actionstatus id="status">
+                <apex:facet name="start">
+                    <img src="/img/loading.gif"/> &nbsp; <span>Please wait...</span>
+                </apex:facet>
+            </apex:actionstatus>
+        </apex:outputpanel>        
+        <apex:outputPanel >
+            <apex:commandButton status="status"  action="{!submit}" value="Submit" style="width: 100px; height: 25px;" onComplete="{!IF(isCallOutcomeNull == false,'RedirectToObject()','')}" reRender="logACall"/>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <apex:commandButton action="{!cancel}" value="Cancel" style="width: 100px; height: 25px;" onComplete="RedirectToObject();"/>
+        </apex:outputPanel>
+    </apex:panelGrid>
+    </apex:pageBlockSection>
+    </apex:pageBlock>
+    </b>
+    </apex:form>
+    
+</apex:page>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Case$Owner.Name</field>
+    </columns>
+    <columns>
+        <field>Case$Priority</field>
+    </columns>
+    <columns>
+        <field>Case$Days_Opened__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Average Days to Close Cases</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND (3 OR 4 OR 5 OR 6 OR 7)</booleanFilter>
+        <criteriaItems>
+            <column>Case$Type</column>
+            <operator>equals</operator>
+            <value>Admin Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Status</column>
+            <operator>equals</operator>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Owner</column>
+            <operator>equals</operator>
+            <value>Diane Galiza</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Owner</column>
+            <operator>equals</operator>
+            <value>James Ryan Bulacso</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Owner</column>
+            <operator>equals</operator>
+            <value>Ralph Alega</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Owner</column>
+            <operator>equals</operator>
+            <value>Kane Macaspac</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Owner</column>
+            <operator>equals</operator>
+            <value>Neil Wilson</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case$IsClosed</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case$Type</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case$Age_in_days__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Average Days to Close Cases</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Cases_with_Case_Metrics_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Case$Case_CreatedDate__c</dateColumn>
+        <interval>INTERVAL_THISMONTH</interval>
+    </timeFrameFilter>
+</Report>

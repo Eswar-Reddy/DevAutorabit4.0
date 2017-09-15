@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$ConvertedOpportunity</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Name</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Owner.Name</field>
+    </columns>
+    <columns>
+        <field>Lead$Solar_Cut_Off_Date__c</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Credit_Application_Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(1 AND (2 OR 4) AND 3) AND 5</booleanFilter>
+        <criteriaItems>
+            <column>Lead.CampaignMembers*Campaign$NH_Community__c.Community_Type__c</column>
+            <operator>equals</operator>
+            <value>Solar Standard</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Solar_Cut_Off_Date__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.StageName</column>
+            <operator>notEqual</operator>
+            <value>Verbal Commitment,Contract Signed,Installation Completed,Opportunity Lost</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Solar_Cut_Off_Date__c</column>
+            <operator>lessThan</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Credit_Application_Status__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NH Lease Agreement Sent after Cutoff</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_Campaign_and_converted_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$ConvertedDate</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r.Invoice_Documents__r$Id</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account$Owner</field>
+    </columns>
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Installer__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account$Partner_Account__c</column>
+            <operator>contains</operator>
+            <value>SunPower Direct (SPD)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities.Lease_Payments__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Expired,Duplicate,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination,Contract Pending</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>contains</operator>
+            <value>Installation Invoice,Conditional Progress LW,Inter-connect Invoice,Conditional Final LW</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities$Installer__c</column>
+            <operator>contains</operator>
+            <value>SPD Self Installation</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>SPRI Placeholder Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_w_Oppty_w_LP_w_wo_Invoice_Docs__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$Workers_Comp_Exp__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

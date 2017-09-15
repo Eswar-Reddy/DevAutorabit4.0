@@ -1,0 +1,36 @@
+<messaging:emailTemplate subject="Contract Submitted - {!relatedTo.Opp_Name__r.Name} ({!relatedTo.Contract_Type__c})" recipientType="User" relatedToType="Opportunity_Role__c">
+  <messaging:HTMLEmailBody >
+    <table width="100%" border="0">
+      <tr style="background-color:black;">
+        <td>
+          <img src="https://test.salesforce.com/servlet/servlet.ImageServer?id=01580000001Jww7&oid=00DS00000001BGx" style="width:100%;" /> 
+        </td>
+      </tr>
+    </table>
+    <br />
+        
+    The following contract is ready for approval:<br /><br />
+ 
+**Please click on the following link to approve the contract within Salesforce.com** <br /><br />
+ 
+https://login.salesforce.com/{!relatedTo.Id}<br /><br />
+
+Contract Type: {!relatedTo.Contract_Type__c}<br />
+Account: {!relatedTo.Account__r.Name}<br />
+Opportunity: {!relatedTo.Opp_Name__r.Name}<br />
+Opportunity Owner: {!relatedTo.Opp_Name__r.Owner.Name}<br />
+Credit Check Status: {!relatedTo.Credit_Check_Status__c}<br />
+Currency: {!relatedTo.CurrencyIsoCode}<br /><br />
+ 
+<b><u> EPC Information (if applicable): </u></b><br />
+Amount: {!relatedTo.Amount__c}<br />
+Direct Project Margin: {!relatedTo.DirectMargin__c}<br />
+Direct Project Margin %: {!relatedTo.DirectMargin_per__c}<br /><br />
+ 
+<b><u> PPA Financing Information (if applicable): </u></b><br />
+Escalator: {!relatedTo.Escalator__c}<br />
+Term: {!relatedTo.Term_Yrs__c}<br />
+Cents / kWh: {!relatedTo.Cents_KWh__c} <br />
+    
+  </messaging:HTMLEmailBody>
+</messaging:emailTemplate>

@@ -1,0 +1,629 @@
+<apex:page controller="ChangeOrderAmendmentController" sidebar="{!IF(isInternal, TRUE, FALSE)}" showHeader="{!IF(isInternal, TRUE, FALSE)}">
+       <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.font_awesome_4_7_0, 'css/font-awesome.min.css')}"/>
+       <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+       <style type="text/css">
+            .margin-bottom--large{
+                margin-bottom: 20px;
+            }
+            .readOnly{
+                color:grey;
+            }
+            .textUpdate{
+                color:#f26a36;
+            }
+            .input-container{
+                background-color:#e5e5e5;
+                border:none;
+                padding:3px;
+            }
+            hr{
+                border: .5px solid #f2b268;
+            }
+            .greybutton{
+                background-color:gray !important;
+            }
+            .requiredStyle{
+                box-shadow: 0 0 1px 1px #ef373e;
+            }
+            h1{
+               font-family:"Open Sans",sans-serif;
+               font-wieght:normal;
+            }
+      </style>
+    <br/>
+   
+    <div class="sunpower-style container" style="max-width:1250px;margin:auto">
+      <c:CommunitiesMainNavComponent activeTab="Accounts" rendered="{!!isInternal}"/>
+        <div class="row">
+          <div class="col-xs-12">
+            <apex:form >
+                <apex:outputPanel rendered="{!!isInternal}" style="margin-top:1em">
+                    <br/>
+                </apex:outputPanel>
+                <apex:outPutPanel rendered="{!pendingAgreementExists}">
+                  <h1>A pending amendment already exists</h1>
+                    <div class="alert alert--info" style="margin-top:1em">
+                        <span>An existing HO Info amendment is already pending for this contract</span>
+                    </div>
+                    <p>To create a new amendment, either A) cancel the pending amendment or B) wait until it is countersigned.</p>
+                    <div class="proceed-section" style="float:right;margin-top:1em">
+                        <strong><apex:commandLink action="{!backToAccount}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                        <apex:commandButton action="{!viewAmendment}" value="View Amendment" styleClass="btn btn-primary btn--small"/>
+                    </div>
+                </apex:outPutPanel>
+        <apex:outputPanel rendered="{!IF(AND(NOT(ISNULL(miscErrorMsg)),showErrorMsg),true,false)}">
+          <div class="alert alert--danger">
+            <span>{!miscErrorMsg} </span>
+          </div>
+        </apex:outputPanel>
+        <apex:outputPanel id="page1" rendered="{!!showSave && !showOwnership && !showErrorMsg}">
+          <div style="margin-bottom:40px;margin-top:20px">
+            <h1> {!acc.a.Name} </h1>
+          </div>
+          <form >
+
+            <div style="sunpower-style margin-left:50px; margin-right:50px">
+
+              <div class="sunpower-style alert alert--info">
+                <span> You are about to make changes to a previously signed contract. Proceeding will trigger a change order request for contract #{!agg.Lease_Number__c} </span>
+              </div>
+
+              <div class="row" style="margin-top:30px;margin-bottom:15px">
+                <div class="col-xs-12 section-header">
+                  <h4>Account</h4>
+                  <apex:commandLink action="{!ownershipChange}" styleClass="secondary-link" rendered="{!showChangeButton}" id="ownershipChange" style="float:right;" >
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Ownership Change
+                  </apex:commandLink>
+                </div>
+              </div>
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <apex:inputText value="{!primaryCos.coFirstName}" styleClass="input-container required" disabled="{!primaryCos.hasCreditCheck}"/>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <apex:inputText value="{!primaryCos.coLastName}" styleClass="input-container required" disabled="{!primaryCos.hasCreditCheck}"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Address</label>
+                    <apex:inputText value="{!acc.aStreet}" styleClass="input-container required" />
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing State</label>
+                    <apex:inputText value="{!acc.a.BillingState}" styleClass="input-container " disabled="true"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing City</label>
+                    <apex:inputText value="{!acc.aCity}"  styleClass="input-container required" />
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Country</label>
+                    <apex:inputText value="{!acc.a.BillingCountry}" styleClass="input-container " disabled="true"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Zip Code</label>
+                    <apex:inputText value="{!acc.aZip}"  styleClass="input-container required" />
+                  </div>
+                </div>
+              </div>
+
+              <hr/>
+
+              <apex:outputPanel id="cosTable">
+                <div class="row" style="margin-bottom:30px; margin-top:20px">
+                  <div class="col-xs-12 section-header">
+                    <h4>Cosignee</h4>
+                    <apex:commandLink action="{!addCosignee}" styleClass="secondary-link" value="+ Add Cosignee" rendered="{!showAdd}" id="addCos" style="float:right;" rerender="cosTable"/>
+
+
+                  </div>
+                </div>
+
+                <apex:outputPanel rendered="{!showMultiCosign}">
+                  <div class="alert alert--danger">
+                    <span> {!multiCosignMsg}</span>
+                  </div>
+                </apex:outputPanel>
+
+
+                <apex:repeat value="{!cos}" var="c"  rendered="{!cos.size > 0}">
+                  <apex:outputPanel rendered="{!c.onContract && !c.isPrimary}">
+                    <apex:outputPanel rendered="{!c.role == 'Co Borrower'}">
+                      <div class="alert alert--info">
+                        <span> {!c.con.FirstName +' '+c.con.LastName + coborrowerMsg}</span>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!c.role == 'Borrower'}">
+                      <div class="alert alert--info">
+                        <span> {!c.con.FirstName +' '+c.con.LastName + borrowerMsg}</span>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:commandLink action="{!removeCoSignee}" styleClass="secondary-link" rendered="{!!c.isBorrower}" id="removecos" style="float:right;" rerender="cosTable">
+                      <i class="fa fa-trash-o" aria-hidden="true"></i> Remove Cosignee
+                      <apex:param name="cIdentifier" value="{!c.Identifier}" assignTo="{!cIdentifier}"/>
+                    </apex:commandLink>
+                    <br/>
+                    <div class="row" style="">
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <label>Cosignee First Name</label>
+                          <apex:inputText value="{!c.coFirstName}" styleClass="input-container  required {!IF(c.coFirstName == NULL, 'requiredStyle','')}"  disabled="{!c.hasCreditCheck}"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <label> Cosignee Last Name</label>
+                          <apex:inputText value="{!c.coLastName}" styleClass="input-container  required {!IF(c.coLastName == NULL, 'requiredStyle','')}"  disabled="{!c.hasCreditCheck}"/>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" style="">
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <label>Cosignee Email</label>
+                          <apex:inputText value="{!c.coEmail}" styleClass="input-container  required {!IF(c.coEmail == NULL, 'requiredStyle','')}" />
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <label>Cosignee Phone</label>
+                          <apex:inputText value="{!c.coPhone}" styleClass="input-container " />
+                        </div>
+                      </div>
+                    </div>
+                  </apex:outputPanel>
+                </apex:repeat>
+              </apex:outputPanel>
+
+              <hr style="background-color:#f7921e;"/>
+
+              <div id="buttonGroup" style="float:right;margin-top:15px">
+                <apex:commandLink action="{!cancel}" onclick="if(!confirm('All changes will be lost. Are you sure you want to continue?')){return false};" styleClass="secondary-link" style="margin-right:15px;" value="Cancel" id="cancel" />
+                <apex:commandButton styleClass="btn btn-primary btn--small " value="Proceed" action="{!proceed}" id="proceedButton" />
+              </div>
+
+            </div>
+
+
+
+
+          </form>
+        </apex:outputPanel>
+
+        <!-- ********** REVIEW PAGE ************ -->
+
+        <apex:outputPanel id="page2" rendered="{!showSave && !showErrorMsg}">
+          <div style="margin-bottom:30px;margin-top:20px">
+            <h1> {!acc.a.Name} </h1>
+          </div>
+          <div style="margin-right:30px; margin-left:30px;">
+            <h4> Contract Amendment Request </h4>
+            <div class="alert alert--info" style="margin-top:30px;margin-bottom:40px;">
+              <span>
+                <p> You are about to make changes to a previously signed contract. Proceeding will trigger the following actions: </p>
+                <p> - An Amendment Agreement will be generated for you to send to the homeowner.</p>
+                <p> Review the information changes you made below. If you need to make any changes, press Back to return to the previous screen. If you are ready to submit your changes, provide an explanation, and click the Submit Change Order button. </p>
+              </span>
+            </div>
+
+            <form >
+              <div class="row" style="margin-bottom:30px;margin-top:20px">
+                <div class="col-xs-12 section-header">
+                  <h4>Account</h4>
+                </div>
+              </div>
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <apex:outputText value="{!acc.FirstName}" styleClass=" readOnly" />
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <apex:outputText value="{!primaryCos.coFirstName}" styleClass=" {!IF(primaryCos.con.FirstName != primaryCos.coFirstName, 'textUpdate', '')}" />
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <apex:outputText value="{!acc.LastName}" styleClass=" readOnly"/>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <apex:outputText value="{!primaryCos.coLastName}" styleClass=" {!IF(primaryCos.con.LastName != primaryCos.coLastName, 'textUpdate', '')}"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Address</label>
+                    <apex:outputText value="{!acc.a.BillingStreet}" styleClass=" readOnly" />
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Address</label>
+                    <apex:outputText value="{!acc.aStreet}" styleClass=" {!IF(acc.a.BillingStreet != acc.aStreet, 'textUpdate', '')}" />
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing City</label>
+                    <apex:outputText value="{!acc.a.BillingCity}" styleClass=" readOnly" />
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing City</label>
+                    <apex:outputText value="{!acc.aCity}" styleClass=" {!IF(acc.a.BillingCity != acc.aCity, 'textUpdate', '')}" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Zip Code</label>
+                    <apex:outputText value="{!acc.a.BillingPostalCode}" styleClass=" readOnly" />
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Zip Code</label>
+                    <apex:outputText value="{!acc.aZip}" styleClass=" {!IF(acc.a.BillingPostalCode != acc.aZip, 'textUpdate', '')}" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing State</label>
+                    <apex:outputText value="{!acc.a.BillingState}" styleClass=" readOnly" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label>Billing Country</label>
+                    <apex:outputText value="{!acc.a.BillingCountry}" styleClass=" readOnly" />
+                  </div>
+                </div>
+              </div>
+
+
+
+              <hr style="background-color:#f7921e;"/>
+
+              <!-- Cosignee -->
+
+              <apex:outputPanel rendered="{!removedCos.size > 0}">
+                <apex:repeat value="{!removedCos}" var="r">
+                  <div class="row" style="margin-bottom:30px;margin-top:20px">
+                    <div class="col-xs-12 section-header">
+                      <h4 style="color:#ef373e;">Removed Cosignee</h4>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <apex:outputText value="{!r.con.FirstName}" styleClass="readOnly" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <apex:outputText value="{!r.con.LastName}" styleClass="readOnly" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Phone</label>
+                        <apex:outputText value="{!r.con.Phone}" styleClass="readOnly" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Email</label>
+                        <apex:outputText value="{!r.con.Email}" styleClass="readOnly" />
+                      </div>
+                    </div>
+                  </div>
+                </apex:repeat>
+              </apex:outputPanel>
+
+              <apex:outputPanel rendered="{!newCos.size > 0}">
+                <apex:repeat value="{!newCos}" var="n">
+                  <div class="row" style="margin-bottom:30px;margin-top:20px">
+                    <div class="col-xs-12 section-header">
+                      <h4 style="color:#69b343;">Added Cosignee</h4>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <apex:outputText value="{!n.coFirstName}" styleClass=" textUpdate" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <apex:outputText value="{!n.coLastName}" styleClass=" textUpdate" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Phone</label>
+                        <apex:outputText value="{!n.coPhone}" styleClass=" textUpdate" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Email</label>
+                        <apex:outputText value="{!n.coEmail}" styleClass=" textUpdate" />
+                      </div>
+                    </div>
+                  </div>
+                </apex:repeat>
+              </apex:outputPanel>
+
+              <apex:outputPanel rendered="{!sameCos != NULL}">
+                <apex:repeat value="{!sameCos}" var="s">
+                  <div class="row" style="margin-bottom:30px;margin-top:20px">
+                    <div class="col-xs-12 section-header">
+                      <h4>Cosignee</h4>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <apex:outputText value="{!s.con.FirstName}" styleClass="readOnly" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <apex:outputText value="{!s.coFirstName}" styleClass="{!IF(s.con.FirstName != s.coFirstName, 'textUpdate', '')}" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <apex:outputText value="{!s.con.LastName}" styleClass="readOnly" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <apex:outputText value="{!s.coLastName}" styleClass="{!IF(s.con.LastName != s.coLastName, 'textUpdate', '')}" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Phone</label>
+                        <apex:outputText value="{!s.con.Phone}" styleClass=" readOnly" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Phone</label>
+                        <apex:outputText value="{!s.coPhone}" styleClass=" {!IF(s.con.Phone != s.coPhone, 'textUpdate', '')}" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Email</label>
+                        <apex:outputText value="{!s.con.Email}" styleClass=" readOnly" />
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <label>Email</label>
+                        <apex:outputText value="{!s.coEmail}" styleClass=" {!IF(s.con.Email != s.coEmail, 'textUpdate', '')}" />
+                      </div>
+                    </div>
+                  </div>
+                </apex:repeat>
+              </apex:outputPanel>
+
+              <apex:outputPanel rendered="{!sameCos.size == 0 && newCos.size == 0 && removedCos.size == 0}">
+                <div class="row" style="margin-bottom:30px;margin-top:20px">
+                  <div class="col-xs-12 section-header">
+                    <h4>No Cosignee</h4>
+                  </div>
+                </div>
+              </apex:outputPanel>
+
+              <hr style="background-color:#f7921e;"/>
+
+              <h4>
+                <span style="color:red;font-size:24px;">*</span> Explanation
+              </h4>
+              <div class="input-container" style="margin-top:10px">
+                <apex:inputField id="notes" value="{!newAgg.Notes__c}" styleClass="required requiredStyle" style="width:100%;border: 1px solid #e5e5e5;"/>
+              </div>
+
+              <apex:actionFunction action="{!assignContact}" name="assignContact_JS" oncomplete="submit_JS();" Rerender="statuses" status="Status1" />
+              <apex:actionFunction action="{!submit}" name="submit_JS" />
+
+              <div id="buttonGroup" style="float:right;margin-top:15px">
+                <apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="Back" id="back" />
+
+                <div id="disabledButton" style="display:inline;">
+                  <apex:commandButton styleClass="btn btn-primary btn--small greybutton" value="Submit Change Order" action="{!submit}" id="submitButtonDisabled" disabled="true"/>
+                </div>
+
+                <div id="abledButton" style="display:none;">
+                  <!-- <apex:commandButton styleClass="btn btn-primary btn--small " value="Submit Change Order" action="{!submit}" id="submitButton" /> -->
+                  <apex:commandButton styleClass="btn btn-primary btn--small " value="Submit Change Order" onclick="this.value = 'Submitting Change Order';this.disabled = true;assignContact_JS();return false;" id="submitButton" status="Status1"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </apex:outputPanel>
+
+        <!-- *********** OWNERSHIP CHANGE ************** -->
+
+        <apex:outputPanel id="page3" rendered="{!showOwnership && !showErrorMsg}">
+
+          <div class="alert alert--info">
+                <span> Select the primary contact for this account. Include an additional cosignee if desired. </span>
+              </div>
+          <form >
+            <table class="table table-responsive" id="theTable">
+              <thead>
+                <th>Contact Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Primary</th>
+                <!-- <th>Include in Contract</th> -->
+
+              </thead>
+
+              <tbody>
+                <apex:repeat value="{!cos}" var="c">
+                  <tr>
+                    <td>{!c.con.FirstName +' '+ c.con.Lastname}</td>
+                    <td>{!c.con.Email}</td>
+                    <td>{!c.con.Phone}</td>
+                    <td>{!c.Role}</td>
+                    <td>
+                      <input type="radio" name="primary"  id="primaryRadio" />
+                      <apex:inputHidden value="{!c.IsPrimary}" id="hiddenInput"/>
+                      <!-- <apex:selectRadio value="{!c.isPrimary}"/> -->
+                    </td>
+                    <!-- <td>
+                      <apex:inputCheckbox value="{!c.OnContract}" id="onContract"/>
+                    </td> -->
+                  </tr>
+                </apex:repeat>
+              </tbody>
+            </table>
+
+            <div id="buttonGroupOwnership" style="float:right;margin-top:15px">
+              <apex:commandLink action="{!ownerBack}" styleClass="secondary-link" style="margin-right:15px;" value="Back" id="ownerBack" />
+              <apex:commandButton styleClass="btn btn-primary btn--small" value="Save" action="{!saveOwnerChange}" />
+            </div>
+          </form>
+        </apex:outputPanel>
+            </apex:form>
+        </div>
+        </div>
+    </div>
+
+    <!-- Keep at bottom of page -->
+    <c:SPCommunityAppResources_JS />
+    <script type="text/javascript" src="{!URLFOR($Resource.SPStyleGuide, 'javascripts/main.bundle.js')}"></script>
+    <script type="text/javascript" language="javascript">
+        j$ = jQuery.noConflict();
+        j$(document).ready(function(){
+
+            j$(document).on("blur", ".required", function(){
+                var value=j$.trim(j$(this).val());
+                console.log('val',value);
+
+                if(value.length>0) {
+                    //j$(this).css("box-shadow", "none");
+                    j$(this).removeClass('requiredStyle');
+                }else{
+                    //j$(this).css("box-shadow", "0 0 1px 1px #ef373e");
+                    j$(this).addClass('requiredStyle');
+                }
+            });
+
+            j$(document).on("keyup", "input.required", function(){
+                console.log('keyup');
+                var empty = false;
+                j$('input.required').each(function() {
+                    if (j$(this).val() == '') empty = true;
+                });
+                if (empty) {
+                    j$('input[id*=proceedButton]').attr('disabled', 'true').addClass('greybutton')
+                } else {
+                    j$('input[id*=proceedButton]').removeAttr('disabled').removeClass('greybutton')
+                }
+            });
+
+            j$(document).on("keyup", "textarea.required", function(){
+                console.log('keyup');
+                var empty = false;
+                j$('textarea.required').each(function() {
+                    if (j$(this).val() == '') empty = true;
+                });
+                if (empty) {
+                    j$('div[id=abledButton]').css('display','none');
+                    j$('div[id=disabledButton]').css('display','inline');
+                } else {
+                    j$('div[id=abledButton]').css('display','inline');
+                    j$('div[id=disabledButton]').css('display','none');
+                }
+            });
+
+            j$('input[type=radio][name=primary]').change(function(){
+                j$('input[type=radio][name=primary]').each(function(){
+                    pr = j$(this);
+                    pr.siblings().val(j$(this).prop('checked'));
+                });
+            });
+
+        });
+    </script>
+</apex:page>

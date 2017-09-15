@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>christopherraymond.morandi@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Americas sub-region</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Americas</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Americas</label>
+        <name>Americas</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC sub-region</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC</label>
+        <name>APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>erik.burkhardt@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>erik.burkhardt@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Europe and MEA sub-regions</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe,MEA</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>EMEA</label>
+        <name>EMEA</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>dmitry.klimko@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa Binding Offer (PPA) SVP for the Americas sub-region</description>
+        <entryCriteria>
+            <booleanFilter>(1 or 2 or (3 AND 4)) AND 5</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Americas</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>UPPa Binding Offer (PPA) SVP - Americas</label>
+        <name>UPPa_Binding_Offer_PPA_SVP_Americas</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa Binding Offer (PPA) SVP for APAC and MEA sub-regions</description>
+        <entryCriteria>
+            <booleanFilter>(1 or 2 or (3 AND 4)) AND 5</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC,MEA,Europe</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>UPPa Binding Offer (PPA) SVP - APAC/MEA</label>
+        <name>UPPa_Binding_Offer_PPA_SVP_APAC_MEA</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>carlo.scapinelli@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa Binding Offer - (PPA) Global President</description>
+        <entryCriteria>
+            <booleanFilter>1 or (2 AND 3)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.25</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>UPPa Binding Offer - (PPA) Global President</label>
+        <name>UPPa_Binding_Offer_PPA_Global_President</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>tom.werner@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPPa DRC (PPA) Approval</description>
+        <entryCriteria>
+            <booleanFilter>1 or (2 AND 3 AND 4)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessThan</operation>
+                <value>USD 0.25</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>UPPa DRC (PPA) Approval</label>
+        <name>UPPa_DRC_PPA_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>EPC/DEV temporary approval flow</description>
+    <emailTemplate>Quote/U_C_Deal_Sheet</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 5 AND (2 OR (3 AND 4))</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>UPP Americas,UPP Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.RecordType</field>
+            <operation>equals</operation>
+            <value>Development</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.RecordType</field>
+            <operation>equals</operation>
+            <value>Systems</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>EPC,PPA (including EPC),M&amp;A</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Territory_Text__c</field>
+            <operation>notContain</operation>
+            <value>Business Development</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Udpat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Rejection_Email_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Binding_Offer_Submission_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Set_Initial_Submitter</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>EPC/DEV Approval Flow</label>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>false</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,108 @@
+<apex:page standardController="Purchase_Order__c" extensions="LeaseOrderWizardControllerInternal" showHeader="false" sideBar="false" renderAs="pdf">
+<head>
+    <style type="text/css">
+        @page  {
+         /* Landscape orientation */
+         size:landscape;
+          }
+         body {
+          font-size:12pt;
+         }
+    </style>
+</head> 
+    <apex:pageBlock title="{!$Label.POWizardPurchaseOrderTitle}">
+        <apex:pageBlockSection columns="2">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="accName">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</apex:outputLabel>
+                <apex:outPutLink value="/{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__c}" id="accName">{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__r.Name}</apex:outPutLink>
+            </apex:pageBlockSectionItem>
+            <apex:outputField value="{!propPurchaseOrder.End_Customer_Account__c}"/>
+            <apex:outputField value="{!propPurchaseOrder.Lease_Number__c}" />
+            <apex:outputField value="{!propPurchaseOrder.Lease__c}" />
+            
+            
+            <apex:pageBlockSectionItem rendered="{!IF(propPurchaseOrder.Opportunity__c == null ,'false','true')}">
+                <apex:outputLabel for="custOpp">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</apex:outputLabel>
+                <apex:outPutLink value="/{!propPurchaseOrder.Opportunity__c}" id="custOpp">{!propPurchaseOrder.Opportunity__r.Name}</apex:outPutLink>
+            </apex:pageBlockSectionItem>
+            <apex:outputField value="{!propPurchaseOrder.Dealer_Fees__c}"/>
+            
+            <apex:outPutField id="shipToCon" value="{!propPurchaseOrder.Ship_To_Contact__c}"/> 
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Notes__c.Label}</apex:outputLabel>
+                {!propPurchaseOrder.Notes__c}
+            </apex:pageBlockSectionItem>
+            <apex:outPutField id="financier" value="{!propPurchaseOrder.Financier__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection columns="2" title="{!$Label.POWizardShippingInfoTitle}">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >{!$Label.POWizardShipToAddress}</apex:outputLabel>
+                        {!propShipingAddress}
+                </apex:pageBlockSectionItem> 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel for="specialInstr">{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}</apex:outputLabel>
+                    <apex:outputLabel id="specialInstr">{!propPurchaseOrder.Special_Instructions__c}</apex:outputLabel>
+                </apex:pageBlockSectionItem>
+                                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}" ></apex:outputLabel>
+                       <apex:outputText value=" {0,date,dd-MMM-yyyy}">
+                            <apex:param value="{!propPurchaseOrder.Requested_Delivery_Date__c}" />
+                        </apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!propPurchaseOrder.Accept_Partial_Shipment__c}" />
+                <apex:outputField value="{!propPurchaseOrder.Shipping_Method__c}" />
+                <apex:outputField value="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}" rendered="{!AND(NOT(ISNULL(propPurchaseOrder.Requested_Delivery_Date__c)),propPurchaseOrder.Requested_Delivery_Date__c<=(TODAY()+3))}"/> 
+                                                                                                                         
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="{!$Label.POWizardBillingInfoTitle}">
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel >{!$Label.POWizardBillToAddress}</apex:outputLabel>
+                             {!propBillingAddress }
+                </apex:pageBlockSectionItem>                                                                                                                                                                            
+            </apex:pageBlockSection>           
+    </apex:pageBlock>
+    <apex:pageBlock title="{!$Label.POWizardLineItemsHeading}">
+                    <!--
+                    <apex:pageBlockTable value="{!propPurchaseOrder.Purchase_Order_Lines__r}" var="item"> 
+                    
+                    -->
+                    <apex:pageBlockTable value="{!propOrderedPOLList}" var="item"> 
+
+                        <apex:column width="2%">
+                            <apex:image height="18px" value="{!IF(ISNULL(item.Parent_Item__c), $Resource.ParentImg ,$Resource.ChildImg)}" style="vertical-align:middle;"/> 
+                        </apex:column> 
+                        <apex:column width="35%">
+                            <apex:facet name="header">
+                            {!$Label.POWizardProductNameHeading}
+                            </apex:facet>
+                            {!item.Item_Description__c}
+                        </apex:column>
+                        <apex:column width="10%">
+                            <apex:facet name="header">
+                            {!$Label.LOWizardNetIDHeading}
+                            </apex:facet>
+                            {!item.Item_ID__c}
+                        </apex:column>
+                        <apex:column width="5%">
+                            <apex:facet name="header">
+                            {!$Label.POWizardQuantityHeading}
+                            </apex:facet>
+                            {!item.Quantity__c}
+                        </apex:column>
+                        <apex:column width="15%" style="text-align:right;white-space:nowrap">
+                            <apex:facet name="header">
+                            <div style="text-align:right;">{!$Label.LOWizardReimbursementPriceHeading}</div>
+                            </apex:facet>
+                            <apex:outputPanel >
+                              {!propPurchaseOrder.CurrencyIsoCode}&nbsp;
+                              <apex:outputText value="{0,number,#0.00}">
+                                <apex:param value="{!item.Price__c}"/>
+                              </apex:outputText>
+                            </apex:outputPanel>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlock>
+                
+</apex:page>

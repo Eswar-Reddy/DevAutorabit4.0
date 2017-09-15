@@ -1,0 +1,59 @@
+<apex:page sidebar="false" controller="OpportunitiesNOTContactedCC" standardstylesheets="true" showChat="false" showheader="false">
+    
+    <style>
+        .vfHelpText a            {position:relative;}
+        .vfHelpText a span       {display: none;}
+        .vfHelpText a:hover span {
+            display: block;
+            position:absolute;
+            top:1.25em;
+            padding:2px 5px;
+            right:-15em; width:15em;
+            z-index:100;
+            border:1px solid orange;
+            background-color:#FEFDB9;
+            color:black;
+            text-decoration: none;
+        }
+        body .bPageBlock .pbTitle {
+            padding: 5px 12px;
+            white-space: nowrap;
+        }
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody {
+            margin: 0px 0px;
+        }
+        body .apexp .pbBody table.list {
+            border: 0px solid #E0E3E5;
+        }
+    </style>
+    
+    <apex:pageBlock title="Opportunities NOT CONTACTED">
+        
+        <apex:pageblockTable value="{!lOpps}" var="o" rendered="{!If(lOpps.size > 0, true, false)}">
+            
+            <apex:column headerValue="Flag" width="7px;">
+                <apex:outputField value="{!o.SLA_Flag__c}" />
+            </apex:column>
+            
+            <apex:column headerValue="Assignment Date" width="115px;">
+                <apex:outputField value="{!o.Dealer_Assignment_Date__c}" />
+            </apex:column>
+            
+            <apex:column headerValue="SLA Time Left" width="40px;">
+                <apex:outputField value="{!o.SLA_Time__c}" /> mins
+            </apex:column>    
+            
+            <apex:column headerValue="Opportunity">
+                <apex:outputLink value="{!URLFOR($Action.Opportunity.View, o.Id)}" target="_blank" title="{!o.Name}">
+                    {!o.Name}
+                </apex:outputLink>
+                
+            </apex:column>
+            
+        </apex:pageblockTable>
+        <apex:outputPanel rendered="{!If(lOpps.size > 0, false, true)}">
+            <br/>&nbsp;&nbsp;&nbsp;&nbsp;All opportunities have been contacted!<br/><br/>
+        </apex:outputPanel>
+    </apex:pageBlock>
+    
+</apex:page>

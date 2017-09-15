@@ -1,0 +1,2815 @@
+<apex:page standardController="Site_Information_Form__c" extensions="HelixDesignRequestController,HelixDesignRequestUtilities" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <apex:stylesheet value="{!$Resource.StyleguideExpansion_CSS}" />
+    
+
+    <style type="text/css">
+
+        .sunpower-style .tabs__header {
+            overflow: hidden;
+        }
+
+        .sunpower-style .form-group {
+            align-items: center;
+        }
+
+        .sunpower-style .dynamic-stretch span {
+            min-width: 249.46px;
+        }
+   
+        .sunpower-style .form-group span {
+            color: #0076be;
+        }
+
+        .sunpower-style .radio label span, 
+        .sunpower-style .checkbox label span,
+        .custom-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #5e6367;
+        }
+
+        .label-fixer {
+            width: 100% !important;
+            text-align: left !important;
+        }
+
+        .sunpower-style input:disabled {
+            cursor: not-allowed;
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .select-shrink {
+                max-width: 203.8px;
+            }
+        }
+
+        .disable-tabs {
+            pointer-events: none !important;            
+        }
+
+        .default-pointer {
+            cursor: default !important;
+        }
+
+        .sunpower-style .btn.disabled, 
+        .sunpower-style .btn:disabled {
+            pointer-events: none !important;
+        }
+
+        .sunpower-style .radio.is-disabled, .sunpower-style .checkbox.is-disabled {
+            pointer-events: none;
+        }
+
+        .table-condensed > thead > tr > th,
+        .table-condensed > tbody > tr > th,
+        .table-condensed > tfoot > tr > th,
+        .table-condensed > thead > tr > td,
+        .table-condensed > tbody > tr > td,
+        .table-condensed > tfoot > tr > td {
+            padding: 5px;
+            font-size: smaller;
+        }
+
+        .sp-dark-grey {
+            color: #9b9b9b;
+        }
+
+        .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }
+
+        .tooltip, .sunpower-style .tooltip {
+            border-bottom: none;
+        }
+
+        .sunpower-style .icon-container {
+            margin-right: .5rem;
+        }
+        .sunpower-style .image-icon-tooltip {
+            vertical-align: middle;
+        }
+
+    </style>
+    
+    <div class="sunpower-style container" style="width: 90%; margin-left: auto; margin-right: auto;" id="mainDiv">
+        <apex:form id="theForm" >
+            
+            <!--header-->
+            <div class="topper"></div>
+            
+            <div class="row" style="margin-bottom: .5rem;">
+                <div class="col-xs-12">
+                    <div class="sunpower-logo-black"></div>
+                </div>
+            </div>
+            
+            <div class="page-header">
+                <h3>Helix Design Request</h3>               
+            </div>
+            <!--end header-->
+            
+        <!--main body-->
+        <div style="width: 90%; margin-left: auto; margin-right: auto;"> 
+
+            <c:SPCommunities_SpinnerOverlay />      
+
+            <apex:outputPanel rendered="{! !lockInputs}">
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="hide-mobile show-desktop" style="width: 100%;">
+                        <ol class="progress">
+                            <li class="progress-done" style="cursor:pointer" onclick="showOverlay(); navigateFunction('1');">General Information</li>
+                            <li class="progress-active">Product Information</li>
+                            <li class="progress-todo" style="cursor: pointer;" onclick="triggerSubmit();">Notes and Attachments</li>
+                            <li class="progress-todo">Submit&nbsp;&nbsp;&nbsp;</li>
+                        </ol>
+                    </div>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!lockInputs}">
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="hide-mobile show-desktop" style="width: 100%;">
+                        <ol class="progress">
+                            <li class="progress-done" style="cursor: pointer !important;" onclick="navigateFunction('1');">General Information</li>
+                            <li class="progress-done" style="cursor: pointer !important;" >Product Information</li>
+                            <li class="progress-done" style="cursor: pointer !important;" onclick="navigateFunction('3');">Notes and Attachments</li>
+                            <li class="progress-done" style="cursor: pointer !important;" onclick="navigateFunction('4');">Submit&nbsp;&nbsp;&nbsp;</li>
+                        </ol>
+                    </div>
+                </div>
+            </apex:outputPanel>
+
+            <apex:actionFunction name="navigateFunction" action="{!navigate}" reRender="mainPanel, errorPanel" oncomplete="setFocus()">
+                <apex:param name="pageNumber" assignTo="{!pageNo}" value="" />
+            </apex:actionFunction>
+            
+            <!--error panel-->
+            <apex:outputPanel id="mainPanel">
+                <apex:outputPanel id="errorPanel" rendered="{!saveQuitErrors}">                    
+                    <div class="alert alert--danger">
+                        <span>
+                            <apex:repeat value="{!errorMessages}" var="msg">
+                                {!msg}<br />
+                            </apex:repeat>
+                        </span>
+                    </div>                                                
+                </apex:outputPanel>
+            </apex:outputPanel>
+
+            <div id="mainErrorPanel">
+
+            </div>
+
+            <div class="row" style="padding-bottom: 2rem;">
+                <div class="tabs" style="padding-top: 2rem;">
+                    <div class="tabs__header-container">
+                        <ul class="tabs__header">
+                            <li class="tabs__header-item tabs__header-item--active" id="helixroofmain" data-tab-id="1" onclick="toggleSubtabs('roofTier1'); setDesignPackageType('Tier 1'); tabSwitch('Helix Roof');">
+                                <span>Helix Roof</span>
+                            </li>
+                            <li class="tabs__header-item " id="helixtrackermain" data-tab-id="2" onclick="tabSwitch('Helix Tracker'); disableProductionFields('', 'tracker');">
+                                <span>Helix Tracker</span>
+                            </li>
+                            <li class="tabs__header-item " id="helixcarportmain" data-tab-id="3" onclick="toggleSubtabs('carportTier1'); setDesignPackageType('Tier 1'); tabSwitch('Helix Carport'); disableProductionFields('','carport');">
+                                <span>Helix Carport</span>
+                            </li>
+                        </ul>
+                    </div>
+                                               
+                    <!--start tab containers-->
+                    <div class="tabs__content-container" >
+
+                        <!--tab1 Helix Roof -->
+                        <div class="tabs__content">
+                            <div class="tabs__content-item tabs__content-item--active" data-tab-content="1">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="section-header">
+                                            <h4>Helix Roof (Bundled with SMA Tripower Inverters)</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!--inner tabs-->
+                                <div class="subtab-styling" style="padding-top: 2rem;">
+                                    <div class="subtab-styling__header-container">
+                                        <ul class="subtab-styling__header">
+                                            <li class="subtab-styling__header-item " id="roofTier1" onclick="toggleSubtabs('roofTier1'); disableProductionFields('', 'roof'); setDesignPackageType('Tier 1');" >
+                                                <span>Tier 1 Design</span>
+                                            </li>
+                                            <li class="subtab-styling__header-item subtab-styling__header-item--active " id="roofTier2" onclick="toggleSubtabs('roofTier2'); disableProductionFields('', 'roof1'); setDesignPackageType('Tier 2');" >
+                                                <span>Tier 2 Design</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="subtab-styling__content-container">
+                                        <div class="subtab-styling__content ">
+                                            <div class="subtab-styling__content-item " id="roofTier1Content" >
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <p style="color: #0076be; font-size: small;">
+                                                        <apex:outputText value="{!headlines[2].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[2]))}"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <table style="margin-left: auto; margin-right: auto;">
+                                                <td>    
+                                                      <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <div class="text-image" style="border: solid #0076be 2px; margin: 1.5rem; border-radius: 4px;">
+                                                                <label>
+                                                                   <img src="{!$Resource.Helix_Roof_Single}" style="width: 282px; height: 159px; margin-bottom: .5rem;" alt="" />
+                                                                   <input type="radio" name="helixSingleDualTiltSizeRadios" onclick="setPanelStyle('Single')" id="roofSingleTiltRadio" />
+                                                                   <span style="padding-left: 1rem;"><b>Helix Single Tilt</b></span>
+                                                                   <p style="margin-left: 1rem; font-size: small !important; color: #5e6367;">
+                                                                     <apex:outputText value="{!headlines[4].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[4]))}" />
+                                                                    </p>
+                                                                </label>    
+                                                           </div>
+                                                      </div>
+                                                </td>
+                                                <td>
+                                                   <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                     <div class="text-image" style="border: solid #0076be 2px; margin: 1.5rem; border-radius: 4px;">
+                                                        <label>
+                                                            <img src="{!$Resource.HelixDualTilt}" style="width: 282px; height: 159px; margin-bottom: .5rem; border-radius: 2px;" alt="" />                                      
+                                                            <input type="radio" name="helixSingleDualTiltSizeRadios" onclick="setPanelStyle('Dual')" id="roofDualTiltRadio" />
+                                                            <span style="padding-left: 1rem;"><b>Helix Dual Tilt</b></span>
+                                                            <p style="margin-left: 1rem; font-size: small !important; color: #5e6367;">
+                                                                <apex:outputText value="{!headlines[5].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[5]))}" />
+                                                            </p>
+                                                        </label>
+                                                     </div>
+                                                   </div>
+                                                </td>
+                                            </table>
+                            
+                                            <div class="page-header"></div>
+                            
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <h5>System Information</h5>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">  
+                                                    <div class="form-group">    
+                                                        <label for="roofModuleType" style="width: 12rem;">
+                                                            <apex:outputPanel rendered="{!NOT(ISBLANK($ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText))}">
+                                                                <span class="tooltip" data-tooltip="{!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText}" data-tooltip-position="right middle">
+                                                                    <span class="icon-container">
+                                                                        <span class="image-icon image-icon-tooltip"></span>
+                                                                    </span>
+                                                                </span>
+                                                            </apex:outputPanel>
+                                                            {!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.Label}
+                                                        </label>                                
+                                                        <apex:inputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" id="roofModuleType" onchange="setSelectedModule(this.value)" rendered="{! !lockInputs}" style="min-width: 249.45px;"/>
+                                                        <apex:outputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}"/>
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                            <div class="page-header"></div>
+                                            
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" id="maxOut">
+                                                        <label>
+                                                            <input type="radio" class="input-container pretty-inputs" name="helixRoofSystemSizeRadios" id="roofMaxTheRoofSpace" onclick="disableProductionFields('max','roof');" />
+                                                            <span class="radio-label">{!$ObjectType.Design__c.Fields.MaxOutTheRoofSpace__c.Label}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>                                                      
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                        <label>
+                                                            <input type="radio" name="helixRoofSystemSizeRadios" id="roofTargetSystemSizeRadio" onclick="disableProductionFields('tss','roof');" />
+                                                            <span class="radio-label">Target System Size</span>
+                                                        </label>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-xs-4">
+                                                    <div class="form-group">  
+                                                        <input type="number" step="0.01" class="input-container pretty-inputs min-check" id="roofTargetSystemSize" disabled="{!IF(lockInputs = true, true, false)}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="form-group">                                                           
+                                                        <select id="roofSelectkWpWacId" size="1" class="input-container pretty-inputs" >
+                                                            <option label="kWp" value="kWp" >kWp</option>
+                                                            <option label="kWac" value="kWac" >kWac</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                        <label>
+                                                            <input type="radio" name="helixRoofSystemSizeRadios" onclick="disableProductionFields('tap','roof');" />
+                                                            <span class="radio-label">{!$ObjectType.Design__c.Fields.TargetAnnualProduction__c.Label}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="form-group">
+                                                        <input type="number" step="0.01" class="input-container pretty-inputs min-check" id="roofTargetAnnualProduction"  disabled="{!IF(lockInputs = true, true, false)}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4" >
+                                                    <div class="form-group" style="font-size: medium; font-weight : 500; margin-right: .5rem; padding-left: .75rem;  margin-top: .5rem; color: #5e6367;">
+                                                    kWh
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--Section 6 - Helix Roof info text -->
+                                            <div class="row" style="color:#5e6367; padding: 1rem; font-size: smaller;">
+                                                <div class="col-xs-12">
+                                                    <span>
+                                                        <i class="fa fa-info" style="font-size: larger; margin-right: .5rem; color: #0076be;"></i>
+                                                        <apex:outputText value="{!headlines[6].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[6]))}"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div><!--end tier 1 -->
+                                        
+                                        <!--Start tier 2 helix roof -->
+                                        <div class="subtab-styling__content subtab-styling__content--active">
+                                            <div class="subtab-styling__content-item subtab-styling__content-item--active" id="roofTier2Content">
+                                                <div class="row">
+                                                    <div class="col-xs-12" style="color: #0076be; font-size: small;">
+                                                        <apex:outputText value="{!headlines[3].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[3]))}"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <table style="margin-left: auto; margin-right: auto;">
+                                                    <td>
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <div class="text-image" style="border: solid #0076be 2px; margin: 1.5rem; border-radius: 4px;">
+                                                                <label>
+                                                                    <img src="{!$Resource.Helix_Roof_Single}" style="width: 282px; height: 159px; margin-bottom: .5rem;" alt="" />
+                                                                    <input type="radio" name="helixSingleDualTiltSizeRadios" onclick="setPanelStyle('Single')" id="roof1SingleTiltRadio" />
+                                                                    <span style="padding-left: 1rem;"><b>Helix Single Tilt</b></span>                                                                
+                                                                    <p style="margin-left: 1rem;">
+                                                                        <apex:outputText value="{!headlines[4].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[4]))}"/>
+                                                                    </p>
+                                                                  </label>
+                                                               </div>     
+                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <div class="text-image" style="border: solid #0076be 2px; margin: 1.5rem; border-radius: 4px;">
+                                                                <label>
+                                                                    <img src="{!$Resource.HelixDualTilt}" style="width: 282px; height: 159px; margin-bottom: .5rem; border-radius: 2px;" alt="" />
+                                                                    <input type="radio" name="helixSingleDualTiltSizeRadios" onclick="setPanelStyle('Dual')" id="roof1DualTiltRadio" />
+                                                                    <span style="padding-left: 1rem;"><b>Helix Dual Tilt</b></span>
+                                                                    <p style="margin-left: 1rem;">
+                                                                        <apex:outputText value="{!headlines[5].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[5]))}"/>
+                                                                    </p>
+                                                                </label>
+                                                              </div>    
+                                                        </div>
+                                                    </td>
+                                                </table>                                                
+                                                <div class="page-header"></div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <h5>System Information</h5>
+                                                    </div> 
+                                                </div>
+                                                
+                                                <div class="row"> 
+                                                    <div class="col-xs-12">  
+                                                        <div class="form-group">    
+                                                            <label for="roof1ModuleType" style="width: 12rem;">
+                                                                <apex:outputPanel rendered="{!NOT(ISBLANK($ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText))}">
+                                                                    <span class="tooltip" data-tooltip="{!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText}" data-tooltip-position="right middle">
+                                                                        <span class="icon-container" style="min-width: 1rem; width: 1rem; margin-right: .5rem;">
+                                                                            <span class="image-icon image-icon-tooltip" ></span>
+                                                                        </span>
+                                                                    </span>
+                                                                </apex:outputPanel>
+                                                                {!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.Label}
+                                                            </label> 
+                                                            <apex:inputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" id="roof1ModuleType" onchange="setSelectedModule(this.value)" rendered="{! !lockInputs}" style="min-width: 249.45px;"/>
+                                                            <apex:outputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}"/>
+                                                        </div>  
+                                                    </div>
+                                                </div>
+                                                <div class="page-header"></div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixRoof1SystemSizeRadios" id="roof1MaxTheRoofSpace" onclick="disableProductionFields('max', 'roof1');" />
+                                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.MaxOutTheRoofSpace__c.Label}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>                                                      
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixRoof1SystemSizeRadios" id="roof1TargetSystemSizeRadio" onclick="disableProductionFields('tss', 'roof1');" />
+                                                                <span class="radio-label">Target System Size</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <input type="number" step="0.01" class="input-container pretty-inputs min-check" id="roof1TargetSystemSize"  disabled="{!IF(lockInputs = true, true, false)}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">  
+                                                            <select id="roof1SelectkWpWacId" size="1" class="input-container pretty-inputs" disabled="{!IF(lockInputs = true, true, false)}" >
+                                                                <option label="kWp" value="kWp" >kWp</option>
+                                                                <option label="kWac" value="kWac" >kWac</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixRoof1SystemSizeRadios" id="roof1TargetAnnualProductionRadio" onclick="disableProductionFields('tap', 'roof1');" />
+                                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.TargetAnnualProduction__c.Label}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <input type="number" class="input-container pretty-inputs min-check" id="roof1TargetAnnualProduction" disabled="{!IF(lockInputs = true, true, false)}" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4" >
+                                                        <div class="form-group" style="font-size: medium; font-weight : 500; margin-right: .5rem; padding-left: .75rem;  margin-top: .5rem; color: #5e6367;">
+                                                        kWh
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--Section 6 - Helix Roof info text -->
+                                                <div class="row" style="color:#5e6367; padding: 1rem; font-size: smaller;">
+                                                    <div class="col-xs-12">
+                                                        <span>
+                                                            <i class="fa fa-info" style="font-size: larger; margin-right: .5rem; color: #0076be;"></i>
+                                                            <apex:outputText value="{!headlines[6].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[6]))}"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="page-header"></div>
+                                                
+                                                <div class="row" style="padding-left: .5rem;">
+                                                    <div class="col-xs-8">
+                                                        <h5>Roof Information</h5>
+                                                    </div>
+                                                    <div class="col-xs-3" style="text-align: right; margin-right: 2rem;">
+                                                        <apex:outputPanel rendered="{! !lockInputs}">
+                                                            <i class="fa fa-plus-circle" style="margin-right: .5rem; color: #0076be; font-size: 1.5rem; cursor: pointer;" onclick="toggleRoofActive(true, true);"></i>
+                                                            Add Roof
+                                                        </apex:outputPanel>
+                                                    </div>
+                                                </div>
+                                                
+
+                                                <!--Roof Summary-->
+                                                <div style="border: solid #e5e5e5 2px; margin: 1rem; padding-top: 1rem; min-height: 8rem; background: #f5f5f5; text-align: center;" id="addRoofInactive">
+
+                                                    <table class="table table-condensed" id="roofDetailsTable">
+                                                        <thead class="sp-blue" style="border-top: transparent; border-bottom: 2px solid; border-bottom-color: #0076be;">
+                                                            <td>Roof ID</td>
+                                                            <td>Project</td>
+                                                            <td>Roof Type</td>
+                                                            <td>Roof Membrane</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </thead>
+                                                        <tbody id="roofDetailsTBody"> </tbody>
+                                                    </table>
+
+                                                    <table class="table table-condensed" id="noRoofTable" style="display: none;"> </table>
+                                                </div>
+                                                <!--End Roof Summary-->
+                                                
+                                                <div style="border: solid #e5e5e5 2px; margin: 1rem; padding: 1rem; text-align: left; display: none;" id="addRoofActive">
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="radio" style="margin-left: 1rem;">
+                                                                <label>
+                                                                    <input type="radio" name="roofTypeRadio" id="existingRoofRadioId" />
+                                                                    <span><b>Existing Roof</b></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="radio" style="margin-left: 1rem;">
+                                                                <label>
+                                                                    <input type="radio" name="roofTypeRadio" id="reroofRadioId"  />
+                                                                    <span><b>Reroof</b></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="radio" style="margin-left: 1rem;">
+                                                                <label>
+                                                                    <input type="radio" name="roofTypeRadio" id="newRoofRadioId" />
+                                                                    <span><b>New Construction</b></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="page-header"></div>
+                                                    
+                                                    <form style="padding-right: .5rem; padding-left: .5rem;">
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group">
+                                                                    <label>Building Height</label>
+                                                                    <input type="number" class="input-container pretty-inputs" id="roofHeightId" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Parapet_Wall_Height__c.Label}</label>
+                                                                    <input type="number" class="input-container pretty-inputs" id="roofParapetWallHeightId" />    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Roof_Slope__c.Label}</label>
+                                                                    <input type="number" class="input-container pretty-inputs" id="roofSlopeId"  /> 
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xs-6">                                                                    
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Anchoring_Allowed__c.Label}</label>
+                                                                    <div class="input-container" style="display: flex;">
+                                                                        <div class="radio" style="margin-left: 1rem;" >
+                                                                            <label>
+                                                                                <input type="radio" name="anchoringRadio" id="anchorCheckYes" />
+                                                                                <span>Yes</span>
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio" style="margin-left: 1rem;" >
+                                                                            <label>
+                                                                                <input type="radio" name="anchoringRadio" id="anchorCheckNo" />
+                                                                                <span>No</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Roof_Type__c.Label}</label>
+                                                                    <select class="input-container pretty-inputs select-shrink" id="roofTypeId" >
+                                                                        <apex:repeat value="{!roofTypeOptions}" var="opt">
+                                                                            <option value="{!opt.value}" label="{!opt.label}" />
+                                                                        </apex:repeat>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-xs-6">                                                                    
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.With_Roof_Load_Limit__c.Label}</label>
+                                                                    <div class="input-container" style="display: flex;">
+                                                                        <div class="radio" style="margin-left: 1rem;">
+                                                                            <label>
+                                                                                <input type="radio" name="loadLimitRadio" onclick="toggleFields('loadLimitGroup',true);"  id="loadLimitCheckYes" />
+                                                                                <span>Yes</span>
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="radio" style="margin-left: 1rem;">
+                                                                            <label>
+                                                                                <input type="radio" name="loadLimitRadio" onclick="toggleFields('loadLimitGroup',false);"  id="loadLimitCheckNo" />
+                                                                                <span>No</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                                
+                                                        </div>
+                                                        
+                                                        <div class="row" style="margin-top: 1rem;">
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Roof_Membrane__c.Label}</label>
+                                                                    <select class="input-container pretty-inputs select-shrink"  id="roofMembraneId" onchange="if(this.value != '' && this.value.indexOf('Adhered') != -1) toggleFields('barrierGroup', false); else toggleFields('barrierGroup', true);">
+                                                                        <apex:repeat value="{!roofMembraneOptions}" var="opt">
+                                                                            <option value="{!opt.value}" label="{!opt.label}" />
+                                                                        </apex:repeat>
+                                                                    </select>   
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group" id="loadLimitGroup">
+                                                                    <label>Load Limit (psf)</label>
+                                                                    <input type="number" class="input-container pretty-inputs" id="loadPSF" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <p style="color: #0076be; font-size: smaller;">
+                                                                    Note! If Mechanically Attached or Ballasted, please complete the Functional Air Barrier section below. Also submit roof construction details if available.
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-xs-6">
+                                                                <p style="color: #0076be; font-size: smaller;">
+                                                                    Note! SunPower designs for a roof load limit of 10 psf for Helix designs, unless specified otherwise.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group" id="barrierGroup">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Functional_Air_Barrier__c.Label}</label>
+                                                                    <select class="input-container pretty-inputs select-shrink"  id="roofFunctionalAirBarrierId" >
+                                                                        <apex:repeat value="{!airBarrierOptions}" var="opt">
+                                                                            <option value="{!opt.value}" label="{!opt.label}" />
+                                                                        </apex:repeat>
+                                                                    </select>                                                                 
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-6">
+                                                                <div class="form-group">
+                                                                    <label>{!$ObjectType.Roof_Details__c.Fields.Snow_Load__c.Label}</label>
+                                                                    <input type="number" class="input-container pretty-inputs" id="roofSnowLoadId"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div id="roofErrorPanel" style="width: 100%;" tabindex="0"> </div>
+                                                        </div>
+                                                        
+                                                        <!--buttons add roof/cancel-->
+                                                        <div class="page-header"></div>                                                           
+                                                        
+                                                        <input id="tempRoofIdHolder" value="" />
+                                                        <div class="row" style="margin-bottom: .5rem;">
+                                                            <div class="col-xs-12">
+                                                                <apex:outputPanel rendered="{! !lockInputs}">
+                                                                    <a href="#roofHeightId" id="roofAddButton" class="btn btn-primary btn--small" onclick="addNewRoof()">Add</a>&nbsp;&nbsp;
+                                                                </apex:outputPanel>
+                                                                <a href="#" id="roofCancelButton" class="btn btn--small" onclick="clearAndResetRoof(true);">Cancel</a>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div><!--end add roofs-->
+                                            </div>
+                                        </div><!--end tier 2 roof -->
+
+                                    </div>
+
+                                    <!--Design Options-->
+                                    <div class="row" style="width: 100%; margin-right: auto; margin-left: auto; cursor: pointer;">
+                                        <div class="col-xs-12">
+                                            <div class="section-header" onclick="rotateChevron('roof');">
+                                                <i class="fa fa-chevron-down fa-rotate-270 fa-pull-left sp-blue" aria-hidden="true" id="roofOptionChevron"></i>
+                                                <div class="sp-blue" style="display: -webkit-inline-box;"><h4 style="color: black;">Design Options&nbsp;</h4>(optional)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!--toggled div display-->
+                                    <div id="roofDesignOptions" style="display: none; margin-right: 1rem; margin-left: 1rem;">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <p style="font-size: smaller;">
+                                                    <apex:outputText value="{!headlines[9].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[9]))}"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <table class="table all-borders" style="text-align: center; font-size: smaller;">
+                                            <tr>
+                                                <td><b>TYPE OF OBSTRUCTION</b></td>
+                                                <td colspan="2"><b>SETBACK DISTANCE</b></td>
+                                                <td colspan="2"><b>ACCESS PATH WIDTH</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>SunPower</td>
+                                                <td>Dealer Input</td>
+                                                <td>SunPower</td>
+                                                <td>Dealer Input</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top: 1.25rem;"><b>HVAC UNIT</b></td>
+                                                <td style="padding-top: 1.25rem;">4'</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <apex:inputField type="number" value="{!objDesign.SetbackDistanceHVAC__c}" id="setbackDistanceHVACId" styleclass="input-container pretty-inputs min-check" />
+                                                   </div>
+                                                </td>
+                                                <td style="padding-top: 1.25rem;">4'</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <apex:inputField type="number" value="{!objDesign.AccessPathwayHVAC__c}" id="accessPathwayHVACId" styleclass="input-container pretty-inputs min-check" />
+                                                   </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top: 1.25rem;"><b>SKYLIGHT</b></td>
+                                                <td style="padding-top: 1.25rem;">4'</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                       <apex:inputField type="number" value="{!objDesign.SetbackDistanceSkylight__c}" id="setbackDistanceSkylightId" styleclass="input-container pretty-inputs min-check" />
+                                                     </div>
+                                                </td>
+                                                <td style="padding-top: 1.25rem;">4'</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                       <apex:inputField type="number" value="{!objDesign.AccessPathwaySkylight__c}" id="accessPathwaySkylightId" styleclass="input-container pretty-inputs min-check" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top: 1.25rem;"><b>SERVICEABLE VENT</b></td>
+                                                <td style="padding-top: 1.25rem;">4'</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <apex:inputField type="number" value="{!objDesign.SetbackDistanceServiceableVent__c}" id="setbackDistanceServiceableVentId" styleclass="input-container pretty-inputs min-check" />
+                                                  </div>
+                                                </td>
+                                                <td style="padding-top: 1.25rem;">4'</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <apex:inputField type="number" value="{!objDesign.AccessPathwayServiceableVent__c}" id="accessPathwayServiceableVentId" styleclass="input-container pretty-inputs min-check" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <div class="page-header"></div>
+                                        
+                                        <!--conduit disclaimer-->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <p style="font-size: smaller;">
+                                                    <apex:outputText value="{!headlines[10].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[10]))}"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <span>
+                                                    <input type="checkbox" id="rerouteConduitId" class="input-container pretty-inputs" />
+                                                    <label style="font-size: 0.75rem; color: #5e6367;">
+                                                        <b>All rooftop conduit will be re-routed</b>
+                                                    </label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!--tree disclaimer-->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <p style="font-size: smaller;">
+                                                    <apex:outputText value="{!headlines[11].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[11]))}"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <span>
+                                                    <input type="checkbox" id="treeRemovalBox" class="input-container pretty-inputs" />
+                                                    <label style="font-size: 0.75rem; color: #5e6367;">
+                                                        <b>All trees will be removed</b>
+                                                    </label>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <p style="font-size: smaller;">{!$ObjectType.Design__c.Fields.Ballast_Block_Weight__c.InlineHelpText}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label>{!$ObjectType.Design__c.Fields.Ballast_Block_Weight__c.Label}</label>
+                                                    <apex:inputField type="number" html-step=".01" value="{!objDesign.Ballast_Block_Weight__c}" id="ballastInput" styleclass="input-container pretty-inputs min-check" />
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                    </div><!--end design options-->
+                                
+                                </div>
+                                <!--end inner tabs--> 
+                            </div>
+                        </div>                          
+                        <!--end tab1 Helix Roof-->                          
+                        
+                        <!--begin tab2 Helix Tracker-->
+                        <div class="tabs__content">
+                            <div class="tabs__content-item" data-tab-content="2">
+                                <div class="row" style="padding-bottom: 2rem;">
+                                    <div class="col-xs-12">
+                                        <div class="section-header">
+                                            <h4>Helix Tracker (Bundled with SMA Tripower Inverters)</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Helix Tracker: System Size section :: START -->                                         
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h5>System Size</h5>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">  
+                                        <div class="form-group">    
+                                            <label for="trackerModuleType" style="width: 12rem;">
+                                                <apex:outputPanel rendered="{!NOT(ISBLANK($ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText))}">
+                                                    <span class="tooltip" data-tooltip="{!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText}" data-tooltip-position="right middle">
+                                                        <span class="icon-container" style="min-width: 1rem; width: 1rem; margin-right: .5rem;">
+                                                            <span class="image-icon image-icon-tooltip" ></span>
+                                                        </span>
+                                                    </span>
+                                                </apex:outputPanel>
+                                                {!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.Label}
+                                            </label>  
+                                            <apex:inputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" id="trackerModuleType" onchange="setSelectedModule(this.value)" rendered="{! !lockInputs}" style="min-width: 249.45px;"/>
+                                            <apex:outputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}"/>
+                                        </div>  
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group" >
+                                            <label style="width: 12rem;">{!$ObjectType.Design__c.Fields.GCR_Requirement__c.Label}</label>
+                                            <select class="input-container pretty-inputs" style="max-width: 249.45px;" id="gcrInput" value="{!objDesign.GCR_Requirement__c}">
+                                                <apex:repeat value="{!gcrOptions}" var="gOpt">
+                                                    <option label="{!gOpt.label}" value="{!gOpt.value}" />
+                                                </apex:repeat>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="page-header"></div>                                    
+                                       
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" >
+                                            <label>
+                                                <input type="radio" name="helixTrackerSystemSizeRadios" onclick="disableProductionFields('tss', 'tracker');" />
+                                                <span class="radio-label">Target System Size</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                           <input type="number" step="0.01" class="input-container pretty-inputs min-check" id="trackerTargetSystemSize" disabled="{!IF(lockInputs = true, true, false)}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <select id="trackerSelectkWpWacId" size="1" class="input-container pretty-inputs" disabled="{!IF(lockInputs = true, true, false)}">
+                                                <option label="kWp" value="kWp" >kWp</option>
+                                                <option label="kWac" value="kWac" >kWac</option>
+                                            </select>  
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" >
+                                            <label>
+                                                <input type="radio" name="helixTrackerSystemSizeRadios" onclick="disableProductionFields('tap', 'tracker');" />
+                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.TargetAnnualProduction__c.Label}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <input type="number" class="input-container pretty-inputs min-check" id="trackerTargetAnnualProduction" disabled="{!IF(lockInputs = true, true, false)}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4" >
+                                        <div class="form-group" style="font-size: medium; font-weight : 500; margin-right: .5rem; padding-left: .75rem;  margin-top: .5rem; color: #5e6367;">
+                                        kWh
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!--Section 7 - tracker doc requirements -->
+                                <div class="row" style="color:#5e6367; padding: 1rem; font-size: smaller;">
+                                    <div class="col-xs-12">
+                                        <span>
+                                            <i class="fa fa-info" style="font-size: larger; margin-right: .5rem; color: #0076be;"></i>
+                                            <apex:outputText value="{!headlines[7].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[7]))}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                    
+                            </div>
+                        </div><!-- Helix Tracker : END -->   
+                        
+                        <!--begin tab3 Helix Carport-->
+                        <div class="tabs__content">
+                            <div class="tabs__content-item" data-tab-content="3">
+                                <div class="row" style="padding-bottom: 2rem;">
+                                    <div class="col-xs-12">
+                                        <div class="section-header">
+                                            <h4>Helix Carport (Bundled with SMA Tripower Inverters)</h4>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="subtab-styling" >
+                                    <div class="subtab-styling__header-container">
+                                        <ul class="subtab-styling__header">
+                                            <li class="subtab-styling__header-item subtab-styling__header-item--active" id="carportTier1" onclick="toggleSubtabs('carportTier1'); setDesignPackageType('Tier 1');" ><!--disableProductionFields('', 'roof'); " -->
+                                                <span>Tier 1 Design</span>
+                                            </li>
+                                            <li class="subtab-styling__header-item " id="carportTier2" onclick="toggleSubtabs('carportTier2'); setDesignPackageType('Tier 2'); " ><!--  disableProductionFields('', 'roof1'); " -->
+                                                <span>Tier 2 Design</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="subtab-styling__content-container">
+                                        <div class="subtab-styling__content ">
+                                            <!--Carport Tier 1 :: START -->
+                                            <div class="subtab-styling__content-item subtab-styling__content-item--active" id="carportTier1Content" >
+                                                
+                                                <!--Helix Carport Tier1: :: START -->
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <p style="color: #0076be; font-size: small;">
+                                                            <apex:outputText value="{!headlines[14].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[14]))}"/>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <h5>System Information</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">  
+                                                        <div class="form-group">    
+                                                            <label for="carportModuleType" style="width: 12rem;">
+                                                                <apex:outputPanel rendered="{!NOT(ISBLANK($ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText))}">
+                                                                    <span class="tooltip" data-tooltip="{!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText}" data-tooltip-position="right middle">
+                                                                        <span class="icon-container" style="min-width: 1rem; width: 1rem; margin-right: .5rem;">
+                                                                            <span class="image-icon image-icon-tooltip" ></span>
+                                                                        </span>
+                                                                    </span>
+                                                                </apex:outputPanel>
+                                                                {!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.Label}
+                                                            </label>  
+                                                            <apex:inputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" id="carportModuleType" onchange="setSelectedModule(this.value)" rendered="{! !lockInputs}" style="min-width: 249.45px;" />
+                                                            <apex:outputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}" />
+                                                        </div>  
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>                                 
+                                            
+                                                <div class="row" id="helixCarportSystemSizeRadiosId">
+                                                    <div class="col-xs-10">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" id="maxOutCarpot1">
+                                                            <label>
+                                                                <input type="radio" class="input-container pretty-inputs" name="helixCarportSystemSizeRadios" id="carportMaxTheRoofSpace" onclick="disableProductionFields('max','carport');"  />
+                                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.MaxOutTheRoofSpace__c.Label}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixCarportSystemSizeRadios" onclick="if('{!lockInputs}' != 'true') disableProductionFields('tss', 'carport');" />
+                                                                <span class="radio-label">Target System Size</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <input type="number" step="0.01" class="input-container pretty-inputs min-check" id="carportTargetSystemSize"  disabled="{!IF(lockInputs = true, true, false)}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                        <select size="1" class="input-container pretty-inputs" id="carportSelectkWpWacId" disabled="{!IF(lockInputs = true, true, false)}">
+                                                            <option label="kWp" value="kWp" >kWp</option>
+                                                            <option label="kWac" value="kWac" >kWac</option>
+                                                        </select>  
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixCarportSystemSizeRadios" onclick="if('{!lockInputs}' != 'true') disableProductionFields('tap', 'carport');" />
+                                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.TargetAnnualProduction__c.Label}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <input type="number" class="input-container pretty-inputs min-check" id="carportTargetAnnualProduction" disabled="{!IF(lockInputs = true, true, false)}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4" >
+                                                        <div class="form-group" style="font-size: medium; font-weight : 500; margin-right: .5rem; padding-left: .75rem;  margin-top: .5rem; color: #5e6367;">
+                                                        kWh
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--Section 8 - carport info -->
+                                                <div class="row" style="color:#5e6367; padding: 1rem; font-size: smaller;">
+                                                    <div class="col-xs-12">
+                                                        <span>
+                                                            <i class="fa fa-info" style="font-size: larger; margin-right: .5rem; color: #0076be;"></i>
+                                                            <apex:outputText value="{!headlines[8].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[8]))}"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Helix Carport Tier 1: END -->
+
+                                            <!--Helix Carport Tier 2 :: START -->
+                                            <div class="subtab-styling__content-item " id="carportTier2Content" >
+                                                <div class="row">
+                                                    <div class="col-xs-12" style="color: #0076be; font-size: small;">
+                                                        <p>
+                                                            <apex:outputText value="{!headlines[16].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[16]))}"/>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <h5>System Information</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">  
+                                                        <div class="form-group">    
+                                                            <label for="carport2ModuleType" style="width: 12rem;">
+                                                                <apex:outputPanel rendered="{!NOT(ISBLANK($ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText))}">
+                                                                    <span class="tooltip" data-tooltip="{!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.InlineHelpText}" data-tooltip-position="right middle">
+                                                                        <span class="icon-container" style="min-width: 1rem; width: 1rem; margin-right: .5rem;">
+                                                                            <span class="image-icon image-icon-tooltip" ></span>
+                                                                        </span>
+                                                                    </span>
+                                                                </apex:outputPanel>
+                                                                {!$ObjectType.Design__c.Fields.ModuleTypeandWattage__c.Label}
+                                                            </label> 
+                                                            <apex:inputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" id="carport2ModuleType" onchange="setSelectedModule(this.value)" rendered="{! !lockInputs}" style="min-width: 249.45px;"/>
+                                                            <apex:outputField value="{!objDesign.ModuleTypeandWattage__c}" styleClass="input-container pretty-inputs" rendered="{!lockInputs}" />
+                                                        </div>  
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>                                 
+                                            
+                                                <div class="row" id="helixCarportSystemSizeRadiosId2">
+                                                    <div class="col-xs-10">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;" id="maxOutCarpot2">
+                                                            <label>
+                                                                <input type="radio" class="input-container pretty-inputs" name="helixCarport1SystemSizeRadios" id="carport1MaxTheRoofSpace" onclick="disableProductionFields('max','carport1');"  />
+                                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.MaxOutTheRoofSpace__c.Label}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixCarport1SystemSizeRadios" onclick="if('{!lockInputs}' != 'true') disableProductionFields('tss', 'carport1');" />
+                                                                <span class="radio-label">Target System Size</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <input type="number" step="0.01" class="input-container pretty-inputs min-check" id="carport1TargetSystemSize"  disabled="{!IF(lockInputs = true, true, false)}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                        <select size="1" class="input-container pretty-inputs" id="carport1SelectkWpWacId" disabled="{!IF(lockInputs = true, true, false)}">
+                                                            <option label="kWp" value="kWp" >kWp</option>
+                                                            <option label="kWac" value="kWac" >kWac</option>
+                                                        </select>  
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <div class="radio" style="margin-left: 1rem; margin-top: 1rem;">
+                                                            <label>
+                                                                <input type="radio" name="helixCarport1SystemSizeRadios" onclick="if('{!lockInputs}' != 'true') disableProductionFields('tap', 'carport1');" />
+                                                                <span class="radio-label">{!$ObjectType.Design__c.Fields.TargetAnnualProduction__c.Label}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <div class="form-group">
+                                                            <input type="number" class="input-container pretty-inputs min-check" id="carport1TargetAnnualProduction" disabled="{!IF(lockInputs = true, true, false)}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4" >
+                                                        <div class="form-group" style="font-size: medium; font-weight : 500; margin-right: .5rem; padding-left: .75rem;  margin-top: .5rem; color: #5e6367;">
+                                                        kWh
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--Section 8 - carport info -->
+                                                <div class="row" style="color:#5e6367; padding: 1rem; font-size: smaller;">
+                                                    <div class="col-xs-12">
+                                                        <span>
+                                                            <i class="fa fa-info" style="font-size: larger; margin-right: .5rem; color: #0076be;"></i>
+                                                            <apex:outputText value="{!headlines[8].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[8]))}"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>
+
+                                                <!-- SITE AUDIT :: BEGIN -->
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="section-header">
+                                                            <h5>Site Audit Information</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <h5>Topographical Survey Results</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer" >{!$ObjectType.Design__c.Fields.Topo_grade_change__c.InlineHelpText}</label>
+                                                            <div class="input-container" style="display: flex; height: 1.5rem;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="gradeRadio" id="gradeCheckYes" onclick="$('#topoGradeInput').show();" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="gradeRadio" id="gradeCheckNo" onclick="$('#gradeChangeInput').val(''); $('#topoGradeInput').hide();" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>                                                                
+                                                            </div>                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" id="topoGradeInput">
+                                                    <div class="col-xs-6">
+                                                        <div class="form-group">
+                                                            <label for="gradeChangeInput">Please specify </label>
+                                                            <span>
+                                                                <input type="number" step="0.01" id="gradeChangeInput" class="input-container pretty-inputs min-check" value="{!objDesign.Topo_grade_change_specify__c}" />
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <h5>Underground Utility Survey Results</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer" >{!$ObjectType.Design__c.Fields.Underground_Utility_Lines__c.InlineHelpText}</label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="utilityRadio" id="utilityCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="utilityRadio" id="utilityCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                                <span class="sp-blue" style="font-size: smaller; margin-left: 1rem;">
+                                                                    Note! If yes, please provide a layout showing the path of any underground utility lines.
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>
+
+                                                <!-- GEOTECH REPORT :: BEGIN -->
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <h5>Geotechnical Report Survey Results</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer" >{!$ObjectType.Design__c.Fields.Soil_Subject_to_Liquefaction__c.Label}</label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="soilCheckRadio" id="soilCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="soilCheckRadio" id="soilCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer">
+                                                                    {!$ObjectType.Design__c.Fields.Vertical_Uplift_Resistance_Skin_Friction__c.Label}
+                                                                </label>
+                                                            <span style="display: inline-flex;">
+                                                                <input type="number" max="999" id="upliftFrictionInput" class="input-container pretty-inputs min-check" value="{!objDesign.Vertical_Uplift_Resistance_Skin_Friction__c}" />&nbsp;&nbsp;&nbsp; (psf)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer">{!$ObjectType.Design__c.Fields.Excessive_Undocumented_Fill__c.Label}</label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="fillCheckRadio" id="fillCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="fillCheckRadio" id="fillCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer">{!$ObjectType.Design__c.Fields.Vertical_Downward_Load_Skin_Friction__c.Label}</label>
+                                                            <span style="display: inline-flex;">
+                                                                <input type="number" max="999" id="downwardFrictionInput" class="input-container pretty-inputs min-check" value="{!objDesign.Vertical_Downward_Load_Skin_Friction__c}" />&nbsp;&nbsp;&nbsp; (psf)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer">{!$ObjectType.Design__c.Fields.Shallow_Bedrock__c.Label}</label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="bedrockCheckRadio" id="bedrockCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="bedrockCheckRadio" id="bedrockCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer">{!$ObjectType.Design__c.Fields.Allowable_Passive_Pressure__c.Label}</label>
+                                                            <span style="display: inline-flex;">
+                                                                <input type="number" max="400" id="passivePressureInput" class="input-container pretty-inputs min-check" value="{!objDesign.Allowable_Passive_Pressure__c}" />&nbsp;&nbsp;&nbsp; (psf)
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer">{!$ObjectType.Design__c.Fields.Site_Located_in_a_Flood_Plain__c.Label}</label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="floodCheckRadio" id="floodCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="floodCheckRadio" id="floodCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="page-header"></div>
+                                            </div>
+                                            <!--Helix Carport Tier 2: END -->
+                                        </div>
+
+                                        <!-- CARPORT DESIGN OPTIONS -->
+                                        <div class="row" style="width: 100%; margin-right: auto; margin-left: auto; cursor: pointer;">
+                                            <div class="col-xs-12">
+                                                <div class="section-header" onclick="rotateChevron('carport');">
+                                                    <i class="fa fa-chevron-down fa-rotate-270 fa-pull-left sp-blue" aria-hidden="true" id="carportOptionChevron"></i>
+                                                    <div class="sp-blue" style="display: -webkit-inline-box;"><h4 style="color: black;">Design Options&nbsp;</h4>(optional)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!--toggled div display-->
+                                        <div id="carportDesignOptions" style="display: none; margin-right: 1rem; margin-left: 1rem;">
+                                            
+                                            <!--tree disclaimer-->
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <p style="font-size: smaller;">
+                                                        <apex:outputText value="{!headlines[15].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[15]))}"/>
+                                                    </p>
+                                                </div>
+                                            </div>                                            
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <span>
+                                                        <input type="checkbox" id="treeRemovalBox2" class="input-container pretty-inputs" />
+                                                        <label style="font-size: 0.75rem; color: #5e6367;">
+                                                            <b>All trees will be removed</b>
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                            </div>                                         
+                                            
+                                            <div class="page-header"></div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">                                                                    
+                                                    <div class="form-group">
+                                                        <label class="label-fixer">{!$ObjectType.Design__c.Fields.Separate_DC_switch_required__c.InlineHelpText}</label>
+                                                        <div class="input-container" style="display: flex;">
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="dcSwitchRadio" id="switchCheckYes" />
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="dcSwitchRadio" id="switchCheckNo" />
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">                                                                    
+                                                    <div class="form-group">
+                                                        <label class="label-fixer">{!$ObjectType.Design__c.Fields.Decking__c.Label}</label>
+                                                        <div class="input-container" style="display: flex;">
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="deckingRadio" id="deckingCheckYes" />
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="deckingRadio" id="deckingCheckNo" />
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="row" style="margin-left: 0px;">                                                                    
+                                                        <div class="form-group" style="height: 2rem;">
+                                                            <label class="label-fixer" style="margin-left: .5rem;">
+                                                                {!$ObjectType.Design__c.Fields.Flush_mounted_piers__c.Label}
+                                                            </label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="piersRadio" id="piersCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="piersRadio" id="piersCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin-left: 0.5rem; margin-bottom: 1rem;">
+                                                        <span class="sp-blue" style="font-size: smaller;">{!$ObjectType.Design__c.Fields.Flush_mounted_piers__c.InlineHelpText}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="row" style="margin-left: 0px;">                                                                    
+                                                        <div class="form-group" style="height: 2rem;">
+                                                            <label class="label-fixer" style="margin-left: .5rem;">{!$ObjectType.Design__c.Fields.X7_5_Degree_Tilt__c.Label}</label>
+                                                            <div class="input-container" style="display: flex;">
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="tiltRadio" id="tiltCheckYes" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio" style="margin-left: 1rem;" >
+                                                                    <label>
+                                                                        <input type="radio" name="tiltRadio" id="tiltCheckNo" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin-left: 0.5rem; margin-bottom: 1rem;">
+                                                        <span class="sp-blue" style="font-size: smaller;">{!$ObjectType.Design__c.Fields.X7_5_Degree_Tilt__c.InlineHelpText}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">                                                                    
+                                                    <div class="form-group">
+                                                        <label class="label-fixer">{!$ObjectType.Design__c.Fields.Additional_37_Watt_Edge_lighting__c.Label}</label>
+                                                        <div class="input-container" style="display: flex;">
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="lightingRadio" id="lightingCheckYes" />
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="lightingRadio" id="lightingCheckNo" />
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">                                                                    
+                                                    <div class="form-group">
+                                                        <label class="label-fixer">{!$ObjectType.Design__c.Fields.Branding__c.Label}</label>
+                                                        <div class="input-container" style="display: flex;">
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="brandingRadio" id="brandingCheckYes" />
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="brandingRadio" id="brandingCheckNo" />
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="form-group">
+                                                        <label class="label-fixer">{!$ObjectType.Design__c.Fields.No_Of_DAS_Monitor_Box__c.InlineHelpText}</label>
+                                                        <input class="input-container pretty-inputs min-check" type="number" max="99" id="numOfBoxesInput" value="{!objDesign.No_Of_DAS_Monitor_Box__c}" />
+                                                    </div>
+                                                </div>
+                                                                                               
+                                                <div class="col-xs-6">                                                                    
+                                                    <div class="form-group" >
+                                                        <label class="label-fixer" style="margin-left: .5rem;">{!$ObjectType.Design__c.Fields.Snow_Guard_required__c.Label}</label>
+                                                        <div class="input-container" style="display: flex;">
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="snowGuardRadio" id="snowGuardCheckYes" />
+                                                                    <span>Yes</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio" style="margin-left: 1rem;" >
+                                                                <label>
+                                                                    <input type="radio" name="snowGuardRadio" id="snowGuardCheckNo" />
+                                                                    <span>No</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="page-header"></div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="row">                                                                    
+                                                        <div class="form-group">
+                                                            <label class="label-fixer" style="font-size: smaller;">
+                                                                <input type="checkbox" id="minClearanceCheck" onclick="if(this.checked) $( '#minClearanceSpan' ).show(); else { $( '#minClearanceSpan' ).hide(); $( '#minClearanceInput' ).val('');}" />
+                                                                Min. clearance on lower edges is greater than 11'
+                                                            </label>                                                            
+                                                            <span class="sp-blue" style="display: inline-flex; align-items: center;" id="minClearanceSpan">
+                                                                <label>Please specify</label>
+                                                                <input class="input-container pretty-inputs min-check" type="number" step="0.01" max="13.5" id="minClearanceInput" value="{!objDesign.Min_Clearance_Lower_Edge__c}" />&nbsp;&nbsp;&nbsp;ft
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <span class="sp-blue" style="font-size: smaller;">{!$ObjectType.Design__c.Fields.Min_Clearance_Lower_Edge__c.InlineHelpText}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">                                                                    
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                        </div><!--end CARPORT design options-->
+
+                                    </div>
+                                </div>
+                            </div> 
+                        </div><!-- Helix Carport : END -->                
+                        
+                    </div><!--end tab content -->
+                </div><!-- end tabs-->
+            </div><!--end all tab div-->
+            
+            <!--buttons-->
+            <div class="row" style="text-align: right;">
+                <div class="col-xs-4" style="text-align: left;">
+                    <apex:commandButton rendered="{! !lockInputs}" styleClass="btn btn-secondary btn--normal" onclick="showOverlay(); saveDesign(false)" value="Save & Quit" oncomplete="hideOverlay()" reRender="mainPanel, errorPanel" />
+                    <apex:commandButton rendered="{!lockInputs}" styleClass="btn btn-secondary btn--normal" onclick="showOverlay()" action="{!returnToOpp}" value="Quit" oncomplete="hideOverlay()" reRender="mainPanel, errorPanel" />
+                </div>
+
+                <div class="col-xs-4">
+                    <apex:commandButton styleClass="btn btn-secondary btn--normal" onclick="showOverlay()" action="{!toHelixDesignRequest}" value="Back" oncomplete="hideOverlay()" reRender="mainPanel, errorPanel"/>
+                </div>
+
+                <div class="col-xs-4" >
+                    <apex:commandButton id="nextButton" rendered="{! !lockInputs}" styleClass="btn btn-primary btn--normal" onclick="showOverlay(); saveDesign(true)" value="Next" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay();" immediate="false" />
+                    <apex:commandButton rendered="{!lockInputs}" styleClass="btn btn-primary btn--normal" onclick="showOverlay()" action="{!toAttachments}" value="Next" oncomplete="hideOverlay()" reRender="mainPanel, errorPanel" />
+                </div>
+            </div>
+            <!--end buttons-->
+        </div><!--end main-->
+
+            <!--footer-->            
+            <div id="home" style="margin-top: .25rem;">
+                <footer>
+                    <div class="footer-content">
+                        <div class="copyright">&copy; SunPower Corporation. All rights reserved.</div>
+                    </div>
+                </footer>
+                <div class="bar"></div>
+            </div>
+            <!--end footer-->
+
+            <!--Hidden inputs-->
+            <div id="divCheckbox" style="display: none;">
+              <apex:inputText value="{!testString}" id="testInput" /> 
+              <apex:inputField value="{!objDesign.HelixDesignType__c}" id="designTypeInput" />
+            </div>
+
+            <!--action functions-->
+            <apex:actionFunction name="setHiddenDesignType" action="{!setDesignType}" reRender="designTypeInput, roofModuleType, roof1ModuleType, trackerModuleType, carportModuleType, carport2ModuleType" immediate="true">
+                <apex:param assignTo="{!objDesign.HelixDesignType__c}" value="" name="designType" />
+            </apex:actionFunction>
+
+            <apex:actionFunction name="setSelectedModule" action="{!setSelectedModule}" reRender="testInput, designTypeInput">
+                <apex:param name="selectedModuleType" assignTo="{!objDesign.ModuleTypeAndWattage__c}" value="" />
+            </apex:actionFunction>
+
+            <div class="modal fade" id="snowLoadModal" tabindex="-1" role="dialog" aria-labelledby="snowLoadModalLabel" >
+                <div class="modal-dialog" role="document" style="margin-top: 12rem;">
+                    <div class="modal-content" >
+                        <div class="modal-body">
+                            <div class="row" style="align-items: baseline;">
+                                <div class="image-icon image-icon-tooltip" style="margin-right: .5rem;"></div>
+                                <h3>Important Information</h3>
+                            </div>
+                            <p style="font-size: smaller;">
+                                <apex:outputText value="{!headlines[17].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(isNull(headlines[17]))}"/>
+                            </p>
+                            <button onclick="closeModal();" class="btn btn-secondary btn--small" style="float: right;">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </apex:form> 
+    </div>
+
+    <c:SPCommunityAppResources_JS />
+    <script type="text/javascript">
+        var selectedTab = '';
+        var subTab = '';
+        var panelStyle = '';
+        var packageType = '{!objDesign.Design_Package_Type__c}';
+        var errorString = ' is required. Please enter a value.';
+        var positiveInputError = 'All values must be a positive number';    
+        var isInit = false;
+        var agreedSnowLoad = false;
+        var isRevision = false;
+        
+        $(document).ready(function() {
+            console.log('Ready!');
+            console.log('locked', '{!lockInputs}');
+            console.log('revision', '{!objDesign.Revision_Of__c }');
+            $( '#snowLoadModal' ).hide();
+            $( '#tempRoofIdHolder' ).hide();
+            $( '#minClearanceSpan' ).hide();//TODO: if not blank show/else hide
+            
+            init();
+
+            if('{!lockInputs}' !== 'true') {
+                $( '#roofSnowLoadId' ).keyup(function() {
+                    if(!agreedSnowLoad && $( '#roofSnowLoadId' ).val() > 30) {
+                        $( '#snowLoadModal' ).show();
+                    }
+                });
+            }
+                
+        });
+        
+        function tabSwitch(tab) {
+            selectedTab = tab;
+            if(!isInit) {
+                setHiddenDesignType(tab);
+                panelStyle = '';
+
+                if(tab.indexOf('Roof') != -1) {
+                    disableProductionFields('', 'roof');
+                    disableProductionFields('', 'roof1');
+
+                    if($( '#roofTier2Content' ).hasClass("subtab-styling__content-item--active")) {
+                        fetchRoofDetails();
+                    } else if($( '#roofTier1Content' ).hasClass("subtab-styling__content-item--active")) {
+                        //do nothing
+                    } else {
+
+                    }
+                } else if(tab.indexOf('Carport') != -1) {
+                    setCarportFields();
+                }
+
+            }
+        }
+        
+        function setDesignPackageType(type) {
+            packageType = type;
+        }
+
+        function setPanelStyle(style) {
+            console.log('setPanel', style);
+            panelStyle = style;
+        }
+        
+        function init() {
+            isInit = true;
+            isRevision = ('{!objDesign.Revision_Of__c }' != '');
+            console.log('init');
+            console.log('isRevision', isRevision);
+            
+            //load page tabs upon entry/re-entry
+            var wasDisabled = false;
+            var designType = '{!objDesign.HelixDesignType__c}';
+            //if('{!objDesign.HelixDesignType__c}' == 'Helix Carport') {
+            if(designType.indexOf('Carport') > -1) {    
+                selectedTab = 'carport';                                
+                enableTab(selectedTab);
+                $( '#helixcarportmain' ).trigger("click");
+                disableTab(selectedTab);
+
+                if('{!objDesign.Design_Package_Type__c}' == 'Tier 2') {
+                    $( '#carportTier2' ).trigger("click");
+                    //setDesignPackageType('Tier 2');
+                    //other Tier 2 stuff here
+                    if( $( '#carportTier2' ).hasClass('disable-tabs')) {
+                        $( '#carportTier2' ).addClass('subtab-styling__header-item--active');
+                        $( '#carportTier1' ).removeClass('subtab-styling__header-item--active');
+                    }
+                    else {
+                        $( '#carportTier2' ).trigger("click");                
+                    }
+                    checkProduction('helixCarport1SystemSizeRadios', 'carport1');
+                }
+                else {
+                    $( '#carportTier1' ).trigger("click"); 
+                    //setDesignPackageType('Tier 1');
+                    if( $( '#carportTier1' ).hasClass('disable-tabs')) {
+                        $( '#carportTier1' ).addClass('subtab-styling__header-item--active');
+                        $( '#carportTier2' ).removeClass('subtab-styling__header-item--active');
+                    }
+                    else {
+                        $( '#carportTier1' ).trigger("click");
+                    }
+                    checkProduction('helixCarportSystemSizeRadios', 'carport');
+                }
+                setCarportFields();
+            //} else if('{!objDesign.HelixDesignType__c}' == 'Helix Tracker') {
+            } else if(designType.indexOf('Tracker') > -1 || designType.indexOf('Ground') > -1) {    
+                selectedTab = 'tracker';
+                enableTab(selectedTab);
+                $( '#helixtrackermain' ).trigger("click");
+                disableTab(selectedTab);
+                checkProduction('helixTrackerSystemSizeRadios', 'tracker');
+                if('{!objDesign.GCR_Requirement__c}' != '') {
+                    $( '#gcrInput' ).val('{!objDesign.GCR_Requirement__c}');
+                }
+            } else {
+                selectedTab = 'roof';
+                enableTab(selectedTab);               
+                
+                $( '#helixroofmain' ).trigger("click");
+                disableTab(selectedTab);
+
+                if('{!objDesign.Design_Package_Type__c}' == 'Tier 2') {
+                    setDesignPackageType('Tier 2');
+                    fetchRoofDetails(); //Get all roof details
+                    selectedTab = 'roof1';
+                    if( $( '#roofTier2' ).hasClass('disable-tabs')) {
+                        $( '#roofTier2' ).addClass('subtab-styling__header-item--active');
+                        $( '#roofTier1' ).removeClass('subtab-styling__header-item--active');
+                    }
+                    else {
+                        $( '#roofTier2' ).trigger("click");                    
+                        checkProduction('helixRoof1SystemSizeRadios', 'roof1');
+                    }
+                    $( '#anchorCheckNo' ).trigger("click");
+                    $( '#loadLimitCheckNo' ).trigger("click");
+                } else {
+                    selectedTab = 'roof';
+                    setDesignPackageType('Tier 1');
+                    if( $( '#roofTier1' ).hasClass('disable-tabs')) {
+                        $( '#roofTier1' ).addClass('subtab-styling__header-item--active');
+                        $( '#roofTier2' ).removeClass('subtab-styling__header-item--active');
+                    }
+                    else {
+                        $( '#roofTier1' ).trigger("click");
+                    }
+                    checkProduction('helixRoofSystemSizeRadios', 'roof');
+                }
+
+                if('{!lockInputs}' != 'true') {
+                    if('{!objDesign.RemoveTrees__c}' == 'true') {
+                        $( '#treeRemovalBox' )[0].checked = true;
+                    } 
+                    if('{!objDesign.RerouteConduit__c}' == 'true') {
+                        $( '#rerouteConduitId' )[0].checked = true;
+                    }
+                }
+
+
+            }
+
+            function enableTab(tab) {
+                if($( '#helix'+tab+'main' ).hasClass('disable-tabs')) {
+                    wasDisabled = true;
+                    $( '#'+tab ).removeClass('disable-tabs');
+                }
+            }
+            function disableTab(tab) {
+                if(wasDisabled) {
+                    wasDisabled = false;
+                    $( '#helix'+tab+'main' ).addClass('disable-tabs');
+                }
+            }
+
+            checkIsLocked();
+            isInit = false;
+        }
+
+        function checkIsLocked() {
+            if('{!lockInputs}' == 'true') {
+                $( ".tabs__header-item" ).addClass("disable-tabs");
+                $( ".subtab-styling__header-item" ).addClass("disable-tabs");
+                $( ".radio" ).addClass("is-disabled");
+                $( "#addRoofActive :input" ).prop("disabled", true);
+                $( "ul" ).addClass("default-pointer");
+                $( "li" ).addClass("default-pointer");
+                $( ".tabs__header-container" ).addClass("default-pointer");
+                $( ".pretty-inputs" ).prop("disabled", true);
+                $('input[type=checkbox]').prop('disabled','true');
+            }
+            else if(isRevision) {
+                $( ".tabs__header-item" ).addClass("disable-tabs");
+                $( ".tabs__header" ).addClass("default-pointer");
+            }
+        }
+
+        function setCarportFields() {
+            if('{!objDesign.Topo_grade_change__c}' != 'true') {
+                $( '#gradeCheckNo' ).trigger('click');
+            } else {
+                $( '#gradeCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Underground_Utility_Lines__c}' != 'true') {
+                $( '#utilityCheckNo' ).trigger('click');
+            } else {
+                $( '#utilityCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Soil_Subject_to_Liquefaction__c}' != 'true') {
+                $( '#soilCheckNo' ).trigger('click');
+            } else {
+                $( '#soilCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Excessive_Undocumented_Fill__c}' != 'true') {
+                $( '#fillCheckNo' ).trigger('click');
+            } else {
+                $( '#fillCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Shallow_Bedrock__c}' != 'true') {
+                $( '#bedrockCheckNo' ).trigger('click');
+            } else {
+                $( '#bedrockCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Site_Located_in_a_Flood_Plain__c}' != 'true') {
+                $( '#floodCheckNo' ).trigger('click');
+            } else {
+                $( '#floodCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Separate_DC_switch_required__c}' != 'true') {
+                $( '#switchCheckNo' ).trigger('click');
+            } else {
+                $( '#switchCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Decking__c}' != 'true') {
+                $( '#deckingCheckNo' ).trigger('click');
+            } else {
+                $( '#deckingCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Flush_mounted_piers__c}' != 'true') {
+                $( '#piersCheckNo' ).trigger('click');
+            } else {
+                $( '#piersCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Snow_Guard_required__c}' != 'true') {
+                $( '#snowGuardCheckNo' ).trigger('click');
+            } else {
+                $( '#snowGuardCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Additional_37_Watt_Edge_lighting__c}' != 'true') {
+                $( '#lightingCheckNo' ).trigger('click');
+            } else {
+                $( '#lightingCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Branding__c}' != 'true') {
+                $( '#brandingCheckNo' ).trigger('click');
+            } else {
+                $( '#brandingCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.X7_5_Degree_Tilt__c}' != 'true') {
+                $( '#tiltCheckNo' ).trigger('click');
+            } else {
+                $( '#tiltCheckYes' ).trigger('click');
+            }
+            if('{!objDesign.Min_Clearance_Lower_Edge__c}' != '' && '{!objDesign.Min_Clearance_Lower_Edge__c}' != '0.00') {
+                $( '#minClearanceSpan' ).show();
+                $( '#minClearanceCheck' )[0].checked = true;
+            }
+            if('{!lockInputs}' != 'true') {
+                if('{!objDesign.RemoveTrees__c}' == 'true') {
+                    $( '#treeRemovalBox2' )[0].checked = true;
+                }
+            } 
+            
+        }        
+
+        function checkProduction(label, tab) {
+            selectedTab = tab;
+
+            if('{!objDesign.MaxOuttheRoofSpace__c}' == 'true') {
+                $( '#'+tab+'MaxTheRoofSpace' )[0].checked = true;
+            } else if('{!objDesign.TargetAnnualProduction__c}' !== '' && '{!objDesign.TargetAnnualProduction__c}' != '0') {
+                 $( 'input[name='+label+']' ).each(function(index, content) {
+                    $content = $(content);
+                    if($content[0].nextElementSibling.innerHTML == 'Target Annual Production') {
+                        $content[0].checked = true;
+                    }
+                });
+                $( '#'+tab+'TargetAnnualProduction' ).val('{!objDesign.TargetAnnualProduction__c}');
+                if('{!lockInputs}' != 'true') {
+                    $( '#'+tab+'TargetAnnualProduction' ).prop('disabled', false);
+                }
+            } else if('{!objDesign.DealerRequestedSystemSizeAC__c}' !== '' && '{!objDesign.DealerRequestedSystemSizeAC__c}' != '0.00') {
+                $( 'input[name='+label+']' ).each(function(index, content) {
+                    $content = $(content);
+                    if($content[0].nextElementSibling.innerHTML == 'Target System Size') {
+                        $content[0].checked = true;
+                    }
+                });
+                $( '#'+tab+'TargetSystemSize').val('{!objDesign.DealerRequestedSystemSizeAC__c}');
+                $( '#'+tab+'SelectkWpWacId').val('kWac');
+                
+                if('{!lockInputs}' != 'true') {
+                    $( '#'+tab+'TargetSystemSize').prop('disabled', false);
+                    $( '#'+tab+'SelectkWpWacId').prop('disabled', false);
+                }
+            } else if('{!objDesign.Requested_System_Size__c}' !== '' && '{!objDesign.Requested_System_Size__c}' != '0.00') {
+                 $( 'input[name='+label+']' ).each(function(index, content) {
+                    $content = $(content);
+                    if($content[0].nextElementSibling.innerHTML == 'Target System Size') {
+                        $content[0].checked = true;
+                    }
+                });
+                $( '#'+tab+'TargetSystemSize').val('{!objDesign.Requested_System_Size__c}');
+                $( '#'+tab+'SelectkWpWacId').val('kWp');
+                
+                if('{!lockInputs}' != 'true') {
+                    $( '#'+tab+'TargetSystemSize').prop('disabled', false);
+                    $( '#'+tab+'SelectkWpWacId').prop('disabled', false);
+                }
+            }
+
+            if('{!objDesign.Technology_System__c}'.indexOf('Dual') != -1)  {
+                $('#'+tab+'DualTiltRadio').trigger("click");
+            } else if('{!objDesign.Technology_System__c}'.indexOf('Single') != -1) {
+                $('#'+tab+'SingleTiltRadio').trigger("click");
+            }
+        }
+
+        function disableProductionFields(field, tab) {
+            selectedTab = tab;
+
+            if(tab == 'tracker') {
+                setDesignPackageType('');
+            } else if(tab === 'roof1') {
+                fetchRoofDetails();
+            }
+
+            if(field == 'tss') {
+                $( '#'+tab+'TargetAnnualProduction').prop('disabled', true);
+                $( '#'+tab+'TargetAnnualProduction').val('');
+
+                $( '#'+tab+'TargetSystemSize').prop('disabled', false);
+                $( '#'+tab+'SelectkWpWacId').prop('disabled', false);
+            } else if(field == 'tap') {
+                $( '#'+tab+'TargetSystemSize').prop('disabled', true);
+                $( '#'+tab+'TargetSystemSize').val('');
+
+                $( '#'+tab+'SelectkWpWacId').prop('disabled', true);
+
+                $( '#'+tab+'TargetAnnualProduction').prop('disabled', false);
+            } else if(field == 'max') {
+                $( '#'+tab+'TargetAnnualProduction').prop('disabled', true);
+                $( '#'+tab+'TargetAnnualProduction').val('');
+
+                $( '#'+tab+'TargetSystemSize').prop('disabled', true);
+                $( '#'+tab+'TargetSystemSize').val('');
+
+                $( '#'+tab+'SelectkWpWacId').prop('disabled', true);
+            } else {
+                $( '#'+tab+'TargetAnnualProduction').prop('disabled', true);
+                $( '#'+tab+'TargetAnnualProduction').val('');
+
+                $( '#'+tab+'TargetSystemSize').prop('disabled', true);
+                $( '#'+tab+'TargetSystemSize').val('');
+
+                $( '#'+tab+'SelectkWpWacId').prop('disabled', true);
+
+                $( 'input[name=helixRoofSystemSizeRadios]' ).each(function(index, content) {
+                    var $content = $(content);
+                    $content[0].checked = false;
+                });
+                $( 'input[name=helixRoof1SystemSizeRadios]' ).each(function(index, content) {
+                    var $content = $(content);
+                    $content[0].checked = false;
+                }); 
+                $( 'input[name=helixTrackerSystemSizeRadios]' ).each(function(index, content) {
+                    var $content = $(content);
+                    $content[0].checked = false;
+                });
+                $( 'input[name=helixCarportSystemSizeRadios]' ).each(function(index, content) {
+                    var $content = $(content);
+                    $content[0].checked = false;
+                });
+                $( 'input[name=helixCarport1SystemSizeRadios]' ).each(function(index, content) {
+                    var $content = $(content);
+                    $content[0].checked = false;
+                });
+            }
+        }
+
+        function triggerSubmit() {
+            var a = document.getElementById('{!$Component.theForm.nextButton}');
+            if(a) {
+                a.click();
+            }
+            
+        }
+
+        function findUndefined(myVar) {
+            try {
+                if(typeof myVar != "undefined" && typeof myVar.value !== "undefined" && myVar.value !== null && myVar.value !== "") {
+                    console.log('true', myVar.value);
+                    return true;
+                }
+            } catch(ex) {
+                console.log('ex', ex);
+            }
+            return false;
+        }
+
+        //Save Page
+        var designErrors = [];
+        var isSubmitSuccess = false;
+        function saveDesign(isSubmit) {
+
+            var design = {};
+            var isValidForm = true;
+            $('input[type=number]:visible').each(function() {
+                if(this.validationMessage != "") {
+                    isValidForm = false;
+                    console.log('found invalid form', this.validationMessage);
+                    hideOverlay();
+                    return;
+                }
+            });
+            
+            if(!isValidForm) return;
+
+            console.log('valid form...');
+            $( '#mainErrorPanel' ).html('');//reset errors
+                        
+            var htmlString = '<div class="alert alert--danger"><span>';
+            designErrors.length = 0;
+
+            //Negative Number Check
+            var negativeInputFound = false;
+            $( '.min-check' ).filter(function() {
+                if(this.value != '' && this.value < 0) {
+                    negativeInputFound = true;
+                }
+            });
+
+            if(negativeInputFound) {
+                designErrors.push(positiveInputError);
+            } 
+
+            //defaulting
+            design.MaxOutTheRoofSpace__c = false;
+            design.TargetAnnualProduction__c = null;
+            design.DealerRequestedSystemSizeAC__c = null;
+            design.Requested_System_Size__c = null;
+            design.GCR_Requirement__c = '';
+            
+            //general information from all tabs
+            design.Id = '{!objDesign.Id}';
+
+            console.log('panelStyle', panelStyle);
+            console.log('selectedTab', selectedTab);
+            
+            if($( '#'+selectedTab+'TargetAnnualProduction').val() != '' && $( '#'+selectedTab+'TargetAnnualProduction').val() != 0.00) {
+                design.TargetAnnualProduction__c = $( '#'+selectedTab+'TargetAnnualProduction').val();
+            }
+
+            design.Design_Package_Type__c = packageType;
+            if(design.Design_Package_Type__c == '' && selectedTab != 'tracker') {
+                if($( '#carportTier2' ).hasClass('subtab-styling__header-item--active') || $( '#roofTier2' ).hasClass('subtab-styling__header-item--active')) {
+                    design.Design_Package_Type__c = 'Tier 2';
+                } else {
+                    design.Design_Package_Type__c = 'Tier 1';
+                }
+            }
+            if($( '#'+selectedTab+'TargetSystemSize').val() != '' && $( '#'+selectedTab+'TargetSystemSize').val() != 0.00) {
+                if($( '#'+selectedTab+'SelectkWpWacId').val() == 'kWac') {              
+                    design.DealerRequestedSystemSizeAC__c = $( '#'+selectedTab+'TargetSystemSize').val();
+                } else {
+                    design.Requested_System_Size__c = $( '#'+selectedTab+'TargetSystemSize').val();
+                }
+            }
+            
+            //Helix Roof data
+            if(selectedTab == 'roof' || selectedTab == 'roof1') {
+                design.HelixDesignType__c = 'Helix Roof';
+                //panel style for Technology_System__c - TODO
+                if(panelStyle != '') {
+                    if(panelStyle.indexOf('Dual') != -1) {
+                        design.Technology_System__c = '{!$Label.HelixDualTilt}';
+                    }
+                    else {
+                        design.Technology_System__c = '{!$Label.HelixSingleTilt}';
+                    }
+                } else {
+                    designErrors.push('Please select the type of panels.');
+                }
+                
+                //gather general roof info
+                design.MaxOutTheRoofSpace__c = $( '#'+selectedTab+'MaxTheRoofSpace' )[0].checked;
+                
+                //design options
+                var a;
+                a = document.getElementById('{!$Component.theForm.setbackDistanceHVACId}');
+                if(findUndefined(a)) design.SetbackDistanceHVAC__c = a.value;
+                else design.SetbackDistanceHVAC__c = null;
+                a = document.getElementById('{!$Component.theForm.accessPathwayHVACId}');
+                if(findUndefined(a)) design.AccessPathwayHVAC__c = a.value;
+                else design.AccessPathwayHVAC__c = null;
+                a = document.getElementById('{!$Component.theForm.setbackDistanceSkylightId}');
+                if(findUndefined(a)) design.SetbackDistanceSkylight__c = a.value;
+                else design.SetbackDistanceSkylight__c = null;
+                a = document.getElementById('{!$Component.theForm.accessPathwaySkylightId}');
+                if(findUndefined(a)) design.AccessPathwaySkylight__c = a.value;
+                else design.AccessPathwaySkylight__c = null;
+                a = document.getElementById('{!$Component.theForm.setbackDistanceServiceableVentId}');
+                if(findUndefined(a)) design.SetbackDistanceServiceableVent__c = a.value;
+                else design.SetbackDistanceServiceableVent__c = null;
+                a = document.getElementById('{!$Component.theForm.accessPathwayServiceableVentId}');
+                if(findUndefined(a)) design.AccessPathwayServiceableVent__c = a.value;
+                else design.AccessPathwayServiceableVent__c = null;
+                a = document.getElementById('{!$Component.theForm.ballastInput}');
+                if(findUndefined(a)) design.Ballast_Block_Weight__c = a.value;
+                else design.Ballast_Block_Weight__c = null;
+                design.RerouteConduit__c = $( '#rerouteConduitId' )[0].checked;
+                design.RemoveTrees__c = $( '#treeRemovalBox' )[0].checked;
+
+                //nulling unecessary fields
+                design.Separate_DC_switch_required__c = false;
+                design.Decking__c = false;
+                design.Flush_mounted_piers__c = false;
+                design.Snow_Guard_required__c = false;
+                design.Additional_37_Watt_Edge_lighting__c = false;
+                design.Branding__c = false;
+                design.X7_5_Degree_Tilt__c = false;
+                design.Min_Clearance_Lower_Edge__c = null;
+                design.No_Of_DAS_Monitor_Box__c = null;
+                design.GCR_Requirement__c = null;
+            } 
+            else if(selectedTab == 'tracker') {
+                design.HelixDesignType__c = 'Helix Tracker';
+                design.Technology_System__c = '{!$Label.HelixTracker}';
+                design.GCR_Requirement__c = $( '#gcrInput' ).val();
+                design.MaxOutTheRoofSpace__c = false;
+                
+                //nulling unnecessary fields
+                design.SetbackDistanceHVAC__c = null;
+                design.AccessPathwayHVAC__c = null;
+                design.SetbackDistanceSkylight__c = null;
+                design.AccessPathwaySkylight__c = null;
+                design.SetbackDistanceServiceableVent__c = null;
+                design.AccessPathwayServiceableVent__c = null;
+                design.RerouteConduit__c = false;
+                design.RemoveTrees__c = false;
+                design.Separate_DC_switch_required__c = false;
+                design.Decking__c = false;
+                design.Flush_mounted_piers__c = false;
+                design.Snow_Guard_required__c = false;
+                design.Additional_37_Watt_Edge_lighting__c = false;
+                design.Branding__c = false;
+                design.X7_5_Degree_Tilt__c = false;
+                design.Min_Clearance_Lower_Edge__c = null;
+                design.No_Of_DAS_Monitor_Box__c = null;
+                design.Topo_grade_change__c = false;
+                design.Topo_grade_change_specify__c = null;
+                design.Underground_Utility_Lines__c = false;
+                design.Soil_Subject_to_Liquefaction__c = false;
+                design.Vertical_Uplift_Resistance_Skin_Friction__c = null;
+                design.Excessive_Undocumented_Fill__c = false;
+                design.Vertical_Downward_Load_Skin_Friction__c = null;
+                design.Shallow_Bedrock__c = false;
+                design.Allowable_Passive_Pressure__c = null;
+                design.Site_Located_in_a_Flood_Plain__c = false;
+                design.Ballast_Block_Weight__c = null;
+            } 
+            else if(selectedTab == 'carport' || selectedTab == 'carport1') { //TODO - Carport tiers
+                if(design.Design_Package_Type__c == 'Tier 2') {
+                    selectedTab = 'carport1';
+                }
+                design.HelixDesignType__c = 'Helix Carport';
+                //design.Technology_System__c = '{!$Label.HelixCarport}';
+                design.Technology_System__c = '';
+                design.MaxOutTheRoofSpace__c = $( '#'+selectedTab+'MaxTheRoofSpace' )[0].checked;
+
+                //Tier 2 stuff
+                if(selectedTab == 'carport1') {
+                    design.Topo_grade_change__c = $('#gradeCheckYes' )[0].checked;
+                    design.Topo_grade_change_specify__c = $( '#gradeChangeInput' ).val();
+                    design.Underground_Utility_Lines__c = $('#utilityCheckYes' )[0].checked;
+                    design.Soil_Subject_to_Liquefaction__c = $('#soilCheckYes' )[0].checked;
+                    design.Vertical_Uplift_Resistance_Skin_Friction__c = $( '#upliftFrictionInput' ).val();
+                    design.Excessive_Undocumented_Fill__c = $('#fillCheckYes' )[0].checked;
+                    design.Vertical_Downward_Load_Skin_Friction__c = $( '#downwardFrictionInput' ).val();
+                    design.Shallow_Bedrock__c = $( '#bedrockCheckYes' )[0].checked;
+                    design.Allowable_Passive_Pressure__c = $( '#passivePressureInput' ).val();
+                    design.Site_Located_in_a_Flood_Plain__c = $( '#floodCheckYes' )[0].checked;
+                } else {
+                    //null out tier 2 fields if not tier 2
+                    design.Topo_grade_change__c = false;
+                    design.Topo_grade_change_specify__c = null;
+                    design.Underground_Utility_Lines__c = false;
+                    design.Soil_Subject_to_Liquefaction__c = false;
+                    design.Vertical_Uplift_Resistance_Skin_Friction__c = null;
+                    design.Excessive_Undocumented_Fill__c = false;
+                    design.Vertical_Downward_Load_Skin_Friction__c = null;
+                    design.Shallow_Bedrock__c = false;
+                    design.Allowable_Passive_Pressure__c = null;
+                    design.Site_Located_in_a_Flood_Plain__c = false;
+                }
+                
+                //design options
+                design.RemoveTrees__c = $( '#treeRemovalBox2' )[0].checked;
+                design.Separate_DC_switch_required__c = $( '#switchCheckYes' )[0].checked;
+                design.Decking__c = $( '#deckingCheckYes' )[0].checked;
+                design.Flush_mounted_piers__c = $( '#piersCheckYes' )[0].checked;
+                design.Snow_Guard_required__c = $( '#snowGuardCheckYes' )[0].checked;
+                design.Additional_37_Watt_Edge_lighting__c = $( '#lightingCheckYes' )[0].checked;
+                design.Branding__c = $( '#brandingCheckYes' )[0].checked;
+                design.X7_5_Degree_Tilt__c = $( '#tiltCheckYes' )[0].checked;
+                if($('#minClearanceCheck')[0].checked) {
+                    design.Min_Clearance_Lower_Edge__c = $( '#minClearanceInput' ).val();
+                } else {
+                    design.Min_Clearance_Lower_Edge__c = null;
+                }
+                design.No_Of_DAS_Monitor_Box__c = $( '#numOfBoxesInput' ).val() == 0 ? null : $( '#numOfBoxesInput' ).val();
+
+                //null unnecessary fields
+                design.SetbackDistanceHVAC__c = null;
+                design.AccessPathwayHVAC__c = null;
+                design.SetbackDistanceSkylight__c = null;
+                design.AccessPathwaySkylight__c = null;
+                design.SetbackDistanceServiceableVent__c = null;
+                design.AccessPathwayServiceableVent__c = null;
+                design.RerouteConduit__c = false;
+                design.GCR_Requirement__c = null;
+                design.Ballast_Block_Weight__c = null;
+            }
+
+            console.log('design pre-validation', design);
+
+            validateDesignData(design);
+            
+            if(designErrors.length > 0 && isSubmit) { //only do validation & error handling upon submit
+                //error handle
+                htmlString = '<div class="alert alert--danger"><span>';
+                for(var i = 0; i < designErrors.length; i++) {
+                    htmlString += designErrors[i] + '<br/>';
+                }
+                htmlString = htmlString.substring(0, htmlString.lastIndexOf("<br/>"));
+                htmlString += '<br/></span></div>';
+                
+                $( '#mainErrorPanel' ).html(htmlString);
+                setFocus();
+            }
+            else {
+                sendDesignData(design, isSubmit);
+            }
+        }
+
+
+        function validateDesignData(design) {
+            //Validations - ballastInput
+            if(design.TargetAnnualProduction__c == null && design.DealerRequestedSystemSizeAC__c == null
+                && design.Requested_System_Size__c == null && design.MaxOutTheRoofSpace__c == false) {
+                designErrors.push('System Production' + errorString);
+            }
+
+            if(selectedTab == 'tracker') {
+                if(!design.GCR_Requirement__c || design.GCR_Requirement__c == '') {
+                    designErrors.push('GCR Requirement' + errorString);
+                }
+            }
+            else if(selectedTab == 'roof' || selectedTab == 'roof1') {
+                if(design.Ballast_Block_Weight__c != '' && design.Ballast_Block_Weight__c != null
+                    && (design.Ballast_Block_Weight__c < 12 || design.Ballast_Block_Weight__c > 20)) {
+                        designErrors.push('Ballast block weight must be between 12 and 20 lbs');
+                }
+                               
+            }            
+            else if(selectedTab == 'carport' || selectedTab == 'carport1') {
+
+                if(design.Min_Clearance_Lower_Edge__c != '' && design.Min_Clearance_Lower_Edge__c != null 
+                    && (design.Min_Clearance_Lower_Edge__c < 11 || design.Min_Clearance_Lower_Edge__c > 13.5)) {
+                    designErrors.push('The lower edge clearance should be between 11\' and 13.5\'');
+                }
+                if(design.Design_Package_Type__c == 'Tier 2') {
+                    //range checks here for optional fields
+                    if(design.Topo_grade_change__c == true && (design.Topo_grade_change_specify__c == '' || design.Topo_grade_change_specify__c < 2)) {
+                        designErrors.push('Topographical grade change, if specified, must be greater than 2\' ' );
+                    }
+                    if(design.Vertical_Uplift_Resistance_Skin_Friction__c != 0.00 && design.Vertical_Uplift_Resistance_Skin_Friction__c < 100) {
+                        designErrors.push('Vertical uplift resistance skin friction must be more than 100 psf');
+                    }
+                    if(design.Vertical_Downward_Load_Skin_Friction__c != 0.00 && design.Vertical_Downward_Load_Skin_Friction__c < 250) {
+                        designErrors.push('Vertical downward load skin friction must be more than 250 psf');
+                    }
+                    if(design.Allowable_Passive_Pressure__c != 0.00 && (design.Allowable_Passive_Pressure__c < 100 || design.Allowable_Passive_Pressure__c > 400)) {
+                        designErrors.push('Allowable passive pressure must be within the range of 100 - 400 psf');
+                    }
+                }
+            }
+        }
+
+        function sendDesignData(design, isSubmit) {
+            var allErrors = [];
+            var htmlString = '<div class="alert alert--danger"><span>';
+            //do remote
+            HelixDesignRequestController.saveDesignRequest(JSON.stringify(design), isSubmit, function(result, event) {
+                if(event.status) {
+                    if(result.success) {
+                        if(result.payloadMap.StatusCode == 200) {
+                            //success, navigate
+                            isSubmitSuccess = true;
+                            var mainURL = window.location.href;
+                            if(isSubmitSuccess && isSubmit) {                    
+                                var newURL = mainURL.substring(0, mainURL.lastIndexOf("/")) + '/HelixDesignRequest_Attachments?designId=' + '{!objDesign.Id}' + '&siteId=' + '{!objSite.id}';
+                            } else {
+                                //var newURL = mainURL.substring(0, mainURL.lastIndexOf("/")) + '/' + '{!opptyId}';
+                                var newURL = "{!redirectURL}";
+                            }
+                            window.location.href = newURL;
+                        }
+                        else if(result.payloadMap.StatusCode == 403) {
+                            //validation error
+                            allErrors = result.payloadMap.errors;
+                            if(allErrors && allErrors.length) {
+                                for(var i = 0; i < allErrors.length; i++) {
+                                    htmlString += allErrors[i] + '<br/>';
+                                }
+                                htmlString = htmlString.substring(0, htmlString.lastIndexOf("<br/>"));
+                                htmlString += '<br/></span></div>';
+                                
+                                $( '#mainErrorPanel' ).html(htmlString);
+                                setFocus();
+                            }
+                        }
+                        else {
+                            //generic error
+                            console.log('GEN ERROR', result);
+                            htmlString += '{!$Label.Cash_Orders_General_Exception}';
+                            $( '#mainErrorPanel' ).html(htmlString);
+                            setFocus();
+                        }
+                    } else {
+                        //exception, generic error
+                        console.log('DML ERROR', result.payloadMap.errors);
+                        htmlString += '{!$Label.Cash_Orders_General_Exception}';
+                        $( '#mainErrorPanel' ).html(htmlString);
+                        setFocus(); 
+                    }
+                } else {
+                    //Remoting Failure, generic error
+                    console.log('BIG TIME ERROR', result);
+                    htmlString += '{!$Label.Cash_Orders_General_Exception}';
+                    $( '#mainErrorPanel' ).html(htmlString);
+                    setFocus();
+                }
+            });
+        }
+
+        //ROOF DETAILS STUFF
+        var allRoofArray = [];
+
+        function fetchRoofDetails() {
+
+            allRoofArray = [];
+            var roofBodyString = '';
+            HelixDesignRequestController.fetchRoofDetails('{!objDesign.Id}', function(result, event) {
+                if(event.status) {
+                    if(result.success) {
+                        //do stuff
+                        allRoofArray = result.payloadMap.details;
+                        if(allRoofArray && allRoofArray.length) {
+                            for(var i = 0; i < allRoofArray.length; i++) {
+                                var fafaString1 = '';
+                                var editView = 'fa-search';
+                                if('{!lockInputs}' != 'true') { 
+                                    fafaString1 = '<i class="fa fa-trash-o sp-dark-grey" id="del'+allRoofArray[i].Id+'" aria-hidden="true" onclick="confirmDelete(\''+allRoofArray[i].Id+'\')"></i></td>';
+                                    editView = 'fa-pencil';
+                                }
+                                var fafaString2 = '<i id="edit'+allRoofArray[i].Id+'"class="fa '+editView+' sp-dark-grey" aria-hidden="true" onclick="populateRoof(\''+allRoofArray[i].Id+'\')"></i>';
+                                roofBodyString += '<tr id="row'+allRoofArray[i].Id+'"><td>'+allRoofArray[i].Roof_ID__c+'</td><td>'+allRoofArray[i].Roof_Construction__c+'</td><td>'+allRoofArray[i].Roof_Type__c+'</td><td>'+allRoofArray[i].Roof_Membrane__c+'</td><td>'+fafaString1+'</td><td>'+fafaString2+'</td></tr>';
+                            }
+                            $( '#roofDetailsTBody' ).html(roofBodyString);
+                        }
+                        else {
+                            //empty list
+                            roofBodyString = '<h5 style="color: #9b9b9b;">No roof has been added yet.</h5>';
+                            $( '#roofDetailsTable' ).hide();
+                            $( '#noRoofTable' ).show();
+                            $( '#noRoofTable' ).html(roofBodyString);
+                        }
+                    }
+                    else {
+                        //error handle
+                        console.log('ERROR FETCHING', result.payloadMap.errors);
+                        roofBodyString = '<div class="alert alert--danger"><span>'+result.payloadMap.errors+'</span></div>';
+                        $( '#noRoofTable' ).html(roofBodyString);
+                        $( '#roofDetailsTable' ).hide();
+                        $( '#noRoofTable' ).show();
+                    }
+                }
+                else {
+                    //error handle
+                    console.log('BIG TIME ERROR', result);
+                    roofBodyString = '{!$Label.Cash_Orders_General_Exception}';
+                    $( '#noRoofTable' ).html(roofBodyString);
+                    $( '#roofDetailsTable' ).hide();
+                    $( '#noRoofTable' ).show();
+                }
+            });
+        }
+
+        function confirmDelete(recordId) {
+            var doDelete = confirm("Are you sure you want to delete this roof?");
+
+            if(doDelete) {
+                HelixDesignRequestController.deleteSelectedRoof(recordId, function(result, event) {
+                    if(event.status) {
+                        if(result.success) {
+                            fetchRoofDetails();
+                        }
+                        else {
+                            console.log('error', result);
+                            alert(result.payload[0]);
+                        }
+                    } 
+                    else {
+                        console.log('big error', event);
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+
+        var isRoofError = false;
+        function addNewRoof() {
+            isRoofError = false;
+
+            var newRoof = {};
+            newRoof.Roof_Load_Limit_Amount_psf__c = null; //nulling to prevent 0 values
+            newRoof.Snow_Load__c = null; //nulling to prevent 0 values
+
+            newRoof.Design__c = '{!objDesign.Id}';
+            newRoof.Height__c = $( '#roofHeightId' ).val();
+            newRoof.Roof_Slope__c = $( '#roofSlopeId' ).val();
+            newRoof.Roof_Type__c = $( '#roofTypeId' ).val();
+            newRoof.Roof_Membrane__c = $( '#roofMembraneId' ).val();
+            newRoof.Parapet_Wall_Height__c = $( '#roofParapetWallHeightId' ).val();
+            newRoof.Functional_Air_Barrier__c = $( '#roofFunctionalAirBarrierId' ).val();
+            newRoof.Snow_Load__c = $( '#roofSnowLoadId' ).val() == "" ? null : $( '#roofSnowLoadId' ).val();
+            newRoof.Anchoring_Allowed__c = $( '#anchorCheckYes' )[0].checked;
+            newRoof.With_Roof_Load_Limit__c = $( '#loadLimitCheckYes' )[0].checked;
+            newRoof.Roof_Load_Limit_Amount_psf__c = $( '#loadPSF' ).val() == "" ? null : $( '#loadPSF' ).val();
+            if($( '#tempRoofIdHolder' ).val() != "" && $( '#roofAddButton' ).text() != 'Add') {
+                newRoof.Id = $( '#tempRoofIdHolder' ).val();
+            }
+
+
+            if($( '#existingRoofRadioId' )[0].checked) {
+                newRoof.Roof_Construction__c = 'Existing Roof';
+            } else if($( '#reroofRadioId' )[0].checked) {
+                newRoof.Roof_Construction__c = 'Reroof';
+            } else if($( '#newRoofRadioId' )[0].checked) {
+                newRoof.Roof_Construction__c = 'New Construction';
+            } else {
+                newRoof.Roof_Construction__c = '';
+            }
+
+            validateRoofDetails(newRoof);
+
+            if(!isRoofError) {
+                var roofBodyString = '';
+                //REMOTE ACTION HERE - insertNewRoof
+                HelixDesignRequestController.insertNewRoof(JSON.stringify(newRoof), function(result, event) {
+
+                    if(event.status) {
+                        if(result.success) {
+                            //do stuff
+                            var newRoof = result.payloadMap.newRoof;
+                            
+                            //check for existing roof in array, then remove to push updated roof
+                            if(allRoofArray && allRoofArray.length > 0) {
+                                for(var i = allRoofArray.length; i--;) {
+                                    if(allRoofArray[i].Id === newRoof.Id) {
+                                        allRoofArray.splice(i, 1);
+                                    }
+                                }
+                            } 
+                        
+                            allRoofArray.push(newRoof);
+                            
+                            
+                            for(var i = 0; i < allRoofArray.length; i++) {
+                                var fafaString1 = '';
+                                var editView = 'fa-search';
+                                if('{!lockInputs}' != 'true') { 
+                                    fafaString1 = '<i class="fa fa-trash-o sp-dark-grey" id="del'+allRoofArray[i].Id+'" aria-hidden="true" onclick="confirmDelete(\''+allRoofArray[i].Id+'\')"></i></td>';
+                                    editView = 'fa-pencil';
+                                }
+                                var fafaString2 = '<i id="edit'+allRoofArray[i].Id+'"class="fa '+editView+' sp-dark-grey" aria-hidden="true" onclick="populateRoof(\''+allRoofArray[i].Id+'\')"></i>';
+                                roofBodyString += '<tr id="row'+allRoofArray[i].Id+'"><td>'+allRoofArray[i].Roof_ID__c+'</td><td>'+allRoofArray[i].Roof_Construction__c+'</td><td>'+allRoofArray[i].Roof_Type__c+'</td><td>'+allRoofArray[i].Roof_Membrane__c+'</td><td>'+fafaString1+'</td><td>'+fafaString2+'</td></tr>';
+                            }
+                            $( '#roofDetailsTBody' ).html(roofBodyString);
+                            clearAndResetRoof(false);
+                            $( '#roofDetailsTable' ).show();
+                            $( '#noRoofTable' ).hide();
+                            //TODO: Clear out roof fields
+                            toggleRoofActive(false, true);
+                            $(window).scrollTop($( '#roofDetailsTable' ).offset().top-20);
+                        }
+                        else {
+                            //error handle
+                            console.log('ERROR FETCHING', result.payloadMap.errors);
+                            roofBodyString = '<div class="alert alert--danger"><span>'+result.payloadMap.errors+'</span></div>';
+                            $( '#roofErrorPanel' ).html(roofBodyString);
+                        }
+                    }
+                    else {
+                        //error handle
+                        console.log('BIG TIME ERROR', result);
+                        roofBodyString = '{!$Label.Cash_Orders_General_Exception}';
+                        $( '#roofErrorPanel' ).html(roofBodyString);
+                    }
+                });
+            }
+        }
+
+        function validateRoofDetails(roof) {
+
+            var htmlString = '';
+            var errors = [];
+
+            if(roof.Roof_Construction__c == "") {
+                isRoofError = true;
+                errors.push('Roof construction type' + errorString);
+            }
+            if(roof.Height__c == ""  || roof.Roof_Slope__c == "" 
+                || roof.Roof_Type__c == "" || roof.Roof_Membrane__c == "" || roof.Height__c == 0 
+                /*|| roof.Parapet_Wall_Height__c == 0 || roof.Parapet_Wall_Height__c == ""*/) { 
+                isRoofError = true;
+                errors.push('All roof fields are required except where noted');
+            }
+            if(roof.Roof_Membrane__c != "" && roof.Roof_Membrane__c.indexOf('Adhered') == -1 && roof.Functional_Air_Barrier__c == "") {
+                isRoofError = true;
+                errors.push('Functional Air Barrier' + errorString);
+            } 
+            if(roof.With_Roof_Load_Limit__c == true && (roof.Roof_Load_Limit_Amount_psf__c == "" || roof.Roof_Load_Limit_Amount_psf__c < 1)) {
+                isRoofError = true;
+                errors.push('Roof Load Limit' + errorString);
+            }
+            if(roof.Roof_Slope__c != "" && (roof.Roof_Slope__c < -5 || roof.Roof_Slope__c > 5)) {
+                isRoofError = true;
+                errors.push(' For Helix Roof, the acceptable roof slope is between -5 and 5 degrees');
+            }
+            if((roof.Height__c != "" && roof.Height__c < 0) 
+                || (roof.Parapet_Wall_Height__c != "" && roof.Parapet_Wall_Height__c < 0) 
+                || (roof.Snow_Load__c != "" && roof.Snow_Load__c != null && roof.Snow_Load__c < 0)
+                || (roof.Roof_Load_Limit_Amount_psf__c != "" && roof.Roof_Load_Limit_Amount_psf__c != null && roof.Roof_Load_Limit_Amount_psf__c < 0)) {
+                isRoofError = true;
+                errors.push(positiveInputError);
+            }            
+          
+            if(isRoofError && errors.length > 0) {
+                htmlString = '<div class="alert alert--danger"><span>';
+                for(var i = 0; i < errors.length; i++) {
+                    htmlString += errors[i] + '<br/>';
+                }
+                htmlString = htmlString.substring(0, htmlString.lastIndexOf("<br/>"));
+                htmlString += '<br/></span></div>';                
+            } 
+            $( '#roofErrorPanel' ).html(htmlString);
+        }
+
+        function clearAndResetRoof(doHidePanel) {
+
+            $( '#roofHeightId' ).val("");
+            $( '#roofSlopeId' ).val("");
+            $( '#roofTypeId' ).val("");
+            $( '#roofMembraneId' ).val("");
+            $( '#roofParapetWallHeightId' ).val("");
+            $( '#roofFunctionalAirBarrierId' ).val("");
+            $( '#roofSnowLoadId' ).val("");
+            $( '#anchorCheckYes' )[0].checked = false;
+            $( '#loadLimitCheckYes' )[0].checked = false;
+            $( '#anchorCheckNo' ).trigger("click");
+            $( '#loadLimitCheckNo' ).trigger("click");
+            $( '#loadPSF' ).val("");
+            $( '#existingRoofRadioId' )[0].checked = true;
+            $( '#reroofRadioId' )[0].checked = false;
+            $( '#newRoofRadioId' )[0].checked = false;
+            $( '#roofErrorPanel' ).html("");
+
+            if(doHidePanel) {
+                toggleRoofActive(false, true);
+            }
+            $( '#roofAddButton' ).text('Add');
+        }
+
+        function populateRoof(roofId) {
+
+            var roof = {};
+            roof = $.grep(allRoofArray, function(e){ return e.Id == roofId; })[0];
+            //change add to update when editing
+            $( '#roofAddButton' ).text('Update');
+
+            $( '#roofHeightId' ).val(roof.Height__c);
+            $( '#roofSlopeId' ).val(roof.Roof_Slope__c);
+            $( '#roofTypeId' ).val(roof.Roof_Type__c);
+            $( '#roofMembraneId' ).val(roof.Roof_Membrane__c);
+            $( '#roofFunctionalAirBarrierId' ).val(roof.Functional_Air_Barrier__c);
+            $( '#roofParapetWallHeightId' ).val(roof.Parapet_Wall_Height__c);
+            $( '#roofSnowLoadId' ).val(roof.Snow_Load__c);
+            $( '#loadPSF' ).val(roof.Roof_Load_Limit_Amount_psf__c);
+            $( '#tempRoofIdHolder' ).val(roof.Id);
+
+            if(roof.Roof_Construction__c !== '') {
+                if(roof.Roof_Construction__c == 'Existing Roof') {
+                    $( '#existingRoofRadioId' ).prop("checked", true);
+                } else if(roof.Roof_Construction__c == 'Reroof') {
+                    $( '#reroofRadioId' ).prop("checked", true);
+                } else if(roof.Roof_Construction__c == 'New Construction') {
+                    $( '#newRoofRadioId' ).prop("checked", true);
+                }
+            }           
+            
+            if(roof.Anchoring_Allowed__c) {
+                $( '#anchorCheckYes' ).prop("checked", true);
+            }
+            else {
+                $( '#anchorCheckNo' ).prop("checked", true);
+            }
+
+            if(roof.With_Roof_Load_Limit__c) {
+                $( '#loadLimitCheckYes' ).prop("checked", true);
+                toggleFields('loadLimitGroup',true);
+            }
+            else {
+                $( '#loadLimitCheckNo' ).prop("checked", true);
+                toggleFields('loadLimitGroup',false);
+            }
+
+            if(roof.Roof_Membrane__c != '' && typeof roof.Roof_Membrane__c !== 'undefined' && roof.Roof_Membrane__c.indexOf('Adhered') != -1) {
+                toggleFields('barrierGroup', false);
+            } else {
+                toggleFields('barrierGroup', true);
+            }
+            toggleRoofActive(true, false);
+        }
+        
+        function toggleRoofActive(showRoofFields, isNew) {
+            
+            if(showRoofFields) {
+                if(isNew) {
+                    $( '#anchorCheckNo' ).trigger("click");
+                    $( '#loadLimitCheckNo' ).trigger("click");
+                    $( '#existingRoofRadioId' )[0].checked = true;
+                }
+                $( "#addRoofActive" ).show();
+                $( "#addRoofInactive" ).hide();
+            } else {
+                $( "#addRoofInactive" ).show();
+                $( "#addRoofActive" ).hide();
+            }
+        }
+
+        function closeModal() {
+            agreedSnowLoad = true;
+            $( '#snowLoadModal' ).hide();
+        }
+        
+        function toggleFields(group, show) {
+            //TODO ADD CARPORT TOGGLES HERE??
+
+            if(group == 'loadLimitGroup' && !show)
+                $( '#loadPSF' ).val("");
+
+            if(show) {
+                $( '#'+group ).show();
+            } else {
+                $( '#'+group ).hide();
+            }
+        }
+        
+        function rotateChevron(tab) {
+            if( $( "#"+tab+"OptionChevron" ).hasClass( "fa-rotate-270" )) {
+                $( "#"+tab+"OptionChevron" ).removeClass( "fa-rotate-270" );
+                $( "#"+tab+"DesignOptions" ).show();
+            } else {
+                $( "#"+tab+"OptionChevron" ).addClass( "fa-rotate-270" );
+                $( "#"+tab+"DesignOptions" ).hide();
+            }
+        }
+
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+
+        function setFocus() {
+            window.scrollTo(0, 0);
+        } 
+      
+           
+    </script>
+</apex:page>

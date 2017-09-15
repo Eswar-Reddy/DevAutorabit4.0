@@ -1,0 +1,151 @@
+<apex:page controller="OpportunityScoreController" id="pg" showHeader="true" docType="html-5.0" standardStylesheets="false">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    <style>
+
+    .sp-blue {
+        color: #0076be !important;
+    }
+    .sp-concrete {
+        color: #5e6367 !important;
+    }
+
+    .bs .table {
+        border: 1px solid #ddd;
+    }
+ 
+    .bs .table > tbody > tr > td{
+        border-top: none;
+    }
+
+    .bs .table > thead > tr > th, 
+    .bs .table > tbody > tr > th, 
+    .bs .table > thead > tr > td, 
+    .bs .table > tbody > tr > td {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .bs .form-control {
+        border-radius: 2px;
+    }
+
+    .bs select[multiple],
+    .bs select[size] {
+      height: 34px;
+    }
+
+    </style>
+
+    <div class="bs">
+        <div class="container container-fluid" style="width: 90%;">
+
+            <apex:pageMessages ></apex:pageMessages>
+
+            <div class="row" style="margin-top: 2rem; margin-bottom: 1rem;">
+                <div class="col-sm-8">
+                    <h2>Commercial Opportunity Score Card</h2>
+                </div>
+                <apex:outputPanel id="outer">
+                    <div class="col-sm-4" >    
+                        <div style="float: right;">
+                            <h3 class="sp-concrete">Opportunity Score&nbsp;&nbsp;</h3>
+                            <h3 class="sp-blue">{!finalScore}</h3>                
+                        </div>
+                    </div>
+                </apex:outputPanel>    
+            </div>
+            
+            <apex:form >
+                
+                <apex:repeat value="{!categroyValueWrapperList}" var="wrapMain1" >                    
+                    <table class="table" style="margin-top: .5rem;">             
+                        <thead>
+                            <th colspan="3" style="line-height: 2.5rem; padding-top: 1.5rem; padding-bottom: 1.5rem;">
+                                <apex:outputPanel id="out">
+                                    <h3 class="sp-concrete" style="font-weight: lighter;">{!wrapMain1.mainObj.Name}</h3>                                
+                                    <div style="float: right; color: #9b9b9b; font-weight: bold;">
+                                        <h6>SCORE&nbsp;</h6><h3 class="sp-blue">{!wrapMain1.mainCategoryScore}</h3>
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </thead>
+                        
+                        <tbody>
+                            
+                            <apex:repeat value="{!wrapMain1.listOfSubCategroyWrapper2}" var="wrapSub">
+                                <tr style="border-top: 1px solid #ddd">
+                                    <td style="font-weight: bold; font-size: larger; padding-top: 1.5rem;">
+                                        {!wrapSub.subObj.Name}
+                                    </td>
+                                    <td></td><td></td>
+                                </tr>              
+                                
+                                <tr>
+                                    <apex:repeat value="{!wrapSub.listOfCategroyWrapper3}" var="wrapCat">
+                                        <tr style="font-size: larger;">
+                                            <td width="60%" style="padding-top: .5rem;">
+                                                {!wrapCat.catObj.Name}&nbsp;&nbsp;
+                                                <apex:outputPanel rendered="{!wrapCat.catObj.Help__c != null}" >
+                                                    <img src="{!URLFOR($Resource.SPStyleGuide, '/images/icon-tooltip.svg')}" style="background-size:contain; background-repeat:no-repeat; width:1rem; height:1rem; " data-toggle="popover" data-placement="bottom" data-content="{!wrapCat.catObj.Help__c}" />
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td width="35%">
+                                                <div class="form-group">
+                                                    <apex:selectList value="{!wrapCat.selectedValue}" size="1" id="selectVId" rendered="{!IF(wrapCat.inputType,true,false)}" onchange="getScoreInput('selectL',this.value, '{!wrapCat.catObj.Name}'); " styleClass="form-control">
+                                                        <apex:selectOptions value="{!wrapCat.cardValueOptions}" />  
+                                                    </apex:selectList>
+                                                    <apex:input type="number" value="{!wrapCat.inputNumber}" id="inputVId" rendered="{!IF(!wrapCat.inputType ,true,false)}" onchange=" getScoreInput('inputF', this.value, '{!wrapCat.catObj.Name}'); " styleClass="form-control" />
+                                                </div>
+                                            </td>
+                                            <td width="5%" style="padding-top: .5rem;">
+                                                <div class="form-group">
+                                                    <h4>
+                                                        <apex:outputText id="scoreId" rendered="{!IF(wrapCat.inputType,true,false)}" value="{!IF(wrapCat.selectedValue != null && mapOfCategeyValues[wrapCat.selectedValue] != null, mapOfCategeyValues[wrapCat.selectedValue].Score__c, '')}" styleClass="sp-blue" style="float: left;" />
+
+                                                        <apex:outputText id="scoreId2" rendered="{!IF(!wrapCat.inputType ,true,false)}" value="{!IF(wrapCat.inputNumber != null && wrapCat.selectedValue != null && mapOfCategeyValues[wrapCat.selectedValue] != null, mapOfCategeyValues[wrapCat.selectedValue].Score__c, '')}" styleClass="sp-blue" style="float: left;" />
+                                                    </h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                </tr>                                    
+                            </apex:repeat>
+                        </tbody>                       
+                    </table>
+                    <div class="row" style="margin-top: 1rem;"></div>
+                </apex:repeat>
+
+                <apex:actionFunction name="getScoreInput" action="{!getScoreInput}" rerender="scoreId, scoreId2, out, outer" status="myStatus1,myStatus11,myStatus111">
+                    <apex:param name="Intype" assignTo="{!Intype}" value="" />
+                    <apex:param name="inputNumberScore" assignTo="{!inputNumberScore}" value="" />
+                    <apex:param name="inputNumberCatName" assignTo="{!inputNumberCatName}" value="" />
+                </apex:actionFunction>
+
+                <div class="row" style="float: right; margin-right: 4rem;">
+                    <apex:commandButton styleClass="btn btn-primary" action="{!Save}" value="Save"  rendered="{! IF(categroyValueWrapperList.size > 0, true, false)}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <apex:commandButton styleClass="btn btn-default" action="{!Back}" value="Back"  onclick="window.close();"/>
+                </div>
+            </apex:form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            
+            $("body").popover({ 
+                selector: '[data-toggle="popover"]',
+                trigger: "hover" 
+            });
+            
+        });
+    </script>
+ 
+</apex:page>

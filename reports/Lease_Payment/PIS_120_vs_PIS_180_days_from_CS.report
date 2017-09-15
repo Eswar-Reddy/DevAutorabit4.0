@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FK_OPP_ID</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_STATE</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Date_Countersigned__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Placed_In_Service__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>NPS for customers</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c.PIS_Entry_Date__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>FiscalWeek</dateGranularity>
+        <field>LeasePayment__c.PIS_Entry_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>PIS &lt;120 vs PIS&gt;180 days from CS</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$LeasePayment__c@LeasePayment__c.Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c.PIS_Entry_Date__c</dateColumn>
+        <endDate>2016-01-03</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2015-06-29</startDate>
+    </timeFrameFilter>
+</Report>

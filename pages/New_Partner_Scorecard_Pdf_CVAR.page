@@ -1,0 +1,384 @@
+<apex:page renderAs="pdf" id="pgNewPartnerScorecard" standardController="Partner_Application__c" 
+ extensions="NewPartnerScorecardController" sidebar="false" showHeader="false">
+<apex:form >
+<table width="100%">
+    <tr style="height:55px">
+        <td width="100%" align="center"><font color="Black" size="5"><b><u>New Commercial Partner Scorecard</u></b></font></td>
+      </tr>  
+  </table>  
+  <br/>
+  <table border="1" style="text-align:center;width:100%;border-color:black;font-weight:bold;background-color:#99ffcc;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="4"><font color="#333399" size="4">General Information</font></td>
+      </tr>
+      <tr>
+          <td>Company</td>
+          <td><apex:outputfield value="{!partnerObj.Company_Name__c}" style="width:100%"/>&nbsp;</td>
+          <td>Date</td>
+          <td><apex:outputfield value="{!partnerObj.Application_Date__c}" style="width:80%"/>&nbsp;</td>
+      </tr>
+      <tr>
+          <td>Owner</td>
+          <td><apex:outputfield value="{!partnerObj.Owner__c}" style="width:100%"/>&nbsp;</td>
+          <td>RSM</td>
+          <td><apex:outputfield value="{!partnerObj.RSM__c}" style="width:90%"/>&nbsp;</td>
+      </tr>
+  </table>
+  <br/>
+  <table border="1" style="font-weight:bold;background-color:#99ffcc;width:100%;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="2"><font color="#333399" size="4">Meeting Attendees</font></td>
+      </tr>
+      <tr style="text-align:left;">
+          <td>Name</td>
+          <td>Title</td>
+      </tr>
+      <tr>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Name_1__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Title_1__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Name_2__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Title_2__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Name_3__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Title_3__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Name_4__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Meeting_Attendee_Title_4__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+  </table>
+  <br/>
+ <div style="page-break-after: always;">
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="3"><font color="#333399" size="4">Hurdles</font></td>
+      </tr>
+      <tr>
+          <td>Area</td>
+          <td>Item</td>
+          <td>X</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="8" style="background-color:white;">Basics</td>
+          <td style="text-align:left;">Relevant contractor’s licenses held</td>          
+          <td><apex:outputfield value="{!partnerObj.Relevant_contractors_licenses_held__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Full time employees: One manager/ owner, one full time install crew, one dedicated sales person, one admin / marketing, one design / engineering</td>          
+          <td><apex:outputfield value="{!partnerObj.Full_time_employees__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Qualifies for credit limit of $250,000 or €250,000</td>          
+          <td><apex:outputfield value="{!partnerObj.Qualifies_for_250000_credit_limit__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Relevant Insurance</td>          
+          <td><apex:outputfield value="{!partnerObj.Relevant_Insurance__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">No major open litigation or past litigation where court found against dealer</td>          
+          <td><apex:outputfield value="{!partnerObj.No_major_partner_faulted_litigation__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">At least one branded truck</td>          
+          <td><apex:outputfield value="{!partnerObj.At_least_one_branded_truck__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Formal office / workshop / warehouse</td>          
+          <td><apex:outputfield value="{!partnerObj.Formal_office_workshop_warehouse__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Business focused on PV or business unit focused on PV</td>          
+          <td><apex:outputfield value="{!partnerObj.Business_focused_on_PV__c}"/>&nbsp;</td>          
+      </tr>   
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="3" style="background-color:white;">Growth</td>
+          <td style="text-align:left;">Greater than 30% CAGR over last 2 years</td>          
+          <td><apex:outputfield value="{!partnerObj.Greater_than_30_CAGR_over_last_2_years__c}"/>&nbsp;</td>          
+      </tr>   
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Growth plan showing greater than 50% of median expected dealer growth in region</td>          
+          <td><apex:outputfield value="{!partnerObj.Growth_plan_greater_than_50_of_median__c}"/>&nbsp;</td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">At least one mid-level employee, e.g. reporting to general manager / owner with employees reporting to them</td>          
+          <td><apex:outputfield value="{!partnerObj.At_least_one_mid_level_employee__c}"/>&nbsp;</td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">
+          <td style="background-color:white;">Sales</td>
+          <td style="text-align:left;">At least one dedicated salesperson</td>          
+          <td><apex:outputfield value="{!partnerObj.At_least_one_dedicated_salesperson__c}"/>&nbsp;</td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="3" style="background-color:white;">Marketing</td>
+          <td style="text-align:left;">At least one person responsible for marketing activities, part time or full time</td>          
+          <td><apex:outputfield value="{!partnerObj.At_least_one_marketing_person__c}"/>&nbsp;</td>          
+      </tr> 
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Basic commercial sales collateral</td>          
+          <td><apex:outputfield value="{!partnerObj.Basic_commercial_sales_collateral__c}"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Basic website</td>          
+          <td><apex:outputfield value="{!partnerObj.Basic_Website__c}"/>&nbsp;</td>          
+      </tr>           
+  </table>
+  
+ </div>
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="9"><font color="#333399" size="4">Growth Plan</font></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>Q-3</td>
+          <td>Q-2</td>
+          <td>Q-1</td>
+          <td>Q0</td>
+          <td>Q+1</td>
+          <td>Q+2</td>
+          <td>Q+3</td>
+          <td>Q+4</td>         
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td>Total Dealer Sales, kW</td>
+          <td><apex:outputfield value="{!partnerObj.Q_minus_3_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_minus_2_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_minus_1_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q0_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_1_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_2_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_3_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_4_Total_Partner_Sales_kW__c}" style="width:100%"/>&nbsp;</td>          
+      </tr>
+      <tr style="background-color:#99ffcc;white-space: nowrap;">
+          <td>SunPower Sales to Partner</td>
+          <td><apex:outputfield value="{!partnerObj.Q_minus_3_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_minus_2_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_minus_1_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q0_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_1_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_2_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_3_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Q_plus_4_SunPower_Sales_to_Partner_kW__c}" style="width:100%"/>&nbsp;</td>       
+      </tr>
+  </table>
+  <br/>
+  
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="6"><font color="#333399" size="4">Scoring</font></td>
+      </tr>
+       <tr>
+          <td>Area</td>
+          <td>Item</td>
+          <td>Scoring</td>
+          <td>Max Score</td>
+          <td>Score</td>
+          <td>Explanation</td>                
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="11" style="background-color:white;">Basics</td>
+          <td style="text-align:left;">Commercial Focused Employees</td>
+          <td style="text-align:left;">1 pt each mid-level mgr</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Commercial_Employees_Score__c}" style="width:100%;text-align:center;"/></td>
+          <td><apex:outputfield value="{!partnerObj.Commercial_Employees_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">License</td>
+          <td style="text-align:left;">Required licenses held > 5 years</td>
+          <td>2</td>
+          <td><apex:outputfield value="{!partnerObj.License_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.License_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">License or qualification</td>
+          <td style="text-align:left;">Advanced license or qualification, e.g. NABCEP</td>
+          <td>2</td>
+          <td><apex:outputfield value="{!partnerObj.License_or_qualification_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.License_or_qualification_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Litigation</td>
+          <td style="text-align:left;">None</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Litigation_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Litigation_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Reputation</td>
+          <td style="text-align:left;">Subjective</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Reputation_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Reputation_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Engineering</td>
+          <td style="text-align:left;">1 full time</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Engineering_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Engineering_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Commercial Proposal Package</td>
+          <td style="text-align:left;">For presentation to commercial customers</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Proposal_Package_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Proposal_Package_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Branded sales vehicle</td>
+          <td style="text-align:left;">At least one</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Branded_sales_vehicle_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Branded_sales_vehicle_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Install truck</td>
+          <td style="text-align:left;">Greater than one with tools / 1 truck = 1 pt</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Install_truck_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Install_truck_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">History in PV</td>
+          <td style="text-align:left;">1 pt per year</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.History_in_PV_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.History_in_PV_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Office</td>
+          <td style="text-align:left;">With Professional Customer Facing Signage</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Signage_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Signage_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="5" style="background-color:white;">Growth</td>
+          <td style="text-align:left;">Historic growth rate</td>
+          <td style="text-align:left;">Linear to 80% annual, 30% annual zero pt</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Historic_growth_rate_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Historic_growth_rate_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Business Plan</td>
+          <td style="text-align:left;">Have one with financials</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Business_Plan_1_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Business_Plan_1_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Business Plan</td>
+          <td style="text-align:left;">Expected growth rate > 50% of median expected dealer growth for region, linear to 150%</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Business_Plan_2_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Business_Plan_2_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Well capitalized</td>
+          <td style="text-align:left;">3 points for assets > liab, 2 points for proof of >$50k of avail capital (on balance sheet or proof of open line of credit.</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Well_capitalized_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Well_capitalized_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">VAR business model</td>
+          <td style="text-align:left;">Partner focused on sales and installation</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.VAR_business_model_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.VAR_business_model_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="6" style="background-color:white;">Sales</td>
+          <td style="text-align:left;">Sales manager</td>
+          <td style="text-align:left;">With reports, binary</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Sales_manager_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Sales_manager_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sales training</td>
+          <td style="text-align:left;">Some process, binary</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Sales_training_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Sales_training_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sales meetings</td>
+          <td style="text-align:left;">At least weekly, binary</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Sales_meetings_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Sales_meetings_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Commercial Sales process</td>
+          <td style="text-align:left;">Sales cycle definitions and roles/tasks defined</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Commercial_Sales_process_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Commercial_Sales_process_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Basics sales metrics tracking</td>
+          <td style="text-align:left;">Trending of lead flow, etc…</td>
+          <td>3</td>
+          <td><apex:outputfield value="{!partnerObj.Basics_sales_metrics_tracking_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Basics_sales_metrics_tracking_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">CRM</td>
+          <td style="text-align:left;">At least some software or spreadsheets, binary</td>
+          <td>2</td>
+          <td><apex:outputfield value="{!partnerObj.CRM_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.CRM_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="5" style="background-color:white;">Marketing</td>
+          <td style="text-align:left;">Marketing Manager</td>
+          <td style="text-align:left;">Full time</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Marketing_Manager_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Marketing_Manager_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sophisticated sales collateral</td>
+          <td style="text-align:left;">Linear, subjective</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Sophisticated_sales_collateral_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Sophisticated_sales_collateral_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Professional uniforms</td>
+          <td style="text-align:left;">Binary</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Professional_uniforms_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Professional_uniforms_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Organized referral program</td>
+          <td style="text-align:left;">Binary</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Organized_referral_program_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Organized_referral_program_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sophisticated website</td>
+          <td style="text-align:left;">Linear, subjective</td>
+          <td>5</td>
+          <td><apex:outputfield value="{!partnerObj.Sophisticated_website_Score__c}" style="width:100%;text-align:center;"/>&nbsp;</td>
+          <td><apex:outputfield value="{!partnerObj.Sophisticated_website_Details__c}" style="width:100%"/>&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan = "3">Scorecard Score</td>
+        <td>100</td>
+        <td><apex:outputField id="scorecard" value="{!partnerObj.Scorecard_Score__c}" style="text-align:center;"/>&nbsp;</td>
+        <td></td>
+      </tr>
+  </table>  
+</apex:form>  
+</apex:page>

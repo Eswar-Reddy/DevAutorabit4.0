@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Activity.Time_Required__c</field>
+    </columns>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>Activity.SSO_Task_Due_Date__c</field>
+    </columns>
+    <columns>
+        <field>Activity.Tracking_Date__c</field>
+    </columns>
+    <columns>
+        <field>Activity.SSO_Internal_Due_Date_Time__c</field>
+    </columns>
+    <columns>
+        <field>Activity.SSO_Designer__c</field>
+    </columns>
+    <columns>
+        <field>Activity.Requested_By__c</field>
+    </columns>
+    <columns>
+        <field>STATUS</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Shows all open tasks assigned to the GBFS team.</description>
+    <filter>
+        <booleanFilter>((((1 AND (2 OR 3 OR 4 OR 5 OR 6 OR 7 OR 9 OR 10)) AND 8)))</booleanFilter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Task.SSO_Task</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Adrian Bello</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Mcklin Katada</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Rosalie Dela Cruz</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Rodolfo Clemente Jr</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Jesus Rafael Mendoza</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Bon Bandoquillo</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STATUS</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>byron cartago</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Joseph maico</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Activity.Promised_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ASSIGNED</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>GBFS Task Report</name>
+    <params>
+        <name>closed</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>t</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Activity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Activity.SSO_Task_Due_Date__c</dateColumn>
+        <interval>INTERVAL_CURFY</interval>
+    </timeFrameFilter>
+</Report>

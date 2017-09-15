@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$LastCommaFirst__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Funding_Tranche__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease_Type__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c.Oracle_Vendor_Email__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$RSM__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease_Phase__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Notice_to_Proceed_Sent__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>EW 2013-1 PIS Monitoring</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Funding_Tranche__c</column>
+            <operator>equals</operator>
+            <value>SPWR EW 2013-1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Termination,Terminated,Pending Cancellation</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Name__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Lease_Type__c</column>
+            <operator>notEqual</operator>
+            <value>Prepaid</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Placed_In_Service__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$PIS_Entry_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>SPWR EW 2013-1 PIS Monitoring</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Notice_to_Proceed_Sent__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Closing_Request_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

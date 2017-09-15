@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Quote__c.Final_Lease_Number__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Quote__c.Dynamic_Proposal__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>This will be run to identify jobs that we need to insert a dummy document and automatically approve the document status</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>contains</operator>
+            <value>shading</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Quote__c.Dynamic_Proposal__c</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notContain</operator>
+            <value>gabi solar</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Mass Upload for Shading Analysis</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payment_with_Invoice_Documents__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Quote__c.Dynamic_Proposal__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$US_Cash_Grant_Submission_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>FK_$Quote.Consolidated_Lease_Number__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Lease_Phase__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Quote.Amendment_Type__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Addendum_Countersigned__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Lease_Change_Notes__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Tracker report for accounting. Contains all amendments countersigned on leases that are already placed in service.</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c.Lease_Phase__c</column>
+            <operator>equals</operator>
+            <value>PIS</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Terminated</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Post-PIS Amendments</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$LeasePayment__c@LeasePayment__c.Quote__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>FK_$Quote.Date_Modified__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

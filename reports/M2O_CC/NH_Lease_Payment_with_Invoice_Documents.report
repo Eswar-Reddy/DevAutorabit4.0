@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$LPS_Notes__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Notice_to_Proceed_Sent__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_in_PTO_Letter__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>NH leases with NTP and PTO. Date in PTO letter is not populated but PTO letter was uploaded</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>equals</operator>
+            <value>LeasePayment__c.NH_Lease_Payment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Date_in_PTO_Letter__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Notice_to_Proceed_Sent__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Pending,Approved,Rejected</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Name</column>
+            <operator>contains</operator>
+            <value>PTO Letter</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NH Lease Payment with Invoice Documents</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payment_with_Invoice_Documents__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

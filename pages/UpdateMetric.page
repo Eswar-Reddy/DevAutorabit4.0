@@ -1,0 +1,19 @@
+<apex:page controller="UpdateMetricCls">
+<apex:form >
+
+<apex:actionPoller action="{!getNextURL}" interval="15" rerender="myPanel"/>
+<apex:outputPanel id="myPanel">    
+    <apex:outputlabel style="color:red;" value="{!dynamicURL}"></apex:outputlabel>    
+    <br/>Batch Number - <apex:outputlabel style="color:red;" value="{!batch}"></apex:outputlabel>
+    <br/>Total Accounts to process - <apex:outputlabel style="color:red;" value="{!lstAccount.size}"></apex:outputlabel>
+    <br/>Accounts processed - <apex:outputlabel style="color:red;" value="{!IF(count<0,0,count)}"></apex:outputlabel>
+    <br/><br/> Current Account-
+    <br/><apex:outputlabel rendered="{!IF(ISNULL(dynamicRVARURL),false,true)}" value="{!dynamicRVARURL}"></apex:outputlabel>
+    <br/><apex:outputlabel rendered="{!IF(ISNULL(dynamicCVARURL),false,true)}" value="{!dynamicCVARURL}"></apex:outputlabel>
+    
+    <apex:iframe rendered="{!IF(ISNULL(dynamicRVARURL),false,true)}" src="{!dynamicRVARURL}" />
+    <apex:iframe rendered="{!IF(ISNULL(dynamicCVARURL),false,true)}" src="{!dynamicCVARURL}" />
+</apex:outputPanel>
+
+</apex:form>
+</apex:page>

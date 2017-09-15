@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Quote.QuoteLineItems$Id</field>
+    </columns>
+    <columns>
+        <field>Quote.QuoteLineItems$OpportunityLineItem.Price_Book_Name__c</field>
+    </columns>
+    <columns>
+        <field>Quote.QuoteLineItems$Cost__c</field>
+    </columns>
+    <columns>
+        <field>Quote$Status</field>
+    </columns>
+    <columns>
+        <field>Quote.QuoteLineItems$Product2</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Quotes with Old Cost</description>
+    <filter>
+        <criteriaItems>
+            <column>Quote.QuoteLineItems$OpportunityLineItem.Price_Book_Name__c</column>
+            <operator>contains</operator>
+            <value>General</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote$Status</column>
+            <operator>notEqual</operator>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote.QuoteLineItems$Product2</column>
+            <operator>notContain</operator>
+            <value>Freight,Total</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote.QuoteLineItems$Product2</column>
+            <operator>contains</operator>
+            <value>414,Q115,Q215,Q315,Q415,Q116,Q216,Q316,Q416,Q117,Q217,Q317,Q417,Q118,Q218,Q318,Q418</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Quote$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Quotes with Old Cost</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Quotes_with_Quote_Line_Items_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Quote$Amendment_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Owner_Email__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Cost__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Opportunity with Products Q413-Q415 Cost Changed</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>notEqual</operator>
+            <value>06 – Closed Won,07 – Closed Lost</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$PricebookEntry.Product2.Name</column>
+            <operator>contains</operator>
+            <value>Q413,Q114,Q214,Q314,Q414,Q115,Q215,Q315,Q415</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$CurrencyIsoCode</column>
+            <operator>equals</operator>
+            <value>USD,EUR</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Owner</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Opportunity with Products Q413-Q415 Cost</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Product_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$X75_Meeting_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

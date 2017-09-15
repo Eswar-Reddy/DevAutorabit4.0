@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>NH_Community__c$Region__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$SunPower_Deal_Type__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Phase__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Trim_Promised__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Account__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Escrow_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Trimmed or w/in next 3 weeks, no Escrow Date (california)</description>
+    <filter>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Trim_Promised__c</column>
+            <operator>lessOrEqual</operator>
+            <value>NEXT_N_DAYS:21</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Escrow_Date__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Hold,Cancelled,Pending Cancellation</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c$State__c</column>
+            <operator>contains</operator>
+            <value>CA</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>NH_Community__c$Account_Manager__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH: CA - Need Escrow Date</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_w_Residential_Proj_w_Proj_Tasks__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>NH_Community__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

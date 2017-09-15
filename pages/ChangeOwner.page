@@ -1,0 +1,73 @@
+<apex:page standardController="Opportunity" extensions="ChangeOwnerCX">
+    
+    <style>
+        #spacing{
+            height:4px;
+        }
+    </style>
+   
+    <script type = "text/javascript">
+        function RedirectToObject() {
+            if((typeof sforce != 'undefined') && (sforce != null) && (sforce.one != null)) {
+                //sforce.one.navigateToSObject('{!opp.Id}');
+                sforce.one.back(true);
+                //window.history.go(-2);
+            } else {
+                window.location.href = '{!URLFOR($Action.Opportunity.View, opp.Id)}';
+            }
+        }
+    </script>
+
+    <apex:form id="changeowner" >
+        
+        <apex:pageMessages />
+        
+        <apex:sectionHeader title="Change Owner"/>
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="1">
+                <apex:panelGrid columns="1">
+                    
+                    <apex:outputText ><b>Opportunity Name</b></apex:outputText>
+                    <apex:outputText value="{!opp.Name}" ></apex:outputText>
+                    <div id = "spacing"></div>
+                                    
+                    <apex:outputText ><b>Current Opportunity Owner</b></apex:outputText>
+                    <apex:outputText value="{!opp.Owner.Name}" ></apex:outputText>
+                    <div id = "spacing"></div>
+                    
+                    <apex:outputText ><b>New Opportunity Owner</b></apex:outputText>                    
+                    <apex:outputPanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>   
+                            <apex:selectList value="{!SelectedUser}" multiselect="false" size="1">
+                                <apex:selectOptions value="{!AvailableUsers}"/>
+                            </apex:selectList> 
+                        </div>
+                    </apex:outputPanel>     
+                    <apex:outputPanel id="err" >
+                        <apex:outputlabel rendered="{!error}" value="Error: Select new Owner" style="font-weight:bolder;color:red"/>
+                    </apex:outputPanel>
+                    
+                    <div id = "spacing"></div>
+                    <div style="height:8px;"></div>
+                    
+                    <apex:outputpanel >
+                        <apex:actionstatus id="status">
+                            <apex:facet name="start">
+                                <img src="/img/loading.gif"/> &nbsp; <span>Please wait...</span>
+                            </apex:facet>
+                        </apex:actionstatus>
+                    </apex:outputpanel>
+                      
+                    <apex:outputPanel >
+                        <apex:commandButton status="status" action="{!updateOwner}" value="Submit" style="width: 100px; height: 25px;" onComplete="{!IF(isSelectedUserNull == false,'RedirectToObject()','')}" reRender="err"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <apex:commandButton value="Cancel" style="width: 100px; height: 25px;" onComplete="RedirectToObject();"/>
+                    </apex:outputPanel>
+                </apex:panelGrid>
+            </apex:pageBlockSection>
+        </apex:pageBlock>    
+    
+    </apex:form>
+
+</apex:page>

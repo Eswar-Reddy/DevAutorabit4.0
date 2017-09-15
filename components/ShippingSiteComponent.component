@@ -1,0 +1,285 @@
+<!--
+===============
+CHANGE HISTORY:
+===============
+
+version: KCM_06292016
+author: Kane Chelster Macaspac
+last modified date/time: 06/30/2016 2:09PM MNL
+details:
+1. in reference to case 00741608, with the help of Crystal, corrected issue where user is getting an error
+   "Remoting does not support serializing system.dmlexception" when saving a new shipping site record in the
+   portal when the address is from the East Coast (NY, NJ, etc).
+2. please use the version name above to search this document for the specific lines of codes that are part of this change.
+-->
+
+<apex:component controller="ShippingSiteComponentController">
+    <!-- TODO: Remove some stuff in center property of mapOptions for now involving controller variable.  Only dealt with partner account country domain.  Possibly pass in as attribute -->
+    <apex:attribute name="componentName"
+    type="String"
+    assignTo="{!Key}"
+    description="The key given to this component so the page can easily get access to it" />
+
+    <apex:attribute name="controllerForPage"
+      type="PageControllerBase"
+      assignTo="{!pageController}"
+      required="true"
+      description="The controller for the page." />
+
+    <style type="text/css">
+        .pac-container { z-index: 1051; }
+        .shippingTable td {
+            padding:5px; !important
+        }
+        .shippingTable {
+            width: 100%; !important
+        }
+        .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        .bs .label {
+            font-size: .90em;
+        }
+        .bs .body {
+            font-size: .90em;
+        }
+    </style>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language=en"/> -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&v=3.exp&sensor=false&libraries=places&language=en"/>
+
+    <script type="text/javascript">
+        var shipToSite = {};
+
+        function isInModal(node){
+            while (node != null) {
+                if(node.classList){
+                    for (var i = node.classList.length - 1; i >= 0; i--) {
+                        if(node.classList[i] == 'modal'){
+                            return node;
+                        }
+                    };
+                }
+                node = node.parentNode;
+            }
+            return null;
+        }
+
+        window.onload = function(){
+            //check if component in a modal with class="modal"
+            var modalNode = isInModal(document.getElementById('map-canvas'));
+            //TODO: get rid of jquery dependency
+            if(modalNode && $){
+                $(modalNode).on('shown.bs.modal', function (e) {
+                    initialize();
+                });
+            }else{
+                initialize();
+            }
+        }
+
+
+        var geocoder;
+        function initialize() {
+            console.log('INITIALIZE');
+            var myLatlng1 = new google.maps.LatLng(37.405178, -121.946483);
+            var mapOptions = {
+                center: myLatlng1,
+                zoom: 18,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            };
+
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            /*
+            if(navigator.geolocation) {
+                 navigator.geolocation.getCurrentPosition(function (position) {
+                     initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                     map.setCenter(initialLocation);
+                 });
+            }
+            THIS TO BE USED FOR LOCATION BASED MAP CENTRALIZATION
+            */
+
+            var input = /** @type {HTMLInputElement} */(document.getElementById('searchTextField'));
+            var autocomplete = new google.maps.places.Autocomplete(input);
+
+            autocomplete.bindTo('bounds', map);
+
+            var infowindow = new google.maps.InfoWindow();
+            var marker = new google.maps.Marker({ map: map });
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function(){
+                infowindow.close();
+                marker.setVisible(false);
+
+                var place = autocomplete.getPlace();
+
+                if (!place.geometry) { // Inform the user that the place was not found and return.
+                    return;
+                }
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport){
+                    map.fitBounds(place.geometry.viewport);
+                }
+                else{
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(20);
+                }
+
+                marker.setIcon(/** @type {google.maps.Icon} */({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true);
+                var locationvalu  = place.formatted_address ;
+                var address = '';
+
+                if (place.address_components){
+                    address = [(place.address_components[0] && place.address_components[0].short_name || ''),
+                               (place.address_components[1] && place.address_components[1].short_name || ''),
+                               (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
+                }
+
+                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                var lat = place.geometry.location.lat();
+                var lng= place.geometry.location.lng();
+
+                geocoder = new google.maps.Geocoder();
+                codeLatLng(lat, lng, place.name);
+            });
+
+        }//End Func initialize
+
+        function codeLatLng(lat, lng, place){
+            var latlng = new google.maps.LatLng(lat, lng);
+            var local;
+            var sublocal;
+            var fullStreet = '';
+
+            geocoder.geocode({'latLng': latlng}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK){
+                    if (!Function.prototype.bind && typeof console != 'undefined' && typeof console.log == 'object')
+                        Function.prototype.call.call(console.log, console, Array.prototype.slice.call(results));
+                    if(results[1]){
+                        shipToSite = {};
+                        for (var i=0; i<results[0].address_components.length; i++){
+                            for (var b=0;b<results[0].address_components[i].types.length;b++){
+                                //Street Number
+                                if (results[0].address_components[i].types[b] == "street_number"){
+                                    route = results[0].address_components[i];
+                                    fullStreet = results[0].address_components[i].long_name + fullStreet;
+                                    break;
+                                }
+
+                                //Street
+                                if (results[0].address_components[i].types[b] == "route"){
+                                    route= results[0].address_components[i];
+                                    fullStreet = fullStreet + ' ' + route.long_name;
+                                    break;
+                                }
+                                // State
+                                if (results[0].address_components[i].types[b] == "administrative_area_level_1"){
+                                    State= results[0].address_components[i];
+                                    document.getElementById('stateId').value = State.short_name;
+                                    shipToSite.State__c = State.short_name;
+                                    break;
+                                }
+                                //Country
+                                if (results[0].address_components[i].types[b] == "country"){
+                                    country= results[0].address_components[i];
+                                    document.getElementById('countryId').value = country.long_name ;
+                                    shipToSite.Country__c = country.long_name;
+                                    break;
+                                }
+                                //postal code
+                                if (results[0].address_components[i].types[b] == "postal_code"){
+                                    postal_code= results[0].address_components[i];
+                                    document.getElementById('zip1Id').value = postal_code.long_name ;
+                                    shipToSite.Zip__c = postal_code.long_name;
+                                    break;
+                                }
+                                //city
+                                if (results[0].address_components[i].types[b] == "locality"){
+                                    locality= results[0].address_components[i];
+                                    local = locality.long_name;
+                                    document.getElementById('cityId').value = locality.long_name ;
+                                    shipToSite.City__c = locality.long_name;
+                                    break;
+                                }
+                                if (results[0].address_components[i].types[b] == "sublocality"){
+                                    sublocality= results[0].address_components[i];
+                                    sublocal = sublocality.long_name;
+                                    break;
+                                }
+                                <!-- KCM_06292016 -->
+                                if (results[0].address_components[i].types[b] == "administrative_area_level_3"){
+                                    sublocality= results[0].address_components[i];
+                                    sublocal = sublocality.long_name;
+                                    break;
+                                }
+                            }
+                        }
+                        document.getElementById('streetId').value =  fullStreet;
+                        shipToSite.Address1__c = fullStreet;
+                        if(local == null){
+                            document.getElementById('cityId').value = sublocal;
+                            shipToSite.City__c = sublocal; <!-- KCM_06292016 -->
+                        }
+
+                        // bug #131465247; enable save button on Order Shipping Page
+                        if(shipToSite && shipToSite.Address1__c && shipToSite.City__c && shipToSite.State__c && shipToSite.Zip__c) {
+                            document.getElementById("saveButton").className = document.getElementById("saveButton").className.replace( /(?:^|\s)disabled(?!\S)/g , '' );
+                        }
+                    }
+                    else{
+                        alert("No results found");
+                    }
+                }
+                else{
+                    alert("Geocoder failed due to: " + status);
+                }
+            });
+        }//End Func codeLatLng
+
+        function setNewStreet(e){
+            shipToSite.Address1__c = e.value;
+        }
+
+    </script>
+
+    <input id="searchTextField" type="text" class="form-control" />
+    <br/>
+    <div id="map-canvas" style="width:100%;height:300px"></div>
+    <apex:form >
+        <table class="shippingTable">
+        <tbody>
+          <tr id="row1">
+            <td><label>{!$ObjectType.Lead.Fields.Street.Label}</label><input id="streetId" type="text" class="form-control" value="{!componentSite.Address1__c}" onchange="setNewStreet(this);" /></td>
+            <td><label>{!$ObjectType.Lead.Fields.PostalCode.Label}</label><input id="zip1Id" type="text" class="form-control" disabled="true" value="{!componentSite.Zip__c}"/></td>
+          </tr>
+          <tr id="row2">
+            <td><label>{!$ObjectType.Lead.Fields.City.Label}</label><input id="cityId" type="text" class="form-control" disabled="true" value="{!componentSite.City__c}"/></td>
+            <td><label>{!$ObjectType.Lead.Fields.State.Label}</label><input id="stateId" type="text" class="form-control" disabled="true" value="{!componentSite.State__c}"/></td>
+          </tr>
+          <tr id="row3">
+            <td><label>{!$ObjectType.Lead.Fields.Country.Label}</label><input id="countryId" type="text" class="form-control" disabled="true" value="{!componentSite.Country__c}"/></td>
+            <!--td>
+                <label>Type</label>
+                <select class="form-control" id="recordType" ><!--onchange="setType(this);"-->
+                    <!--option value="Installation Site">{!$Label.Installation_Site}</option>
+                    <option value="Dealer Warehouse">{!$Label.Dealer_Warehouse}</option>
+                </select>
+            </td-->
+          </tr>
+        </tbody>
+      </table>
+      <apex:actionFunction name="saveInComponent" action="{!compControllerTest2}" reRender=""/>
+    </apex:form>
+
+</apex:component>

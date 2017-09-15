@@ -1,91 +1,367 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AssignmentRules xmlns="http://soap.sforce.com/2006/04/metadata">
     <assignmentRule>
-        <fullName>Standard</fullName>
+        <fullName>Assignment Rule 1</fullName>
         <active>true</active>
         <ruleEntry>
-            <assignedTo>eswar.reddy1@ar.com</assignedTo>
-            <assignedToType>User</assignedToType>
+            <assignedTo>CustomerCareQueue</assignedTo>
+            <assignedToType>Queue</assignedToType>
             <criteriaItems>
-                <field>Account.BillingCountry</field>
+                <field>Case.RecordTypeId</field>
                 <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
+                <value>Customer Service Case</value>
             </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Gold,Platinum</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.Type</field>
-                <operation>contains</operation>
-                <value>Customer</value>
-            </criteriaItems>
-        </ruleEntry>
-        <ruleEntry>
-            <assignedTo>eswar.reddy1@ar.com</assignedTo>
-            <assignedToType>User</assignedToType>
-            <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Silver,Bronze</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.Type</field>
-                <operation>contains</operation>
-                <value>Customer</value>
-            </criteriaItems>
-        </ruleEntry>
-        <ruleEntry>
-            <assignedTo>eswar.reddy1@ar.com</assignedTo>
-            <assignedToType>User</assignedToType>
             <criteriaItems>
                 <field>Account.BillingCountry</field>
                 <operation>notEqual</operation>
-                <value>US,USA,United States,United States of America</value>
+                <value>United States</value>
             </criteriaItems>
             <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Gold,Platinum</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.Type</field>
-                <operation>contains</operation>
-                <value>Customer</value>
+                <field>Account.ShippingCountry</field>
+                <operation>notEqual</operation>
+                <value>United States</value>
             </criteriaItems>
         </ruleEntry>
         <ruleEntry>
-            <assignedTo>eswar.reddy1@ar.com</assignedTo>
-            <assignedToType>User</assignedToType>
+            <assignedTo>Customer_Care_Queue_Americas</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <booleanFilter>1 AND (2 OR 3)</booleanFilter>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Customer Service Case</value>
+            </criteriaItems>
             <criteriaItems>
                 <field>Account.BillingCountry</field>
-                <operation>notEqual</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
                 <operation>equals</operation>
-                <value>Silver,Bronze</value>
+                <value>United States</value>
             </criteriaItems>
             <criteriaItems>
-                <field>Account.Type</field>
-                <operation>contains</operation>
-                <value>Customer</value>
+                <field>Account.ShippingCountry</field>
+                <operation>equals</operation>
+                <value>United States</value>
             </criteriaItems>
         </ruleEntry>
         <ruleEntry>
-            <assignedTo>eswar.reddy1@ar.com</assignedTo>
-            <assignedToType>User</assignedToType>
+            <assignedTo>TechnicalSupportQueueAustralia</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <booleanFilter>(1 AND 2) Or (3 and 4) Or (1 AND 2)</booleanFilter>
             <criteriaItems>
-                <field>Account.Type</field>
-                <operation>contains</operation>
-                <value>Partner</value>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Technical Support Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Account.Theater__c</field>
+                <operation>equals</operation>
+                <value>Australia</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Priority</field>
+                <operation>equals</operation>
+                <value>Low</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.SuppliedEmail</field>
+                <operation>equals</operation>
+                <value>techsupport.australia@sunpower.com</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>TechnicalSupportQueueNA</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Technical Support Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - TSE NA</value>
+            </criteriaItems>
+            <template>Case/TSE_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>InspectionReviewingQueue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Inspection/Site Audit Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Type</field>
+                <operation>equals</operation>
+                <value>Inspection</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>CRMCase</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>CRM Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email,Email - @CRM</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>New Inspections</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Type</field>
+                <operation>equals</operation>
+                <value>Inspection</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Partner_Portal_Support_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Partner Management Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – PAM</value>
+            </criteriaItems>
+            <template>Case/Partner_Portal_Support_Case_Assignment</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Spectrum_Case_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Spectrum Support Case</value>
+            </criteriaItems>
+            <template>Case/Spectrum_Support_Case_Assignment</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Marketing_Support_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – MKTG OPS</value>
+            </criteriaItems>
+            <template>Case/Marketing_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Partner_Training_Support_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Partner Management Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – PTS</value>
+            </criteriaItems>
+            <template>Case/Partner_Training_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Lead_Management_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – CXSOL</value>
+            </criteriaItems>
+            <template>Case/Marketing_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Partner_Marketing_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – REFERRAL</value>
+            </criteriaItems>
+            <template>Case/Marketing_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Partner_Marketing_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – EMPSOLAR</value>
+            </criteriaItems>
+            <template>Case/Marketing_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Partner_Marketing_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – ALLIANCE</value>
+            </criteriaItems>
+            <template>Case/Marketing_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Partner_Marketing_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email – AFFILIATE</value>
+            </criteriaItems>
+            <template>Case/Marketing_Support_Case_Response</template>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Marketing_ROW_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Marketing Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>EUMKTG-OPS</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>HomeSale_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>FPO Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - HS</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>SunPowerFinancing_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>FPO Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - SPF</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Wet_Sign_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>FPO Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - WS</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Contract_Management</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>FPO Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - Booking</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Cash_Management_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>FPO Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - SPP</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Refinance_Queue</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>FPO Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - RF</value>
+            </criteriaItems>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>CRMCase</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>CRM Case</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email - @Digital</value>
             </criteriaItems>
         </ruleEntry>
     </assignmentRule>

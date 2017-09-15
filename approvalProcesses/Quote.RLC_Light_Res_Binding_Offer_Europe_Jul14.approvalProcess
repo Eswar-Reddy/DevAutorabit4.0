@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>GlobalSupport</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>XXX RLC Light France</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Amount</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>XXX RLC Light France</label>
+        <name>XXX_RLC_Light_France</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>jdawe@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>vincent.maurice@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>RLC Light Binding Offer Europe Step 2</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>RLC Light Binding Offer Europe Step 2</label>
+        <name>RLC_Light_Binding_Offer_Europe_Step_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>martin.debono@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>RLC Light Binding Offer Europe FP&amp;A Approval Step 3</description>
+        <entryCriteria>
+            <booleanFilter>(1 or 2) and (3 and 4)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessThan</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>RLC Light Binding Offer Europe FP&amp;A Approval Step 3</label>
+        <name>RLC_Light_Binding_Offer_Europe_FP_A_Approval_Step_3</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>xxxxRLC Light Binding Offer Europe Step 4</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>xxxxRLC Light Binding Offer Europe Step 4</label>
+        <name>RLC_Light_Binding_Offer_Europe_Step_4</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <booleanFilter>1 or 2</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>12</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Budgetary Pricing BU/CFO President Approval</label>
+        <name>Budgetary_Pricing_BU_CFO_President_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>tom.werner@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>RLC Light Binding Offer Europe DRC Approval</description>
+        <entryCriteria>
+            <booleanFilter>1 or (2 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>12</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>RLC Light Binding Offer Europe DRC Approval</label>
+        <name>RLC_Light_Binding_Offer_Europe_DRC_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>RLC Light/Res Binding Offer Europe-Jul14</description>
+    <emailTemplate>Quote/U_C_Deal_Sheet</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>(1 AND 2 AND 3 AND 4 AND 5)</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Binding Offer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>PV Only</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Business_Unit__c</field>
+            <operation>equals</operation>
+            <value>RLC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.RLC_Type__c</field>
+            <operation>equals</operation>
+            <value>Light Commercial,Residential</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Region1__c</field>
+            <operation>equals</operation>
+            <value>Europe,MEA</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Udpat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Rejection_Email_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Binding_Offer_Submission_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Set_Initial_Submitter</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>RLC Light/Res Binding Offer Europe-Jul14</label>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,51 @@
+<apex:component >
+
+<apex:attribute id="isCommercial" name="isCommercial" type="Boolean" required="true" description="indicated application is commercial or not."/>
+<apex:attribute id="pageNumber" name="pageNumber" type="String" required="true" description="indicate Page Number."/>
+ 
+ <apex:outputPanel layout="block" rendered="{!NOT(isCommercial)}">
+        <table width="100%" style="background-color:black" border="0" height="70px">
+            <tr>
+                <td width="70%" align="left" style="padding-left:10px"><font color="#FFFFFF" size="5"><b>DEALER</b>&nbsp;</font><font color="#FBB917" size="5"><b>APPLICATION</b></font></td>
+                <td width="30%"><apex:image alt="SunPower" url="{!$Resource.ImgSunPower}" width="340px" height="50px"/></td>
+            </tr>
+            
+        </table>
+        <table width="100%" style="background-color:GREY" border="0">
+            <tr>
+                <td width="50%" align="left" style="padding-left:10px"><font color="#FFFFFF" size="2"><B>INSTRUCTIONS</B>&nbsp;&nbsp;Please complete all sections of the dealer application</font>
+                </td> 
+                <td width="50%" align="right" style="padding-right:10px"><font color="#FFFFFF" size="2"><B>PAGE {!pageNumber} OF 3</B></font>
+                </td>
+            </tr>
+             <tr>
+                <td colspan="2" align="left" style="padding-left:10px"><font color="#FFFFFF" size="2"><B>ATTENTION</B></font>&nbsp;<span style="padding-left:5px"><font color="#FFFFFF" size="2">Customer Care New to Solar Dealer Application</font></span>
+                </td> 
+            </tr>
+        </table>
+ </apex:outputPanel> 
+ 
+ <apex:outputPanel layout="block" rendered="{!isCommercial}">
+        <table width="100%" style="background-color:black" border="0" height="70px">
+            <tr>
+                <td width="70%" align="left" style="padding-left:10px"><font color="#FFFFFF" size="5"><b>COMMERCIAL DEALER</b>&nbsp;</font><font color="#FBB917" size="5"><b>APPLICATION</b></font></td>
+                <td width="30%"><apex:image alt="SunPower" url="{!$Resource.ImgSunPower}" width="340px" height="50px"/></td>
+            </tr>
+            
+        </table>
+        <table width="100%" style="background-color:#FBB917" border="0">
+            <tr>
+                <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>INSTRUCTIONS</B></font>&nbsp;&nbsp;Please complete all sections of the dealer application
+                </td> 
+                <td width="50%" align="right" style="padding-right:10px"><font color="#000000" size="2"><B>PAGE {!pageNumber} OF 3</B></font>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>ATTENTION</B></font>&nbsp;<span style="padding-left:5px">Customer Care Commercial Dealer Application</span>
+                </td> 
+            </tr>
+        </table>
+           
+ </apex:outputPanel> 
+
+</apex:component>

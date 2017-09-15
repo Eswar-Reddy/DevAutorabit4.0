@@ -1,0 +1,610 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false">
+<apex:form >
+
+<c:PartnerAppHeader2 id="header" isCommercial="{!isCommercial}" pageNumber="1"/>
+<apex:pageMessages />
+
+<apex:pageBlock >      
+
+    <apex:pageBlockButtons >
+        <apex:commandButton value="Next" action="{!step2}"/>
+        <apex:commandButton value="Cancel" action="{!cancelPartner}"/>
+    </apex:pageBlockButtons>
+     
+
+        <table border="0" cellspacing="3px" cellpadding="0px" width="100%" >
+            <tr>
+                <td colspan="4">
+                    <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>General Information</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+           <tr>
+
+               <td align="left" width="15%"style="padding-left:5px"><apex:outputlabel value="Company Name:"/></td>
+
+               <td width="35%"><apex:inputField style="width:75%" value="{!partnerApp.Company_Name__c}"/></td>
+
+               <td align="left" width="15%" style="padding-left:5px">Date:</td>
+
+
+               <td width="35%"><apex:inputField style="width:40%" value="{!partnerApp.Application_Date__c}"/></td>
+           </tr>
+
+           <tr>
+               <!--cdevarapalli Changing the page layout to include 5 owners and new related fields
+               <td align="left" style="padding-left:5px">Owner:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner__c}"/></td>-->
+               
+               <td></td>
+
+               <td></td>
+               
+               <td align="left"  style="padding-left:5px">EIN:</td>
+
+               <td ><apex:inputField style="width:75%" value="{!partnerApp.EIN__c}" required="true"/></td>
+
+           </tr>
+           
+           <tr><td><br/></td></tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px; margin-top:200px;">Owner 1:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner__c}" required="true"/></td>
+               <td align="left"  style="padding-left:5px">Owner 1 DOB:</td>
+               <td ><apex:inputField style="width:75%" value="{!partnerApp.Owner_1_DOB__c}" required="true"/></td>
+           </tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px">Owner 1 % of Ownership</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_1_of_Ownership__c}" required="true"/></td>
+               <td></td>
+               <td></td>
+           </tr>
+           
+           <tr><td><br/></td></tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px; margin-top:200px;">Owner 2:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_2__c}"/></td>
+               <td align="left"  style="padding-left:5px">Owner 2 DOB:</td>
+               <td ><apex:inputField style="width:75%" value="{!partnerApp.Owner_2_DOB__c}"/></td>
+           </tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px">Owner 2 % of Ownership</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_2_of_Ownership__c}"/></td>
+               <td></td>
+               <td></td>
+           </tr>
+           
+           <tr><td><br/></td></tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px; margin-top:200px;">Owner 3:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_3__c}"/></td>
+               <td align="left"  style="padding-left:5px">Owner 3 DOB:</td>
+               <td ><apex:inputField style="width:75%" value="{!partnerApp.Owner_3_DOB__c}"/></td>
+           </tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px">Owner 3 % of Ownership</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_3_of_Ownership__c}"/></td>
+               <td></td>
+               <td></td>
+           </tr>
+           
+           <tr><td><br/></td></tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px; margin-top:200px;">Owner 4:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_4__c}"/></td>
+               <td align="left"  style="padding-left:5px">Owner 4 DOB:</td>
+               <td ><apex:inputField style="width:75%" value="{!partnerApp.Owner_4_DOB__c}"/></td>
+           </tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px">Owner 4 % of Ownership</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_4_of_Ownership__c}"/></td>
+               <td></td>
+               <td></td>
+           </tr>
+           
+           <tr><td><br/></td></tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px; margin-top:200px;">Owner 5:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_5__c}"/></td>
+               <td align="left"  style="padding-left:5px">Owner 5 DOB:</td>
+               <td ><apex:inputField style="width:75%" value="{!partnerApp.Owner_5_DOB__c}"/></td>
+           </tr>
+           
+           <tr>
+               <td align="left" style="padding-left:5px">Owner 5 % of Ownership</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Owner_5_of_Ownership__c}"/></td>
+
+               <td></td>
+
+               <td></td>
+           </tr>
+     
+           <tr><td><br/></td></tr>
+            
+            <!-- [START] Case 00618830 - Additional Bill To and Shipt To Address Details -->
+           <tr>
+
+               <td align="left" style="padding-left:5px">Bill To Street:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Address__c}" required="true"/></td>
+
+               <td align="left" style="padding-left:5px">Ship To Street:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Ship_To_Street__c}"/></td>
+
+           </tr>   
+            
+           <tr>
+
+               <td align="left" style="padding-left:5px">Bill To City:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.City__c}" required="true"/></td>
+
+               <td align="left" style="padding-left:5px">Ship To City:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Ship_To_City__c}"/></td>
+
+           </tr> 
+            
+            <tr>
+
+               <td align="left" style="padding-left:5px">Bill To State:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.State__c}" required="true"/></td>
+
+               <td align="left" style="padding-left:5px">Ship To State:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Ship_To_State__c}"/></td>
+
+           </tr>
+            
+            <tr>
+
+               <td align="left" style="padding-left:5px">Bill To Country:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Country__c}" required="true"/></td>
+
+               <td align="left" style="padding-left:5px">Ship To Country:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Ship_To_Country__c}"/></td>
+
+           </tr>
+            
+            <tr>
+
+               <td align="left" style="padding-left:5px">Bill To Postal Code:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Zip__c}" required="true"/></td>
+
+               <td align="left" style="padding-left:5px">Ship To Postal Code:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Ship_To_Postal_Code__c}"/></td>
+
+           </tr>
+            
+            <!-- [END] Case 00618830  -->
+
+           <tr>
+
+               <td align="left" style="padding-left:5px">Co. Phone #:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Phone__c}" required="true"/></td>
+               
+               <td align="left" style="padding-left:5px">Years in Business:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Years_in_Business__c}"/></td>
+
+           </tr> 
+
+           <tr>
+               <apex:outputPanel rendered="{!NOT(isCommercial)}">
+               <td align="left" style="padding-left:5px">Current Industry:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Current_Industry__c}"/></td>
+               </apex:outputPanel>
+               
+               <apex:outputPanel rendered="{!isCommercial}">
+               <td align="left" style="padding-left:5px">Business Focus:</td>
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Current_Industry__c}"/></td>
+               </apex:outputPanel>
+               
+               <td align="left" style="padding-left:5px">Co. Website:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Website__c}"/></td>
+               
+           </tr> 
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+        </table>     
+        <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+           
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Contractor Qualification</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left" width="15%">Contractors License Number:</td>
+
+               <td width="35%"><apex:inputField style="width:75%" value="{!partnerApp.Contractor_License_Number__c}"/></td>
+
+               <td style="white-space:nowrap;margin-left:2px;padding-left:5px" align="left" width="15%">Building Permits pulled in the last 36 months:</td>
+
+               <td width="35%"><apex:inputField style="width:75%" value="{!partnerApp.Building_Permits_last_36_months__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Electrical License? :</td>
+
+               <td><apex:inputfield value="{!partnerApp.Electrical_License__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Electrical Permits pulled in the last 36 months:</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Electrical_Permits_last_36_months__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Solar License/Certification? :</td>
+
+               <td><apex:inputfield value="{!partnerApp.Solar_License_Certification__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Roofing License? :</td>
+
+               <td><apex:inputfield value="{!partnerApp.Roofing_License__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Additional License/Certification (Specify)</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_1_Specify__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Additional License/Certification (Specify)</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_2_Specify__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Additional License/Certification (Specify)</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_3_Specify__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Additional License/Certification (Specify)</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_4_Specify__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Licensed or Certified Engineer Available? :</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Professional_Engineer_Available__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Project Manager (on-staff) :</td>
+
+               <td><apex:inputField style="width:75%" value="{!partnerApp.Project_Manager_on_staff__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px" align="left">Electrician on-staff? :</td>
+
+               <td><apex:inputfield value="{!partnerApp.Electrician_on_staff__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">CAD Designer available? :</td>
+
+               <td><apex:inputfield value="{!partnerApp.CAD_Designer_Available__c}"/></td>
+
+           </tr>
+           <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+        </table>
+
+           <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="8">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Current Personnel</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="8">Indicate in the spaces below the number of employees at the manager level and field level for each category</td></tr>
+
+            <tr style="font-weight:bold;" align="left">
+
+                <td style="width:5%"></td>
+
+                <td align="center">Sales</td>
+
+                <td align="center">Marketing</td>
+
+                <td align="center">Installation</td>
+
+                <td align="center">Operations/Admin</td>
+
+                <td align="center">Design</td>
+
+                <td align="center">Finance</td>
+
+                <td align="center">Technical Support</td>
+                
+                <td align="center">Customer Service</td>
+
+            </tr>
+
+            <tr>
+
+                <td style="white-space:nowrap;" align="center">Manager</td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Sales_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Marketing_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Installation_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Operations_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Design_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Finance_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Technical_Employees__c}"/></td>
+                
+                <td><apex:inputField style="width:90%" value="{!partnerApp.Manager_Customer_Service_Employees__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td style="white-space:nowrap;" align="center">Field Level</td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Sales_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Marketing_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Installation_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Operations_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Design_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Finance_Employees__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Technical_Employees__c}"/></td>
+                
+                <td><apex:inputField style="width:90%" value="{!partnerApp.Field_Level_Customer_Service_Employees__c}"/></td>
+
+            </tr>
+
+            <tr>
+                <td style="white-space:nowrap;" align="left" colspan="8">Does your company currently provide coverage for worker's compensation?&nbsp;&nbsp;<apex:inputfield value="{!partnerApp.Insurance_Coverage__c}"/></td>
+            </tr>
+            <tr>
+                <td colspan="8">&nbsp;</td>
+            </tr>    
+             <tr>
+                <td colspan="8">&nbsp;</td>
+            </tr>    
+            
+        </table>
+
+           <table border="0" cellspacing="3px" cellpadding="1px" width="100%">
+            <tr>
+                <td colspan="5">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Company Growth and Financials</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+             <tr>
+                <td colspan="5">&nbsp;</td>
+            </tr>    
+            
+            <tr>
+                <td style="white-space:nowrap;padding-left:5px;" align="left" colspan="3">Please indicate the number of projects your company sold or completed last year</td>
+                <td colspan="2"  align="left" style="padding-left:15px">
+                  <apex:selectList value="{!partnerApp.Projects_completed_last_year__c}" size="1">
+                    <apex:selectOptions value="{!Proj_Comp_Last_Year_Options}" />
+                  </apex:selectList>
+                </td>
+            </tr>            
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Indicate in the spaces below the amount of revenue generated and forecasted from your existing business</td></tr>
+            <tr>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left" width="25%">Annual Revenue 2 Yr. ago</td>
+
+               <td align="right" width="25%"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerApp.Annual_Revenue_2_year_ago__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left" width="25%">Projected Revenue This Yr.</td>
+
+               <td align="right" width="25%"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerApp.Projected_Revenue_This_Year__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Annual Revenue 1 Yr. ago</td>
+
+               <td align="right"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerApp.Annual_Revenue_1_year_ago__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Projected Revenue Next Yr.</td>
+
+               <td align="right"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerApp.Projected_Revenue_Next_Year__c}"/></td>
+
+           </tr>
+
+           <tr>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Is your company profitable today? :</td>
+
+               <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Company_Profitable__c}"/></td>
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Do you have a Business Plan available for your existing company?</td>
+
+               <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Business_Plan__c}"/></td>
+           </tr>
+           
+           <tr>
+              <td style="white-space:nowrap;padding-left:5px;" align="left">Has your company ever secured a performance bond? :</td>
+              <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Secured_Performance_Bond__c}"/></td>
+              <td style="white-space:nowrap;padding-left:5px;" align="left"><apex:outputPanel rendered="{!isCommercial}">Are you currently bondable?</apex:outputPanel></td>
+              <td colspan="2" align="left" style="padding-left:15px"><apex:outputPanel rendered="{!isCommercial}"><apex:inputfield value="{!partnerApp.Currently_Bondable__c}"/></apex:outputPanel></td>
+           </tr>
+           
+           <tr >
+
+                <td style="white-space:nowrap;padding-left:5px;" align="left" colspan="3">Are you OK with SunPower requesting additional information on your current credit standing? :</td>
+                <td colspan="2"  align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Credit_Report__c}"/></td>
+
+            </tr>
+
+            <tr>
+                <td colspan="5">&nbsp;</td>
+            </tr>   
+             <tr>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+        </table>
+
+       <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="4">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Business Segments</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>  
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="4">Please indicate the current mix of total business that is residential / commercial focused (out of 100% combined)</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="35%">Residential Focus (from 0 to 100%)</td>
+                <td width="15%"><apex:inputField style="width:100%" value="{!partnerApp.Residential_Focus__c}"/></td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left" width="35%">Commercial Focus (from 0 to 100%)</td>
+                <td width="15%"><apex:inputField style="width:90%" value="{!partnerApp.Commercial_Focus__c}"/></td>
+
+            </tr>  
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">kW of Residential PV Systems Installed to date: (if applicable)</td>
+                <td><apex:inputField style="width:100%" value="{!partnerApp.Residential_Systems_installed_to_date__c}"/></td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">kW of Commercial Systems Installed to date: (if applicable)</td>
+                <td><apex:inputField style="width:90%" value="{!partnerApp.Commercial_Systems_installed_to_date__c}"/></td>
+
+            </tr>   
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>    
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>    
+            
+        </table>
+
+            <table border="0" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr>
+                <td colspan="3">
+                     <table width="100%" style="background-color:#FBB917" border="0">
+                        <tr>
+                            <td width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>Geographic Coverage</B></font>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+            </tr>   
+            <tr><td style="white-space:nowrap;padding:7px;" align="left" colspan="3">Indicate in the spaces below the locations of up to 3 offices, and # of employees at each location</td></tr>
+
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Location (City, State)</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left">Market(s) Serviced</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="left"># of Employees at Location</td>
+
+            </tr>  
+
+            <tr>
+
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_1__c}"/></td>
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_1_Markets__c}"/></td>
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_1_Number_of_Employees__c}"/></td>
+
+            </tr>   
+
+            <tr>
+
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_2__c}"/></td>
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_2_Markets__c}"/></td>
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_2_Number_of_Employees__c}"/></td>
+
+            </tr>
+
+            <tr>
+
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_3__c}"/></td>
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_3_Markets__c}"/></td>
+                <td><apex:inputField style="width:75%" value="{!partnerApp.Location_3_Number_of_Employees__c}"/></td>
+
+            </tr>
+
+        </table>
+
+</apex:pageBlock>
+
+</apex:form>
+
+</apex:page>

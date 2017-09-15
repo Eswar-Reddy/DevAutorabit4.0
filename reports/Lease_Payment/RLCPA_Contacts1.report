@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>Contact.Partner_Portal_User__c</field>
+    </columns>
+    <columns>
+        <field>EMAIL</field>
+    </columns>
+    <columns>
+        <field>CONTACT_RECORDTYPE</field>
+    </columns>
+    <columns>
+        <field>Contact.Portal_User_Profile__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Owner and OpsBiz</description>
+    <filter>
+        <criteriaItems>
+            <column>Contact.Country_Domain__c</column>
+            <operator>equals</operator>
+            <value>rvar-us,combo-us</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Account.Partner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ROLE</column>
+            <operator>equals</operator>
+            <value>Operations/Business Administrator,Owner/President</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ROLE</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>RLCPA Contacts for Owner and OpsBiz</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountContactRole</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

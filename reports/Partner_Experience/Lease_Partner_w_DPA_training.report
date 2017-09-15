@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Contact$Account.Lease2_0_Program_Partner__c</field>
+    </columns>
+    <columns>
+        <field>Contact$Account.Lease_Program_Partner__c</field>
+    </columns>
+    <columns>
+        <field>Contact$Active_Partner_Portal_User__c</field>
+    </columns>
+    <columns>
+        <field>Contact$Partner_Portal_User__c.Name</field>
+    </columns>
+    <columns>
+        <field>Contact$Lease_Course_Status__c</field>
+    </columns>
+    <columns>
+        <field>Contact$Partner_Portal_User__c.CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Contact$Portal_User_Profile__c</field>
+    </columns>
+    <columns>
+        <field>Contact$Portal_User_Role__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>((1 AND 2 AND 3 AND 4 AND 5 AND 6)or(7 AND 8 AND 9))</booleanFilter>
+        <criteriaItems>
+            <column>Contact$RecordType</column>
+            <operator>equals</operator>
+            <value>Contact.Partner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Partner_Portal_User__c.Country_Domain__c</column>
+            <operator>equals</operator>
+            <value>rvar-us,cvar-us,combo-us</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Account.RecordType</column>
+            <operator>equals</operator>
+            <value>Account.Partner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Lease_Course_Status__c</column>
+            <operator>includes</operator>
+            <value>Dealer Participation Agreement</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Account</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Partner_Portal_User__c.IsActive</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Partner_Portal_User__c.IsActive</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Partner_Portal_User__c.Portal_User_Type__c</column>
+            <operator>equals</operator>
+            <value>LMS Only User</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Lease_Course_Status__c</column>
+            <operator>includes</operator>
+            <value>Dealer Participation Agreement</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Contact$Account</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Partner w/ DPA training</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Contacts_and_Associated_Objects__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Contact$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Cases$RecordType</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$CreatedBy</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$VAR_Dept_Owner__c</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$Description</field>
+    </columns>
+    <currency>USD</currency>
+    <description>For Dashboard</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Cases$Status</column>
+            <operator>notEqual</operator>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Cases$Owner</column>
+            <operator>equals</operator>
+            <value>,Jennifer Mendoza,Roni Flores,Marvic Babilonia,Louie Cueto,Leny Malocloc,Agatha Freida Alcantara,Jeff Felismino,Marvin Unggos</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Cases$Status</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Cases$Owner</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Cases$Case_CreatedDate__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>TSS Open Cases by Status</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Account_with_Case_Issues__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Cases$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

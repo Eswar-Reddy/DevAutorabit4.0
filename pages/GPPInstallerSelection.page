@@ -1,0 +1,47 @@
+<apex:page standardController="Quote" extensions="GPPQuoteCopyEdit"  action="{!GPPInstallerSelectionInit}"  >
+  <apex:form >
+  <apex:messages style="color:red"/>
+    <apex:pageBlock title="Installer Selection">
+ <!--       <apex:outputText value="Select Installer : ">
+      </apex:outputText>
+     <apex:selectList id="InstallerList" size="1" value="{!installer}">
+        <apex:selectOptions value="{!InstallPartners}">
+        </apex:selectOptions>
+      </apex:selectList> -->
+      <apex:pageBlockButtons location="bottom">
+        <apex:commandButton title="Submit" Value="Submit" action="{!submit}"/> 
+        <apex:commandButton title="Cancel" Value="Cancel" action="{!cancel}"/>
+      </apex:pageBlockButtons>
+      
+         <script>
+            function actFuncCall(ele, eleVal){ actFunc1(ele, document.getElementById(eleVal.id).checked); }
+        </script>
+        
+        <apex:actionFunction action="{!ChangeSelection}" id="actFunc1" name="actFunc1" reRender="OutPanel">
+            <apex:param name="param1" assignTo="{!propSelectedRecord}" value=""/>
+            <apex:param name="param2" assignTo="{!propValue}" value=""/>        
+        </apex:actionfunction>  
+      
+      <apex:outputpanel id="OutPanel">
+           <apex:pageBlockTable id="pbt" value="{!InstallPartners}" var="partners">
+
+                     <apex:column width="3%" id="col1">
+                         <apex:inputCheckbox id="inpCB" value="{!partners.propSelected}" onclick="actFuncCall('{!partners.insAcc.Id}', this);" disabled="{!isLocked}" />
+                     </apex:column>                    
+                     <apex:column headerValue="{!$ObjectType.Account.fields.Name.label}">
+                         <apex:outputText value="{!partners.insAcc.Name}"/>
+                     </apex:column>
+                     <apex:column headerValue="Billing Address">
+                         <apex:outputText value="{!partners.propBillingAddress}"/>
+                     </apex:column>
+                     <apex:column headerValue="Partner Tier">
+                         <apex:outputText value="{!partners.insAcc.Dealer_Tier__c}"/>
+                     </apex:column>   
+            </apex:pageBlockTable>
+        </apex:outputpanel> 
+                <br/>
+        <apex:outputText value="Note : If page freezes after clicking Submit, make sure that Pop-ups are not blocked"></apex:outputText>
+        <br/><br/>  
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

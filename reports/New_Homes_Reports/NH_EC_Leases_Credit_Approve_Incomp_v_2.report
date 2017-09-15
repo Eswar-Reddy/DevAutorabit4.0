@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Account</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Campaign</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Credit_Application_Status__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$StageName</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Quotes.Agreements__r$echosign_dev1__Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity$PartnerAccount</column>
+            <operator>equals</operator>
+            <value>SunPower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Name</column>
+            <operator>notContain</operator>
+            <value>test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Credit_Application_Status__c</column>
+            <operator>contains</operator>
+            <value>approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Quotes.Agreements__r$echosign_dev1__Status__c</column>
+            <operator>notEqual</operator>
+            <value>Out for Signature,Signed,Waiting for Counter-Signature,Awaiting Counter Signature,Cancelled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$StageName</column>
+            <operator>notEqual</operator>
+            <value>Verbal Commitment,Contract Signed,Opportunity Lost</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Owner</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Opportunity$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH EC Leases - Credit Approve Incomp v.2</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Quote_and_Agreements__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CreatedDate</dateColumn>
+        <interval>INTERVAL_LAST90</interval>
+    </timeFrameFilter>
+</Report>

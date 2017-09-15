@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Residential_Project__c.Project_Number__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Builder_Name__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Rough_Wire_Promised__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.PV_Install_Promised__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>CHILD_NAME</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Cancellation_Justification__c</field>
+    </columns>
+    <columns>
+        <field>Residential_Project__c.Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>(2 AND (1 OR 3)) AND 4</booleanFilter>
+        <criteriaItems>
+            <column>Residential_Project__c.Status__c</column>
+            <operator>equals</operator>
+            <value>Pending Cancellation</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Residential_Project__c.New_Home</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Residential_Project__c.Cancellation_Justification__c</column>
+            <operator>equals</operator>
+            <value>Customer Changed Mind</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Project_Hold_Data__c.User__c</column>
+            <operator>notEqual</operator>
+            <value>jerry bennett,richard sellers,Cecilia Maningding</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CUST_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Project_Hold_Data__c.User__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>RP in pending cancellation_not jkarsnia</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntityCustomEntity$Residential_Project__c$Project_Hold_Data__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CHILD_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Estimate_Estimator__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Site__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Cost_Estimate_Due__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Cost_Estimate_Tracking__c</field>
+    </columns>
+    <columns>
+        <field>PSR__c.Cost_Estimate_Completed__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>PSR__c.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_$Design__c.Proposal_Designer__c</column>
+            <operator>equals</operator>
+            <value>Dewane Bradford</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>PSR__c.Estimate__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>PSR__c.Cost_Estimate_Duration__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Estimate Duration</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$PSR__c@PSR__c.Design__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>PSR__c.Cost_Estimate_Completed__c</dateColumn>
+        <interval>INTERVAL_CURPREV1</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,17 @@
+<apex:page showHeader="false" sidebar="false" standardController="Learning__c">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <div style="max-width: 1200px; margin: auto;">
+        <apex:detail subject="{!Learning__c.Id}" inlineEdit="true" relatedListHover="false" showChatter="true" />
+    </div>
+    <script>
+    window.onload = function() {
+        UserRedirect();
+    }
+    </script>
+    <c:SPCommunityAppResources_JS />
+</apex:page>

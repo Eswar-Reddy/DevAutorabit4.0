@@ -1,0 +1,84 @@
+<apex:page standardController="Lead" sidebar="false" showheader="false" extensions="InlineDealerLocatorController" >
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    
+    <style>
+        .customtable {
+        font-size:12px;
+        text-shadow: 1px 1px 0px #fff;
+        width:90%;
+        -moz-border-radius:3px;
+        -webkit-border-radius:3px;
+        border-radius:3px;
+        -moz-box-shadow: 0 1px 2px #d1d1d1;
+        -webkit-box-shadow: 0 1px 2px #d1d1d1;
+        box-shadow: 0 1px 2px #d1d1d1;
+        }
+        .customtable th {
+        padding:6px 10px 6px 10px;
+        border-top:1px solid #fafafa;
+        border-bottom:1px solid #e0e0e0;
+        background: #ededed;
+        background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+        background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+        text-align:center;
+        }
+        .customtable tr {
+        text-align: center;
+        }
+        .message {
+        font-weight: bold;
+        margin: auto;
+        width: 60%;
+        }
+        .bs .container {
+        width: inherit;
+        padding-top: 20px;
+        }
+    </style>
+    
+    
+    <apex:pagemessages />
+    
+    <div class="bs">     
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8"> 
+                    <table class="table table-bordered customtable">
+                        <tr>
+                            <th>Partner</th>
+                            <th>Partner Phone</th>
+                            <th>Partner Type</th>
+                            <th>Overflow?</th>
+                            <th>Partner Level</th>
+                            <th>Alliance Partner</th>
+                            <th>RSM</th>
+                        </tr>
+                        <apex:repeat var="partners" value="{!EligiblePartners}" >
+                            <tr>
+                                <td><a href="/{!partners.partnerId}" target="_blank">{!partners.name}</a></td>
+                                <td>{!partners.partnerPhone}</td>
+                                <td>{!partners.handleType}</td>
+                                <td>{!if(partners.isOverflowPartner == true, 'No', 'Yes')}</td>
+                                <td>{!partners.dealerPriority}</td>
+                                <td><img src="/img/checkbox_{!IF(partners.AllianceProgramPartner, '', 'un')}checked.gif" /></td>
+                                <td><a href="/{!partners.rsmID}" target="_blank">{!partners.rsmName}</a></td>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+                </div><!--end left col-->
+                <div id="campaigndiv" class="col-sm-4" rendered="IF({!relatedCampaign == null}), false, true)">
+                    <h4 style="padding-bottom:10px;">Campaign Summary</h4>
+                    <blockquote style="padding-bottom: 0px;">
+                        <p>{!relatedCampaign.name}</p> 
+                        <footer>{!relatedCampaign.Short_Description__c}</footer>
+                    </blockquote>
+                </div><!--end right column--> 
+            </div>
+        </div>
+    </div>
+ 
+</apex:page>

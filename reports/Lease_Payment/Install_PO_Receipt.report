@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>notEqual</operator>
+            <value>LeasePayment__c.FR_LeasePayment,LeasePayment__c.AU_Lease_Payment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notContain</operator>
+            <value>gabi,tpo,bluewolf</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$Dealer_Fee_90_PO_Receipt_Complete__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Install PO Receipt</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>LeasePayment__c$Install_Pymnt_Apprvd__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Dealer_Fee_90_PO_Receipt_Complete__c</dateColumn>
+        <interval>INTERVAL_THISWEEK</interval>
+    </timeFrameFilter>
+</Report>

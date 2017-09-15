@@ -1,0 +1,487 @@
+<apex:page id="pgNewPartnerScorecard" standardController="Partner_Application__c" 
+ extensions="NewPartnerScorecardController" sidebar="false" showHeader="false">
+ <script>
+              function showPopUp(){
+                if(confirm("The scorecard will be auto-completed. Are you sure?")) {
+                    return true;
+                }
+                else {
+                   return false;
+                }
+                }
+ function openPDF(){
+     window.open('/apex/New_Partner_Scorecard_Pdf_au?id='+'{!id}','_blank','width=700,height=650');;
+ }
+ function IsNumeric(sText)
+    {
+        var ValidChars = "0123456789.";
+        var IsNumber=true;
+        var Char;
+        for (i = 0; i < sText.length && IsNumber == true; i++) 
+          { 
+          Char = sText.charAt(i); 
+          if (ValidChars.indexOf(Char) == -1) 
+             {
+             IsNumber = false;
+             }
+          }
+       return IsNumber;
+   }
+
+   function validateValue(elem, val){
+        if(IsNumeric(elem.value)){
+            if(elem.value > val){
+                alert('Value must be less than or equals to '+val);
+                elem.value='0';
+                elem.focus();
+            }
+        }else{
+            elem.value='0';
+            return;
+        
+        }
+    }
+ </script>
+<apex:form >
+<table width="100%">
+    <tr style="height:55px">
+        <td width="100%" align="center"><font color="Black" size="5"><b><u>New Partner Scorecard</u></b></font></td>
+      </tr>  
+  </table>  
+  <br/>
+<apex:pageBlock >
+  <apex:pageBlockButtons >
+    <apex:commandButton action="{!savePartnerApp_au}" value="Save and Exit"/>    
+    <apex:commandButton action="{!quickSavePartnerApp_au}" value="Save"/>
+    <apex:commandButton action="{!cancel}" value="Cancel"/>    
+    <apex:commandButton value="Create PDF" onclick="openPDF();return false;" />
+  </apex:pageBlockButtons>
+  <table border="1" style="text-align:center;width:100%;border-color:black;font-weight:bold;background-color:#99ffcc;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="4"><font color="#333399" size="4">General Information</font></td>
+      </tr>
+      <tr>
+          <td>Company</td>
+          <td><apex:inputField value="{!partnerObj.Company_Name__c}" style="width:100%"/></td>
+          <td>Date</td>
+          <td align = "left"><apex:inputField value="{!partnerObj.Application_Date__c}" style="width:80%"/></td>
+      </tr>
+      <tr>
+          <td>Owner</td>
+          <td><apex:inputField value="{!partnerObj.Owner__c}" style="width:100%"/></td>
+          <td>RSM</td>
+          <td align = "left"><apex:inputField value="{!partnerObj.RSM__c}" style="width:90%"/></td>
+      </tr>
+  </table>
+  <br/>
+  <table border="1" style="font-weight:bold;background-color:#99ffcc;width:100%;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="2"><font color="#333399" size="4">Meeting Attendees</font></td>
+      </tr>
+      <tr style="text-align:left;">
+          <td>Name</td>
+          <td>Title</td>
+      </tr>
+      <tr>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Name_1__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Title_1__c}" style="width:100%"/></td>
+      </tr>
+      <tr>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Name_2__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Title_2__c}" style="width:100%"/></td>
+      </tr>
+      <tr>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Name_3__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Title_3__c}" style="width:100%"/></td>
+      </tr>
+      <tr>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Name_4__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Meeting_Attendee_Title_4__c}" style="width:100%"/></td>
+      </tr>
+  </table>
+  <br/>
+  
+  <br/>
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="9"><font color="#333399" size="4">STAGE 2 - Business Plan</font></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>Q-3</td>
+          <td>Q-2</td>
+          <td>Q-1</td>
+          <td>Q0</td>
+          <td>Q+1</td>
+          <td>Q+2</td>
+          <td>Q+3</td>
+          <td>Q+4</td>         
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td>Total Dealer Sales, kW</td>
+          <td><apex:inputField value="{!partnerObj.Q_minus_3_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_minus_2_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_minus_1_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q0_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_1_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_2_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_3_Total_Partner_Sales_kW__c}" style="width:100%"/></td>
+          <td><apex:inputField value="{!partnerObj.Q_plus_4_Total_Partner_Sales_kW__c}" style="width:100%"/></td>          
+      </tr>      
+  </table>
+  <br/>
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+  		<tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="4"><font color="#333399" size="4">STAGE 2 – Company Growth</font></td>
+      	</tr>
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:5px;" align="left">Year</td>
+                <td style="white-space:nowrap;padding-left:5px;" align="center">kW</td>
+                <td style="white-space:nowrap;padding-left:5px;" align="center">$MM</td>
+                <td style="white-space:nowrap;padding-left:5px;" align="center">Employee at Year End</td>
+
+            </tr>            
+            
+            <tr  style="background-color:#99ffcc;">
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left" width="25%">Actual 2 years ago</td>
+
+               <td align="right" width="25%"><apex:inputField style="width:90%" value="{!partnerObj.Annual_Revenue_2_year_ago_in_kW__c}"/></td>
+
+               <td align="right" width="25%"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerObj.Annual_Revenue_2_year_ago__c}"/></td>
+
+               <td align="right" width="25%"><apex:inputField style="width:90%" value="{!partnerObj.Number_of_Employees_2_years_ago__c}"/></td>
+
+           </tr>
+
+           <tr  style="background-color:#99ffcc;">
+
+               <td style="white-space:nowrap;padding-left:5px;" align="left">Actual last year</td>
+
+               <td align="right"><apex:inputField style="width:90%" value="{!partnerObj.Annual_Revenue_1_year_ago_in_kW__c}"/></td>
+
+               <td align="right"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerObj.Annual_Revenue_1_year_ago__c}"/></td>
+
+               <td align="right"><apex:inputField style="width:90%" value="{!partnerObj.Number_of_Employees_last_year__c}"/></td>
+
+           </tr>
+
+            <tr  style="background-color:#99ffcc;">
+            	<td style="white-space:nowrap;padding-left:5px;" align="left" width="25%">Estimated this year</td>
+            	
+            	<td align="right"><apex:inputField style="width:90%" value="{!partnerObj.Projected_Revenue_This_Year_in_kW__c}"/></td>
+            	
+            	<td align="right"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerObj.Projected_Revenue_This_Year__c}"/></td>
+            	
+            	<td align="right"><apex:inputField style="width:90%" value="{!partnerObj.Estimated_Number_of_Employees_this_year__c}"/></td>
+            </tr>        
+           
+			<tr  style="background-color:#99ffcc;">
+            	<td style="white-space:nowrap;padding-left:5px;" align="left">Estimated next year</td>
+            	
+            	<td align="right"><apex:inputField style="width:90%" value="{!partnerObj.Projected_Revenue_Next_Year_in_kW__c}"/></td>
+            	
+            	<td align="right"><B>$</B>&nbsp;<apex:inputField style="width:90%" value="{!partnerObj.Projected_Revenue_Next_Year__c}"/></td>
+            	
+            	<td align="right"><apex:inputField style="width:90%" value="{!partnerObj.Estimated_Number_of_Employees_next_year__c}"/></td>
+            </tr>
+        </table>
+        <br/>
+        <table border="1" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr style="text-align:left;width:100%;background-color:#ccecff;">
+                <td colspan="3" width="100%" align="left" style="padding-left:10px">
+                      <font color="#333399" size="4"> <B>STAGE 2 – Geographical Location</B>  </font>              
+                </td>
+            </tr>   
+            
+            <tr style="font-weight:bold;">
+                <td style="white-space:nowrap;padding-left:5px;" align="center">Location</td>
+                <td style="white-space:nowrap;padding-left:5px;" align="center">Warehouse/Showroom/Remote Office</td>                
+                <td style="white-space:nowrap;padding-left:5px;" align="center">Primary Competition at Location</td>
+            </tr>  
+            <tr style="background-color:#99ffcc;">
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_1__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_1_Type__c}"/></td>                
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_1_Primary_Competition__c}"/></td>
+            </tr>  
+
+            <tr style="background-color:#99ffcc;">
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_2__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_2_Type__c}"/></td>                
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_2_Primary_Competition__c}"/></td>
+            </tr>
+
+            <tr style="background-color:#99ffcc;">
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_3__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_3_Type__c}"/></td>                
+				<td><apex:inputField style="width:100%" value="{!partnerObj.Location_3_Primary_Competition__c}"/></td>
+            </tr>            
+            <tr style="background-color:#99ffcc;">
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_4__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Location_4_Type__c}"/></td>                
+				<td><apex:inputField style="width:100%" value="{!partnerObj.Location_4_Primary_Competition__c}"/></td>
+            </tr>
+
+        </table>
+        <br/>
+        <table border="1" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr style="text-align:left;width:100%;background-color:#ccecff;">
+                <td colspan="4" width="100%" align="left" style="padding-left:10px"><font color="#333399" size="4"><B>STAGE 2- PV Products</B></font>
+                
+                </td>
+            </tr>   
+            
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Manufacturer or Distributor</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="center">PV Product</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Credit Limit</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Share of account %</td>
+
+            </tr> 
+
+            <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Distributor_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Product_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Credit_Limit_1__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_share_1__c}"/></td>
+
+            </tr> 
+
+            <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Distributor_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Product_2__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.PV_Credit_Limit_2__c}"/> </td>
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.PV_share_2__c}"/> </td>
+
+            </tr>
+
+            <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Distributor_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Product_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Credit_Limit_3__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_share_3__c}"/></td>
+
+            </tr>
+            
+             <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Distributor_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.PV_Product_4__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.PV_Credit_Limit_4__c}"/> </td>
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.PV_share_4__c}"/> </td>
+
+            </tr>    
+
+        </table>
+        <br/>
+        <table border="1" cellspacing="3px" cellpadding="0px" width="100%">
+            <tr style="text-align:left;width:100%;background-color:#ccecff;">
+                <td colspan="4" width="100%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>STAGE 2- Inverters</B></font>
+                            </td> 
+                        
+            </tr>   
+            
+            <tr style="font-weight:bold;">
+
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Manufacturer or Distributor</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Inverters</td>
+
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Credit Limit</td>
+                <td style="white-space:nowrap;padding-left:7px;" align="center">Share of account %</td>
+
+            </tr> 
+
+            <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Distributor_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Product_1__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Credit_Limit_1__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Share_1__c}"/></td>
+
+            </tr> 
+
+            <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Distributor_2__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Product_2__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.Inverter_Credit_Limit_2__c}"/> </td>
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.Inverter_Share_2__c}"/> </td>
+
+            </tr>
+
+            <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Distributor_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Product_3__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Credit_Limit_3__c}"/></td>
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Share_3__c}"/></td>
+
+            </tr>
+            
+             <tr style="background-color:#99ffcc;">
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Distributor_4__c}"/></td>
+
+                <td><apex:inputField style="width:100%" value="{!partnerObj.Inverter_Product_4__c}"/></td>
+
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.Inverter_Credit_Limit_4__c}"/> </td>
+                <td> <apex:inputField style="width:100%" value="{!partnerObj.Inverter_Share_4__c}"/> </td>
+
+            </tr>
+        </table>
+        <br/>
+        
+  <table border="1" style="font-weight:bold;width:100%;text-align:center;">
+      <tr style="text-align:left;width:100%;background-color:#ccecff;">
+          <td colspan="6"><font color="#333399" size="4">Scoring</font></td>
+      </tr>
+       <tr>
+          <td>Area</td>
+          <td>Partner applicant has/is:</td>
+          <td>Scoring</td>
+          <td>Max Score</td>
+          <td width="10%">Score</td>
+          <td width="10%">Explanation</td>                
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="7" style="background-color:white;">Sales</td>
+          <td style="text-align:left;">Sales manager</td>
+          <td style="text-align:left;">With reports</td>
+          <td>5</td>
+          <td><apex:inputField value="{!partnerObj.Sales_manager_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,5)"/></td>
+          <td><apex:inputField value="{!partnerObj.Sales_manager_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sales training</td>
+          <td style="text-align:left;">Some process</td>
+          <td>1</td>
+          <td><apex:inputField value="{!partnerObj.Sales_training_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,1)"/></td>
+          <td><apex:inputField value="{!partnerObj.Sales_training_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sales meetings</td>
+          <td style="text-align:left;">At least weekly</td>
+          <td>1</td>
+          <td><apex:inputField value="{!partnerObj.Sales_meetings_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,1)"/></td>
+          <td><apex:inputField value="{!partnerObj.Sales_meetings_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Sales process</td>
+          <td style="text-align:left;">Pitch book</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Sales_process_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Sales_process_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Basics sales metrics tracking</td>
+          <td style="text-align:left;">Trending of lead flow, etc…</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Basics_sales_metrics_tracking_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Basics_sales_metrics_tracking_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">CRM</td>
+          <td style="text-align:left;">At least some software or spreadsheets, binary</td>
+          <td>1</td>
+          <td><apex:inputField value="{!partnerObj.CRM_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,1)"/></td>
+          <td><apex:inputField value="{!partnerObj.CRM_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;"># of sales team</td>
+          <td style="text-align:left;">1 pt each</td>
+          <td>5</td>
+          <td><apex:inputField value="{!partnerObj.VAR_business_model_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,5)"/></td>
+          <td><apex:inputField value="{!partnerObj.VAR_business_model_Details__c}" style="width:100%"/></td>
+      </tr>
+      
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="2" style="background-color:white;">Installation</td>
+          <td style="text-align:left;">Selling SPWR and other competitors</td>
+          <td style="text-align:left;">Selling SPWR Only 9 pts Selling SPWR and only one other competitors name stated as being sold 5 pts Multiple includes SPWR plus two other brands 3 pts</td>
+          <td>9</td>
+          <td><apex:inputField value="{!partnerObj.Install_truck_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,9)"/></td>
+          <td><apex:inputField value="{!partnerObj.Install_truck_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;"># of Installs</td>
+          <td style="text-align:left;">Per week is over 10 -> 12 pts Per week is over 5 -> 7 pts</td>
+          <td>12</td>
+          <td><apex:inputField value="{!partnerObj.License_or_qualification_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,12)"/></td>
+          <td><apex:inputField value="{!partnerObj.License_or_qualification_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="3" style="background-color:white;">Growth</td>
+          <td style="text-align:left;">Business Plan</td>
+          <td style="text-align:left;">Willingness to sign multi quarter contract</td>
+          <td>10</td>
+          <td><apex:inputField value="{!partnerObj.Business_Plan_1_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,10)"/></td>
+          <td><apex:inputField value="{!partnerObj.Business_Plan_1_Details__c}" style="width:100%"/></td>
+      </tr>       
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Business Plan</td>
+          <td style="text-align:left;">Subjective assessment based on Business Plan discussion</td>
+          <td>5</td>
+          <td><apex:inputField value="{!partnerObj.Business_Plan_2_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,5)"/></td>
+          <td><apex:inputField value="{!partnerObj.Business_Plan_2_Details__c}" style="width:100%"/></td>
+      </tr>
+       <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Growth Plan</td>
+          <td style="text-align:left;">Estimated Share of Account anticipated for SPWR 2 point per 5%</td>
+          <td>30</td>
+          <td><apex:inputField value="{!partnerObj.Well_capitalized_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,30)"/></td>
+          <td><apex:inputField value="{!partnerObj.Well_capitalized_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td rowspan="3" style="background-color:white;">Marketing</td>
+          <td style="text-align:left;">Marketing Activity</td>
+          <td style="text-align:left;">Evidence of marketing experience in current business</td>
+          <td>10</td>
+          <td><apex:inputField value="{!partnerObj.Organized_referral_program_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,10)"/></td>
+          <td><apex:inputField value="{!partnerObj.Organized_referral_program_Details__c}" style="width:100%"/></td>
+      </tr>      
+      <tr style="background-color:#99ffcc;">          
+          <td style="text-align:left;">Professional uniforms</td>
+          <td style="text-align:left;"></td>
+          <td>2</td>
+          <td><apex:inputField value="{!partnerObj.Professional_uniforms_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,2)"/></td>
+          <td><apex:inputField value="{!partnerObj.Professional_uniforms_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr style="background-color:#99ffcc;">
+          <td style="text-align:left;">Marketing Staff</td>
+          <td style="text-align:left;">Full time/ Part time</td>
+          <td>3</td>
+          <td><apex:inputField value="{!partnerObj.Marketing_Manager_Score__c}" style="width:100%;text-align:center;" onblur="validateValue(this,3)"/></td>
+          <td><apex:inputField value="{!partnerObj.Marketing_Manager_Details__c}" style="width:100%"/></td>
+      </tr>
+      <tr>
+        <td colspan = "3">Scorecard Score</td>
+        <td>/100</td>
+        <td><apex:outputField id="scorecard" value="{!partnerObj.Scorecard_Score__c}" style="text-align:center;"/></td>
+        <td></td>
+      </tr>
+  </table>
+</apex:pageBlock>
+</apex:form>  
+</apex:page>

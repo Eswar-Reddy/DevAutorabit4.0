@@ -1,0 +1,23 @@
+<apex:page extensions="DynaFormVerificationControllerExt" standardController="Dynaform__c">
+
+	<apex:form >
+	<apex:pageBlock title="Verify a Form">
+		<apex:pageBlockButtons location="top">
+			<apex:commandButton action="{!view}" value="Go Back"/>
+		</apex:pageBlockButtons>
+		<apex:pageMessages id="pageMessages"/>
+		<apex:actionStatus id="verifyStatus">
+			<apex:facet name="start">
+				<apex:outputText >Verifying...</apex:outputText>
+			</apex:facet>
+			<apex:facet name="stop">
+				<apex:outputPanel layout="none">
+					<apex:commandButton action="{!verifyFormURL}" status="verifyStatus" value="Verify" rerender="pageMessages"/>
+					<apex:outputText value="{!Dynaform__c.Form_URL__c}"/>
+				</apex:outputPanel>
+			</apex:facet>
+		</apex:actionStatus>
+	</apex:pageBlock>
+	</apex:form>
+
+</apex:page>

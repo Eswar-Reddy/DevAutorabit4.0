@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.Partner_Account_Id__c</field>
+    </columns>
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</field>
+    </columns>
+    <columns>
+        <field>CUST_OWNER_NAME</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSigned__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>FK_$Opportunity.Partner_Account_Id__c</column>
+            <operator>startsWith</operator>
+            <value>360</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</column>
+            <operator>equals</operator>
+            <value>Signed,Waiting for Counter-Signature</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Validate success echosign routingPartner</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$echosign_dev1__SIGN_Agreement__c@echosign_dev1__SIGN_Agreement__c.echosign_dev1__Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>echosign_dev1__SIGN_Agreement__c.Counter_Signed_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

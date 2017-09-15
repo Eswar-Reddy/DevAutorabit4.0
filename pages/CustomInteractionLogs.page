@@ -1,0 +1,101 @@
+<apex:page standardController="Case" extensions="CustomInteractionLog" tabStyle="Task">    
+
+    <script language="JavaScript1.2" src="/js/functions.js"></script>
+    <script src="/soap/ajax/24.0/connection.js" type="text/javascript"></script>
+    <apex:includeScript value="/support/console/24.0/integration.js"/>    
+    <script src="{!URLFOR($Resource.jquery_16min)}" type="text/javascript"></script>
+    <script src="{!URLFOR($Resource.jquery_ui_18, 'js/jquery-ui-1.8.16.custom.min.js')}"></script>
+    
+    <script type="text/javascript">   
+            function testOpenPrimaryTab(PrimaryID,newCase,description,contactID) {
+              var CustomUrl='/setup/ui/recordtypeselect.jsp?ent=Case&retURL=/500/o&save_new_url=/500/e?retURL=/500/o&cas15='+description;
+                if(newCase=='false'){
+                        sforce.console.openPrimaryTab(null, PrimaryID, true,'salesforce', openSuccess, 'salesforceTab');
+                    }else{
+                        if(PrimaryID.substring(0, 3)=="001"){
+                            try{
+                                 sforce.connection.sessionId = "{!$Api.Session_ID}"
+                                 var qr = sforce.connection.query("SELECT id,name,Partner_Account__c,Partner_Account__r.Name FROM Account where ID='"+PrimaryID+"'");
+                                var records = qr.getArray("records");
+                                var Partner_Account__c = records[0].Partner_Account__c;
+                                var Partner_Account__Name = records[0].Partner_Account__r.Name;                                
+                               }
+                            catch (error){
+                                alert(error.faultstring);
+                               }
+                            }
+                        if(PrimaryID.substring(0, 3)=="001"&&contactID.substring(0, 3)=="003"){
+                                 sforce.console.openPrimaryTab(null, '/setup/ui/recordtypeselect.jsp?ent=Case&def_account_id='+PrimaryID+'&def_contact_id='+contactID+'&CF00N80000004HKR4='+Partner_Account__Name+'&CF00N80000004HKR4_lkid='+Partner_Account__c+'&retURL=%2F500%2Fo&save_new_url=%2F500%2Fe%3FretURL%3D%252F500%252Fo&cas15='+description,true,'salesforce', openSuccess, 'salesforceTab');
+                            }
+                           else if(PrimaryID.substring(0, 3)=="001"&& contactID.substring(0, 3)!="003"){
+                               //alert('hi2');
+                                sforce.console.openPrimaryTab(null, '/setup/ui/recordtypeselect.jsp?ent=Case&def_account_id='+PrimaryID+'&CF00N80000004HKR4='+Partner_Account__Name+'&CF00N80000004HKR4_lkid='+Partner_Account__c+'&retURL=%2F500%2Fo&save_new_url=%2F500%2Fe%3FretURL%3D%252F500%252Fo&cas15='+description,true,'salesforce', openSuccess, 'salesforceTab');
+                             }
+                        else if(PrimaryID.substring(0, 3)!="001"&& contactID.substring(0,3)=="003"){
+                            //alert('hi3');
+                                sforce.console.openPrimaryTab(null, '/setup/ui/recordtypeselect.jsp?ent=Case&def_contact_id='+contactID+'&CF00N80000004HKR4='+Partner_Account__Name+'&CF00N80000004HKR4_lkid='+Partner_Account__c+'&retURL=%2F500%2Fo&save_new_url=%2F500%2Fe%3FretURL%3D%252F500%252Fo&cas15='+description,true,'salesforce', openSuccess, 'salesforceTab');
+                             }
+                                   else
+                                   sforce.console.openPrimaryTab(null,CustomUrl,true,'salesforce', openSuccess, 'salesforceTab');
+                       
+        }
+        
+        var openSuccess = function openSuccess(result) {
+            //Report whether opening the new tab was successful
+            if (result.success == true) {
+                //alert('Primary tab successfully opened');
+                document.getElementById('{!$Component.updatefrom:thePageBlock:pbSection:whoId}').value = '';
+                document.getElementById('{!$Component.updatefrom:thePageBlock:pbSection:whatId}').value = '';
+                document.getElementById('{!$Component.updatefrom:thePageBlock:pbSection:subject}').value = '';
+                document.getElementById('{!$Component.updatefrom:thePageBlock:pbSection:description}').value = '';
+            } else {
+                //alert('Primary tab cannot be opened');
+            }
+        };
+    }
+            
+  </script>
+  <div style="height:500px;width:100%;overflow:auto;">
+    <apex:form id="updatefrom">
+        <apex:pageBlock title="Log A Call" id="thePageBlock" mode="edit" >
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" reRender="updateable, relatedList,thePageBlock" oncomplete="testOpenPrimaryTab('{!task.whatId}','{!newCase}','{!description}','{!task.WhoId}');" status="counterStatus"/>
+                <!--<apex:commandButton value="Save And New" action="{!saveAndNew}" reRender="updateable, relatedList"/>-->
+            </apex:pageBlockButtons>
+            <apex:actionStatus startText=" (searching...)" id="counterStatus" />
+            <apex:actionFunction action="{!updateWhoWhatId}" name="updateWhoWhatIdJS" reRender="updateable">
+                <apex:param name="newCaseId" assignTo="{!caseId}" value=""/>
+            </apex:actionFunction>               
+            <apex:actionFunction action="{!setCallAttachedData}" name="setCallAttachedDataJS" reRender="updateable">
+                <apex:param name="CallObject" assignTo="{!CallObject}" value=""/>
+                <apex:param name="ANI" assignTo="{!ANI}" value=""/>
+            </apex:actionFunction>
+            <apex:actionFunction action="{!setCallEndData}" name="setCallEndDataJS" reRender="updateable, relatedList">
+                <apex:param name="CallDuration" assignTo="{!CallDurationInSeconds}" value=""/>
+                <apex:param name="CallDisposition" assignTo="{!CallDisposition}" value=""/>
+            </apex:actionFunction>            
+            <apex:outputPanel id="updateable" layout="block">
+                 <apex:pageBlockSection columns="1" id="pbSection">
+                    <apex:inputField value="{!task.whatId}" id="whatId"/>
+                  <!-- commenting out this component  <apex:inputField value="{!task.whoId}" id="whoId"/>  -->
+                     <apex:inputField style="width:230px;" value="{!task.subject}" id="subject"/>
+                     <apex:pageBlockSectionItem >
+                            <apex:outputText value="New case"></apex:outputText> 
+                            <apex:inputCheckbox style="width:230px;" value="{!newCase}"/>
+                     </apex:pageBlockSectionItem>
+                    <!-- <apex:inputField value="{!task.ANI__c}"/> -->                    
+                </apex:pageBlockSection>
+                <apex:pageBlockSection columns="1">
+                    <apex:inputTextarea style="height:500px;width:350px;overflow:auto;" value="{!task.description}" id="description" />                                        
+                    
+                    <br/><apex:outputText value="{!statusMessage}" />                                       
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:outputPanel id="relatedList">
+        <apex:relatedList list="OpenActivities"/>
+    </apex:outputPanel>
+    </div>
+</apex:page>

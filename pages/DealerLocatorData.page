@@ -1,0 +1,180 @@
+<apex:page controller="DealerLocatorController" standardStylesheets="false" showHeader="false" sidebar="false" id="thePage" >
+  <apex:composition template="{!$Site.Template}">
+    <apex:define name="body">
+      <body>
+      <script type="text/javascript">
+      function changeUIstate() {
+        $('.result').css("height", 64);
+        $('.result:first').css("height", 200).addClass("open");  
+        // $('#aboutDealerWrapper').addClass('hide');  
+        // $('#dealerDetailsWrapper').removeClass('hide');
+        $('#usaMap').addClass('hide');
+        $('.result').find('.websiteLaunchButton').each(function(){
+
+        var urlString = $(this).attr("href")
+       
+        if( urlString == "") {
+            $(this).hide();
+        };
+       
+        if($.browser.msie && parseFloat($.browser.version) < 8){
+           if( urlString == "") {
+            $(this).hide();
+            } else {
+           
+           var imageHtml = $(this).parent().find('.websiteLaunchButton').html();
+           //alert(urlString)
+           //var base = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
+           //alert(base);
+           //var ie7string = urlString.substring(base.length, urlString.length);
+           //alert(ie7string);
+           $(this).replaceWith('<a href="'+urlString+'?cid=DL_NA_Residential" target="_blank">'+imageHtml+'</a>');
+           }
+        }else {
+       
+            if (urlString.substring(0, 7) != "http://") {
+                urlString = "http://"+urlString;
+                $(this).attr("href", urlString + "?cid=DL_NA_Residential" )
+            } else {
+                $(this).attr("href", urlString + "?cid=DL_NA_Residential" )
+            };
+        };//end of ms detection
+
+        }); 
+
+        };
+      </script>
+      
+      <!-- SiteCatalyst code version: H.19.4.
+        Copyright 1997-2009 Omniture, Inc. More info available at
+        http://www.omniture.com --> 
+        <script language="JavaScript" type="text/javascript"><!--
+        /* You may give each page an identifying name, server, and channel on
+        the next lines. */
+        s.pageName="en_US/residential/products-services/services/our-dealers/find-dealer-locator"
+        s.server=""
+        s.channel="/residential"
+        s.pageType=""
+        s.prop1="/residential"
+        s.prop2="/residential/products-services"
+        s.prop3="/residential/products-services/services"
+        s.prop4="/residential/products-services/services/our-dealers"
+        s.prop13="en_US"
+        /* Conversion Variables */
+        s.campaign=""
+        s.state=""
+        s.zip=""
+        s.events=""
+        s.products=""
+        s.purchaseID=""
+        s.eVar1=""
+        s.eVar2=""
+        s.eVar3=""
+        s.eVar4=""
+        s.eVar5=""
+        /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+        var s_code=s.t();if(s_code)document.write(s_code)//--></script> 
+        <script language="JavaScript" type="text/javascript"><!--
+        if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+        //--></script><noscript><a href="http://www.omniture.com" title="Web Analytics"><img
+        
+        src="http://metrics.sunpowercorp.com/b/ss/spcDev/1/H.19.4--NS/0"
+        
+        height="1" width="1" border="0" alt="" /></a></noscript><!--/DO NOT REMOVE/--> 
+        <!-- End SiteCatalyst code version: H.19.4. --> 
+
+      <div class="leftcol"> <img src="{!URLFOR($Resource.dealerLocatorImages, '/dealerLocatorImages/roofpic.jpg')}" />
+        <div id="aboutDealerWrapper">
+          <h2 class="space">About the SunPower Dealer Network</h2>
+          <p>In search of a local solar installer that you can count on to offer a high standard of quality and customer service? Look no further. SunPower-qualified dealers are handpicked and put through the most rigorous training in the industry. In fact, SunPower is the only solar manufacturer with an ISPQ-accredited training program, an international standard that ensures continuity, consistency and quality in the delivery of training. We even inspect our dealers’ work to ensure that the highest quality standards are upheld. </p>
+          <p>Your SunPower dealer will handle all aspects of your installation, including design, permitting, access to financing, rebate processing and system maintenance.  Use our Dealer Locator on the right to find a SunPower-qualified dealer near you and have peace of mind knowing you’re working with a best-in-class solar installer.</p>
+        </div>
+      </div>
+      <div class="rightcol">
+        <apex:form >
+          <apex:actionFunction name="loadSearch" action="{!onSearch}" rerender="myResults,pnlRadius" oncomplete="changeUIstate();">
+          </apex:actionFunction>
+          <apex:outputPanel >
+            <div class="form" id="zip-form">
+              <h1>Find a Trusted Local Dealer</h1>
+              <input type="text" style="display: none;" disabled="disabled" size="1" />
+              <fieldset id="zip-form">
+                <h3>Search by:</h3>
+                <table width="400" border="0">
+                  <tr>
+                    <td width="60" align="right"><apex:outputText value="Zip Code"/></td>
+                    <td width="133"><apex:inputText value="{!baseLocation}" size="16"/></td>
+                    <td>
+                        <apex:commandButton image="{!URLFOR($Resource.dealerLocatorImages, '/dealerLocatorImages/find.jpg')}" action="{!onSearch}" value="submit" rerender="myResults,pnlRadius"  styleClass="findButton"  accesskey="s" oncomplete="changeUIstate();" >
+                            <!-- Done for Case # 00073245 [Hiding the US map] -->
+                            <!-- Done for Case # 00069491 to display Map first time only
+                            <apex:param value="NO" name="displayString"/> -->
+                        </apex:commandButton>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="60" align="right"><apex:outputText value="Radius"/></td>
+                    <td width="133"> 
+                    <apex:outputPanel id="pnlRadius">
+                        <apex:selectList value="{!radius}" size="1"> 
+                            <apex:selectOptions value="{!radiusValues}" > 
+                            </apex:selectOptions>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                        &nbsp;<apex:outputText value="Miles"/>
+                    </td>
+                    <td></td>                    
+                  </tr>
+                </table>
+              </fieldset>
+            </div>
+          </apex:outputPanel>
+          <div id="results">
+            <apex:outputPanel id="myResults" layout="block">
+              <apex:outputPanel layout="black" style="color: #666">
+                <apex:messages />
+              </apex:outputPanel>
+              <apex:outputPanel layout="block" rendered="{!AND(searched,empty)}"><br />
+                <apex:outputLabel rendered="{!OR(radius = 5,radius = 25,radius = 50,radius = 100)}">
+                  <h3>We appreciate your interest in SunPower.</h3> <br /><br />
+                  <p>We don't currently have a dealer within {!radius} miles of your location. Please expand your search to locate your nearest SunPower dealer. </p>
+                </apex:outputLabel>
+                <apex:outputLabel rendered="{!radius = 200}">
+                  <h3>We appreciate your interest in SunPower.</h3> <br /><br />
+                  <p>We currently do not serve your market through our dealer network, but check back soon to see when SunPower solutions are available in your area. </p>
+                </apex:outputLabel>
+              </apex:outputPanel>
+              <apex:outputPanel layout="block" rendered="{!AND(searched,NOT(empty))}">
+                <apex:repeat var="row" value="{!resultRows}" id="theRepeat">
+                  <div class="result">
+                    <h2>{!row.account.Name}</h2>
+                    <div class="address">
+                      <h3>{!row.account.Dealer_Tier__c}</h3>
+                      <img class="moreButton" src="{!URLFOR($Resource.dealerLocatorImages, '/dealerLocatorImages/more.png')}" width="52" height="20" />
+                      <p>{!row.account.BillingCity}, {!row.account.BillingState}<br />
+                        {!LEFT(row.account.BillingPostalCode,5)}<br />
+                          {!row.account.Phone}</p>
+                    </div>
+                    <div class="description">{!row.account.Partner_Facts__c}</div>
+                    <div class="buttons"><a href="/DealerLocator/DealerLocatorForm?id={!row.account.id}"><img src="{!URLFOR($Resource.dealerLocatorImages, '/dealerLocatorImages/request.jpg')}" /></a><a href="{!row.account.Website}" rel="{!row.account.Website}" target="_blank" class="websiteLaunchButton"><img src="{!URLFOR($Resource.dealerLocatorImages, '/dealerLocatorImages/launch.jpg')}" /></a></div>
+                  </div>
+                  <!-- result -->
+                </apex:repeat>
+              </apex:outputPanel>
+              <!-- Done for Case # 00073245 [Hiding the US map] -->
+              <!-- Done for Case # 00069491
+              Map is displayed first time only 
+             <apex:image url="{!URLFOR($Resource.dealerLocatorImages, '/dealerLocatorImages/usa.jpg')}" id="usaMap" rendered="{!displayMap}"/>
+             --> 
+            </apex:outputPanel>
+          </div>
+        </apex:form>
+      </div>
+      <!-- rightcol -->
+      <script type="text/javascript">
+      window.onload = loadSearch();
+      </script>
+      </body>
+    </apex:define>
+  </apex:composition>
+</apex:page>

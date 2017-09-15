@@ -1,0 +1,181 @@
+<apex:page standardController="Quote" sidebar="false" cache="true" contenttype="application/vnd.ms-word#{!Quote.Name}-{!Quote.QuoteNumber}.doc" >
+   <style>
+        .oddRow {background-color: white; color:white; background-image:none}
+
+        .evenRow { background-color: lightgrey; color:black; background-image:none}
+   </style>
+   
+   <apex:pageBlock >
+       <apex:outputPanel style="font-weight: bold;font-size:24px;" >
+           {!$Organization.Name}
+       </apex:outputPanel> <br/><br/>
+       <apex:outputPanel style="font-size:14px;" layout="block" >
+            <B> FOR GOOD AND VALUABLE CONSIDERATION, THIS PV MODULE PURCHASE AGREEMENT </B> (the "Agreement") is entered into 
+            by and between SUNPOWER SYSTEMS SARL ("Sunpower") and {!Quote.Opportunity.Account.Name} ("Customer") on the terms and conditions set forth herein 
+            as the date indicated under the signature below (or, if different, later of the two dates) ("Effective Date"). The offer
+            stated in this PV Module Purchase Agreement is valid until <font color="Red">XXXXX</font>. This PV Module Purchase Agreement will be legally binding
+            upon signature by both Parties. (SunPower and Customer {!Quote.Opportunity.Account.Name})
+       </apex:outputPanel> <br/><br/>
+       <table width="100%" border-width="0px">
+           <TR>
+                          
+               <TD width="20%"><apex:outputText value="Company Address " style="font-weight: bold;margin-left:0px;" /></TD>
+               <TD width="30%"><apex:outputText value="{!$Organization.Street}" /></TD>
+
+               <TD width="20%"><apex:outputText value="Created Date" style="font-weight: bold;" /></TD>
+               <TD width="30%"><apex:outputText value="{0,date,M/dd/yyyy}" >
+                   <apex:param value="{!TODAY()}" />
+                   </apex:outputText></TD>
+            </TR>
+            <TR>  
+                <TD width="20%"><apex:outputLabel ></apex:outputLabel></TD>
+                <TD width="30%"><apex:outputText style="width:200px;" value="{!$Organization.City} {!$Organization.State} {!$Organization.PostalCode}"/></TD>
+           
+                <TD width="20%"><apex:outputtext value="{!$ObjectType.Quote.fields.ExpirationDate.label} " style="font-weight: bold;" rendered="{!NOT(ISNULL(Quote.ExpirationDate))}"/></TD>
+                <TD width="30%"><apex:outputtext value="{0,date,M/dd/yyyy}">
+                    <apex:param value="{!Quote.ExpirationDate}"/>
+                </apex:outputtext></TD>
+            </TR>
+            <TR>
+               <TD width="20%"><apex:outputLabel ></apex:outputLabel></TD>
+               <TD width="30%"><apex:outputText style="width:200px;" value="{!$Organization.Country}"/></TD>
+
+               <TD width="20%"><apex:outputText value="{!$ObjectType.Quote.fields.QuoteNumber.label} " style="font-weight: bold;" /></TD>
+               <TD width="30%"><apex:outputText value="{!Quote.QuoteNumber}" /></TD>
+            </TR>
+            <TR>
+                <TD width="20%"><apex:outputText value="Prepared By " style="font-weight: bold" /></TD>
+                <TD width="30%"><apex:outputtext value="{!$User.FirstName} {!$User.LastName}" /></TD>
+
+                <TD width="20%"><apex:outputtext value="Contact Name " style="font-weight: bold;" rendered="{!NOT(ISNULL(Quote.Contact.Name))}"/></TD>
+                <TD width="30%"><apex:outputtext value="{!Quote.Contact.Name}"/></TD>
+            </TR>
+            <TR>
+                <TD width="20%"><apex:outputText value="E-Mail " style="font-weight: bold" /></TD>
+                <TD width="30%"><apex:outputtext value="{!$User.Email}" /></TD>
+
+                <TD width="20%"><apex:outputtext rendered="{!NOT(ISNULL(Quote.Phone))}" value="{!$ObjectType.Quote.fields.Phone.label} " style="font-weight: bold;"/></TD>
+                <TD width="30%"><apex:outputtext value="{!Quote.Phone}"/></TD>
+            </TR>
+             <TR>   
+                <TD width="50%" colspan="2"><apex:outputLabel ></apex:outputLabel></TD>
+                <TD width="20%"><apex:outputtext rendered="{!NOT(ISNULL(Quote.Email))}" value="{!$ObjectType.Quote.fields.Email.label} " style="font-weight: bold;"/></TD>
+                <TD width="30%"><apex:outputtext value="{!Quote.Email}"/></TD>
+            </TR>
+            <TR>
+                <TD width="20%" colspan="2"><apex:outputLabel ></apex:outputLabel></TD>
+                <TD width="20%"><apex:outputtext rendered="{!NOT(ISNULL(Quote.Fax))}" value="{!$ObjectType.Quote.fields.Fax.label} " style="font-weight: bold;"/></TD>
+                <TD width="30%"><apex:outputtext value="{!Quote.Fax}"/></TD>
+            </TR>
+            <TR>
+                <TD width="20%"><apex:outputtext rendered="{!NOT(ISNULL(Quote.BillingName))}" value="{!$ObjectType.Quote.fields.BillingName.label}" style="font-weight: bold"/></TD>
+                <TD width="30%"><apex:outputtext value="{!Quote.BillingName}"/></TD>
+
+                <TD width="20%"><apex:outputtext rendered="{!NOT(ISNULL(Quote.ShippingName))}" value="{!$ObjectType.Quote.fields.ShippingName.label} " style="font-weight: bold;"/></TD>
+                <TD width="30%"><apex:outputtext value="{!Quote.ShippingName}"/></TD>
+            </TR>
+            <TR>
+                <TD width="20%"><apex:outputtext value="Bill To" rendered="{!NOT(AND(ISNULL(Quote.BillingStreet),ISNULL(Quote.BillingCity),ISNULL(Quote.BillingState),ISNULL(Quote.BillingPostalCode),ISNULL(Quote.BillingCountry)))}" style="font-weight: bold"/></TD>
+                <TD width="30%"><apex:outputText value="{!Quote.BillingStreet}" /></TD>
+
+                <TD width="20%"><apex:outputtext value="Ship To " rendered="{!NOT(AND(ISNULL(Quote.ShippingStreet),ISNULL(Quote.ShippingCity),ISNULL(Quote.ShippingState),ISNULL(Quote.ShippingPostalCode),ISNULL(Quote.ShippingCountry)))}" style="font-weight: bold;"/></TD>
+                <TD width="30%"><apex:outputText value="{!Quote.ShippingStreet}" /></TD>
+            </TR>
+            <TR>
+              <TD width="20%"><apex:outputLabel ></apex:outputLabel></TD>
+              <TD width="30%"><apex:outputText style="width:200px;" value="{!Quote.BillingCity} {!Quote.BillingState} {!Quote.BillingPostalCode}"/></TD>
+
+              <TD width="20%"><apex:outputLabel ></apex:outputLabel></TD>
+              <TD width="30%"><apex:outputText style="width:200px;" value="{!Quote.ShippingCity} {!Quote.ShippingState} {!Quote.ShippingPostalCode}"/></TD>
+            </TR>
+            <TR>
+              <TD width="20%"><apex:outputLabel ></apex:outputLabel></TD>
+              <TD width="30%"><apex:outputText style="width:200px;" value="{!Quote.BillingCountry}"/></TD>
+
+              <TD width="20%"><apex:outputLabel ></apex:outputLabel></TD>
+              <TD width="30%"><apex:outputText style="width:200px;" value="{!Quote.ShippingCountry}"/></TD>
+            </TR>
+      </table>
+      <BR/>  
+      <apex:pageBlockTable width="100%" border="3px" rules="cols" cellpadding="0" value="{!Quote.QuoteLineItems}" var="QLI" rowClasses="oddRow,evenRow" columnsWidth="70px,40px,40px,40px,40px,50px" columnClasses="textInCenter">
+             <apex:column value="{!QLI.PriceBookEntry.Product2.Name}" style="text-align:center;"/>
+             <apex:column value="{!QLI.ServiceDate}" style="text-align:center;"/>
+             <apex:column value="{!QLI.ListPrice}" style="text-align:center;"/>
+             <apex:column value="{!QLI.UnitPrice}" style="text-align:center;"/>
+             <apex:column value="{!QLI.Quantity}" style="text-align:center;" />
+             <apex:column value="{!QLI.TotalPrice}" style="text-align:center;"/>
+     </apex:pageBlockTable>
+
+     <br/>
+     <table width="100%" border-width="0px">
+         <TR>
+            <TD width="50%" colspan="2"><apex:outputLabel ></apex:outputLabel></TD>    
+            <TD width="20%"><apex:outputtext value="{!$ObjectType.Quote.fields.Subtotal.label}" style="font-weight: bold"/></TD>
+            <TD width="30%">
+                <apex:outputtext value="{!Quote.CurrencyISOCode}" />
+                <apex:outputText value="{0, number, ###,###,###.00}">
+                    <apex:param value="{!Quote.Subtotal}" />
+                </apex:outputText>
+            </TD>
+         </TR>   
+         <TR>
+            <TD width="50%" colspan="2"><apex:outputLabel ></apex:outputLabel></TD>
+            <TD width="20%"><apex:outputtext value="{!$ObjectType.Quote.fields.Discount.label}" style="font-weight: bold"/></TD>
+            <TD width="30%"><apex:outputField value="{!Quote.Discount}" /></TD>
+         </TR>   
+         <TR>
+            <TD width="50%" colspan="2"><apex:outputLabel ></apex:outputLabel></TD>
+            <TD width="20%"><apex:outputtext value="{!$ObjectType.Quote.fields.TotalPrice.label}" style="font-weight: bold"/></TD>
+            <TD width="30%">
+                <apex:outputtext value="{!Quote.CurrencyISOCode}" />
+                <apex:outputText value="{0, number, ###,###,###.00}">
+                    <apex:param value="{!Quote.TotalPrice}" />
+                </apex:outputText>
+            </TD>
+         </TR>   
+         <TR>    
+            <TD width="50%" colspan="2"><apex:outputLabel ></apex:outputLabel></TD>    
+            <TD width="20%"><apex:outputtext value="{!$ObjectType.Quote.fields.GrandTotal.label}" style="font-weight: bold"/></TD>
+            <TD width="30%">
+                <apex:outputtext value="{!Quote.CurrencyISOCode}" />
+                <apex:outputText value="{0, number, ###,###,###.00}">
+                    <apex:param value="{!Quote.GrandTotal}" />
+                </apex:outputText>
+            </TD>
+        </TR>   
+     </Table>
+     <BR/>
+     <Table  width="100%" hieght="10px">
+       <TR>
+            <TD>
+                <apex:outputPanel style="font-size:14px;" >
+                    <b>IN WITNESS WHEREOF,</b> SunPower and Customer have enter into and agree to be bound by terms and conditions of this<br/>
+                    Agreement as of the Effective Date.
+                </apex:outputPanel>
+            </TD>
+       </TR>
+       <TR bgcolor="#DEE5EC">       
+           <TD valign="middle" bgcolor="#DEE5EC">
+                <apex:outputtext value="Quote Acceptance Information" style="font-weight: bold;font-size:20px;"/>
+            </TD>  
+      </TR>   
+     </Table>
+     <BR/>   
+     <apex:outputPanel layout="block" style="font-weight: bold;">
+         
+         <apex:outputtext value="Signature  " />
+         <apex:outputtext value="..............................................................."/><br/><br/>
+         
+         <apex:outputtext value="Name "/>
+         <apex:outputtext value="....................................................................."/><br/><br/>
+
+         <apex:outputtext value="Title "/>
+         <apex:outputtext value="....................................................................."/><br/><br/>
+
+         <apex:outputtext value="Date "/>
+         <apex:outputtext value="....................................................................."/><br/><br/>
+
+     </apex:outputPanel>
+       
+   </apex:pageBlock>
+</apex:page>

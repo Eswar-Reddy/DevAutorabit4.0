@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Name__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Site_State_Prov__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>To monitor leases that date of delivery is more than 30+ days but no Install Inv Pack yet submitted</description>
+    <filter>
+        <booleanFilter>1 AND 2</booleanFilter>
+        <criteriaItems>
+            <column>LeasePayment__c$Date_Delivered__c</column>
+            <operator>lessOrEqual</operator>
+            <value>10/1/2012</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Install_Inv_Rcvd__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$RSM__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>90% follow-up after 30+ days delivered</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

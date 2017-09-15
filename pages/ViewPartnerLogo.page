@@ -1,0 +1,23 @@
+<apex:page StandardController="Account" extensions="ViewPartnerLogoController" tabStyle="Account" showHeader="false" sidebar="false" id="page1">
+  <style type="text/css" media="screen">
+         body {background-color:#F3F3EC;}
+        .bPageBlock {border-top:0; padding-bottom:0;}
+        .bPageBlock .pbBody {margin-right:0; padding:0;}
+        .bPageBlock .pbFooter {display:none;}
+       </style>
+<apex:form id="form1"> 
+	<apex:pageBlock id="block1">
+   		 <apex:pageBlockSection columns="1" >
+			<apex:image id="currentImg" value="{!logoURL}" width="200" height="100" />
+		 </apex:pageBlockSection>
+	</apex:pageBlock>
+	<div>
+        <iframe id="resizeHack" width="0" height="0" frameborder="no"/>
+    </div>
+</apex:form>	
+<script>
+	  document.getElementById("resizeHack").src = "{!URLFOR($SControl.Resize_VF_Iframe)}" +
+                                              "&ifName=" + window.name +
+                                              "&ifHeight=" + document.body.offsetHeight;
+</script>
+</apex:page>

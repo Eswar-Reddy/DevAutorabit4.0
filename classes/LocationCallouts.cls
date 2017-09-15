@@ -1,0 +1,147 @@
+global class LocationCallouts 
+{
+    private static boolean Isrun = false;
+    global static boolean isRunningTest = false;    
+    
+    public static boolean checkrun()
+    {
+        return Isrun;
+    }
+    
+    public static void hasrun() 
+    {
+        Isrun = true;
+    }
+ 
+    @future (callout=true)
+    public static void setLocation(id accountId, id leadId)
+    {
+        Account a = new account();
+        List<Lead> l = new List<lead>();
+        String recordId = '';
+        String address = '';
+        if(accountId != null)
+        {
+            a = [SELECT BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Geo__Latitude__s,Geo__Longitude__s FROM Account WHERE id =: accountId];
+                if(a != null)
+                {
+                    if (a.BillingStreet != null)
+                        address += a.BillingStreet +', ';
+                    if (a.BillingCity != null)
+                        address += a.BillingCity +', ';
+                    if (a.BillingState != null)
+                        address += a.BillingState +' ';
+                    if (a.BillingPostalCode != null)
+                        address += a.BillingPostalCode +', ';
+                    if (a.BillingCountry != null)
+                        address += a.BillingCountry;
+                    
+                    recordId = String.valueOf(a.Id);
+               }
+        }
+        else
+        {
+            l = [SELECT Id, City, Country, PostalCode, State, Street, lat__c, log__c FROM Lead WHERE Id =: leadId];
+            if(l.size()>0)
+            {
+                if (l[0].Street != null)
+                    address += l[0].Street +', ';
+                if (l[0].City != null)
+                    address += l[0].City +', ';
+                if (l[0].State != null)
+                    address += l[0].State +' ';
+                if (l[0].PostalCode != null)
+                    address += l[0].PostalCode +', ';
+                if (l[0].Country != null)
+                    address += l[0].Country ;
+                    
+                recordId = String.valueOf(l[0].Id); 
+            }  
+        }
+
+        address = EncodingUtil.urlEncode(address, 'UTF-8');
+ 
+        JSONParser parser;
+        
+        if(isRunningTest){
+         String hardCodedRes = '{"results" :[ { "address_components" : [{"long_name" : "Acoma Avenue", "short_name" : "Acoma Ave", "types" : [ "route" ]},{ "long_name" : "Clairemont Mesa East","short_name" : "Clairemont Mesa East","types" :[ "neighborhood", "political" ]},{ "long_name" : "San Diego","short_name" : "San Diego","types" : [ "locality", "political" ]},{ "long_name" : "San Diego","short_name" : "San Diego","types" : [ "administrative_area_level_2", "political" ]},{ "long_name" : "California","short_name" : "CA","types" : [ "administrative_area_level_1", "political" ]},{"long_name" : "United States","short_name" : "US","types" : [ "country", "political" ]},{"long_name" : "92117","short_name" : "92117","types" : [ "postal_code" ]}],"formatted_address" : "Acoma Avenue, San Diego, CA 92117, USA","geometry" : {"bounds" : {"northeast" : {"lat" : 32.8316410,"lng" : -117.19226050},"southwest" : {"lat" : 32.8307590,"lng" : -117.1941680}},"location" : {"lat" : 32.83142240,"lng" : -117.19318260},"location_type" : "GEOMETRIC_CENTER","viewport" : {"northeast" : {"lat" : 32.83254898029150,"lng" : -117.1918652697085},"southwest" : {"lat" : 32.82985101970850,"lng" : -117.1945632302915 } }},"types" : [ "route" ] }],"status" : "OK"}}';
+
+            parser = JSON.createParser(hardCodedRes);
+            
+        }
+        else
+        {//Calling the web-service
+            // build callout
+            Http h = new Http();
+            HttpRequest req = new HttpRequest();
+            req.setEndpoint('http://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&sensor=false');
+            req.setMethod('GET');
+            req.setTimeout(60000);
+SYSTEM.DEBUG('\n####request####->' + req);        
+            try{
+                // callout
+                HttpResponse res = h.send(req);    
+                // parse coordinates from response
+                parser = JSON.createParser(res.getBody());
+SYSTEM.DEBUG('\n####callout result####->' + res.getBody()); 
+                GoogleAPIAuditLogger.Register(recordId, Userinfo.getUsername(), DateTime.now());//Register the API Call Out for Audit 
+            }catch(Exception e){
+                system.debug('In Callout exception');   
+            }   
+        }
+        
+        try{
+            double lat = null;
+            double lon = null;
+            system.debug('before loop');
+           
+          while (parser.nextToken() != null) { 
+              system.debug('insode');
+           if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && (parser.getText() == 'location'))
+            {   
+                system.debug('in if');
+             parser.nextToken(); // object start                        
+           
+               while (parser.nextToken() != JSONToken.END_OBJECT){
+                system.debug('again loop');
+                String txt = parser.getText();
+                system.debug(txt);                           
+                parser.nextToken();                           
+                if (txt == 'lat') 
+                          lat = parser.getDoubleValue();                            
+                         
+                 else
+                    if (txt == 'lng')                                
+                             lon = parser.getDoubleValue();  
+           }        
+           }          
+           } 
+            // update coordinates if we get back
+            if (lat != null && lon != null ){
+                system.debug('here3');
+                if(accountId!=null){
+                    a.Geo__Latitude__s = lat;
+                    // system.debug('##7-->' + a.Customer_Location__Latitude__s);
+                    
+                    a.Geo__Longitude__s = lon;
+                    system.debug(a + 'bbbbbbbbbbbbbbbbbbbb');
+                    update a;
+                 }else{
+                     l[0].lat__c = lat;
+                    // system.debug('##7-->' + a.Customer_Location__Latitude__s);
+                    
+                    l[0].log__c = lon;
+                    system.debug(l + 'bbbbbbbbbbbbbbbbbbbb');
+                    update l;
+                 
+                 }
+               
+            }
+ 
+        } catch (Exception e) {
+        
+            system.debug('in exception');
+        }
+      // }
+    }
+}

@@ -1,0 +1,122 @@
+<apex:page controller="Case360ViewController" tabStyle="Case" sidebar="false" showHeader="false">
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_11_3)}"/>
+    <apex:includeScript value="/support/console/36.0/integration.js"/>
+    <apex:includeScript value="{!$Resource.Case360View}"/>
+    <apex:pagemessages ></apex:pagemessages>
+    <apex:form >
+        <apex:outputPanel layout="block" style="margin-left:600px;width:60%;height:30px;font-size:16px">
+            <a class="chronologicalView" href="#" id="{!parentCase.Id}">Switch to Chronological View</a>
+        </apex:outputPanel>
+        <apex:pageBlock title="Case 360 View Categorical">
+            <apex:pageBlockSection title="Case Detail" columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Case Number</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.CaseNumber}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Subject</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.Subject}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Status</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.Status}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Created Date</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.CreatedDate}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Owner</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.Owner.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Commitment Date</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.Commitment_Date__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Description</apex:outputLabel>
+                    <apex:outputField value="{!parentCase.Description}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Service Requests" columns="1">
+                <apex:pageBlockTable value="{!wrprWorkOrderList}" var="W">
+                    <apex:column headerValue="SR#">
+                        <a class="serviceRequest" href="/{!W.wo.Id}" id="{!W.wo.Id}">{!W.wo.WorkOrderNumber}</a>
+                    </apex:column>
+                    <apex:column headerValue="Subject" value="{!W.wo.Subject}"/>
+                    <apex:column headerValue="Status" value="{!W.wo.Status}"/>
+                    <apex:column headerValue="Priority" value="{!W.wo.Priority}"/>
+                    <apex:column headerValue="Record Type" value="{!W.wo.RecordType.Name}"/>
+                    <apex:column headerValue="Created Date" value="{!W.wo.CreatedDate}"/>
+                    <apex:column headerValue="Created By" value="{!W.wo.CreatedBy.Name}"/>
+                    <apex:column headerValue="Owner" value="{!W.wo.Owner.Name}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="RMAs" columns="1">
+                <apex:pageBlockTable value="{!wrprRMAList}" var="W">
+                    <apex:column headerValue="RMA#">
+                        <a class="rma" href="/{!W.rma.Id}" id="{!W.rma.Id}">{!W.rma.Name}</a>
+                    </apex:column>
+                    <apex:column headerValue="RMA Type" value="{!W.rma.RMA_Type__c}"/>
+                    <apex:column headerValue="RMA Status" value="{!W.rma.RMA_Status__c}"/>
+                    <apex:column headerValue="Created Date" value="{!W.rma.CreatedDate}"/>
+                    <apex:column headerValue="Created By" value="{!W.rma.CreatedBy.Name}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Tasks" columns="1">
+                <apex:pageBlockTable value="{!wrprTaskList}" var="W">
+                    <apex:column headerValue="Case#/SR#">
+                        <apex:outputPanel rendered="{!W.c != NULL}">
+                            <a class="case" href="/{!W.c.Id}" id="{!W.c.Id}">{!W.c.CaseNumber}</a>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!W.wo != NULL}">
+                            <a class="serviceRequest" href="/{!W.wo.Id}" id="{!W.wo.Id}">{!W.wo.WorkOrderNumber}</a>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="Subject">
+                        <a class="task" href="/{!W.t.Id}" id="{!W.t.Id}">{!W.t.Subject}</a>
+                    </apex:column>
+                    <apex:column headerValue="Due Date" value="{!W.t.ActivityDate}"/>
+                    <apex:column headerValue="Status" value="{!W.t.Status}"/>
+                    <apex:column headerValue="Priority" value="{!W.t.Priority}"/>
+                    <apex:column headerValue="Assigned To" value="{!W.t.Owner.Name}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Events" columns="1">
+                <apex:pageBlockTable value="{!wrprEventList}" var="W">
+                    <apex:column headerValue="Case#/SR#">
+                        <apex:outputPanel rendered="{!W.c != NULL}">
+                            <a class="case" href="/{!W.c.Id}" id="{!W.c.Id}">{!W.c.CaseNumber}</a>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!W.wo != NULL}">
+                            <a class="serviceRequest" href="/{!W.wo.Id}" id="{!W.wo.Id}">{!W.wo.WorkOrderNumber}</a>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column headerValue="Subject">
+                        <a class="event" href="/{!W.e.Id}" id="{!W.e.Id}">{!W.e.Subject}</a>
+                    </apex:column>
+                    <apex:column headerValue="Start Date" value="{!W.e.StartDateTime}"/>
+                    <apex:column headerValue="End Date" value="{!W.e.EndDateTime}"/>
+                    <apex:column headerValue="Assigned To" value="{!W.e.Owner.Name}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Emails" columns="1">
+                <apex:pageBlockTable value="{!wrprEmailList}" var="W">
+                    <apex:column headerValue="Subject">
+                        <a class="email" href="/{!W.em.Id}" id="{!W.em.Id}">{!W.em.Subject}</a>
+                    </apex:column>
+                    <apex:column headerValue="Status" value="{!W.em.Status}"/>
+                    <apex:column headerValue="Email Address" value="{!W.em.ToAddress}"/>
+                    <apex:column headerValue="Message Date" value="{!W.em.MessageDate}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Case Comments" columns="1">
+                <apex:pageBlockTable value="{!wrprCommentList}" var="W">
+                    <apex:column headerValue="Comments" value="{!W.comment.CommentBody}"/>
+                    <apex:column headerValue="Created Date" value="{!W.comment.CreatedDate}"/>
+                    <apex:column headerValue="Created By" value="{!W.comment.CreatedBy.Name}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

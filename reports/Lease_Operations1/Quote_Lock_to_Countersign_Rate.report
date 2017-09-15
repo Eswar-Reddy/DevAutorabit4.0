@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Quote.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Quote$Consolidated_Lease_Number__c</field>
+    </columns>
+    <columns>
+        <field>Quote$Date_Modified__c</field>
+    </columns>
+    <columns>
+        <field>Quote.Lease_Payments__r$Date_Countersigned__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Quote.Lease_Payments__r$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote.Lease_Payments__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Terminated</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Quote Lock to Countersign Rate</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_with_Quotes_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Quote$Date_Modified__c</dateColumn>
+        <endDate>2014-06-29</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-06-17</startDate>
+    </timeFrameFilter>
+</Report>

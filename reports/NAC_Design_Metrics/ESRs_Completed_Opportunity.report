@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Activity.Acutual_Time_Spent_Hrs__c</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>Activity.Completed_Date__c</field>
+    </columns>
+    <columns>
+        <field>DUE_DATE</field>
+    </columns>
+    <columns>
+        <field>Activity.Promised_Date__c</field>
+    </columns>
+    <columns>
+        <field>Activity.Request_Category__c</field>
+    </columns>
+    <columns>
+        <field>Activity.Request_Sub_Category__c</field>
+    </columns>
+    <columns>
+        <field>CREATED_BY</field>
+    </columns>
+    <columns>
+        <field>ASSIGNED</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Shows all completed ESRs per project that are associated with Opportunities</description>
+    <filter>
+        <booleanFilter>1 and 2 and (4 or 3)</booleanFilter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Task.DG_Project_Engineering_Task,Task.Structural_Support,Task.Performance_Support</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OPPORTUNITY_NAME</column>
+            <operator>notEqual</operator>
+            <value>313542_A Test Oppty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OPPORTUNITY_NAME</column>
+            <operator>contains</operator>
+            <value>hohhot,saihan,helin,wuchuan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CREATED_BY</column>
+            <operator>notEqual</operator>
+            <value>adrian bello</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>ESRs - Completed(Opportunity)</name>
+    <params>
+        <name>closed</name>
+        <value>closed</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>te</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>OpportunityActivity</reportType>
+    <roleHierarchyFilter>SunpowerAllBUs</roleHierarchyFilter>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Activity.Completed_Date__c</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

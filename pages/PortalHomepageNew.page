@@ -1,0 +1,51 @@
+<apex:page controller="PortalHomepage" showHeader="false" sidebar="false">
+
+    <apex:panelGrid columns="1" id="partnerPageGrid" width="100%" rendered="{!isPartnerUser}">
+    <apex:outputText >{!$Label.PHN_Welcome} {!userName}</apex:outputText>
+
+<!-- Splash Image  -->
+
+        <apex:image height="100" id="TopNAPremierSplash" rendered="{!AND(isPremierPartnerAccount, NOT(isEUPartnerAccount))}"
+            url="{!URLFOR($Resource.Portal_Home_Premier_NA_Splash)}"  />
+
+        <apex:image height="100" id="TopNAAuthorizedSplash" rendered="{!AND(isAuthorizedAccount, NOT(isEUPartnerAccount))}" 
+            url="{!URLFOR($Resource.Portal_Home_Auth_NA_Splash)}"  />
+            
+<!-- begin: for case NO: 00069105 -->
+            <apex:image height="100" id="TopEUDutchDealerSplash" rendered="{!IF(isEUPartnerAccount==true && isDutch==true,'true','false')}" 
+            url="{!URLFOR($Resource.Portal_Home_Premier_EU_Dutch_Splash)}"  />
+
+            <apex:image height="100" id="TopEUFRBEDealerSplash" rendered="{!IF(isEUPartnerAccount==true && isFrenchBE==true,'true','false')}" 
+            url="{!URLFOR($Resource.Portal_Home_Premier_EU_French_Splash)}"  />
+<!-- End: for case NO: 00069105 -->
+
+        <apex:image height="100" id="TopEUDealerSplash" rendered="{!IF(isEUPartnerAccount==true && isFrench==true,'true','false')}" 
+            url="{!URLFOR($Resource.Portal_Home_Premier_EU_French_Splash)}"  />
+        
+         <apex:image height="100" id="TopEUItalianDealerSplash" rendered="{!IF(isEUPartnerAccount==true && isItalian==true,'true','false')}" 
+            url="{!URLFOR($Resource.Portal_Home_Premier_EU_Italian_Splash)}"  />
+            
+           <apex:image height="100" id="TopEUSpanishDealerSplash" rendered="{!IF(isEUPartnerAccount==true && isSpanish==true,'true','false')}" 
+            url="{!URLFOR($Resource.Portal_Home_Premier_EU_Spanish_Splash)}"  /> 
+            
+         <apex:image height="100" id="TopEUGermanDealerSplash" rendered="{!IF(isEUPartnerAccount==true && isGerman==true,'true','false')}" 
+            url="{!URLFOR($Resource.Portal_Home_Premier_EU_German_Splash)}"  />
+                                                
+        <apex:image height="100" id="TopNACommercialSplash" rendered="{!AND(isCommercialAccount, NOT(isEUPartnerAccount))}" 
+            url="{!URLFOR($Resource.Portal_Home_Commercial_NA_Splash)}"  />            
+            
+        <!-- Note:  Premier NA dealers do not see a top splash image on the page -->
+                  
+<!-- Top Section -->
+                  
+
+    </apex:panelGrid>
+
+        
+        <!-- Recent Content Page:        -->
+        <!--   Mid Section - Important Announcement-->        
+        <!--   Bottom Section - SunPower Clips, Announcements, Training Schedule, Events/Webinars -->         
+                 
+        <apex:include id="spBottomSectionContent"  pageName="RecentContent" />
+
+</apex:page>

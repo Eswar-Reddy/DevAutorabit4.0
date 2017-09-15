@@ -1,0 +1,214 @@
+<apex:page controller="AgreementConfirmationController" action="{!init}" docType="html-5.0" sidebar="{!IF(isInternalUser, TRUE, FALSE)}" showHeader="{!IF(isInternalUser, TRUE, FALSE)}" standardStylesheets="false">
+    <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.font_awesome_4_7_0, 'css/font-awesome.min.css')}"/>
+    <c:SPCommunityAppResources_CSS />
+    <style type="text/css">
+        .greybutton{
+            background-color:gray !important;
+        }
+        label.spLabel{
+            font-size:medium;
+            color:black;
+            margin-right:10px;
+            width:200px; !important
+        }
+        .has-Error{
+            box-shadow: 0 0 8px red;
+        }
+        .asterisk{
+            color:#ef373e;
+            opacity:0.6;
+            margin-left:3px;
+        }
+    </style>
+    <apex:outputPanel rendered="{!!isInternalUser}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts"/>
+    </apex:outputPanel>
+    <body class="sunpower-style container-fluid" style="max-width: 1250px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <apex:form id="frm">
+                    <apex:outputPanel rendered="{!!isInternalUser}" style="margin-top:1em">
+                        &nbsp;
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!systemError}">
+                        <div styleClass="alert alert--danger">
+                            <apex:messages />
+                        </div>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <apex:commandButton action="{!back}" styleClass="btn btn-primary btn--small" value="Back"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!!isLocked}">
+                        <h1>The quote you created isn't locked</h1>
+                        <div class="alert alert--danger" style="margin-top:1em">
+                            <span>The cloned quote you created isn't locked. Only a locked quote can be used to amend a countersigned contract.</span>
+                        </div>
+                        <p>If you want to amend the existing countersigned contract, you can repeat the process of creating a new quote and updating it. Just please be sure to lock the quote (by clicking Select on the Savings page).</p>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!createQuote}" value="Create New Quote" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!quoteTypeMismatch || quoteTermMismatch}">
+                        <apex:outputPanel rendered="{!quoteTypeMismatch}">
+                            <h1>Finance type amendment error</h1>
+                            <div class="alert alert--danger" style="margin-top:1em">
+                                <span>The finance type selected in this quote is different from the finance type selected in the countersigned contract you are trying to amend.</span>
+                            </div>
+                            <p>It isn't possible to change finance type via contract amendment.</p>
+                            <p>If you want to amend the existing countersigned contract while keeping the original finance type, you can repeat the process of creating a new quote and updating it. Just please be sure to leave the finance type unchanged.</p>
+                            <p>If you want to change the finance type of the existing countersigned contract, you have to cancel the contract and replace it with a new one.</p>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!quoteTermMismatch}">
+                            <h1>Loan term amendment error</h1>
+                            <div class="alert alert--danger" style="margin-top:1em">
+                                <span>The loan term specified in this quote is different from the loan term specified in the countersigned contract you are trying to amend.</span>
+                            </div>
+                            <p>It isn't possible to change loan term via contract amendment.</p>
+                            <p>If you want to amend the existing countersigned contract while keeping the original loan term, you can repeat the process of creating a new quote and updating it. Just please be sure to leave the loan term unchanged.</p>
+                            <p>If you want to change the loan term of the existing countersigned contract, you have to cancel the contract and replace it with a new one.</p>
+                        </apex:outputPanel>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!createQuote}" value="Create New Quote" styleClass="btn btn-primary btn--small" style="margin-right:15px;"/>
+                            <apex:commandButton action="{!cancelContract}" value="Cancel Contract" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!amendmentExists}">
+                        <h1>A pending amendement already exists</h1>
+                        <div class="alert alert--info" style="margin-top:1em">
+                            <span>An existing quote amendment is already pending for this contract</span>
+                        </div>
+                        <p>To create a new quote amendment, either A) cancel the pending amendment or B) wait until it is countersigned.</p>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!viewAmendment}" value="View Amendment" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!isInService}">
+                        <h1>This system has already been Placed in Service (PIS)</h1>
+                        <div class="alert alert--info" style="margin-top:1em">
+                            <span>The system covered by this contract has already been placed in service. As a result, you can't amend it without help from SunPower.</span>
+                        </div>
+                        <p>If you would like to request a post-PIS amendment to this contract, please A) use the field below to provide a brief explanation of the reason and B) click Request Help. A SunPower team member will follow up with you to discuss.</p>
+                        <div style="margin-top:1em">
+                            <label class="spLabel">
+                                <span class="asterisk"><i class="fa fa-asterisk fa-1" aria-hidden="true"></i></span>
+                                <strong>Explanation</strong>
+                            </label>
+                        </div>
+                        <div id="noteContainer" class="input-container">
+                            <apex:inputHidden id="hiddenNotePIS" value="{!comment}"/>
+                            <textarea cols="100" rows="3" id="notePIS" class="has-Error"/>
+                        </div>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!requestHelp}" id="requestHelp" value="Request Help" styleClass="btn btn-primary btn--small greybutton"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!agreementFailure}">
+                        <h1>Error: Your amendment document was not created</h1>
+                        <div class="alert alert--danger" style="margin-top:1em">
+                            <span>We're sorry! We attempted to create the amendment document you requested, but something went wrong.</span>
+                        </div>
+                        <p>If you would like to try again, please click Create Amendment Document. Otherwise, you can click Report Error and a SunPower team member will follow up with you to discuss.</p>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!reportError}" value="Report Error" styleClass="btn btn-primary btn--small" style="margin-right:15px;"/>
+                            <apex:commandButton action="{!createAmendment}" value="Create Amendment Document" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!errorSubmitSuccess}">
+                        <h1>Your request has been submitted</h1>
+                        <div class="alert alert--success" style="margin-top:1em">
+                            <span>Thank you for submitting an amendment help request.</span>
+                        </div>
+                        <p>We've provided all the necessary information to the responsible SunPower team. Expect to hear a response from them shortly.</p>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <apex:commandButton action="{!back}" value="Continue" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!errorSubmitFailure}">
+                        <h1>Error: Your help request was not submitted</h1>
+                        <div class="alert alert--danger" style="margin-top:1em">
+                            <span>We're sorry! We attempted to submit your amendment help request, but something went wrong.</span>
+                        </div>
+                        <p>If you would like to try again, please click Resubmit Request</p>
+
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!reportError}" value="Resubmit Request" styleClass="btn btn-primary btn--small"/>
+                        </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!!hasErrors}">
+                        <h1>You are about to amend a countersigned contract</h1>
+                        <div class="alert alert--info" style="margin-top:1em">
+                            <span>You are about create an amendment document describing changes to an existing, countersigned contract.</span>
+                        </div>
+                        <p>If you would like to proceed, please A) Provide a brief explanation of the reason for the amendment and B) Click Create Amendment Document. We will create the requirement agreement documents, which you can then review and send for signature.</p>
+                        <div style="margin-top:1em">
+                            <label class="spLabel">
+                                <span class="asterisk"><i class="fa fa-asterisk fa-1" aria-hidden="true"></i></span>
+                                <strong>Explanation</strong>
+                            </label>
+                        </div>
+                        <div id="noteContainer" class="input-container">
+                            <apex:inputHidden id="hiddenNoteAmend" value="{!comment}"/>
+                            <textarea cols="100" rows="3" id="noteAmend" class="has-Error"/>
+                        </div>
+                        <div class="proceed-section" style="float:right;margin-top:1em">
+                            <strong><apex:commandLink action="{!back}" styleClass="secondary-link" style="margin-right:15px;" value="BACK"/></strong>
+                            <apex:commandButton action="{!createAmendment}" id="submitAmendment" value="Create Amendment Document" styleClass="btn btn-primary btn--small greybutton"/>
+                        </div>
+                    </apex:outputPanel>
+                </apex:form>
+            </div>
+        </div>
+    </body>
+
+    <c:SPCommunityAppResources_JS />
+    <script type="text/javascript">
+        j$ = jQuery.noConflict();
+        j$(document).ready(function() {
+            j$('input[id*=submitAmendment]').attr('disabled', 'true');
+            j$('input[id*=requestHelp]').attr('disabled', 'true');
+
+            // check note value
+            j$('textarea[id=noteAmend]').on('input', function() {
+                var value = j$.trim(j$(this).val());
+                document.getElementById('{!$Component.frm:hiddenNoteAmend}').value = value;
+                // make sure there's text
+                if(value.length < 4) {
+                    setSubmit(true);
+                    j$('#noteAmend').addClass('has-Error');
+                } else {
+                    j$('#noteAmend').removeClass('has-Error');
+                    setSubmit(false);
+                }
+            });
+            // check note value
+            j$('textarea[id=notePIS]').on('input', function() {
+                var value = j$.trim(j$(this).val());
+                document.getElementById('{!$Component.frm:hiddenNotePIS}').value = value;
+                // make sure there's text
+                if(value.length < 4) {
+                    setSubmit(true);
+                    j$('#notePIS').addClass('has-Error');
+                } else {
+                    j$('#notePIS').removeClass('has-Error');
+                    setSubmit(false);
+                }
+            });
+        })
+
+        function setSubmit(value) {
+            if(value) {
+                j$('input[id*=submitAmendment]').attr('disabled', 'true').addClass('greybutton');
+                j$('input[id*=requestHelp]').attr('disabled', 'true').addClass('greybutton');
+            } else {
+                j$('input[id*=submitAmendment]').removeAttr('disabled').removeClass('greybutton');
+                j$('input[id*=requestHelp]').removeAttr('disabled').removeClass('greybutton');
+            }
+        }
+    </script>
+</apex:page>

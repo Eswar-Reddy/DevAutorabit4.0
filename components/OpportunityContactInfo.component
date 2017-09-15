@@ -1,0 +1,44 @@
+<!-- Updated template under case 00093615-->
+<apex:component controller="OpportunityContactInfoController"
+    access="global">
+    <apex:attribute name="componentValue" description="Opportunity value"
+        type="String" assignTo="{!oppId}" />
+    <p class="MsoPlainText" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; line-height: 115%; text-align: justify;"><span style="font-size: 10pt; line-height: 115%; font-family:'arial', 'Calibri','sans-serif';">Dear<span style="color: black;"> </span>({!opportunity.owner.name}),</span></p>
+    <p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">A new sales opportunity has been forwarded to your attention.</p>
+    <p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; margin-bottom: 0pt; text-align: justify;"></p>
+    <p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">After discussing the solar needs and proposed installation location with <span style="font-style: italic;">{!opportunity.Name},</span> they have requested a visit from a SunPower Partner Representative.</p>
+    <p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; margin-bottom: 0pt; text-align: justify;"><span>&nbsp;</span></p>
+    <p class="MsoPlainText" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">
+        <span style="font-size: 10pt; font-family: &quot;Calibri&quot;,&quot;sans-serif&quot;;">Name: </span>
+        <font class="Apple-style-span" face="Calibri, sans-serif">
+        <span class="Apple-style-span" style="font-size: 12px;"><i><a href="{!oppLink}/{!opportunity.id}">{!opportunity.Name}</a></i></span></font><br/>
+        <apex:outputPanel >
+            <span style="font-size: 10pt; font-family: &quot;Calibri&quot;,&quot;sans-serif&quot;;">Address: &nbsp;
+            <apex:outputField value="{!account.BillingStreet}" /> <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputField value="{!account.BillingCity}"/>, &nbsp;
+            <apex:outputField value="{!account.BillingState}" />
+            <apex:outputField value="{!account.BillingPostalCode}" /> <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<apex:outputField value="{!account.BillingCountry}" /> 
+            <br/></span>
+            <apex:variable value="{!1}" var="recordCounter" />
+            <span style="font-size: 10pt; font-family: &quot;Calibri&quot;,&quot;sans-serif&quot;;">Contact Number/s: &nbsp;<apex:repeat rendered="{!isRecordFound}" value="{!contacts}" var="con"><apex:outputText value=", " rendered="{!IF(recordCounter<>1,true,false)}"/><apex:variable value="{!recordCounter+1}" var="recordCounter" /><apex:outputField value="{!con.phone}" /></apex:repeat></span><br/>
+            <apex:variable value="{!1}" var="recordCounter" />
+            <span style="font-size: 10pt; font-family: &quot;Calibri&quot;,&quot;sans-serif&quot;;">Email Address: &nbsp;<apex:repeat rendered="{!isRecordFound}" value="{!contacts}" var="con"><apex:outputText value=", " rendered="{!IF(recordCounter<>1,true,false)}"/><apex:variable value="{!recordCounter+1}" var="recordCounter" /><apex:outputField value="{!con.Email}" /></apex:repeat></span>    
+        </apex:outputPanel>
+    </p>
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; margin-bottom: 0pt; text-align: justify;"><span>&nbsp;</span></p>  
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">For your convenience we have included a (<a href="{!Opportunity.Address_URL__c}">satellite view of the location</a>)</p>
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">Additional information (power consumption, specific area of interest, etc.) regarding this opportunity can be found in the Accounts tab of your SunPower Partner Portal.</p>
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">You can provide comments regarding this opportunity by completing a short “<a href="http://www.surveymonkey.com/s.aspx?sm=hR3NusEbJ5ab2wCngcpS4Q_3d_3d">Rate this Opportunity</a>" survey.  Your feedback will help ensure that we are providing high quality leads to our partners.</p>
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; text-align: justify;">For portal usage or reporting questions, please contact <a href="mailto:customercare@sunpowercorp.com">customercare@sunpowercorp.com</a> or 1 800 786 7693.</p>
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; margin-bottom: 0pt; text-align: justify;"><span style="color: black;">For Sales related questions, please contact your Sales Manager.</span></p>
+
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; margin-bottom: 0pt; text-align: justify;"><span>&nbsp;</span></p>
+<p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 10pt; margin-bottom: 0pt; text-align: justify;">
+    Thank you.
+    <br/>SunPower Customer Care Team
+    <br/><a href="http://www.sunpowercorp.com/"><span style="color: purple;">www.sunpowercorp.com</span></a>
+    <br/>1-800-SUNPOWER
+</p>   
+    
+</apex:component>

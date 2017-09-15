@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Account</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Partner_Account_text__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Subject</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Description</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Revision__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Due_DateTime__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Completed_Date__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Activities$Owner</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>1 AND 3 AND (2 OR 4)</booleanFilter>
+        <criteriaItems>
+            <column>Opportunity.Activities$Subject</column>
+            <operator>equals</operator>
+            <value>PA MAXFIT DESIGN,PA MAX FIT DESIGN,MAX FIT DESIGN,MAXFIT DESIGN</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$PartnerAccount</column>
+            <operator>equals</operator>
+            <value>Alternative Energy Systems Inc,Energy Plus Solar Inc.,Green Convergence,Hooked on Solar,Milholland Electric,Pacific Stonegate Inc. DBA Solar Vast,Photon Brothers,Precis Solar,Quality Home Services,Sea Bright Solar - CA,Solar Technologies,Stellar Solar Electric,American Solar,Arise Solar,Byers Solar Systems,California Solar Electric Company,Capital City Solar Electric,Energy Concepts,Freedom Solar,JP Electric &amp; Solar,NB Baker Electric,PacificSky Solar LLC,Restart Solar,Semper Solaris Construction Inc.,Solaire Energy Systems,Sun First! Inc.,Sunpro Solar,The Solar Company,True Power Solar,Valley Pacific Builders Inc. DBA Pacific Solar,Valley Solar Inc.,Westhaven Solar &amp; Construction</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Design_Status__c</column>
+            <operator>equals</operator>
+            <value>Design Submitted</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$PartnerAccount</column>
+            <operator>contains</operator>
+            <value>SunPower Direct (SPD),Provoltz,Active Solar,JV Global,Power by sun,ZeroCostSolar,Everwise,SLR Energy</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>EDDiE Jobs - Task Completed</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity_with_or_without_activities__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity.Activities$Completed_Date__c</dateColumn>
+        <interval>THIS_FISCALWEEK</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,21 @@
+<apex:page standardController="Purchase_Order__c" extensions="LeaseOrderWizardControllerInternal" showHeader="false"  sidebar="false" contentType="application/vnd.ms-excel#LeaseOrder.csv" cache="true">
+    
+    <apex:outputText rendered="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}">
+        ,{!$Label.POWizardProductNameHeading},{!$Label.LOWizardNetIDHeading},{!$Label.POWizardQuantityHeading},{!$Label.LOWizardReimbursementPriceHeading},{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label},End Customer Account,Lease Number,Lease,{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Dealer_Fees__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Notes__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Financier__c.Label},Ship To Contact,{!$Label.POWizardShipToAddress},{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label},Accept Partial Shipment,Shipping Method,{!$ObjectType.Purchase_Order__c.Fields.Accept_Expedited_Delivery_Charges__c.Label},{!$Label.POWizardBillToAddress},
+        ,,,,,"{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__r.Name}","{!propPurchaseOrder.End_Customer_Account__r.Name}","{!propPurchaseOrder.Name}",{!propPurchaseOrder.Lease__c},"{!propPurchaseOrder.Opportunity__r.Name}","{!propPurchaseOrder.Dealer_Fees__c}","{!propPurchaseOrder.Notes__c}","{!propPurchaseOrder.Financier__c}","{!propPurchaseOrder.Ship_To_Contact__r.Name}","{!propShipingAddress}","{!propPurchaseOrder.Special_Instructions__c}", <apex:outputText value="{0,date,dd-MMM-yyyy}"><apex:param value="{!propPurchaseOrder.Requested_Delivery_Date__c}" /></apex:outputText>,{!propPurchaseOrder.Accept_Partial_Shipment__c},{!propPurchaseOrder.Shipping_Method__c},{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c},"{!propBillingAddress}"
+    </apex:outputText>
+    
+    <apex:outputText rendered="{!NOT(propPurchaseOrder.Accept_Expedited_Delivery_Charges__c)}">
+        ,{!$Label.POWizardProductNameHeading},{!$Label.LOWizardNetIDHeading},{!$Label.POWizardQuantityHeading},{!$Label.LOWizardReimbursementPriceHeading},{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label},End Customer Account,Lease Number,Lease,{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Dealer_Fees__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Notes__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Financier__c.Label},Ship To Contact,{!$Label.POWizardShipToAddress},{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label},{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label},Accept Partial Shipment,Shipping Method,{!$Label.POWizardBillToAddress},
+        ,,,,,"{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__r.Name}","{!propPurchaseOrder.End_Customer_Account__r.Name}","{!propPurchaseOrder.Name}",{!propPurchaseOrder.Lease__c},"{!propPurchaseOrder.Opportunity__r.Name}","{!propPurchaseOrder.Dealer_Fees__c}","{!propPurchaseOrder.Notes__c}","{!propPurchaseOrder.Financier__c}","{!propPurchaseOrder.Ship_To_Contact__r.Name}","{!propShipingAddress}","{!propPurchaseOrder.Special_Instructions__c}", <apex:outputText value="{0,date,dd-MMM-yyyy}"><apex:param value="{!propPurchaseOrder.Requested_Delivery_Date__c}" /></apex:outputText>,{!propPurchaseOrder.Accept_Partial_Shipment__c},{!propPurchaseOrder.Shipping_Method__c},"{!propBillingAddress}"
+    </apex:outputText>
+    
+    <!--
+    <apex:repeat value="{!propPurchaseOrder.Purchase_Order_Lines__r}" var="item">
+    -->
+    
+    <apex:repeat value="{!propOrderedPOLList}" var="item">
+        ,"{!item.Item_Description__c}",{!item.Item_ID__c},{!item.Quantity__c},{!item.Price__c}
+    </apex:repeat>
+    
+</apex:page>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities.Lease_Payments__r$Status__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.Opportunities.Lease_Payments__r$Size_KW__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>How many jobs per month based on CS</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Opportunities.Lease_Payments__r$Partner_Account__c</column>
+            <operator>contains</operator>
+            <value>smart energy,suntime,hi-power</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities.Lease_Payments__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Active,Transferred,Pending Transfer,Dealer Change</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Opportunities.Lease_Payments__r$Partner_Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>FiscalQuarter</dateGranularity>
+        <field>Account.Opportunities.Lease_Payments__r$Date_Countersigned__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>3 Dealers on 3 Payment Milestones</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_w_Oppty_w_LP_w_wo_Invoice_Docs__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Opportunities.Lease_Payments__r$Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_PREVCUR2FY</interval>
+    </timeFrameFilter>
+</Report>

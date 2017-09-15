@@ -1,0 +1,113 @@
+<style> 
+a { 
+font-family: Arial,Helvetica,sans-serif; 
+font-size: 69%; 
+color: #333333; 
+} 
+li { 
+line-height:.9em; 
+list-style-image:url("/resource/1285744026000/listImage"); 
+list-style-position:outside; 
+
+margin:0; 
+padding:0; 
+} 
+.sidebarModuleBody { 
+line-height:1.6em; 
+margin:0 10px 8px; 
+_margin:10 10px 8px; 
+padding:0 3px 0 5px; 
+} 
+
+ul li, ol li { 
+margin-left:1.5em; 
+padding-left:0; 
+} 
+body { 
+font-family:'Arial','Helvetica',sans-serif; 
+
+} 
+</style> 
+ 
+<div class="sidebarModuleBody" style="margin-left:-49px;margin-top:-20px;_margin-top:0px;">
+<br/>
+<ul>
+<li><a href="#" onclick="redirectUser('/apex/HomePagePartnerPortalLink?My_Accnt=1');">My Account</a></li>
+<li><a href="#" onclick="redirectUser('/_ui/system/security/ChangePassword');">Change My Password</a></li>
+<li><a href="#" onclick="redirectUser1('/apex/My_Subscriptions');">My Subscriptions</a></li>
+<!---<li><a href="#" onclick="redirectUser('/apex/PinnacleSmartStore');">SmartStore</a></li>--->
+<li><a href="#" onclick="parent.trackEvent('MRC', 'redirect', 'OnFullFillment');redirectUser('/apex/OnFulfillment');">Marketing Resource Center</a></li>
+<li><a href="#" onclick="parent.trackEvent('LMS', 'redirect', 'SunPowerUniversity');redirectUser('/apex/SunPowerUniversity');">SunPower University</a></li>
+<li><a href="#" onclick="redirectUser('/apex/HomePagePartnerPortalLink?MDTF_Prog=1');">Dealer Program Fund</a></li>
+<li id="residentialDiv" style="display:none"><a href="#" onclick="redirectUser1('/apex/SunPowerGuidelines');" >Residential Dealer Program Guidelines</a></li>
+<li id="commercialDiv" style="display:none"><a href="#" onclick="redirectUser1('/apex/sunpower_comm');">Commercial Dealer Program Guidelines </a></li>
+<!--<li><a href="#" onclick="redirectUser1('/apex/SOA2subUnSub?link=yes');">Email Subscription</a></li> -->
+</ul> 
+</div> 
+
+
+</div> 
+
+<script src="/soap/ajax/13.0/connection.js"></script> 
+
+<script> 
+var resultArray = sforce.connection.query("SELECT Country_Domain__c FROM User WHERE Id = '{!$User.Id}'").getArray("records"); 
+
+if (resultArray[0].Country_Domain__c=='combo-us') { 
+
+var commercialDiv = (document.getElementById) ? document.getElementById("commercialDiv") : document.all["commercialDiv"]; 
+commercialDiv.style.display = ""; 
+
+var residentialDiv = (document.getElementById) ? document.getElementById("residentialDiv") : document.all["residentialDiv"]; 
+residentialDiv.style.display = ""; 
+
+}else if (resultArray[0].Country_Domain__c.indexOf("rvar-") == -1) { 
+var commercialDiv = (document.getElementById) ? document.getElementById("commercialDiv") : document.all["commercialDiv"]; 
+commercialDiv.style.display = ""; 
+
+}else if (resultArray[0].Country_Domain__c.indexOf("cvar-") == -1) { 
+var residentialDiv = (document.getElementById) ? document.getElementById("residentialDiv") : document.all["residentialDiv"]; 
+residentialDiv.style.display = ""; 
+
+} 
+
+
+function redirectUser(url) { 
+parent.document.location.href = url; 
+} 
+function redirectUser1(url) { 
+window.open(url,"myWindow");
+} 
+
+function getElement(aID) { 
+return (parent.document.getElementById) ? parent.document.getElementById(aID) : parent.document.all[aID]; 
+} 
+
+function getIFrameDocument(aID) { 
+var rv = null; 
+var frame = getElement(aID); 
+if (frame.contentDocument) { /* if contentDocument exists, W3C compliant (e.g. Mozilla) */ 
+rv = frame.contentDocument; 
+} else { /* bad Internet Explorer */ 
+rv = parent.document.frames[aID].document; 
+} 
+
+return rv; 
+} 
+
+function adjustIFrameSize() { 
+var frame = getElement("iframeManOpp1"); 
+var frameDoc = getIFrameDocument("iframeManOpp1"); 
+frame.height = frameDoc.body.scrollHeight; 
+} 
+
+var originalOnLoad = window.onload; 
+window.onload = function() { 
+if (originalOnLoad) { 
+originalOnLoad(); 
+} 
+
+adjustIFrameSize(); 
+} 
+
+</script>

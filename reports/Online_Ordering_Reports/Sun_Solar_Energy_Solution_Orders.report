@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>oe_order_headers__c$Parent_Account__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$Name</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$LEASE_NUMBER__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$Bill_To_Address__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$Ship_to_Address__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>oe_order_headers__c$Parent_Account__c</column>
+            <operator>equals</operator>
+            <value>Sun Solar Energy Solutions dba Lifestyles Construction and Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c$RecordType</column>
+            <operator>notEqual</operator>
+            <value>oe_order_headers__c.CASH_BOOKED,oe_order_headers__c.CASH_CANCELLED,oe_order_headers__c.LEASE_BOOKED,oe_order_headers__c.LEASE_CANCELLED</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c$ORDER_TYPE__c</column>
+            <operator>equals</operator>
+            <value>SPEB RVAR Lease 2,SPNA RVAR Lease1,SPNA RVAR Standard</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>oe_order_headers__c$ORDER_TYPE__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Sun Solar Energy Solution Orders</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Sales_Order_with_Lines__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>oe_order_headers__c$CPD__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

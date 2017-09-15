@@ -1,0 +1,41 @@
+<apex:page controller="POWizardCreateContactController" sidebar="false" showHeader="false">
+<script>
+    function closewin(obj){
+    try{
+	    window.self.close();
+	    }catch(e){
+		    window.close();
+	    }
+    }    
+    
+</script>
+ <apex:form >
+     <apex:pageBlock title="Contact Information" >
+      <apex:pageMessages />
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton action="{!Save}" value="Save"  />
+            <apex:commandButton value="Cancel" onclick="return closewin(this)"/>
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection columns="1">
+            <apex:inputfield value="{!newcontact.FirstName}"  required="true" /> 
+            <apex:inputfield value="{!newcontact.LastName}" required="true"/>  
+            <apex:inputfield value="{!newcontact.Phone}" required="true"/> 
+        </apex:pageBlockSection>
+     </apex:pageBlock>
+     <script>
+window.onload = new function(){
+     var isCloseMe= {!isClose};
+            if(isCloseMe == true){
+//                window.opener.location = window.opener.location;
+				window.opener.selectShipToSiteContact('{!newcontact.id}');
+				try{
+	                window.self.close();
+	                }catch(e){
+	                window.close();
+	                }
+                //window.close();
+            }  
+   } 
+     </script>
+ </apex:form>
+</apex:page>

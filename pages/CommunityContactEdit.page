@@ -1,0 +1,367 @@
+<apex:page showHeader="false" id="cpg" sidebar="false" standardController="Contact">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+
+    var newWin=null;
+    function openLookupPopup(name, id, objName,fieldName)
+    {
+        var url="/apex/LookupPopUp?namefield=" + name + "&idfield=" + id + "&ObjectName=" + objName + "&FieldName="+ fieldName;
+        newWin=window.open(url, 'Popup','height=500,width=600,left=100,top=100,resizable=no,scrollbars=yes,toolbar=no,status=no');
+        if (window.focus) 
+        {
+            newWin.focus();
+        }
+            
+        return false;
+    }
+                  
+    function closeLookupPopup()
+    {
+       if (null!=newWin)
+       {
+          newWin.close();
+       }  
+    }
+</script>
+    
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;">
+        <div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">
+            <apex:form >
+            <apex:actionFunction name="save_contact" action="{!save}"/>
+            <div class="row top2" >
+                <div class="col-xs-12 col-md-8">
+                    <a href="/{!$CurrentPage.parameters.Id}">
+                        <h5 style="font-size: small;color: #0076be !important;">BACK TO CONTACT INFORMATION </h5>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-2" style="text-align:right;">
+                    <a class="btn btn-primary btn--small" id="savebotton" onclick="save_contact();" >Save</a>
+                </div>
+            </div> 
+            
+            <div class="row" style="margin-top:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Contact Detail</h3>    
+                </div>
+            </div>
+            <div class="row" style="margin-top:20px;margin-bottom:20px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Salutation</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Contact.Salutation}"></apex:inputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Phone</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Phone}"></apex:inputField>
+                </div>
+                
+            </div> 
+            
+            <div class="row"  style="margin-bottom:20px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >First Name</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.firstname}"></apex:inputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Mobile</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.MobilePhone}"></apex:inputField>
+                </div>
+                
+            </div> 
+
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Last Name</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.lastname}"></apex:inputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Email</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Email}"></apex:inputField>
+                </div>
+                
+                
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Account Name</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Account.Name}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Preferred Language Code</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Preferred_Language_Code__c}"></apex:inputField>
+                </div>
+                
+            </div> 
+            <div class="row" style="margin-bottom:20px">
+               <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Title</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Title}"></apex:inputField>
+                </div>
+            </div> 
+            <div class="row" style="margin-bottom:20px">
+                
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Primary</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Primary__c}"></apex:outputField>
+                </div>
+            </div> 
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Include in Contract</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 6%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.Include_in_Lease_Doc__c}"></apex:inputField>
+                </div>
+            </div>
+            <div class="row" id="campaignfld" style="margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Campaign</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-11">
+                    <apex:inputHidden value="{!Contact.Campaign__c}" id="targetId" />
+                    <apex:inputText id="targetName" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;" onFocus="this.blur()" value="{!Contact.Campaign__r.Name}"></apex:inputText><a href="#" style="float:right;" onclick="openLookupPopup('{!$Component.targetName}', '{!$Component.targetId}','Campaign','Name'); return false"><i class="fa fa-search" aria-hidden="true"></i></a>
+
+                </div>
+                
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1rem !important;margin-left: auto;margin-right: auto;" />
+            </div>
+            
+            <!--
+            <div class="row">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Address Information</h3>    
+                </div>
+            </div>
+            <div class="row" style="margin-top:20px;margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Mailing Street</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.MailingStreet}"></apex:inputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Mailing Zip/Postal Code</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.MailingPostalCode}"></apex:inputField>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Mailing City</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.MailingCity}"></apex:inputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Mailing Country</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.MailingCountry}"></apex:inputField>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Mailing State</apex:outputLabel>
+                </div>    
+                <div class="col-md-3 col-xs-12">
+                    <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;"  value="{!Contact.MailingState}"></apex:inputField>
+                </div>
+            </div>
+            -->
+            <div class="row top2" style="margin-top:20px"></div>
+            </apex:form>
+        </div>
+    </body>
+    <script>
+    window.onload = function(){
+        var trgId = document.getElementById('cpg:j_id45:targetId');
+        var prfl = '{!$Profile.Name}';
+        console.log(trgId);
+        console.log(prfl);
+        console.log(prfl.indexOf('Partner TPS'));
+        if(trgId == null || prfl.indexOf('Partner TPS')<0){
+            document.getElementById('campaignfld').style.display = 'none';
+        }
+    }
+    </script>
+	
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+
+</apex:page>

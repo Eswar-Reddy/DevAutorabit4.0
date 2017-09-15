@@ -1,0 +1,389 @@
+<apex:page controller="WarrantyRegistrationPDFController" renderAs="pdf" readOnly="true" showHeader="false" sidebar="false" standardStylesheets="false">
+ <!-- Stylesheets FORMULAIRE D’ENREGISTREMENT DE GARANTIE --> 
+ <apex:stylesheet value="{!$Resource.PDFDocumentStyle_2}" />
+ 
+ <apex:form >
+ <apex:pageBlock >
+   <apex:outputPanel style="font-family:Arial Regular;font-size:11px;">
+                <table width="100%" cellpadding="0px" cellspacing="0px">
+                    <tr>
+                        <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px" /></td>
+                        <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial;font-size:30px;" >
+                            <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                    Bon De Garantie                                
+                            </apex:outputPanel>
+                        </td>
+                    </tr> 
+                    <tr>    <!-- Start 00118327 -->                     
+                        <td colspan="4" align="left">
+                            <apex:outputPanel style="font-family:Arial Regular;">                                
+                                   <br></br>Numéro d'enregistrement de la garantie &nbsp;<apex:outputText value="{!warranty.Warranty_Number__c}"/>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                </table>
+   <br />
+   <table  width="100%" cellpadding="0px" cellspacing="0px" style="font-size:13px">
+            <tr>
+                <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                    <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp; <b>{!$Label.Customer_Information}</b> </div>
+                    <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >                     
+                        <tr>
+                            <td valign="top" width="100%">
+                              <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Name}" style="text-indent:justify"/><br></br>
+                                            <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingStreet}"/> &nbsp; <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingCity}"/> &nbsp;  <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingState}"/> &nbsp; 
+                                             <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingPostalCode}"/> 
+                                             <br></br><br></br>
+                                             <br></br>
+                                             <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Email__c}"/>                                         
+                            </td>
+                          
+                        </tr>
+                    </table> 
+                </td>
+                <td style="width: 2%;"></td>
+                <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                    <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp; <b>{!$Label.Partner_Information}</b></div>
+                     <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >
+                       <tr>
+                            <td valign="top" width="100%">
+                              <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Name}" style="text-indent:justify"/>&nbsp; <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingStreet}"/>   &nbsp;<apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingCity}"/> &nbsp;
+  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingState}"/> &nbsp;  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingPostalCode}"/>                                    <br></br> <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Phone}"/> <br></br> 
+                                        <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Website}"/>                                                                               
+                            </td>
+                           
+                        </tr>
+                    </table>  
+                </td> 
+            </tr> 
+        </table>
+        <apex:outputPanel rendered="{!NOT ISNULL(warranty.Delivery_Date__c)}" style="font-size:11px;">
+            {!$Label.Date_Of_Delivery}:&nbsp;
+            <!-- <apex:outputText value="{0,date,MM/dd/yy}"><apex:param value="{!warranty.Delivery_Date__c}" /></apex:outputText> -->
+                        <apex:outputField value="{!warranty.Delivery_Date__c}" />
+        </apex:outputPanel>
+        <br/>
+        <br/>
+           <!--Start Product Table -->
+                <apex:outputPanel > 
+                    <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;"> &nbsp;&nbsp;<b>{!$Label.Registered_Items}:</b>&nbsp;&nbsp;&nbsp; {!sNum} {!$Label.Total_Number_of_records}  </div>
+                                
+                        <table cellspacing="0" cellpadding="3" style="border: .06em solid #E9AB17;border-top-color:black;" width="100%" id="tblDetails">     
+                             <tbody>         
+                                   
+                                <!-- First Page Header Footer Section Starts -->
+                                <tr  style="background: #CCCCCC;line-height: 16px;" width="100%">
+                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                </tr>
+                
+                                 <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                                    
+                                    <apex:outputPanel layout="none" rendered="true">
+                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                    </apex:outputPanel>
+                                       
+                                </apex:outputPanel>
+                                <!--Loop List of List-->
+                                
+                                <apex:repeat value="{!wProductsWrapper}" var="wProduct">
+                                    
+                                        
+                                        <!--Loop Through Products-->
+                                        <apex:repeat value="{!wProduct}" var="Pro">
+                                            
+                                            <apex:outputPanel layout="none" id="OtherPagesHeader" rendered="{!IF(Pro.isPageBrk,true,false)}">
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="page-break-before: always;background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;">
+                                                <tr style="background: #CCCCCC;border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%">
+                                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                                </tr>
+                                                </table> <!-- End 00118327 -->
+                                                <apex:outputPanel id="panelHeaderFooter" 
+                                                    styleClass="footer_right"
+                                                    layout="block">
+                                                    
+                                                    <apex:outputPanel layout="none" rendered="true">
+                                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                                    </apex:outputPanel>
+                                                       
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;"> 
+                                            <tr  style="background: #F5F5F5; font-size:12px;line-height:20px;"  width="100%">
+                                                <td width="10%">    
+                                                   &nbsp;<apex:outPutText value="{!Pro.sNo}"/> 
+                                                </td>
+                                                
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Product_Name__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.product_type__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Serial_Number__c}</td>
+                                            </tr>                 
+                                                </table>
+                                            </apex:repeat>   
+                             </apex:repeat>  
+                           </tbody> 
+                        </table>  
+                        <br/>
+                        <br/>
+                </apex:outputPanel>  
+                <!--End Product Table --> 
+           </apex:outputPanel>   
+     </apex:pageBlock>
+     <div style="page-break-after:always">&nbsp;</div>
+         <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+             <apex:outputPanel style="font-size: 12px; text-align:left;padding-left:10px" layout="block"> A COMPLÉTER PAR LE CLIENT.<br/><br/><br/></apex:outputPanel>
+             <apex:outputPanel style="font-size: 11px; text-align:right"><i>Document #001-59331 Rev.*A</i><br/>Page <span class="pageNumber"></span> of <span class="pageCount"></span> </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+            <table width="100%" style="font-size:14px;border:0px;" cellspacing="0px" cellpadding="0px">
+                <tr>
+                        <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px" /></td>
+                        <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial;font-size:30px;" >
+                            <apex:outputPanel style="font-family:Arial;font-size:18px;">                                
+                                    Bon De Garantie                                 
+                            </apex:outputPanel>
+                        </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:12px;">&nbsp;</td> 
+                </tr>     
+                <tr >               
+                    <td height="25" bgcolor="#E9AB17;" colspan="4" style="font-size:15px">&nbsp;&nbsp;COORDONNÉES DU CLIENT</td>              
+                </tr>   
+                <tr>
+                    <td>&nbsp;</td> 
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding-top:10px;"><apex:outputText value="Nom:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:94%;float:right">{!warranty.Customer_SFDC_ID__r.Name}</span></td>      
+                </tr>  
+                <!-- 
+                <tr>
+                    <td colspan="4" style="padding-top:10px;"><apex:outputText value="Personne à contacter:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:81.5%;float:right;">{!warranty.Customer_SFDC_ID__r.Contact_Name__c}&nbsp;</span></td>
+                </tr>
+                 -->
+                <tr>
+                    <td colspan="4" style="padding-top:10px;"><apex:outputText value="Adresse:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:91.5%;float:right;">{!warranty.Customer_SFDC_ID__r.BillingStreet}&nbsp;</span></td>
+                </tr> 
+                <tr>
+                    <td colspan="2" style="padding-top:10px;" width="27%"><apex:outputText value="Ville:" style="float:left;padding-right:4px;" />&nbsp;<span style="border-bottom:1px solid;float:left;width:85.5%" >{!warranty.Customer_SFDC_ID__r.Billingcity}&nbsp;</span></td>     
+                    <td colspan="2" style="padding-top:10px;"><apex:outputText value="Département:" style="float:left;" />&nbsp; <span style="border-bottom:1px solid;float:right;width:76.7%" >{!warranty.Customer_SFDC_ID__r.PersonDepartment}&nbsp;</span></td>
+               </tr>
+               <tr>
+                   <td colspan="2" style="padding-top:10px;"><apex:outputText value="Code Postal:" style="float:left;padding-right:4px;"/>&nbsp; <span style="border-bottom:1px solid;width:72%;float:left;">{!warranty.Customer_SFDC_ID__r.BillingPostalCode}&nbsp;</span></td>
+                   <td colspan="2" style="padding-top:10px;"><apex:outputText value="Téléphone:" style="float:left;"/>&nbsp; <span style="border-bottom:1px solid;width:80%;float:right;">{!warranty.Customer_SFDC_ID__r.Phone}&nbsp;</span></td>
+              </tr>
+              <tr>
+                   <td colspan="4" style="padding-top:10px;"><apex:outputText value="Email:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:93.4%;float:right;">{!warranty.Customer_SFDC_ID__r.Email__c}&nbsp;</span></td>
+              </tr>
+              <tr><td style="padding-top:20px">&nbsp;</td></tr>
+              <tr >               
+                  <td height="25" bgcolor="#E9AB17;" colspan="4" style="font-size:15px;">&nbsp;&nbsp;VOTRE OPINION NOUS INTÉRESSE</td>              
+              </tr>    
+              <tr>
+                  <td colspan="4"> 
+                     <p>Chez SunPower, nous nous engageons à fournir à nos clients un service de premier ordre. A cette fin, nous
+                     demandons à nos clients de nous donner leur avis sur le service qu’ils ont reçu. Veuillez cocher la case qui convient
+                     et nous indiquer votre adresse électronique. Nous vous enverrons un bref questionnaire dans lequel vous pourrez
+                     nous donner votre opinion sur le niveau de service de votre Partenaire et SunPower. Nous vous remercions
+                     d’avoir choisi SunPower.
+                     </p>
+                  </td>
+              </tr>
+              <br />
+              <tr>         
+                  <td colspan="4" style="text-align:justify;font-size:11px;text-indent:18px">
+                      <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">
+                          Les données personnelles ne seront pas communiquées à des tiers.
+                      </apex:outputPanel>
+                  </td>
+              </tr>
+              <tr>
+                  <td><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+                  <td colspan="3" style="text-align:justify;font-size:12px">
+                      <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">
+                          Cochez cette case si vous ne souhaitez pas être contacté pour répondre aux enquêtes qualité de services.
+                     </apex:outputPanel>
+                 </td>
+              </tr>
+              <tr>
+                 <td><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+                 <td colspan="3" style="text-align:justify;font-size:12px;">
+                     <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">
+                         Cochez cette case si vous ne souhaitez pas être contacté pour répondre à des sondages de satisfaction clients.
+                     </apex:outputPanel>
+                 </td>
+             </tr>
+             <tr>
+                 <td><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+                 <td colspan="3" style="text-align:justify;font-size:12px">
+                     <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">
+                         Cochez cette case si vous ne souhaitez pas être contacté pour recevoir des informations sur les produits et services de Sunpower.
+                     </apex:outputPanel>
+                 </td>
+             </tr>
+             <br /> <br />     
+             <tr style="page-break-after:always">
+                 <td colspan="2">Date__________________________&nbsp;<input type="text" name="date" /></td>
+                 <td colspan="2" >Signature_______________________&nbsp;<input type="text" name="signature" /></td>
+             </tr>    
+             <tr>
+                 <td colspan="4">
+                     <apex:outputPanel style="font-size:12px;font-family:Arial Regular;">
+                         <table width="100%" cellspacing="10px" style="font-size:11px;">
+                             <tr>
+                                 <td><center><apex:outputPanel style="font-size:16px;font-family:Arial Regular">
+                                    ANNEXE 1: </apex:outputPanel></center>
+                                 </td>
+                                 <td><center><apex:outputPanel style="font-size:16px;font-family:Arial Regular">EXHIBIT 1:</apex:outputPanel></center></td>
+                             </tr>
+                             <tr>
+                                 <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;1. SunPower France SAS, société par actions simplifiée, 
+                                     immatriculée au registre du commerce et des sociétés de 
+                                     Paris sous le numéro 508 814 852, dont le siège social 
+                                     
+                                     <!-- Commented as part of case# 00166667 to change address from "10 Rue de La Paix, 75002 Paris" to "9-11 Allee de L'Arche, 92671 Courbevoie Cedex". -->
+                                     
+                                     est situé 9-11 Allee de L'Arche, 92671 Courbevoie Cedex, filiale du groupe 
+                                     SunPower, (ci-après le « <b>Responsable du Traitement</b> ») 
+                                     dispose de moyens informatiques destinés à gérer les fiches 
+                                     clients dans le cadre de la gestion des garanties SunPower 
+                                     (ci-après le « <b>Traitement des Données Personnelles </b>»). </p>
+                                 </td>
+                                 <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;1. SunPower France SAS, a French société par actions
+                                     simplifiée, registered with the trade and companies registry
+                                     of Paris under the number 508 814 852, with a registered
+                                     
+                                     <!-- Commented as part of case# 00166667 to change address from "10 Rue de La Paix, 75002 Paris" to "9-11 Allee de L'Arche, 92671 Courbevoie Cedex". -->
+                                     
+                                     office located at 9-11 Allee de L'Arche, 92671 Courbevoie Cedex, subisdiary
+                                     of the SunPower group, (hereinafter the « Data Processor
+                                     ») has the data processing capability to process customers
+                                     files in the framework of the management of SunPower’s
+                                     warranties (hereinafter the « <b>Personal Data Processing</b> »).</p>
+                                 </td>     
+                             </tr>
+                             <tr>
+                                 <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;Les informations enregistrées dans le cadre du Traitement 
+                                     des Données Personnelles sont réservées à l’usage du (ou 
+                                     des) service(s) de SunPower concerné(s) et ne peuvent être 
+                                     communiquées qu’au destinataire mentionné ci-dessous dans 
+                                     le cadre de la gestion de la garantie SunPower et conformément 
+                                     à la procédure ci-après: le certificat de garantie est complété 
+                                     par le Partner SunPower et le client, puis il est envoyé au siège 
+                                     social de SunPower France à Paris. Ensuite, les certificats de 
+                                     garantie sont adressés à SunPower Corporation à San José, 
+                                     Californie, Etats-Unis pour traitement des données dans le 
+                                     cadre de la gestion des garanties SunPower (Ci-après le « 
+                                     <b> Transmission des Données</b> »). </p>
+                                 </td>
+                                 <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;The information registered in the framework of the
+                                      Personal Data Processing is used exclusively by the concerned
+                                      service(s) of SunPower and can only be communicated to
+                                     the addressee mentioned below in the framework of the
+                                     management of SunPower’s warranty and in compliance
+                                     with the following procedure: SunPower’s dealer fills in
+                                     the warranty certification together with the customer and
+                                     sends it back to SunPower France at its registered office.
+                                     The warranty cards are then sent on a regular basis to
+                                     SunPower Corporation, at San Jose, California, USA in
+                                     order to proceed with the data processing in the framework
+                                     of the management of SunPower’s warranty (Hereinafter the
+                                     «<b> Data Transfer</b> »).
+                                     </p>
+                               </td>
+                          </tr>
+                          <tr>
+                              <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;Le destinataire est SunPower Corporation, San
+                                    José, Californie, Etats-Unis (Ci-après le « <b>Destinataire
+                                    des Données</b> »). Le Destinataire des Données aura
+                                    communication des données suivantes: nom (et, s’agissant
+                                    des sociétés, dénomination sociale), prénom et adresse
+                                    complète du client.</p>
+                              </td>
+                              <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;The addressee is SunPower Corporation, San Jose,
+                                  California, USA (hereinafter the « <b>Data Addressee</b> »). The
+                                  Data Addressee will receive the following data: name (and,
+                                  with respect to companies, corporate name), first name and
+                                  full address of the client.</p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;2. Par la présente, le client dont les données sont
+                                    transférées, consent d’une manière ferme et par avance dudit
+                                    transfert par le Responsable du Traitement au Destinataire
+                                    des Données.</p>
+                              </td>
+                              <td><p style="text-align:justify;margin-bottom:-5px;font-family:Arial Regular">&nbsp;&nbsp;2. The customer, whose data is transferred, hereby
+                                    agrees in advance to such transfer by the Data Processor to
+                                    the Data Addressee.</p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td><p style="text-align:justify;margin-bottom:-5px">&nbsp;&nbsp;3. Ainsi que mentionné ci-dessus, la Transmission
+                                    des Données au Destinataire des Données est destinée à
+                                    l’enregistrement centralisé des bénéficiaires de la garantie
+                                    SunPower et au traitement desdites données dans le cadre
+                                    de la gestion de la garantie SunPower.</p>
+                              </td>
+                              <td><p style="text-align:justify;margin-bottom:-5px">&nbsp;&nbsp;3. As indicated above, the purpose of the Data Transfer
+                                    to the Data Addressee is the centralised collection of the
+                                    beneficiaries of SunPower’s warranty and the processing
+                                    of such data in the framework of the management of
+                                    SunPower’s warranty.</p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td><p style="text-align:justify;margin-bottom:-5px">&nbsp;&nbsp;4. Il est ici expressément rappelé que le Responsable du
+                                    Traitement des données bénéficie de l’une des exceptions en
+                                    matière de transferts de données à caractère personnel vers
+                                    des Etats n’appartenant pas à la communauté européenne
+                                    , telles que prévues à l’article 69 de la loi n° 78-17 du 6
+                                    janvier 1978 modifiée en 2004 relatives à l’informatique,
+                                    aux fichiers et aux libertés (ci-après la « Loi Informatique
+                                    et Libertés »), à savoir, le consentement préalable de la
+                                    personne dont les données sont transmises a consenti au
+                                    Transfert des Données au Destinataire des Données.</p>
+                              </td>
+                              <td><p style="text-align:justify;margin-bottom:-5px">&nbsp;&nbsp;4. It is hereby expressly acknowledged that the Data
+                                    Processor benefits from one of the exceptions, in connection
+                                    with the transfer of personal data to States which are outside
+                                    the European Community, as provided under article 69 of
+                                    the Act n° 78-17 dated January 6, 1978 as amended in
+                                    2004 (hereinafter the “Data Protection Law”), namely: the
+                                    person, whose data is transferred, has agreed, in advance,
+                                    to such Data Transfer to the Data Addressee.</p>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td><p style="text-align:justify;margin-bottom:-5px">&nbsp;&nbsp;5. Conformément aux articles 39 et suivants de la
+                                    Loi Informatique et Libertés, toute personne peut obtenir
+                                    communication et, le cas échéant, rectification ou suppression
+                                    des informations la concernant, ou le retrait de son accord sur
+                                    la Transmission des Données au Destinataire des Données, en
+                                    s’adressant à solarfr@sunpowercorp.com</p>
+                              </td>
+                               <td><p style="text-align:justify;margin-bottom:-5px">&nbsp;&nbsp;5. In compliance with articles 39 et seq. of the Data
+                                    Protection Law, any concerned person is entitled to obtain
+                                    and, as the case may be, require the rectification or the
+                                    deletion of information regarding him/her, or revoke his/her
+                                    agreement to the Data Transfer to the Data Addressee, by
+                                    contacting the following service solarfr@sunpowercorp.com</p>
+                              </td>
+                          </tr>
+                      </table>
+                  </apex:outputPanel>
+              </td>
+              </tr>
+         </table>  
+     </apex:outputPanel>
+  </apex:form> 
+</apex:page>

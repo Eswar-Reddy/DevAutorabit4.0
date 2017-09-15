@@ -1,0 +1,54 @@
+<apex:page sidebar="false" showHeader="false" controller="CommunityLoginController" action="{!login}">
+<style type="text/css">
+        .rightColumn {
+            text-align:right;
+        }
+        .leftColumn {
+            text-align:left;
+        }   
+</style>
+    <apex:stylesheet value="{!$Resource.PartnerPortalSiteLoginCSS}" />
+    <apex:form forceSSL="true" id="pploginForm" >
+    
+        <div class="webHeaderContainer" id="headerWebId">
+            <div class="webHeader"><img width="200" height="25" alt="SunPower More Energy. For Life." src="{!$Resource.SunPower_Logo_2015}"/>
+            </div>
+        </div>
+        <hr size="1" />
+        <div id="mainSection">
+            <div id="signInFormSection" class="pageSection" align="center">
+                <br/>
+                <apex:outPutLabel style="color: #F47B4B; font-size:115%;">{!mainHeader}</apex:outPutLabel>
+                <br/><br/>
+                <apex:outputLabel style="font-size:80%;" >{!welcomeMsg}</apex:outputLabel>
+                <br/><br/><br/>
+                <div class="headerSection"><h1>{!portalLoginHeader}</h1></div>
+                <div>
+                    <apex:pageMessages id="error"/>
+                    <apex:panelGrid columns="2" columnClasses="leftColumn,rightColumn" style="margin-top:1em;" cellspacing="4" cellpadding="4">
+                        
+                        <apex:outputLabel value="{!$Label.site.username}" for="username" style="font-family: FuturaLight,Arial;font-weight:normal; font-size: 100%;margin-bottom:30px;"/>
+                        <apex:inputText id="username" value="{!username}"/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+                        <apex:outputLabel value="{!$Label.site.password}" for="password"/>
+                        <apex:inputSecret id="password" value="{!password}"/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+                        <apex:commandButton action="{!login}" value="{!$Label.site.login_button}" id="loginButton" style=" background: none repeat scroll 0 0 #5496CC; border: medium none; color: #fff; cursor: pointer;display: inline-block; font: 0.9em Arial,Helvetica,sans-serif; padding: 8px 20px; position: relative;"/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+                        <apex:outputText value=""/>
+                        <apex:outputLink value="{!$Page.partnerportalforgotpassword}" style="color: #5496CC;font: 0.85em Arial,Helvetica,sans-serif;text-decoration:none;margin-top:100px;"> {!$Label.site.forgot_your_password_q}</apex:outputLink>
+                    </apex:panelGrid>
+                </div>
+            </div>
+        </div>
+        <!--
+        <br/>
+        <apex:outputPanel >Browser Language is {!usrLangCode}</apex:outputPanel>
+        <br/>
+        <apex:outputPanel >Language is {!languageSelected}</apex:outputPanel>-->
+    </apex:form>
+</apex:page>

@@ -1,0 +1,20 @@
+<apex:component >
+	<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"/>
+	
+	<script>
+		//to get rid off the bug that when a validation occurs, all data get reset on the layout.
+        var oInputValues = {};
+        function fnSaveValuesAndCheck(){
+            $("form[id$=form]").find('input,select').each(function(){
+                if(this.id)
+                    oInputValues[this.id] = $(this).val();
+            });
+        }
+        
+        function fnLoadInputValues(){
+            $.each(oInputValues, function(id, value){
+               document.getElementById(id).value = value;
+            });
+        }
+	</script>
+</apex:component>

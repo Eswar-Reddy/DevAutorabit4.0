@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <label>Sales</label>
+    <logo>echosign_dev1__ButtonsLogosImages/sunpower_crm.jpg</logo>
+    <tab>standard-Chatter</tab>
+    <tab>standard-Campaign</tab>
+    <tab>standard-Lead</tab>
+    <tab>standard-Opportunity</tab>
+    <tab>standard-Account</tab>
+    <tab>standard-Contact</tab>
+    <tab>standard-report</tab>
+    <tab>Order_Details_VF</tab>
+    <tab>Clicktools</tab>
+    <tab>Customer_Survey_Result__c</tab>
+    <tab>Metrics__c</tab>
+    <tab>CPR_Exception_Log__c</tab>
+    <tab>RMA__c</tab>
+    <tab>Price_Request__c</tab>
+    <tab>Origination_Document__c</tab>
+    <tab>Invoice_Documents__c</tab>
+    <tab>Dealer_Notification__c</tab>
+    <tab>Sunpower_Spectrum_Debug_Log__c</tab>
+    <tab>Portal_Login_Page_Setup__c</tab>
+    <tab>Order_Discount__c</tab>
+    <tab>Installation_Model__c</tab>
+    <tab>Solar_Access_Presets__c</tab>
+    <tab>Roof_Design__c</tab>
+</CustomApplication>

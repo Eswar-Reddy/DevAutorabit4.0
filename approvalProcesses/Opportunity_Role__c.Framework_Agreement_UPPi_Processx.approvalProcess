@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>santiago.senn@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPP Intl Master Agreement Managing Director/Manager Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>RejectRecord</ifCriteriaNotMet>
+        <label>UPP Intl Master Agreement Managing Director/Manager Approval</label>
+        <name>UPP_Intl_Master_Agreement_Managing_Director_Manager_Approval</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPP Intl Business Development Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>UPP Intl Business Development Approval</label>
+        <name>UPP_Intl_Business_Development_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>UPP Intl President Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Business_Unit1__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>UPP Intl President Approval</label>
+        <name>UPP_Intl_President_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>dennis.arriola@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Budgetary Pricing BU/CFO President Approval</description>
+        <entryCriteria>
+            <booleanFilter>NOT(1 AND 2)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Expected_Direct_Margin1__c</field>
+                <operation>greaterThan</operation>
+                <value>25</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount_Approved__c</field>
+                <operation>lessThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Budgetary Pricing BU/CFO President Approval</label>
+        <name>Budgetary_Pricing_BU_CFO_President_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Deal Review Committee Approval</description>
+        <entryCriteria>
+            <booleanFilter>NOT (1 and 2) or 3</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Expected_Direct_Margin1__c</field>
+                <operation>greaterThan</operation>
+                <value>15</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount_Approved__c</field>
+                <operation>lessThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Amount_Approved__c</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Deal Review Committee Approval</label>
+        <name>Deal_Review_Committee_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>cristina.schwartz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>milton.torres@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>nakul.correa@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>simone.foa@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Framework Contract Approval</description>
+        <label>Framework Contract Approval</label>
+        <name>Framework_Contract_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Framework Agreement - UPPi process</description>
+    <emailTemplate>Opportunity_Role/Master_Agreement_Submission</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Framework Master Agreement</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Business_Unit1__c</field>
+            <operation>equals</operation>
+            <value>UPP Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Contract_Status__c</field>
+            <operation>equals</operation>
+            <value>Draft,Rejected</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Master_Agreement_Submission_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Master_Contract_Status_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Master_Agreement_Rejected_Contract</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Master_Agreement_Rejected_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Master_Agreement_Submission_Status</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Framework Agreement - UPPi  Processx</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recallActions>
+        <action>
+            <name>Master_Agreement_Recall_Contract_Status</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

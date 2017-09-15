@@ -1,0 +1,1113 @@
+<apex:page showHeader="false" id="qtpg" sidebar="false" standardStylesheets="false" standardController="Quote" extensions="QuoteReadOnlyExtension">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .shadingTable td{
+            border: 1px solid #e5e5e5;
+            padding:5px;
+            background-color: #f5f5f5;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+    </script>
+    
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;">
+        <div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">
+            <apex:form >
+            <div class="row top2" >
+                <div class="col-xs-12">
+                    <a href="/{!Quote.Account__c}">
+                        <h5 style="font-size: small;color: #0076be !important;">BACK TO ACCOUNT INFORMATION </h5>
+                    </a>
+                </div>
+            </div> 
+            <div class="row top1" >
+                <div class="col-xs-12" style="text-align:center;">
+                    <h5 style="color:red !important;">Quote is {!QuoteState}</h5>
+                </div>
+            </div> 
+            <div class="row" style="margin-top:10px;">
+                <div class="tabs">
+                <div class="tabs__header-container">
+                    <ul class="tabs__header">
+                        <li class="tabs__header-item tabs__header-item--active" id="inputtab" data-tab-id="1">
+                            <span>Quote Inputs</span><br/>
+                        </li>
+                        <li class="tabs__header-item " id="outputtab" data-tab-id="2">
+                            <span>Quote Outputs</span>
+                        </li>
+                    </ul>
+                </div>
+                    
+                <!--start tab containers-->
+                <div class="tabs__content-container" >
+                    <div class="tabs__content">
+                        <div class="tabs__content-item tabs__content-item--active" data-tab-content="1">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Quote Type</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField id="qType" style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.QuoteType__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Sector</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField id="qSector" style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Sector__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>General Information</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Description</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-7 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Description__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Install Date</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.InstallDate__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Adder Fees</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                       <apex:param value="{!Quote.Adder_Fee__c}"/>
+                                    </apex:outputText>
+                                    <!--<apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Adder_Fee__c}"></apex:outputField>-->
+                                </div> 
+                            </div>
+                            <apex:outputPanel rendered="{!If((Quote.QuoteType__c=='Cash'),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Certified Third Party Loan</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Certified_Third_Party_Loan__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Third Party Loan Number</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Third_Party_Loan_Number__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Include Ecobee Thermostat</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Ecobee_User__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Equipment</h3>    
+                                </div>
+                            </div>
+                            <apex:outputPanel rendered="{!If((Quote.ModuleConfigurationId__c!=null),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Module</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.ModuleConfigurationId__r.Name}"></apex:outputField>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!If((Quote.ModuleConfigurationId__c==null && Quote.Module__c!=null),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Module</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Module__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!If((Quote.ModuleConfigurationId__c==null && Quote.Module__c==null),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Module</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.System_Model__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Module Count</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Module_Count__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Mounting Description</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Mounting_Description__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monitoring System</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Monitoring_System__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="subtab-styling" >
+                                        <div class="subtab-styling__header-container">
+                                            <ul class="subtab-styling__header">
+                                                <li class="subtab-styling__header-item subtab-styling__header-item--active" id="roof1Tab" onclick="toggleSubtabs('roof1Tab');" >
+                                                    <span>Roof 1</span>
+                                                </li>
+                                                <li class="subtab-styling__header-item " id="roof2Tab" onclick="toggleSubtabs('roof2Tab');" >
+                                                    <span>Roof 2</span>
+                                                </li>
+                                                <li class="subtab-styling__header-item " id="roof3Tab" onclick="toggleSubtabs('roof3Tab');" >
+                                                    <span>Roof 3</span>
+                                                </li>
+                                                <li class="subtab-styling__header-item " id="roof4Tab" onclick="toggleSubtabs('roof4Tab');" >
+                                                    <span>Roof 4</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="subtab-styling__content-container" style=" border-bottom:1px solid #e5e5e5 !important;">
+                                            <div class="subtab-styling__content subtab-styling__content--active">
+                                            <!--Roof 1 :: START -->
+                                                <div class="subtab-styling__content-item subtab-styling__content-item--active" id="roof1TabContent" >
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Description</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofDescMap['roof1']}</apex:outputLabel>
+                                                        </div>
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Pitch</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofPitch['roof1']}</apex:outputLabel>
+                                                        </div>  
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >{!acModuleText}</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofTotalParallelStr['roof1']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Azimuth(degrees)</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofAzimuth['roof1']}</apex:outputLabel>
+                                                        </div>
+                                                    </div>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Modules per String</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofModuleQty['roof1']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Manufacturer</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrManf['roof1']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Module</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrModl['roof1']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Count</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvrtrcnt['roof1']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!roof1exists}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >System Solar Access Percentages</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <table class="shadingTable" style ="width:95%;border-spacing: 10px;border-collapse: separate;">
+                                                            <tr>
+                                                                <td>JAN<br/>{!roofdetailMap['roof1'].Jan__c}</td>
+                                                                <td>FEB<br/>{!roofdetailMap['roof1'].Feb__c}</td>
+                                                                <td>MAR<br/>{!roofdetailMap['roof1'].Mar__c}</td>
+                                                                <td>APR<br/>{!roofdetailMap['roof1'].Apr__c}</td>
+                                                                <td>MAY<br/>{!roofdetailMap['roof1'].May__c}</td>
+                                                                <td>JUN<br/>{!roofdetailMap['roof1'].Jun__c}</td>
+                                                                <td>JUL<br/>{!roofdetailMap['roof1'].Jul__c}</td>
+                                                                <td>AUG<br/>{!roofdetailMap['roof1'].Aug__c}</td>
+                                                                <td>SEP<br/>{!roofdetailMap['roof1'].Sep__c}</td>
+                                                                <td>OCT<br/>{!roofdetailMap['roof1'].Oct__c}</td>
+                                                                <td>NOV<br/>{!roofdetailMap['roof1'].Nov__c}</td>
+                                                                <td>DEC<br/>{!roofdetailMap['roof1'].Dec__c}</td>
+                                                            </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                     </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="subtab-styling__content ">
+                                            <!--Roof 2 :: START -->
+                                                <div class="subtab-styling__content-item" id="roof2TabContent" >
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Description</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofDescMap['roof2']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Pitch</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofPitch['roof2']}</apex:outputLabel>
+                                                        </div>  
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >{!acModuleText}</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofTotalParallelStr['roof2']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Azimuth(degrees)</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofAzimuth['roof2']}</apex:outputLabel>
+                                                        </div>
+                                                    </div>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Modules per String</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofModuleQty['roof2']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Manufacturer</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrManf['roof2']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Module</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrModl['roof2']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Count</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvrtrcnt['roof2']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!roof2exists}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >System Solar Access Percentages</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                           
+
+<table class="shadingTable" style ="width:95%;border-spacing: 10px;border-collapse: separate;">
+                                                            <tr>
+                                                                <td>JAN<br/>{!roofdetailMap['roof2'].Jan__c}</td>
+                                                                <td>FEB<br/>{!roofdetailMap['roof2'].Feb__c}</td>
+                                                                <td>MAR<br/>{!roofdetailMap['roof2'].Mar__c}</td>
+                                                                <td>APR<br/>{!roofdetailMap['roof2'].Apr__c}</td>
+                                                                <td>MAY<br/>{!roofdetailMap['roof2'].May__c}</td>
+                                                                <td>JUN<br/>{!roofdetailMap['roof2'].Jun__c}</td>
+                                                                <td>JUL<br/>{!roofdetailMap['roof2'].Jul__c}</td>
+                                                                <td>AUG<br/>{!roofdetailMap['roof2'].Aug__c}</td>
+                                                                <td>SEP<br/>{!roofdetailMap['roof2'].Sep__c}</td>
+                                                                <td>OCT<br/>{!roofdetailMap['roof2'].Oct__c}</td>
+                                                                <td>NOV<br/>{!roofdetailMap['roof2'].Nov__c}</td>
+                                                                <td>DEC<br/>{!roofdetailMap['roof2'].Dec__c}</td>
+                                                            </tr>
+                                                            </table> 
+                                                        </div>
+                                                    </div>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="subtab-styling__content ">
+                                            <!--Roof 3 :: START -->
+                                                <div class="subtab-styling__content-item" id="roof3TabContent" >
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Description</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofDescMap['roof3']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Pitch</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofPitch['roof3']}</apex:outputLabel>
+                                                        </div>  
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >{!acModuleText}</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofTotalParallelStr['roof3']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Azimuth(degrees)</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofAzimuth['roof3']}</apex:outputLabel>
+                                                        </div>
+                                                    </div>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Modules per String</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofModuleQty['roof3']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Manufacturer</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrManf['roof3']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Module</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrModl['roof3']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Count</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvrtrcnt['roof3']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!roof3exists}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >System Solar Access Percentages</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <table class="shadingTable" style ="width:95%;border-spacing: 10px;border-collapse: separate;">
+                                                            <tr>
+                                                                <td>JAN<br/>{!roofdetailMap['roof3'].Jan__c}</td>
+                                                                <td>FEB<br/>{!roofdetailMap['roof3'].Feb__c}</td>
+                                                                <td>MAR<br/>{!roofdetailMap['roof3'].Mar__c}</td>
+                                                                <td>APR<br/>{!roofdetailMap['roof3'].Apr__c}</td>
+                                                                <td>MAY<br/>{!roofdetailMap['roof3'].May__c}</td>
+                                                                <td>JUN<br/>{!roofdetailMap['roof3'].Jun__c}</td>
+                                                                <td>JUL<br/>{!roofdetailMap['roof3'].Jul__c}</td>
+                                                                <td>AUG<br/>{!roofdetailMap['roof3'].Aug__c}</td>
+                                                                <td>SEP<br/>{!roofdetailMap['roof3'].Sep__c}</td>
+                                                                <td>OCT<br/>{!roofdetailMap['roof3'].Oct__c}</td>
+                                                                <td>NOV<br/>{!roofdetailMap['roof3'].Nov__c}</td>
+                                                                <td>DEC<br/>{!roofdetailMap['roof3'].Dec__c}</td>
+                                                            </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="subtab-styling__content ">
+                                            <!--Roof 4 :: START -->
+                                                <div class="subtab-styling__content-item" id="roof4TabContent" >
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Description</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofDescMap['roof4']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Pitch</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofPitch['roof4']}</apex:outputLabel>
+                                                        </div>  
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >{!acModuleText}</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofTotalParallelStr['roof4']}</apex:outputLabel>
+                                                        </div> 
+                                                        <div class="col-md-2 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Azimuth(degrees)</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-3 col-xs-12">
+                                                            <apex:outputLabel >{!RoofAzimuth['roof4']}</apex:outputLabel>
+                                                        </div>
+                                                    </div>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Modules per String</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofModuleQty['roof4']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Manufacturer</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrManf['roof4']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Module</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvtrModl['roof4']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!acModule}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >Inverter Count</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            <apex:outputLabel >{!RoofInvrtrcnt['roof4']}</apex:outputLabel>
+                                                        </div> 
+                                                    </div>   
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!roof4exists}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xs-12 labelStyle">
+                                                            <apex:outputLabel >System Solar Access Percentages</apex:outputLabel>
+                                                        </div>    
+                                                        <div class="col-md-4 col-xs-12">
+                                                            
+
+<table class="shadingTable" style ="width:95%;border-spacing: 10px;border-collapse: separate;">
+                                                            <tr>
+                                                                <td>JAN<br/>{!roofdetailMap['roof4'].Jan__c}</td>
+                                                                <td>FEB<br/>{!roofdetailMap['roof4'].Feb__c}</td>
+                                                                <td>MAR<br/>{!roofdetailMap['roof4'].Mar__c}</td>
+                                                                <td>APR<br/>{!roofdetailMap['roof4'].Apr__c}</td>
+                                                                <td>MAY<br/>{!roofdetailMap['roof4'].May__c}</td>
+                                                                <td>JUN<br/>{!roofdetailMap['roof4'].Jun__c}</td>
+                                                                <td>JUL<br/>{!roofdetailMap['roof4'].Jul__c}</td>
+                                                                <td>AUG<br/>{!roofdetailMap['roof4'].Aug__c}</td>
+                                                                <td>SEP<br/>{!roofdetailMap['roof4'].Sep__c}</td>
+                                                                <td>OCT<br/>{!roofdetailMap['roof4'].Oct__c}</td>
+                                                                <td>NOV<br/>{!roofdetailMap['roof4'].Nov__c}</td>
+                                                                <td>DEC<br/>{!roofdetailMap['roof4'].Dec__c}</td>
+                                                            </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Pricing</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Partial Prepayment</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Partial_Prepayment__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Annual Escalation</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Lease_Annual_Escalation__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Full Prepaid Lease</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Full_Prepaid_Lease__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Loan Term(Years)</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Loan_Term__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Approved Amount</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                           <apex:param value="{!Quote.Approved_Finance_Amount__c}" />
+                                    </apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >System Price</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                           $<apex:param value="{!Quote.System_Cost__c}" />
+                                    </apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Rebate</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >BuyDown Override</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <div style="float:left;"><apex:outputField style="height: 40px;width: 90% !important;border-radius: 5px;border: 0px;"  value="{!Quote.Buydown_Override__c}"></apex:outputField>
+                                    </div>
+                                    <div style="float:left;">
+                                        <apex:outputText value="{0, number,###,###,##0.00}">
+                                           <apex:param value="{!Quote.Buydown_Amount__c}" />
+                                        </apex:outputText></div>
+                                    </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Design Factor</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Design_Factor__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Optional Incentives</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Optional_Incentives__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Utility</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Current Rate</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Current_Rate__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Proposed Rate</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quote.Proposed_Rate_Name__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs__content">
+                        <div class="tabs__content-item" data-tab-content="2">
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>System Overview</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >System Size DC</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.System_Size_DC__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >System Size AC</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.System_Size_AC__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Total Energy</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                       <apex:param value="{!systemProdOutput.Total_Energy__c}"/>
+                                    </apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Cost per Watt DC</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.cost_per_watt_DC__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Cost per Watt AC</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.cost_per_watt_AC__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1.5rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Homeowner Payments</h3>    
+                                </div>
+                            </div>
+                            <apex:outputPanel rendered="{!If((Quote.QuoteType__c=='Lease'),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monthly Lease Payment</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0,number,###,###,##0.00}">{!systemProdOutput.CurrencyIsoCode}
+                                    &nbsp;<apex:param value="{!systemProdOutput.Monthly_Lease_Payment__c}"/></apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monthly ACH Lease Pymt</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Monthly_Lease_Payment7_50discount__c}
+                                    "></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Upfront Lease Payment</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Upfront_Lease_Payment__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!If((Quote.QuoteType__c=='Loan'),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monthly ACH Loan Payment</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0,number,###,###,##0.00}">{!systemProdOutput.CurrencyIsoCode}
+                                    &nbsp;<apex:param value="{!systemProdOutput.Monthly_Lease_Payment7_50discount__c}"/></apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Co Payment</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0,number,###,###,##0.00}">{!systemProdOutput.CurrencyIsoCode}
+                                    &nbsp;<apex:param value="{!QuoteOutput.Down_Payment__c}"/></apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Total Contract Price</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0,number,###,###,##0.00}">{!systemProdOutput.CurrencyIsoCode}
+                                    &nbsp;<apex:param value="{!QuoteOutput.Total_Contract_Price__c}"/></apex:outputText>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Financed Amount</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputText value="{0,number,###,###,##0.00}">{!systemProdOutput.CurrencyIsoCode}
+                                    &nbsp;<apex:param value="{!QuoteOutput.Financed_Amount__c}"/></apex:outputText>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!If((Quote.QuoteType__c=='Cash'),true,false)}">
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Cash System Price</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Quotesummary.System_Cost__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            </apex:outputPanel>
+                            
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1.5rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Assumed Rebate</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Upfront Incentives</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Upfront_Incentives__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Incentive Design Factor</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Incentive_Design_Factor__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-top: 1rem !important;margin-bottom: 1.5rem !important;margin-left: auto;margin-right: auto;" />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: left;">
+                                    <h3>Return on Investment</h3>    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monthly Elec Bill Without PV</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Monthly_Electric_Bill_Without_PV_year1__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monthly Elec Bill With PV</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Monthly_Electric_Bill_With_PV_year1__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Monthly Elec Bill Savings</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Monthly_Electric_Bill_saving_year1__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >% Electricity Produced</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Percentage_Electricity_Produced__c}"></apex:outputField>
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-12 labelStyle">
+                                    <apex:outputLabel >Cash Price ROI</apex:outputLabel>
+                                </div>    
+                                <div class="col-md-4 col-xs-12">
+                                    <apex:outputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!systemProdOutput.Cash_Price_Return_On_Investment_year1__c}"></apex:outputField>
+                                </div> 
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </apex:form>
+        </div>
+    </body>
+    <script>
+     window.onload = function(){
+        
+            console.log('{!roofcount}');
+            var roofs = '{!roofcount}';
+            for(var i=roofs;i<=4;i++){
+                document.getElementById('roof'+i+'Tab').style.display='none';
+            }
+        };
+    </script>
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+
+</apex:page>

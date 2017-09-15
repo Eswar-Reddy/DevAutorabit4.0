@@ -1,0 +1,339 @@
+<apex:page showHeader="false" id="cpg" sidebar="false" Controller="ReportsListController">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+        
+   
+      #phHeaderLogoImage {
+           max-width: 258px;
+       }
+       
+       .footer-list-block {
+           max-width: 16rem !important;
+           float:left;
+       }
+       
+       .link-list {
+           position: relative !important;
+           left: 0px !important;
+       }
+       .foot{
+       
+           position:relative;
+           bottom:20px;
+       }       
+       .skiplink,
+       #footer {
+           display: none !important;
+       }
+       
+       #main-content {
+           padding-top: 2rem !important;
+       }
+       .footer-content {
+           position: relative !important;
+           top: 20px !important;
+       }
+
+       #home .link-list {
+           margin-bottom: 0rem !important;
+       }
+    </style>
+    
+    <script>
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+
+    var newWin=null;
+    function openLookupPopup(name, id, objName,fieldName)
+    {
+        var url="/apex/LookupPopUp?namefield=" + name + "&idfield=" + id + "&ObjectName=" + objName + "&FieldName="+ fieldName;
+        newWin=window.open(url, 'Popup','height=500,width=600,left=100,top=100,resizable=no,scrollbars=yes,toolbar=no,status=no');
+        if (window.focus) 
+        {
+            newWin.focus();
+        }
+            
+        return false;
+    }
+                  
+    function closeLookupPopup()
+    {
+       if (null!=newWin)
+       {
+          newWin.close();
+       }  
+    }
+</script>
+    
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent activeTab="Reports" />
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;">
+        <div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">
+            <apex:form >
+            
+            
+            
+            <div class="row" style="margin-top:20px;margin-bottom:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Reports</h3>    
+                </div>
+            </div>
+            <!--<apex:repeat value="{!reportData}" var="report">
+                <div class="row" style="margin-bottom:10px;">
+                  <div class="col-xs-12" style="text-align: left;">
+                    <a href="/apex/SPCommunityReportDetail?id={!report.Id}">{!report.name}</a>    
+                </div>
+                 
+                </div> 
+            </apex:repeat>-->
+            <div class="row" style="margin-bottom:20px;">
+                  <div class="col-xs-12 col-md-4">
+                   <div style="text-align:center;border:2px solid #e5e5e5;border-radius:15px;">
+                   <img style="width:100%;margin-left:auto;margin-right:auto;height:200px;border-radius:15px 15px 0px 0px;" alt="" src="{!$Resource.reportImage1}"/><br/>
+                   <a href="/apex/SPCommunityReportDetail?id={!reportData[0].id}">{!reportData[0].name}</a><br/> 
+                   <p>Provides insight to all closed won deals<br/>&nbsp;</p>  
+                   </div> 
+                  </div>
+                 <div class="col-xs-12  col-md-4">
+                   <div style="text-align:center;border:2px solid #e5e5e5;border-radius:15px;">
+                   <img style="width:100%;margin-left:auto;margin-right:auto;height:200px;border-radius:15px 15px 0px 0px;" alt="" src="{!$Resource.reportImage2}"/><br/>
+                   <a href="/apex/SPCommunityReportDetail?id={!reportData[1].id}">{!reportData[1].name}</a><br/>
+                   <p>Provides insight to all converted leads and their sources</p>
+                   </div>   
+                  </div>
+                  <div class="col-xs-12  col-md-4" >
+                   <div style="text-align:center;border:2px solid #e5e5e5;border-radius:15px;">
+                   <img style="width:100%;margin-left:auto;margin-right:auto;height:200px;border-radius:15px 15px 0px 0px;" alt="" src="{!$Resource.reportImage3}"/><br/>
+                   <a href="/apex/SPCommunityReportDetail?id={!reportData[2].id}">{!reportData[2].name}</a><br/>
+                   <p>Provides a full pipeline view of all your open opportunities</p>
+                   </div>
+                 </div>
+           
+            </div> 
+            <div class="row" style="margin-bottom:20px;">
+                  <div class="col-xs-12  col-md-4">
+                   <div style="text-align:center;border:2px solid #e5e5e5;border-radius:15px;">
+                   <img style="width:100%;margin-left:auto;margin-right:auto;height:200px;border-radius:15px 15px 0px 0px;" alt="" src="{!$Resource.reportImage4}"/><br/>
+                   <a href="/apex/SPCommunityReportDetail?id={!reportData[3].id}">{!reportData[3].name}</a><br/>
+                   <p>Provides insight to all customer signed deals that are pending SunPower countersignature</p>
+                   </div>
+                  </div>
+                  <div class="col-xs-12  col-md-4" style="text-align: left;">
+                        
+                  </div>
+                  <div class="col-xs-12  col-md-4" style="text-align: left;">
+                       
+                  </div>
+           
+            </div>
+         
+            
+            
+            <div class="row top2" style="margin-top:50px;"></div>
+            </apex:form>
+            <div class="row foot" style="border-top:2px solid #e5e5e5;">
+                   <h5 class="icon-header" style="margin-top:10px;">
+               <span class="home-icon icon icon-news"></span>
+               Other Reports
+           </h5>
+                   <div class="footer-content">
+                       <div class="footer-list-block">
+                           <apex:outputPanel rendered="{!NOT(isNull(s4))}">
+                               <!--<h5 class="footer-category">{!s4.Display_Name__c}</h5>-->
+                               <ul class="link-list" style="list-style-type:none;">
+                                   <apex:repeat value="{!s4.APPR_PUB__Headline_Links__r}" var="c">
+                                       <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                   </apex:repeat>
+                               </ul>
+                           </apex:outputPanel>
+                       </div>
+                       <div class="footer-list-block">
+                           <apex:outputPanel rendered="{!NOT(isNull(s5))}">
+                               <!--<h5 class="footer-category">{!s5.Display_Name__c}</h5>-->
+                               <ul class="link-list" style="list-style-type:none;">
+                                   <apex:repeat value="{!s5.APPR_PUB__Headline_Links__r}" var="c">
+                                       <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                   </apex:repeat>
+                               </ul>
+                           </apex:outputPanel>
+                       </div>
+                       <div class="footer-list-block hidden-mobile">
+                           <apex:outputPanel rendered="{!NOT(isNull(s6))}">
+                               <!--<h5 class="footer-category">{!s6.Display_Name__c}</h5>-->
+                               <ul class="link-list" style="list-style-type:none;">
+                                   <apex:repeat value="{!s6.APPR_PUB__Headline_Links__r}" var="c">
+                                       <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                   </apex:repeat>
+                               </ul>
+                           </apex:outputPanel>
+                       </div>
+                       <div class="footer-list-block hidden-mobile">
+                           <apex:outputPanel rendered="{!NOT(isNull(s7))}">
+                               <!--<h5 class="footer-category">{!s7.Display_Name__c}</h5>-->
+                               <ul class="link-list" style="list-style-type:none;">
+                                   <apex:repeat value="{!s7.APPR_PUB__Headline_Links__r}" var="c">
+                                       <li><a href="{!c.APPR_PUB__URL__c}" target="{!IF(c.APPR_PUB__Open_In_New_Window__c,"_blank", "_self")}">{!c.APPR_PUB__Display_Name__c}</a></li>
+                                   </apex:repeat>
+                               </ul>
+                           </apex:outputPanel>
+                       </div>
+                   </div>
+                  <!-- <br/>
+                   <div class="copyright">&copy; SunPower Corporation. All rights reserved.</div>-->
+                   </div>
+
+        </div>
+                      
+
+    </body>
+        
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+
+</apex:page>

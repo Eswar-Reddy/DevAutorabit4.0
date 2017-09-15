@@ -1,0 +1,132 @@
+<messaging:emailTemplate subject="{!$Label.RMA_Email_RMA_Confirmation_for_Case} {!relatedTo.Case__r.CaseNumber}" recipientType="Contact" relatedToType="RMA__c" 
+language="{!relatedTo.Attention_To_Language_Code__c}">
+<messaging:htmlEmailBody >
+<html>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="700">
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="700px"><img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+            
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px;" style="text-decoration:none; outline:none;">
+                    <table width="960px;">
+                        <tr>
+                            <td width="700px" style="padding-left:50px;">                 
+                                <p style="margin-top:20px">{!$Label.RMA_Email_Hello} {!relatedTo.Attention_to__c},</p>
+                                <p style="margin-right:20px">
+                                    {!$Label.RMA_Email_An_RMA_has_been_created}
+                                </p>
+                                
+                                <!--Table-->
+                                <table width="98%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#FDB723;border-spacing:0;">
+                                <tr>
+                                    <td style="background: #FDB723;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                                        <span style="font-size:16px;font-weight:bold;">{!$Label.RMA_Email_RMA_Details}</span>
+                                    </td>
+                                </tr>
+                                <tr style="vertical-align:top;">
+                                    <td style="padding-top:20px;padding-right:30px;"> 
+                                        <ul>
+                                         <li>
+                                            <p> 
+                                                {!$Label.RMA_Email_Case_Number}: {!relatedTo.Case__r.CaseNumber}  <br/> 
+                                            </p>
+                                          </li> 
+                                          <li>
+                                            <p> 
+                                                {!$Label.RMA_Email_Case_Subject}: {!relatedTo.Case__r.Subject}  <br/> 
+                                            </p>
+                                          </li> 
+                                          <li>
+                                            <p> 
+                                                {!$Label.RMA_Email_RMA_Number}: {!relatedTo.Name}  <br/> 
+                                            </p>
+                                          </li> 
+                                          <li>       
+                                            <p> 
+                                                {!$Label.RMA_Email_Customer_Name}: {!relatedTo.Case__r.Account.Name} <br/>    
+                                            </p>
+                                          </li>
+                                          <b>
+                                                {!$Label.RMA_Email_IMPORTANT}: {!$Label.RMA_Email_Please_reply_in_case}  <br/><br/>     
+                                          </b>  
+                                          <li>       
+                                            <p> 
+                                                {!$Label.RMA_Email_Ship_to_Address_of_Replacement}: {!relatedTo.Shipping_Address__c},{!relatedTo.Shipping_Address2__c} {!relatedTo.Shipping_City__c} {!relatedTo.Shipping_State_Province__c}, {!relatedTo.Shipping_Zip_Postal_Code__c} {!relatedTo.Shipping_Country__c}  <br/>     
+                                            </p>
+                                          </li>
+                                          <li>       
+                                            <p> 
+                                                {!$Label.RMA_Email_Contact_Info}: {!relatedTo.Attention_To__c} {!relatedTo.Attention_To_Email__c} {!relatedTo.Phone_Number__c} <br/>     
+                                            </p>
+                                          </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                </table>
+                                <p  style="margin-top:20px">
+                                    {!$Label.RMA_Email_We_will_get_back_to_you}
+                                </p>
+                                <p  style="margin-top:20px">
+                                  <apex:outputPanel rendered="{!NOT(AND(OR(language = 'fr', language = 'nl'), relatedTo.Case__r.Region__c = 'SPBE'))}">
+                                    <b> <a href="mailto:{!$Label.RMA_Email_Europe_Email}" target="_blank"> {!$Label.RMA_Email_Europe_Email} </a> </b>  
+                                  </apex:outputPanel>  
+                                  <apex:outputPanel rendered="{!AND(OR(language = 'fr', language = 'nl'), relatedTo.Case__r.Region__c = 'SPBE')}">
+                                    <b> <a href="mailto:{!$Label.RMA_Email_Europe_Email_Belgium}" target="_blank"> {!$Label.RMA_Email_Europe_Email_Belgium} </a> </b>  
+                                  </apex:outputPanel>  
+                                </p>
+                                <p  style="margin-top:20px">
+                                    <br>{!$Label.RMA_Email_Regards}, </br>
+                                    <b>{!$Label.RMA_Email_SunPower_RMA_Team}</b>
+                                </p>
+                                <!-- Breaks are added to ensure Image and Text alignment at the top -->
+                                <br/><br/><br/>                  
+                            </td>
+                        </tr>
+                    </table>    
+                </td>    
+            </tr>
+        </table>
+    </body>
+       <style type="text/css">
+            body {
+                background-color: #FFFFFF;
+                margin-left: 0px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-bottom: 0px;
+                font-family: Calibri, Arial, Futura;
+                color: #555555;
+            }
+            p,
+            li,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5, 
+            table {
+                margin-top: 0pt;
+            }
+            p,table{
+                font-size: 11pt;
+            }
+            a { color:#0070c0; text-decoration:none}
+            a:visited { color:#0070c0; text-decoration:none}
+            a:link { color:#0070c0; text-decoration:none}
+            a:hover { color:#0070c0; text-decoration:none}
+
+            li {
+                line-height:20px;
+                margin-bottom: 10pt;
+                display: list-item;
+                padding-bottom:5px;
+            }
+        </style>
+</html>
+</messaging:htmlEmailBody></messaging:emailTemplate>

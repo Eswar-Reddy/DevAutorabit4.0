@@ -1,0 +1,160 @@
+<apex:page showHeader="false" sidebar="false" standardController="Design__c" extensions="EnergyProductionSummaryController" tabStyle="Design__c">
+
+	<style>
+        .ct{
+            text-align: center;
+        }
+
+        .boldClass {
+            font-weight: bold;
+        }
+
+        input {
+            max-width: 70px;
+        }
+    </style>
+
+	<apex:form >
+        <apex:pageBlock mode="maindetail" rendered="{!record != null}">
+        
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!edit}" id="editButton" value="Edit"/>
+                <apex:commandButton action="{!save}" id="saveButton" value="Save" />
+                <apex:commandButton action="{!cancel}" id="cancelButton" value="Cancel"/>
+            </apex:pageBlockButtons>
+
+    		<apex:pageBlockSection collapsible="false" columns="1" id="inlineDisplay" rendered="{! !isEditMode}">
+                <apex:pageBlockTable columnClasses="ct" value="{!ep}" var="rDes" columns="12" width="100%">
+                    <apex:column headerValue="January" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Jan__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="February" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Feb__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="March" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Mar__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="April" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Apr__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="May" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.May__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="June" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Jun__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="July" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Jul__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="August" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Aug__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="September" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Sep__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="October" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Oct__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="November" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Nov__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                    <apex:column headerValue="December" headerClass="ct" width="8.3%">
+                        <apex:outputField value="{!ep.Dec__c}">
+                            <apex:inlineEditSupport showOnEdit="saveButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="boldClass" />
+                        </apex:outputField>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection collapsible="false" columns="1" id="editDisplay" rendered="{!isEditMode}" >
+                <apex:pageBlockTable columnClasses="ct" value="{!ep}" var="rDes" columns="12" width="90%">
+                    <apex:column headerValue="January" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Jan__c}" />
+                    </apex:column>
+                    <apex:column headerValue="February" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Feb__c}" />
+                    </apex:column>
+                    <apex:column headerValue="March" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Mar__c}" />
+                    </apex:column>
+                    <apex:column headerValue="April" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Apr__c}" />
+                    </apex:column>
+                    <apex:column headerValue="May" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.May__c}" />
+                    </apex:column>
+                    <apex:column headerValue="June" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Jun__c}" />
+                    </apex:column>
+                    <apex:column headerValue="July" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Jul__c}" />
+                    </apex:column>
+                    <apex:column headerValue="August" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Aug__c}" />
+                    </apex:column>
+                    <apex:column headerValue="September" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Sep__c}" />
+                    </apex:column>
+                    <apex:column headerValue="October" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Oct__c}" />
+                    </apex:column>
+                    <apex:column headerValue="November" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Nov__c}" />
+                    </apex:column>
+                    <apex:column headerValue="December" headerClass="ct" width="8%">
+                        <apex:inputField value="{!ep.Dec__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>        
+	   </apex:pageBlock>
+
+       <apex:actionFunction name="windowReload" action="{!cancel}" immediate="true" />
+    </apex:form>
+	
+</apex:page>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case$Subject</field>
+    </columns>
+    <columns>
+        <field>Case.FeedItems$CreatedBy</field>
+    </columns>
+    <columns>
+        <field>Case.FeedItems$Body</field>
+    </columns>
+    <currency>USD</currency>
+    <description>This report shows cases that have &quot;Root Cause&quot; in the chatter post.</description>
+    <filter>
+        <criteriaItems>
+            <column>Case.FeedItems$Body</column>
+            <operator>contains</operator>
+            <value>Root Cause</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case$CaseNumber</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Cases with Root Cause in Chatter Post</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Cases_with_Chatter_Feed__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Case$Case_CreatedDate__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

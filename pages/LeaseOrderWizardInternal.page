@@ -1,0 +1,339 @@
+<apex:page standardcontroller="Purchase_Order__c" extensions="LeaseOrderWizardControllerInternal" sidebar="false">
+    <script src="../../soap/ajax/25.0/connection.js" type="text/javascript"></script>
+    <script src="../../soap/ajax/24.0/apex.js" type="text/javascript"></script>
+    <script>
+    function openCsv(){
+        window.open('/apex/LeaseOrderWizardInternalcsv?id='+"{!propPurchaseOrder.ID}"+'&orderConfirmation='+"{!showOrderConfirmation}",'','width=1,height=1,top=0,left=0,target=_blank');
+    }
+    function openPDF(){
+        var windowUrl = '/apex/LeaseOrderWizardInternalPDF?id='+"{!propPurchaseOrder.ID}"+'&orderConfirmation='+"{!showOrderConfirmation}";
+        window.open(windowUrl,'','width=800,height=800');
+    }
+    function SubmitOrder(wheretodo){
+        if(wheretodo == '4')
+        {
+            var isAllPass = false;
+            var errMsg = ''; 
+            
+            if({!(NOT(creditCheckStatus = 'Approved') && NOT(propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'France'))})
+            {
+                errMsg = errMsg + "- {!propPurchaseOrder.End_Customer_Account__r.Name}" + "'s Credit Check is not passed yet!\n\nIn order to submit the Purchase Order, customer's Credit Check must be passed.\n";
+                isAllPass = true;  
+            } 
+            sforce.connection.sessionId = "{!$API.Session_ID}";    
+            var partnerAcc = sforce.connection.query("SELECT Primary_PSR__r.IsActive, Primary_PSR__r.Id, Primary_PSR__c FROM Account WHERE id= '" +  "{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__c}" + "'").getArray("records"); 
+            var billTo     = sforce.connection.query("SELECT Id, Dealer_Account__c, Site_ID__c FROM Bill_To_Site__c WHERE Dealer_Account__c = '" + "{!propPurchaseOrder.End_Customer_Account__c}" + "'").getArray("records");    
+            var shipTo     = sforce.connection.query("SELECT id, Residential_Customer_Account__c, SiteID__c FROM Ship_to_Site__c WHERE Residential_Customer_Account__c = '" + "{!propPurchaseOrder.End_Customer_Account__c}" + "'").getArray("records");               
+            var billToshipTo     = sforce.connection.query("SELECT id, Ship_to_Site__c, Bill_to_Site__c FROM Purchase_Order__c WHERE Ship_to_Site__c != Null AND Bill_to_Site__c != Null AND Id = '" + "{!propPurchaseOrder.Id}" + "'").getArray("records");
+            
+            var checkActive = 'false';
+            
+            for (var i = 0; i < partnerAcc.length; i++){
+                if(partnerAcc[i].Primary_PSR__r != null && partnerAcc[i].Primary_PSR__r != ''){ 
+                    checkActive = partnerAcc[i].Primary_PSR__r.IsActive;
+                }
+                else
+                    break;
+            }     
+            var billToCount = billTo.length;
+            var shipToCount = shipTo.length;
+            var billToshipToCount = billToshipTo.length;
+            
+            if(checkActive == "false")
+            {
+                errMsg = errMsg + "- Primary PSR is Inactive or Not available. Either activate the Primary PSR or modify the PSR.\n"; 
+                isAllPass = true;      
+            }
+            
+            if(billToCount == 0)
+            {       
+                errMsg = errMsg + "- Customer do not have a Bill To Site defined.\n";
+                isAllPass = true;      
+            }
+            if(shipToCount == 0)
+            {
+                errMsg = errMsg + "- Customer do not have a Ship To Site defined.\n";
+                isAllPass = true;       
+            }
+            if(billToshipToCount == 0)
+            {
+                errMsg = errMsg + "- Customer do not have either Bill To or Ship To record associated to this PO.\n";
+                isAllPass = true;
+            }
+            
+            if(!isAllPass && errMsg == '')    
+                actFunSwitchTab('4');
+            else
+                alert(errMsg);
+        }
+    }
+    function CheckStatus(TabVal, ChangeVal){
+        if(TabVal == 4 && ChangeVal)
+            actFuncSavePOFinancierStatus();
+    }   
+    </script>
+    <apex:form id="frm">
+        <!----- ACTION FUNCTIONS --->
+        <apex:actionFunction name="actFunSwitchTab" action="{!SwitchTab}" reRender="oPnlTabPnl">
+            <apex:param id="prm1" name="prm1" value="" assignTo="{!propGotoTab}" />
+        </apex:actionFunction>
+        <apex:actionFunction name="actFuncSavePOFinancier" action="{!SavePOFinancier}" reRender="oPnlTabPnl"/>
+        <apex:actionFunction name="actFuncSavePOFinancierStatus" action="{!SavePOFinancierDummy}" reRender="oPnl4Change"/>
+        <!--- END ACTION FUNCTION -->
+        <apex:outputPanel id="oPnlTabPnl">
+            <apex:PageMessages />
+            <!-- apex:pageMessage rendered="{!propTabToDisplay=4}" summary="Your Order has been successfully Submitted to SunPower." severity="info" strength="3" / -->
+            <apex:pageMessage rendered="{!propTabToDisplay=4}" summary="{!prop4MsgOnSubmit}" severity="info" strength="3" /> 
+            <apex:pageMessage rendered="{!AND(propTabToDisplay=3,prop3MsgOnSubmit<>'')}" summary="{!prop3MsgOnSubmit}" severity="error" strength="3" /> 
+            <apex:outputPanel id="oPnl4Change">
+                <apex:pageMessage rendered="{!AND(propTabToDisplay=4, propFinancierChanged)}" summary="Financier changed successfully." severity="confirm" strength="3"  /> 
+                <script>setTimeout(function(){CheckStatus("{!propTabToDisplay}", "{!propTabToDisplay}")},6000);</script>
+				<apex:commandLink action="{!comparePOs}" rendered="{!NOT(ISNULL(poDeltaURL))}" value="Compare to Previous PO" target="_blank"/>
+                </apex:outputPanel>
+                <apex:tabPanel id="tabPnl">
+                    <!-- ===== TAB ADD PRODUCTS ====== -->
+                        <apex:tab id="tab1" label="{!$Label.POWizardAddProducts}" disabled="{!propTabToDisplay<>1}" rendered="{!AND(propTabToDisplay<>4,propTabToDisplay<>0)}">
+                            <apex:pageBlock title="{!$Label.POWizardNewOrderWizardTitle}">
+                                <apex:pageBlockButtons rendered="{!showNextbutton}">
+                                    <input type="button" value="{!$Label.POWizardNextStep}" class="btn" onclick="actFunSwitchTab('2');"/>                    
+                                        </apex:pageBlockButtons>
+                                    <apex:pageBlockSection columns="2" >
+                                        <apex:outPutField value="{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__c}" />
+                                            <apex:outPutField value="{!propPurchaseOrder.Lease_Number__c}" />
+                                                <apex:outPutField value="{!propPurchaseOrder.Opportunity__r.OwnerId}" label="Owner" /> 
+                                                    <apex:outPutField value="{!propPurchaseOrder.Sales_Type__c}" />
+                                                        <apex:outPutField value="{!propPurchaseOrder.End_Customer_Account__c}" />
+                                                            <apex:outputField value="{!propPurchaseOrder.Quote__r.NH_Community__c}"/>        <!-- sktemp1 -->
+                                                                <!-- Start Added/Modified by Birlasoft for GPP Australia -->
+                                                                    <apex:inputField value="{!propPurchaseOrder.Financier__c }" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia'}"/>                    
+                                                                    <apex:outputField value="{!propPurchaseOrder.Financier__c }" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'Australia'}"/>                      
+                                                                    <apex:outPutField value="{!propPurchaseOrder.TPO_Account__c}" rendered="{!OR(propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'France',propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'Australia')}"/>
+                                                                    <apex:outPutField label="Installer" value="{!propPurchaseOrder.Installer__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'Australia'}"/>
+                                                                    <!-- End Added/Modified by Birlasoft for GPP Australia -->                    
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Dealer_Fees__c}" />  
+                                                                    <apex:inputField value="{!propPurchaseOrder.Projected_Install__c}" />                                    
+                                                                    </apex:pageBlockSection>
+                                                                    <apex:pageBlockSection columns="1" title="New Order Wizard" >
+                                                                    <apex:pageBlockTable value="{!propOrderedPOLList}" var="pol">
+                                                                    <apex:column width="2%"><apex:image height="18px" value="{!IF(ISNULL(pol.Parent_Item__c), $Resource.ParentImg ,$Resource.ChildImg)}" style="vertical-align:middle;"/> </apex:column> 
+                                                                    <apex:column value="{!pol.Item_Description__c}"></apex:column>
+                                                                    <apex:column value="{!pol.Vendor_Name__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'Australia' || IF(CONTAINS(propPurchaseOrder.Dealer_Account__r.NH_SSE_Type__c,"TPS"),true,false) || propPurchaseOrder.Quote__r.QuoteType__c="Loan"}"></apex:column>  <!--ADDED on 04-Jul-2014:Birlasoft: Display Seller/Installer Name For Australia-->
+                                                                    <apex:column value="{!pol.Partner_Role__c}" rendered="{!IF(CONTAINS(propPurchaseOrder.Dealer_Account__r.NH_SSE_Type__c,"TPS"),true,false) || propPurchaseOrder.Quote__r.QuoteType__c="Loan"}"></apex:column>
+                                                                    <apex:column headerValue="Net Id"><apex:outputField value="{!pol.Item_ID__c}"/></apex:column>                        
+                                                                    <apex:column value="{!pol.Quantity__c}"></apex:column>
+                                                                    <!-- apex:column value="{!pol.Price__c}"></apex:column -->
+                                                                    <apex:column headerValue="Reimbursement Price"><apex:outputField value="{!pol.Unit_Price__c}"/></apex:column>                                                                                                                      
+                                                                    </apex:pageBlockTable>                  
+                                                                    </apex:pageBlockSection>               
+                                                                    </apex:pageBlock>
+                                                                    </apex:tab><!-- tab1 -->
+                                                                    <!-- ==== TAB ADD PRODUCTS END ==== -->
+                                                                    
+                                                                    <!-- ====== TAB SHIPPING ====== -->      
+                                                                    <apex:tab id="tab2" label="{!$Label.POWizardShippingLabel}" disabled="{!propTabToDisplay<>2}" rendered="{!AND(propTabToDisplay<>4,propTabToDisplay<>0)}">
+                                                                    <apex:actionFunction action="{!calcDayDifference}"
+                                                                    name="calcDayDifference" reRender="tab2" status="statusPendingTab3">
+                                                                    </apex:actionFunction>
+                                                                    <apex:pageBlock >
+                                                                    <apex:pageBlockButtons >
+                                                                    <input type="button" value="{!$Label.POWizardPrevStep}" class="btn" onclick="actFunSwitchTab('1');"/>
+                                                                    <input type="button" value="{!$Label.POWizardNextStep}" class="btn" onclick="actFunSwitchTab('3');"/>
+                                                                    </apex:pageBlockButtons>                
+                                                                    <apex:pageBlockSection columns="2" >
+                                                                    <apex:outPutField value="{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__c}" />
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Sales_Type__c}" />
+                                                                    <apex:outPutField value="{!propPurchaseOrder.End_Customer_Account__c}" />                        
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Lease_Number__c}" />
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Opportunity__c}" />
+                                                                    
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Dealer_Fees__c}" />
+                                                                    <!-- Start Added by Rehan for TPO display for France -->
+                                                                    <apex:outPutField value="{!propPurchaseOrder.TPO_Account__c}" rendered="{!OR(propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'France',propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia')}"/>
+                                                                    <!-- End Added by Rehan for TPO display for France -->                    
+                                                                    <apex:inputField value="{!propPurchaseOrder.Notes__c}" />                                     
+                                                                    <apex:outputField value="{!propPurchaseOrder.Ship_To_Contact__c}" />
+                                                                    </apex:pageBlockSection>
+                                                                    <!--                <apex:actionFunction action="{!changeshippadd}" name="changeshippaddr" reRender="oPnlTabPnl" >
+                                                                    <apex:param id="prm2" name="prm2" value="" assignTo="{!selectedadd}" />
+                                                                    </apex:actionFunction> -->
+                                                                    <apex:pageBlockSection title="Shipping Information" columns="2" >
+                                                                    <!--                 <apex:pageBlockSectionItem rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'France'}">
+                                                                    <apex:outputText value="Select Shipping Address" />
+                                                                    <apex:selectList size="1" value="{!ShipAddrSelected}" onchange="changeshippaddr(this.value);"  disabled="{!IF(isFRTPOPO, false, true)}"  >
+                                                                    <apex:selectOptions value="{!ShippAddrSection}" /> 
+                                                                    </apex:selectList>
+                                                                    </apex:pageBlockSectionItem> -->
+                                                                    <!-- Start 04-Jul-2014 : Birlasoft : Modified to display Installer Address as Shipping Address  -->
+                                                                    <apex:pageBlockSectionItem id="pbsi" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia'}">
+                                                                    <apex:outputLabel value="Shipping Address" />
+                                                                    <apex:outputText value="{!propShipingAddress}" />
+                                                                    </apex:pageBlockSectionItem> 
+                                                                    <apex:pageBlockSectionItem id="bpsi" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia'}">
+                                                                    <apex:outputLabel value="Shipping Address" />
+                                                                    <apex:outputText value="{!propInstShipingAddress}"/>                      
+                                                                    </apex:pageBlockSectionItem>  
+                                                                    <!-- End 04-Jul-2014 : Birlasoft : Modified to display Installer Address as Shipping Address  -->
+                                                                    <!--       <apex:pageBlockSectionItem id="pbsi2" >
+                                                                    <apex:outputText value="" />
+                                                                    </apex:pageBlockSectionItem>  
+                                                                    
+                                                                    <apex:pageBlockSectionItem id="pbsi3" rendered="{!IF(isFRTPOPO, false, true)}">
+                                                                    <apex:outputLabel value="Partner Address" />
+                                                                    <apex:outputText value="{!strMailingAdd}" />
+                                                                    </apex:pageBlockSectionItem>  -->   
+                                                                    
+                                                                    <apex:inputField value="{!propPurchaseOrder.Requested_Delivery_Date__c}">
+                                                                    <apex:actionSupport event="onchange" action="{!Foxing}" rerender="oPnlExpDelCharge" />
+                                                                    </apex:inputField>
+                                                                    <apex:inputField value="{!propPurchaseOrder.Accept_Partial_Shipment__c}" />
+                                                                    
+                                                                    <apex:inputField value="{!propPurchaseOrder.Shipping_Method__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'France'}"/>
+                                                                    <apex:inputField value="{!propPurchaseOrder.Shipping_Method_France__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry = 'France'}"/>
+                                                                    
+                                                                    <apex:outputPanel id="oPnlExpDelCharge" styleClass="labelCol" style="padding-left:6%">
+                                                                    <apex:outputLabel value="Accept Expedited Delivery Charges" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <apex:outputField id="opFldEDC" value="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}" rendered="{!OR(ISNULL(propPurchaseOrder.Requested_Delivery_Date__c),propPurchaseOrder.Requested_Delivery_Date__c>(TODAY()+3))}"  />
+                                                                    <apex:inputField id="inFldEDC" value="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}"  rendered="{!AND(NOT(ISNULL(propPurchaseOrder.Requested_Delivery_Date__c)),propPurchaseOrder.Requested_Delivery_Date__c<=(TODAY()+3))}"/> 
+                                                                    </apex:outputPanel>
+                                                                    <apex:inputField value="{!propPurchaseOrder.Special_Instructions__c}" />
+                                                                    </apex:pageBlockSection>                
+                                                                    </apex:pageBlock>       
+                                                                    </apex:tab><!-- tab2 -->
+                                                                    <!-- ====== TAB SHIPPING END ====== -->
+                                                                    
+                                                                    <!-- ====== TAB SUBMIT ORDER ====== -->              
+                                                                    <apex:tab id="tab3" label="Submit Order" disabled="{!propTabToDisplay<>3}" rendered="{!AND(propTabToDisplay<>4,propTabToDisplay<>0)}">
+                                                                    <apex:pageBlock >
+                                                                    <apex:pageBlockButtons >
+                                                                    <input type="button" value="{!$Label.POWizardPrevStep}" class="btn" onclick="actFunSwitchTab('2');" style="display:{!IF(OR(propPurchaseOrder.Order_Status__c='Error', propPurchaseOrder.Order_Status__c='In Progress'),'none','inline')};"/>
+                                                                    <input type="button" value="{!$Label.POWizardSubmitButton}" class="btn" onclick="SubmitOrder('4');"/>                                      
+                                                                    </apex:pageBlockButtons>              
+                                                                    <apex:pageBlockSection columns="1">
+                                                                    <apex:pageBlockSectionItem dataStyle="text-align:right;align:right;">  
+                                                                    <a href="javascript:openPDF();" style="text-decoration:none;">{!$Label.POWizardPrintViewLabel}&nbsp;<img height="17" width="17" title="{!$Label.POWizardTextPdfDoc}" class="pdfIcon" alt="{!$Label.POWizardTextPdfDoc}" src="/img/pdf17.gif"/> &nbsp;</a>
+                                                                    <a href="javascript:openCsv();" style="text-decoration:none;">{!$Label.POWizardCsvLabel}&nbsp;<img height="17" width="17" title="{!$Label.POWizardCsvDoc}" class="pdfIcon" alt="{!$Label.POWizardCsvDoc}" src="{!$Resource.csvfile}"/> &nbsp;</a>
+                                                                    </apex:pageBlockSectionItem>
+                                                                    </apex:pageBlockSection>
+                                                                    
+                                                                    <apex:pageBlockSection columns="2" title="Order Info">
+                                                                    <apex:outputField value="{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.End_Customer_Account__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Lease_Number__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Sales_Type__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Opportunity__c}" />
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Dealer_Fees__c}" />
+                                                                    <!-- Start 04-Jul-2014 Birlasoft Updated to display TPO Account & Installer -->
+                                                                    <apex:outPutField value="{!propPurchaseOrder.TPO_Account__c}" rendered="{!OR(propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'France',propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia')}"/>
+                                                                    <apex:outPutField label="Installer" value="{!propPurchaseOrder.Installer__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia'}"/>
+                                                                    <!-- End 04-Jul-2014 Birlasoft Updated to display TPO Account & Installer -->                                        
+                                                                    <apex:outputField value="{!propPurchaseOrder.Notes__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Ship_To_Contact__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Financier__c }" />                                                                                    
+                                                                    </apex:pageBlockSection>
+                                                                    <apex:pageBlockSection columns="2" title="Shipping Information">
+                                                                    <apex:pageBlockSectionItem rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia'}">
+                                                                    <apex:outputLabel value="Shipping Address" />
+                                                                    <apex:outputText value="{!propShipingAddress}"/>
+                                                                    </apex:pageBlockSectionItem>
+                                                                    <apex:pageBlockSectionItem rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia'}">
+                                                                    <apex:outputLabel value="Shipping Address" />
+                                                                    <apex:outputText value="{!propInstShipingAddress}"/>                      
+                                                                    </apex:pageBlockSectionItem>  
+                                                                    <apex:outputField value="{!propPurchaseOrder.Special_Instructions__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Requested_Delivery_Date__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Accept_Partial_Shipment__c}" />  
+                                                                    <apex:outputField value="{!propPurchaseOrder.Shipping_Method__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}" rendered="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}"/>                                                           
+                                                                    </apex:pageBlockSection>
+                                                                    <apex:pageBlockSection columns="1" title="Billing Info">
+                                                                    <apex:pageBlockSectionItem >
+                                                                    <apex:outputLabel value="Billing Address" />
+                                                                    <apex:outputText value="{!propBillingAddress}" />
+                                                                    </apex:pageBlockSectionItem>                                                                               
+                                                                    </apex:pageBlockSection> 
+                                                                    <apex:pageBlockSection columns="1" title="Line Items" >
+                                                                    <apex:pageBlockTable value="{!propOrderedPOLList}" var="pol">
+                                                                    <apex:column width="2%"><apex:image height="18px" value="{!IF(ISNULL(pol.Parent_Item__c), $Resource.ParentImg ,$Resource.ChildImg)}" style="vertical-align:middle;"/> </apex:column> 
+                                                                    <apex:column value="{!pol.Item_Description__c}"></apex:column>
+                                                                    <apex:column value="{!pol.Vendor_Name__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia' || IF(CONTAINS(propPurchaseOrder.Dealer_Account__r.NH_SSE_Type__c,"TPS"),true,false) || propPurchaseOrder.Quote__r.QuoteType__c="Loan"}"></apex:column>  <!--ADDED on 22-May-2014:Birlasoft: Display Seller/Installer Name -->
+                                                                    <apex:column value="{!pol.Partner_Role__c}" rendered="{!IF(CONTAINS(propPurchaseOrder.Dealer_Account__r.NH_SSE_Type__c,"TPS"),true,false) || propPurchaseOrder.Quote__r.QuoteType__c="Loan"}"></apex:column>
+                                                                    <apex:column headerValue="Net Id"><apex:outputField value="{!pol.Item_ID__c}"/></apex:column>                        
+                                                                    <apex:column value="{!pol.Quantity__c}"></apex:column>
+                                                                    <!-- apex:column value="{!pol.Price__c}"></apex:column -->
+                                                                    <apex:column headerValue="Reimbursement Price"><apex:outputField value="{!pol.Unit_Price__c}"/></apex:column>                                                                                                                      
+                                                                    </apex:pageBlockTable>                  
+                                                                    </apex:pageBlockSection>
+                                                                    </apex:pageBlock>          
+                                                                    </apex:tab><!-- tab3 -->
+                                                                    <!-- ====== TAB SUBMIT ORDER END ====== --> 
+                                                                    
+                                                                    <!-- ====== TAB PO DETAILS ====== -->             
+                                                                    <apex:tab id="tab4" label="Submitted Order Details" disabled="{!propTabToDisplay<>4}" rendered="{!propTabToDisplay=4}" >
+                                                                    <apex:pageBlock >
+                                                                    <apex:pageBlockButtons rendered="{!AND(propCurrentUser.Allow_Financier_Update__c,propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia')}">
+                                                                    <input type="button" onclick="actFuncSavePOFinancier();" value="Save Financier Change" style="display:{!IF(propCurrentUser.Allow_Financier_Update__c,'block','none')};" class="btn"/>
+                                                                    </apex:pageBlockButtons>            
+                                                                    <apex:pageBlockSection columns="1">
+                                                                    <apex:pageBlockSectionItem dataStyle="text-align:right;align:right;">  
+                                                                    <a href="javascript:openPDF();" style="text-decoration:none;">{!$Label.POWizardPrintViewLabel}&nbsp;<img height="17" width="17" title="{!$Label.POWizardTextPdfDoc}" class="pdfIcon" alt="{!$Label.POWizardTextPdfDoc}" src="/img/pdf17.gif"/> &nbsp;</a>
+                                                                    <a href="javascript:openCsv();" style="text-decoration:none;">{!$Label.POWizardCsvLabel}&nbsp;<img height="17" width="17" title="{!$Label.POWizardCsvDoc}" class="pdfIcon" alt="{!$Label.POWizardCsvDoc}" src="{!$Resource.csvfile}"/> &nbsp;</a>
+                                                                    </apex:pageBlockSectionItem>
+                                                                    </apex:pageBlockSection>
+                                                                    
+                                                                    <apex:pageBlockSection columns="2" title="Order Info">
+                                                                    <apex:outputField value="{!propPurchaseOrder.End_Customer_Account__r.Partner_Account__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.End_Customer_Account__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Lease_Number__c}" />
+                                                                    <!-- Display TPO Account For France,Australia -->
+                                                                    <apex:outPutField value="{!propPurchaseOrder.TPO_Account__c}" rendered="{!OR(propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'France',propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia')}"/>
+                                                                    <!-- Display TPO Account For France,Australia -->
+                                                                    <apex:outputField value="{!propPurchaseOrder.Sales_Type__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Opportunity__c}" />
+                                                                    <apex:outPutField value="{!propPurchaseOrder.Dealer_Fees__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Ship_To_Contact__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Notes__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Financier__c }" rendered="{!OR(NOT(propCurrentUser.Allow_Financier_Update__c),propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia')}"/>
+                                                                    <apex:inputField value="{!propPurchaseOrder.Financier__c }" rendered="{!AND(propCurrentUser.Allow_Financier_Update__c,propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia')}" style="background-color:#FDFEC0"/>                                                                                    
+                                                                    </apex:pageBlockSection>
+                                                                    <apex:pageBlockSection columns="2" title="Shipping Information">                   
+                                                                    <apex:pageBlockSectionItem rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry != 'Australia'}">
+                                                                    <apex:outputLabel value="Shipping Address" />
+                                                                    <apex:outputText value="{!propShipingAddress}"/>
+                                                                    </apex:pageBlockSectionItem>
+                                                                    <apex:pageBlockSectionItem rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia'}">
+                                                                    <apex:outputLabel value="Shipping Address" />
+                                                                    <apex:outputText value="{!propInstShipingAddress}"/>                      
+                                                                    </apex:pageBlockSectionItem>
+                                                                    <apex:outputField value="{!propPurchaseOrder.Special_Instructions__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Requested_Delivery_Date__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Accept_Partial_Shipment__c}" />  
+                                                                    <apex:outputField value="{!propPurchaseOrder.Shipping_Method__c}" />
+                                                                    <apex:outputField value="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}" rendered="{!propPurchaseOrder.Accept_Expedited_Delivery_Charges__c}"/>                                                           
+                                                                    </apex:pageBlockSection>
+                                                                    <apex:pageBlockSection columns="1" title="Billing Info">
+                                                                    <apex:pageBlockSectionItem >
+                                                                    <apex:outputLabel value="Billing Address" />
+                                                                    <apex:outputText value="{!propBillingAddress}" />
+                                                                    </apex:pageBlockSectionItem>                                                                               
+                                                                    </apex:pageBlockSection> 
+                                                                    <apex:pageBlockSection columns="1" title="Line Items" >
+                                                                    <apex:pageBlockTable value="{!propOrderedPOLList}" var="pol">
+                                                                    <apex:column width="2%"><apex:image height="18px" value="{!IF(ISNULL(pol.Parent_Item__c), $Resource.ParentImg ,$Resource.ChildImg)}" style="vertical-align:middle;"/> </apex:column> 
+                                                                    <apex:column value="{!pol.Item_Description__c}"></apex:column>
+                                                                    <apex:column value="{!pol.Vendor_Name__c}" rendered="{!propPurchaseOrder.Opportunity__r.Account.BillingCountry == 'Australia' || IF(CONTAINS(propPurchaseOrder.Dealer_Account__r.NH_SSE_Type__c,"TPS"),true,false) || propPurchaseOrder.Quote__r.QuoteType__c="Loan"}"></apex:column>  <!--ADDED on 22-May-2014:Birlasoft: Display Seller/Installer Name -->
+                                                                    <apex:column value="{!pol.Partner_Role__c}" rendered="{!IF(CONTAINS(propPurchaseOrder.Dealer_Account__r.NH_SSE_Type__c,"TPS"),true,false) || propPurchaseOrder.Quote__r.QuoteType__c="Loan"}"></apex:column>
+                                                                    <apex:column headerValue="Net Id"><apex:outputField value="{!pol.Item_ID__c}"/></apex:column>                        
+                                                                    <apex:column value="{!pol.Quantity__c}"></apex:column>
+                                                                    <!-- apex:column value="{!pol.Price__c}"></apex:column -->
+                                                                    <apex:column headerValue="Reimbursement Price"><apex:outputField value="{!pol.Unit_Price__c}"/></apex:column>                                                                                                                     
+                                                                    </apex:pageBlockTable>                  
+                                                                    </apex:pageBlockSection>
+                                                                    </apex:pageBlock>                  
+                                                                    </apex:tab><!-- tab4 -->
+                                                                    <!-- ====== TAB PO DETAILS END ====== -->
+                                                                    <!--===== TAB PO ALL DETAILS END =====-->                           
+                                                                    </apex:tabPanel><!-- tabPnl -->
+                                                                    </apex:outputPanel><!-- oPnlTabPnl -->
+                                                                    </apex:form>
+                                                                    
+                                                                    </apex:page>

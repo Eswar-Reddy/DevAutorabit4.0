@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <chart>
+        <backgroundColor1>#FFFFFF</backgroundColor1>
+        <backgroundColor2>#FFFFFF</backgroundColor2>
+        <backgroundFadeDir>Diagonal</backgroundFadeDir>
+        <chartSummaries>
+            <axisBinding>y</axisBinding>
+            <column>RowCount</column>
+        </chartSummaries>
+        <chartType>HorizontalBar</chartType>
+        <enableHoverLabels>true</enableHoverLabels>
+        <expandOthers>true</expandOthers>
+        <groupingColumn>NH_Community__c$Region__c</groupingColumn>
+        <location>CHART_TOP</location>
+        <showAxisLabels>true</showAxisLabels>
+        <showPercentage>false</showPercentage>
+        <showTotal>false</showTotal>
+        <showValues>false</showValues>
+        <size>Medium</size>
+        <summaryAxisRange>Auto</summaryAxisRange>
+        <textColor>#000000</textColor>
+        <textSize>12</textSize>
+        <title>NH Communities to Assign</title>
+        <titleColor>#000000</titleColor>
+        <titleSize>18</titleSize>
+    </chart>
+    <columns>
+        <field>NH_Community__c$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c$Builder_Preferred_Roofer__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c$Community_Status__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c$Expected_Community_Construction_Start__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Alliance_Partners__r$Name</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>NH_Community__c$Community_Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Construction Complete,Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Alliance_Partners__r$Role__c</column>
+            <operator>equals</operator>
+            <value>Installation Partner</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>NH_Community__c$Region__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Communities Pending IP Assignment</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_with_Alliance_Partners__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>NH_Community__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

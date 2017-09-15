@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Business_Unit__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Quotes$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Quotes$Proposal_Due__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>for JD</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Americas,NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Probability</column>
+            <operator>greaterOrEqual</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Quotes$Proposal_Due__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Name</column>
+            <operator>notContain</operator>
+            <value>ford</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Proposal Due Dates</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Quotes__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Opportunity.Quotes$Proposal_Due__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-12-30</startDate>
+    </timeFrameFilter>
+</Report>

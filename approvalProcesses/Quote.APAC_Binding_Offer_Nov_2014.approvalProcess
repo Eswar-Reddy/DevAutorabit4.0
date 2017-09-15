@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>arun.kumar@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Off Grid Step 1</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.RecordType</field>
+                <operation>equals</operation>
+                <value>Components</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Off Grid Step 1</label>
+        <name>India_Off_Grid_Step_1</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>wilf.johnston@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>AUS Off Grid Step 1/AUS-NZ On Grid Step 1</description>
+        <entryCriteria>
+            <booleanFilter>(1 AND 2) or (2 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>New Zealand,Australia</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>AUS Off Grid Step 1/AUS-NZ On Grid Step 1</label>
+        <name>AUS_Off_Grid_Step_1_AUS_NZ_On_Grid_Step_1</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>takashi.sugihara@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Initial Binding Offer (Japan)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Japan</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Initial Binding Offer (Japan)</label>
+        <name>APAC_Initial_Binding_Offer_Japan</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>thomas.thillou@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Off Grid APAC</description>
+        <entryCriteria>
+            <booleanFilter>(1 AND 2 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.RecordType</field>
+                <operation>equals</operation>
+                <value>Systems</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>notEqual</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Off Grid APAC</label>
+        <name>Off_Grid_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>david.monceau@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>All Off Grid Step 2</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>notEqual</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>All Off Grid Step 2</label>
+        <name>All_Off_Grid_Step_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>arun.kumar@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>India On Grid Approval 1</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>India</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>notEqual</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>India On Grid Approval 1</label>
+        <name>India_On_Grid_Approval_1</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>nmorris@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>zach.struyk@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Initial Binding Offer Approval - On Grid (Not India, NZ, AUS, Japan (RLC)</description>
+        <entryCriteria>
+            <booleanFilter>1 AND 2 and 3</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>,Australia,New Zealand,India</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>notEqual</operation>
+                <value>RLC,Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Initial Binding Offer Approval - On Grid (Not India, NZ, AUS, Japan (RLC)</label>
+        <name>APAC_Initial_Binding_Offer_Approval_On_Grid_Not_India_NZ_AUS_Japan_RLC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>shingo.tajiri@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Binding Offer VP RLC (Japan)</description>
+        <entryCriteria>
+            <booleanFilter>((1 or 2) and 3 and 4 and 5) or (6 and 7 and 3 and 4 and 5) or (4 and 8)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Japan</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Binding Offer VP RLC (Japan)</label>
+        <name>Binding_Offer_VP_RLC_Japan</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Region VP U&amp;C</description>
+        <entryCriteria>
+            <booleanFilter>((1 or 2) and 3 and 4) or ((1 or 2) and 5 and 6) or (7 and 8 and 3 and 4) or (7 and 8 and 5 and 6)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>Japan</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>notEqual</operation>
+                <value>RLC,Commercial Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Region VP U&amp;C</label>
+        <name>APAC_Region_VP_U_C</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>kevin.whelan@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Region VP RLC</description>
+        <entryCriteria>
+            <booleanFilter>((1 or 2) and 3 and 4) or (3 and 4 and 5 and 6)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Australia</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Region VP RLC</label>
+        <name>APAC_Region_VP_RLC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>FP&amp;A Approval (Commercial Intl)</description>
+        <entryCriteria>
+            <booleanFilter>(1 and 5) or (2 and 5) or (3 and 4 and 5)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>FP&amp;A Approval (Commercial Intl)</label>
+        <name>FP_A_Approval_Commercial_Intl</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>carlo.scapinelli@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>FP&amp;A Approval (UPPi)</description>
+        <entryCriteria>
+            <booleanFilter>(1 and 5) or (2 and 5) or (3 and 4 and 5)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>FP&amp;A Approval (UPPi)</label>
+        <name>FP_A_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>jorg.heinemann@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC Region VP</description>
+        <entryCriteria>
+            <booleanFilter>(1 and 5) or (2 and 5) or (3 and 4 and 5)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>20</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.45</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>notEqual</operation>
+                <value>RLC,Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC Region VP</label>
+        <name>APAC_Region_VP</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC - Binding Offer  President</description>
+        <entryCriteria>
+            <booleanFilter>(1 and 5) or (2 and 5) or (3 and 4 and 5)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 25,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>12</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.25</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC,Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>APAC - Binding Offer  President</label>
+        <name>APAC_Binding_Offer_President</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>tom.werner@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>APAC-Binding Offer- Deal Review Committee Approval</description>
+        <entryCriteria>
+            <booleanFilter>1 or (2 and 3) or (2 and 4 and 5)</booleanFilter>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.DirectMargin_per__c</field>
+                <operation>lessOrEqual</operation>
+                <value>12</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.NPV_W__c</field>
+                <operation>lessOrEqual</operation>
+                <value>USD 0.25</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Net_Present_Value__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>APAC-Binding Offer- DRC Approval</label>
+        <name>APAC_Binding_Offer_DRC_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterOrEqual</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 2</label>
+        <name>Place_Holder_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 3</label>
+        <name>Place_Holder_3</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 4</label>
+        <name>Place_Holder_4</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 5</label>
+        <name>Place_Holder_5</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 6</label>
+        <name>Place_Holder_6</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Total_Price__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 7</label>
+        <name>Place_Holder_7</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Total_Price__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Place Holder 8</label>
+        <name>Place_Holder_8</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>barry.serafino@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Quote.TotalPrice</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Place Holder 9</label>
+        <name>Place_Holder_9</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>APAC - Binding Offer Nov 2014</description>
+    <emailTemplate>Quote/U_C_Deal_Sheet</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 AND 2 and 3 and 4</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Quote_Steps__c</field>
+            <operation>equals</operation>
+            <value>Binding Offer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Region1__c</field>
+            <operation>equals</operation>
+            <value>APAC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>PV Only,BOS+PV,BOS Only,EPC,Cells</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Territory_Text__c</field>
+            <operation>notContain</operation>
+            <value>Business Development</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Email_Alert</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Binding_Offer_Final_Approval_Field_Udpat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Binding_Offer_Final_Rejection_Email_Notification</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Binding_Offer_Submission_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>APAC - Binding Offer Nov 2014</label>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

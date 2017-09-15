@@ -1,0 +1,31 @@
+<apex:page id="My_Subscriptions" standardController="User" extensions="My_SubscriptionsController" sidebar="false" showHeader="true" tabStyle="user">
+    <apex:SectionHeader title="Subscription" subtitle="Change My Subscription" />
+    <apex:form id="form1"> 
+    <script>
+         var logMsg=''; 
+         function closeWindow() {
+              if(logMsg != null && logMsg == "SUCCESS") {
+                  window.close();
+                }  
+          } 
+    </script>
+        <apex:pageBlock id="block1">
+        <apex:PageBlockButtons >
+            <apex:CommandButton value="Save" action="{!save}" />
+            <apex:CommandButton value="Cancel" onclick="self.close();" />
+        </apex:PageBlockButtons>
+        
+         <apex:outputPanel id="errorPanel" StyleClass="pbError">
+                {!errorMessage}
+                 <script>
+                  logMsg="{!errorMessage}";
+                  closeWindow();
+                </script>
+          </apex:outputPanel> 
+           <apex:pageBlockSection columns="2">
+                <apex:inputField value="{!currentUser.Contact.Subscription__c}"  id="subscription"/>
+           </apex:pageBlockSection>     
+        </apex:pageBlock>
+        
+    </apex:form>
+</apex:page>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Activity.Hours_Spent__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>Task.Engineering_EU_Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED_ALIAS</column>
+            <operator>equals</operator>
+            <value>lmath,bjeul,AGueh,FEsco,aalli</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Opportunity__c</column>
+            <operator>notEqual</operator>
+            <value>429322_Dummy Company- General Tasks</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Design__c.Technology_System__c</column>
+            <operator>equals</operator>
+            <value>G-Oasis C1,G-Oasis C7,G-Other,G-T0,P-Other,P-SPWR,P-T0,R-Other,R-T5</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Off_Grid__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Design__c.Technology_System__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ASSIGNED</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Activity.Task_Type__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>D&amp;E EU/INTL-OFF GRID-Task Export II</name>
+    <params>
+        <name>closed</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>t</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>ActivityCustomEntity$Design__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_LASTMONTH</interval>
+    </timeFrameFilter>
+</Report>

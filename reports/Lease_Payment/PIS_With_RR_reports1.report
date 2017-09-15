@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>number</bucketType>
+        <developerName>BucketField_98164100</developerName>
+        <masterLabel>NTP - PTO Aging</masterLabel>
+        <nullTreatment>z</nullTreatment>
+        <sourceColumnName>Account.Lease_Payments__r$Aging_Days_CS_PISE__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <to>30</to>
+            </sourceValues>
+            <value>30 days and below</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>30</from>
+                <to>40</to>
+            </sourceValues>
+            <value>31-40 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>40</from>
+                <to>59</to>
+            </sourceValues>
+            <value>41-59 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>59</from>
+                <to>90</to>
+            </sourceValues>
+            <value>60-90 days</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>90</from>
+            </sourceValues>
+            <value>Greater than 90 days</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>Account.Lease_Payments__r$Dealer_Name__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Install_Inv_Amount__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Date_Delivered__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Partner_Account__c</column>
+            <operator>contains</operator>
+            <value>Nuvision</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>1601 -Approved Documents</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

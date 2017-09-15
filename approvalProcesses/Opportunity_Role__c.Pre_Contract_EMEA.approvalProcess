@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Account__c</field>
+        <field>DRC_Amount__c</field>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Project_Manager__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Non-Front) PM - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Non-Front-End Loading,&quot;Pre-Contract Spending (For APAC/EMEA, Not Stage Related)&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Non-Front) PM - EMEA/APAC</label>
+        <name>Non_Front_PM_EMEA_APAC</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Non-Front) Sales Ops - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Non-Front-End Loading,&quot;Pre-Contract Spending (For APAC/EMEA, Not Stage Related)&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Non-Front) Sales Ops - EMEA/APAC</label>
+        <name>Non_Front_Sales_Ops_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Vertical_Director__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Non-Front) Vertical Director - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Non-Front-End Loading,&quot;Pre-Contract Spending (For APAC/EMEA, Not Stage Related)&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Non-Front) Ver Dir - EMEA/APAC</label>
+        <name>Non_Front_Ver_Dir_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Early Stage) Sales Ops - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Early Stage Sales Support</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Early Stage) Sales Ops - EMEA/APAC</label>
+        <name>Early_Stage_Sales_Ops_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Vertical_Director__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Early Stage) Vertical Director - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Early Stage Sales Support</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Early Stage) Ver Dir - EMEA/APAC</label>
+        <name>Early_Stage_Ver_Dir_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Project_Manager__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Front) PM - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Front-End Loading</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Front) PM - EMEA/APAC</label>
+        <name>Front_PM_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Front) Sales Ops - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Front-End Loading</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Front) Sales Ops - EMEA/APAC</label>
+        <name>Front_Sales_Ops_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Vertical_Director__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract (Front) Vertical Director - EMEA/APAC</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+                <operation>equals</operation>
+                <value>Front-End Loading</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>(Front) Ver Dir - EMEA/APAC</label>
+        <name>Front_Ver_Dir_EMEA_APAC</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>shingo.tajiri@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Regions Sales (Japan)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Japan</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>RLC,Commercial Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Regions Sales (Japan)</label>
+        <name>Regions_Sales_Japan</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Regions Sales MEA APAC (not Japan or Europe)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC,MEA</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>China</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Regions Sales (MEA APAC not Japan or Europe)</label>
+        <name>Regions_Sales_MEA_APAC_not_Japan_or_Europe</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>francois.leny@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Regions Sales Approval - (Europe)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Regions Sales Approval - (Europe))</label>
+        <name>Regions_Sales_Approval_Europe</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>carlo.scapinelli@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>FP&amp;A Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>FP&amp;A Approval</label>
+        <name>Finance_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Head of Regions Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Business_Unit__c</field>
+                <operation>equals</operation>
+                <value>UPP Intl</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Head of Regions Approval</label>
+        <name>Head_of_Regions_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>chuck.boynton@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>tom.werner@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>DRC Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 3,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>DRC Final Approval Step</label>
+        <name>DRC_Final_Approval_Step</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract 4</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Pre-Contract 4</label>
+        <name>Pre_Contract_4</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract PlaceHolder 5</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Pre-Contract 5</label>
+        <name>Pre_Contract_5</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract PlaceHolder 6</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Pre-Contract 6</label>
+        <name>Pre_Contract_6</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>frederic.biollaz@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Pre-Contract PlaceHolder 7</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity_Role__c.Total_Request_Amount__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Pre-Contract 7</label>
+        <name>Pre_Contract_7</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Pre-Contract Spending EMEA/APAC</description>
+    <emailTemplate>Opportunity_Role/Pre_Contract_Spending_Approval_Request</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>1 and 2 and 3 and 4 and 5</booleanFilter>
+        <criteriaItems>
+            <field>Opportunity_Role__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Deal Approvals</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Type_of_Request__c</field>
+            <operation>equals</operation>
+            <value>Pre-Contract Spending</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Pre_Contract_Spend_Type__c</field>
+            <operation>equals</operation>
+            <value>Front-End Loading,Non-Front-End Loading,Early Stage Sales Support,&quot;Pre-Contract Spending (For APAC/EMEA, Not Stage Related)&quot;</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity_Role__c.Contract_Status__c</field>
+            <operation>notEqual</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Region1__c</field>
+            <operation>equals</operation>
+            <value>APAC,Europe,MEA</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Contract_Status_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Pre_Contract_Spending_Approval_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Contract_Rejection_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Pre_Contract_Spending_Rejected_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Contract_Approval_Submission_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Pre_Contract_Spending_Submitted_EMEA_APAC</name>
+            <type>Alert</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Pre-Contract Spending EMEA/APAC</label>
+    <recallActions>
+        <action>
+            <name>Pre_Contract_Spending_Approval_Recalled</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Recall_Contract_Status_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

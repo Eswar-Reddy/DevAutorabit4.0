@@ -1,0 +1,38 @@
+<messaging:emailTemplate subject="Amendment Requested For Lease {!relatedTo.Lease_Number__c}" recipientType="User" relatedToType="Quote_Summary__c">
+    <messaging:htmlEmailBody >
+<br/>     
+
+    <table width="100%" border="0" >        
+        <tr>
+            <td><apex:image url="https://c.cs12.content.force.com/servlet/servlet.ImageServer?id=015V0000000A25T&oid=00DV000000521VK&lastMod=1346767386000" /></td>
+        </tr>
+        <tr>    
+            <td><br/>
+                A <b>{!relatedTo.Ammendment__c}</b> amendment has been requested for Lease <b>{!relatedTo.Lease_to_be_Amended__c}</b>.  <br/>
+                The quote number with the new <b>{!relatedTo.Ammendment__c}</b> data is &nbsp;
+                <b><a href="https://cs12.salesforce.com/{!relatedTo.Locked_Scenario__r.Id}">{!relatedTo.Locked_Scenario__r.Name}</a></b>
+        <br/><br/>
+                Partner : <b>{!relatedTo.Dealer_Account__c}</b><br/>
+                Salesperson : <b>{!relatedTo.Dealer__c }</b><br/>                
+                Homeowner : <b>{!relatedTo.Account_Name__r.Name}</b><br/><br/>
+                
+                Amendment To : <b>{!relatedTo.Lease_to_be_Amended__c}</b> <br/>
+                New <b>{!relatedTo.Ammendment__c}</b> Data Quote Number : 
+                <b><a href="https://cs12.salesforce.com/{!relatedTo.Locked_Scenario__r.Id}">{!relatedTo.Locked_Scenario__r.Name}</a></b>
+                <br/> 
+                Comments :<b> {!relatedTo.Comments__c}</b>
+                
+             <!--   Lease Number : <b>{!relatedTo.Lease_Number__c}</b><br/>
+                PSR : <b>{!relatedTo.Primary_PSR__r.Name}</b>     -->
+                
+                <br/><br/><br/><br/>
+            </td>
+        </tr>
+        <tr>
+            <td><apex:image url="https://c.cs12.content.force.com/servlet/servlet.ImageServer?id=015V0000000A25Y&oid=00DV000000521VK&lastMod=1346767217000" /></td>
+        </tr>                
+    </table>
+        
+       
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

@@ -1,0 +1,19 @@
+<apex:page showHeader="false" sidebar="false" standardController="Credit_Application__c">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <div style="max-width: 1200px; margin: auto;">
+        <apex:detail subject="{!Credit_Application__c.Id}" inlineEdit="true" relatedListHover="false" showChatter="true" />
+    </div>
+    <c:AttachmentUploadComponent parentId="{!Credit_Application__c.Id}"/>
+    <c:NotesTable parentAtt="{!Credit_Application__c.Id}" />
+    <script>
+    window.onload = function() {
+        UserRedirect();
+    }
+    </script>
+    <c:SPCommunityAppResources_JS />
+</apex:page>

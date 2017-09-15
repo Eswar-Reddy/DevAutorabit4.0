@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>15-(echosign_dev1__SIGN_Agreement__c.echosign_dev1__DaysUnsigned__c:SUM)</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA1</developerName>
+        <downGroupingContext>FK_NAME</downGroupingContext>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Time to Expiration</masterLabel>
+        <scale>0</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>15-(echosign_dev1__SIGN_Agreement__c.echosign_dev1__DaysUnsigned__c:AVG)</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA2</developerName>
+        <downGroupingContext>FK_OPP_OWNER_NAME</downGroupingContext>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Avg Time to Expiration</masterLabel>
+        <scale>0</scale>
+    </aggregates>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSentDate__c</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSignedDate__c</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>FK_$Account.Partner_Account__c</column>
+            <operator>equals</operator>
+            <value>SunPower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</column>
+            <operator>equals</operator>
+            <value>Out for Signature</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSentDate__c</column>
+            <operator>lessThan</operator>
+            <value>N_DAYS_AGO:14</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Message__c</column>
+            <operator>notContain</operator>
+            <value>duplicate</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_OPP_OWNER_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH EC Leases - Expired Agreements</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$echosign_dev1__SIGN_Agreement__c@echosign_dev1__SIGN_Agreement__c.echosign_dev1__Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSentDate__c</dateColumn>
+        <interval>INTERVAL_LAST30</interval>
+    </timeFrameFilter>
+</Report>

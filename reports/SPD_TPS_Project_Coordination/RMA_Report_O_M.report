@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case.RMAs__r$Name</field>
+    </columns>
+    <columns>
+        <field>Case$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Case.RMAs__r$Shipping_Carrier__c</field>
+    </columns>
+    <columns>
+        <field>Case.RMAs__r$Replacement_Tracking_No__c</field>
+    </columns>
+    <columns>
+        <field>Case.RMAs__r$Delivery_Date_of_Replacement_unit_s__c</field>
+    </columns>
+    <columns>
+        <field>Case.RMAs__r$RMA_Status__c</field>
+    </columns>
+    <columns>
+        <field>Case$Status</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Case$Partner_Name__c</column>
+            <operator>equals</operator>
+            <value>SoCal Field Repair Crew,NorCal Field Repair Crew,NorCal Field Technician,SoCal Field Technician,East Coast Field Technician,SunPower Direct (SPD)</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Case$Status</column>
+            <operator>equals</operator>
+            <value>Assigned,Escalated,In Process,In Progress,New,Open to Work,Pending,Pending Other SPWR Team Action,Pending Partner Action,Pending Technical Support Action</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Case$Partner_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>RMA Report O&amp;M</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Cases_with_RMAs_with_RMA_Line_Items__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Case$Case_CreatedDate__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,162 @@
+<apex:component >
+    <apex:attribute name="jsondata"         description="This is the chart data" type="string" required="true" />
+    <apex:attribute name="title"            description="This is the chart title" type="string" required="true" />
+    <apex:attribute name="height"           description="This is the chart height" type="string" default="250" />
+    <apex:attribute name="width"            description="This is the chart width" type="string" default="400" />
+    <apex:attribute name="legend"           description="This is the legend location" type="string" default="right" />
+    <apex:attribute name="colors"           description="This is the list of colors for the columns."   type="string"/>
+    <apex:attribute name="borderColor"      description="This is the color of the border around chart elements." type="string" default="white" />
+    <apex:attribute name="focusBorderColor" description="This is the color of the border around chart elements that are in focus." type="string" default="gray" />
+    <apex:attribute name="is3D"             description="This deteremines whether or not the chart is 3D."  type="boolean" default="false"/>
+    <apex:attribute name="hAxisTitle"       description="This is the horizontal axis title."    type="string" />
+    <apex:attribute name="backgroundColor"  description="This is the background color for the main area of the chart."  type="string" default="white"/>
+    <apex:attribute name="chartAreaWidth"   description="This is to configure height of the chart area (excluding axis and legends)."   type="string"/>
+    <apex:attribute name="chartAreaHeight"  description="This is to configure height of the chart area (excluding axis and legends)."   type="string" />
+    <apex:attribute name="chartAreaLeft"    description="This is to configure how far to draw the chart from the left border."  type="string" />
+    <apex:attribute name="isStacked"        description="This determines whether or not the chart is stacked." type="boolean" />
+
+    <apex:attribute name="noDataMessage" description="Data to show if there is no data to display"  type="String" default="No Data to display"/>
+
+    <!-- sample selectListenerBody attribute: selectListenerBody="window.location.href = '/apex/DrilldownPage';"  -->
+    <apex:attribute name="selectListenerBody" description="The JavaScript function definition that will be executed when a Select event occurs. (Do not use the double-quote character in the body.)" type="string" default=""/>
+
+    <apex:outputPanel id="chart_div" layout="block" style="width:{!width}px;height={!height}px" >
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+             google.load("visualization", "1", {packages: ["corechart"]});
+             google.setOnLoadCallback(drawLineChart);
+             var ANNOTATION_COL_INDEX = 7;
+             var TOTAL_COL_INDEX = 6;
+             var GREEN_SLA_COL_INDEX = 5;
+             var YELLOW_SLA_COL_INDEX = 4;
+             var RED_SLA_COL_INDEX = 3;
+             var SELECTED_COL_INDEX = 2;
+             var NO_SLA_COL_INDEX = 1;
+             var LABEL_COL_INDEX = 0;
+
+             var maxTotal = 0;
+
+             var data = new Object();
+             function drawLineChart() {
+
+                if ('{!jsondata}' == ''){
+                     var label  = document.getElementById('{!$Component.chart_div}_NoDataLabel');
+                     label.style.visibility="visible";
+                     return;
+                }
+
+                data = new google.visualization.DataTable( eval( '({!jsondata})' ) );
+
+                data.addColumn({type:'string', role:'annotation'});
+
+                for(var i = 0; i < data.getNumberOfRows(); i++) {
+                    var totalValue = data.getValue(i,TOTAL_COL_INDEX);
+
+                    if(totalValue > maxTotal) {
+                        maxTotal = totalValue
+                    }
+                    data.setCell(i, ANNOTATION_COL_INDEX, ''+totalValue);
+                }
+
+                var adjustedChartHeight = Math.ceil(maxTotal * 1.5);
+
+                var options = {width: {!width},
+                            height: {!height},
+                            legend: '{!legend}',
+                            title: '{!title}',
+                            titleTextStyle: {color: '#333333', fontName: 'Open Sans', fontSize: 22},
+                            is3D : {!is3D},
+                            colors : [{!colors}],
+                            borderColor : '{!borderColor}',
+                            focusBorderColor : '{!focusBorderColor}' ,
+                            hAxis : {title : '{!hAxisTitle}' , titleTextStyle: {color: 'black'}, textStyle: {color: 'black', fontName: 'Open Sans', fontSize: 12}, slantedText: false} ,
+                            vAxis : {baseline : 0, gridlines : { count : 0}, viewWindow: {min: 0, max:adjustedChartHeight}} ,
+                            backgroundColor : '{!backgroundColor}',
+                            isStacked : {!isStacked},
+                            seriesType : "bars",
+                            series: {5: {type: "line"}} ,
+                            chartArea: {left: 0, width: {!width}},
+                            lineWidth : 0
+                           };
+                
+                //Draw the chart
+                var chart = new google.visualization.ComboChart( document.getElementById('{!$Component.chart_div}') );
+                chart.draw(data, options);
+
+                var prevRow = -1;
+                
+                //MAM 26.FEB.2015 - Comment out as this segment causes issues case 00472260 start 
+                /*for(var i = 0; i < data.getNumberOfRows(); i++) {
+                    var selectedColumnValue = data.getValue(i, SELECTED_COL_INDEX);
+                    if(selectedColumnValue > -1) {
+                        
+                        chart.setSelection([{row: i}]);
+                        prevRow = i;
+                        
+                    } else {
+                        data.setCell(i, SELECTED_COL_INDEX, 0);
+                    }
+                    
+                }
+                chart.draw(data, options);*/
+                //MAM 26.FEB.2015 end
+                
+                var listenerBody = "{!selectListenerBody}";
+                var selectListener = new Function("e", listenerBody);
+                
+                
+                
+                //Google Event Listener function: getSelectedRow
+                function getSelectedRow(){
+                  
+                  var selection = chart.getSelection();
+                  var stage = '';
+                  var currentRow = -1;
+
+                  for (var i = 0; i < selection.length; i++) {
+                    var item = selection[i];
+                    if (item.row != null) {
+                      currentRow = item.row;
+                      stage = data.getValue(item.row, LABEL_COL_INDEX);
+                    }
+                  }
+
+                  var deselected = currentRow < 0;
+                  var changedRow = prevRow != currentRow;
+                  if(deselected && prevRow >= 0) {
+                      data.setCell(prevRow, NO_SLA_COL_INDEX, data.getValue(prevRow, SELECTED_COL_INDEX));
+                      data.setCell(prevRow, SELECTED_COL_INDEX, 0);
+                      //chart.draw(data, options); //MAM 26.FEB.2015 - Comment out as this segment causes issues case 00472260
+                  }
+
+                  if(changedRow && currentRow >= 0) {
+                      if(prevRow >= 0) {
+                          data.setCell(prevRow, NO_SLA_COL_INDEX, data.getValue(prevRow, SELECTED_COL_INDEX));
+                          data.setCell(prevRow, SELECTED_COL_INDEX, 0);
+
+                          data.setCell(currentRow, SELECTED_COL_INDEX, data.getValue(currentRow, NO_SLA_COL_INDEX));
+                          data.setCell(currentRow, NO_SLA_COL_INDEX, 0);
+                          //chart.draw(data, options); //MAM 26.FEB.2015 - Comment out as this segment causes issues case 00472260
+                          chart.setSelection([{row: currentRow}]); 
+                      } else {
+                        data.setCell(currentRow, SELECTED_COL_INDEX, data.getValue(currentRow, NO_SLA_COL_INDEX));
+                          data.setCell(currentRow, NO_SLA_COL_INDEX, 0);
+                        //chart.draw(data, options); //MAM 26.FEB.2015 - Comment out as this segment causes issues case 00472260
+                        chart.setSelection([{row: currentRow}]); 
+                      }
+
+                  }
+                  prevRow = currentRow;
+
+                  selectListener(stage);
+                  
+                }
+                
+                //Add Event Listener registration
+                if(listenerBody != ''){
+                    google.visualization.events.addListener(chart, 'select', getSelectedRow);
+                }                
+            }
+        </script>
+    </apex:outputPanel>
+</apex:component>

@@ -1,0 +1,15 @@
+<apex:page standardController="Quote" extensions="CtrlApprovalPreview" tabStyle="Quote" action="{!init}" >
+ 	<apex:sectionHeader title="Furture Approval Steps" />
+ 	<apex:pageBlock >
+  	<apex:pageMessages />
+ 	<apex:repeat value="{!ApprovalMap}" var="stepKey">
+		<apex:pageBlockSection title="Step {!stepKey}" >
+		<apex:pageBlockTable value="{!ApprovalMap[stepKey]}" var="stepUsers">
+			<apex:column value="{!stepUsers.FirstName}" />
+			<apex:column value="{!stepUsers.LastName}" />
+			<apex:column value="{!stepUsers.Email}"    />
+		</apex:pageBlockTable>
+		</apex:pageBlockSection>
+	</apex:repeat>
+ 	</apex:pageBlock>
+</apex:page>

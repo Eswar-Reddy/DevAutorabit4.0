@@ -1,0 +1,183 @@
+<messaging:emailTemplate subject="SunPower Installation Update" recipientType="Contact" relatedToType="LeasePayment__c">
+<messaging:htmlEmailBody >
+<html>
+    <style type="text/css">
+    body {
+        background-color: #FFFFFF;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        font-family: Arial, Futura;
+        color: #555555;
+    }
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    table {
+        margin-top: 0pt;
+    }
+    p,table{
+        font-size: 11pt;
+    }
+    a { color:#0070c0; text-decoration:none}
+    a:visited { color:#0070c0; text-decoration:none}
+    a:link { color:#0070c0; text-decoration:none}
+    a:hover { color:#0070c0; text-decoration:none}
+
+    li {
+        line-height:20px;
+        margin-bottom: 10pt;
+        display: list-item;
+        padding-bottom:5px;
+    }
+    
+    </style>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="960px"><img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+                        
+            <tr>
+                <td align="right"  style="padding-top:20px; padding-right:50px; outline:none">
+                    <!-- Company Name Merge Field-->
+                    <span style="text-align:right;color:#739DD2;font-family:Avenir Next;font-size:24pt;"><b>{!relatedTo.Opportunity__r.Partner_Account_text__c}</b></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <td align="right"  style="padding-top:10px; padding-right:50px; padding-bottom:30px; outline:none">
+                   <p>A Proud Representative of SunPower</p>
+                </td>
+            </tr>
+
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px;" style="text-decoration:none; outline:none;">
+                    <table width="960px;">
+                        <tr>
+                            <td width="700px" style="padding-left:50px;">
+                                <h2>YOUR SYSTEM IS ON!</h2>                   
+                                <p style="margin-top:20px">Hello <font color="#555555">{!relatedTo.Opportunity__r.Primary_Contact_First_Name__c} {!relatedTo.Opportunity__r.Primary_Contact_Last_Name__c}</font>,</p>
+                                
+                                <p style="margin-right:20px">Congratulations!</p>
+                                
+                                <p style="margin-right:20px">You are now producing clean renewable energy from the sun. Again, thank you for partnering with SunPower.</p>
+                                           
+                                <p><b>What’s Next?</b></p>
+                                
+                                <!--Table-->
+                                <table width="100%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#FDB723;border-spacing:0;">
+                                <tr>
+                                    <td style="background: #FDB723;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                                        <span style="font-size:16px;font-weight:bold;"> A List of Helpful Resources:</span>
+                                    </td>
+                                </tr>
+                                <tr style="vertical-align:top;">
+                                    <td style="padding-top:20px;padding-right:30px;"> 
+                                        <ul>
+                                          <li>
+                                            <p> 
+                                                <b>SunPower Welcome Kit</b><br/>
+                                                Your SunPower Welcome Kit is in the mail! Included in this kit is a SunPower User Manual to help answer any questions on your leased system. 
+                                                We’ve also attached an electronic version of the SunPower User Manual to this message.<br/><br/>
+                                            </p>
+                                          </li> 
+                                          <li>       
+                                            <p> 
+                                                <b>Your First Billing Statement</b><br/>
+                                                Your first statement is being processed. You can expect to receive it in 30-60 days. 
+                                                Your payments will be due on the first day of the month beginning the month after your system is interconnected.<br/>
+                                                <b>Note:</b> You will still receive a bill from your utility company. As each utility company is different, 
+                                                be sure to contact them to make sure you’re on the right rate plan for solar. 
+                                                Most companies will utilize plans such as “time of use”, so inquire to get the best rate possible.<br/><br/>
+                                            </p>
+                                          </li>
+                                          <li>
+                                            <p> 
+                                                <b>Monitor Your Energy Production Online</b><br/>
+                                                Log in to <a href="http://www.sunpowermonitor.com/residential">monitoring</a> anytime to see how much energy your system is producing. 
+                                                You can also <a href="http://www.sunpowermonitor.com/residential">download</a> the SunPower Monitoring app for your iPhone<sup>&reg;</sup>, iPad<sup>&reg;</sup>, or Android™ mobile device.<br/><br/>
+                                            </p>
+                                          </li>
+                                          <li> 
+                                            <p>
+                                                <b>Installation Experience Survey</b>
+                                                You’ll soon receive an email invitation to take a survey. It’s important to us that you’ve had a fantastic experience; 
+                                                please let us know if we have delivered it. Remember you can contact us anytime at 1-800-SUNPOWER.<br/><br/>
+                                            </p>
+                                          </li>                           
+                                          <li>
+                                            <p>
+                                                <b>Annual Energy Production Report</b>
+                                                SunPower monitors your system performance. Following your 1-year anniversary, and for every year thereafter, 
+                                                you will receive our Annual Energy Production Guarantee report that summarizes your system’s energy production for the year.<br/><br/>
+                                            </p>         
+                                          </li>
+                                          <li>
+                                            <p>
+                                                <b>Write a Review</b>
+                                                Share your experience with {!relatedTo.Opportunity__r.Partner_Account_text__c}&nbsp;
+                                               <apex:outputLink value="{!relatedTo.Opportunity__r.PartnerAccount.SunPower_Dealer_WebPage_URL__c}" id="eventlink">write a review</apex:outputLink>
+                                                and help other customers find the perfect partner for their solar needs* <br/>
+                                                *See web page for terms and conditions relating to submission of review.
+                                            </p>         
+                                          </li> 
+                                        </ul>
+                                    </td>
+                                </tr>
+                                </table>
+                            </td>
+                            
+                            <td width="260px" valign="top" style="padding-left:65px; padding-right:45px;">
+                                <!-- ON Progress Bar Vertical in PROD -->
+                                <img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlQz&oid=00D80000000ZF1L&lastMod=1396243059000" />    
+                                
+                                <br/>
+                                <p style="margin-left:40px; font-family: Futura;font-size: 8pt;margin-top: 10px;float: left;padding-left: 35px;width: 182px;line-height: 10pt;">* SunPower Provides Communication. <br/>&nbsp; All other communication provided by <br/>&nbsp; your partner.</p>
+                            
+                            </td>
+                        </tr>
+                    </table>    
+                </td>
+                
+            </tr>
+            
+            <tr>
+                <td>
+                    <p style="margin-top:20px; margin-left:50px;">Warmly,</p>
+                    <p style="margin-top:20px; margin-left:50px;">
+                        <b>The SunPower Team</b>
+                        <br></br>
+                        1-800-SUNPOWER
+                    </p>
+                    <!-- ON IMAGE we can't put this as a background, if we made it as a background image, it will work on gmail but not on MS Outlook -- in PROD -->
+                    <img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlQG&oid=00D80000000ZF1L&lastMod=1395971877000" width="960px"/>
+                </td>
+            </tr>
+            
+            <!--Footer Wrapper-->
+            <tr>
+                <td  style="padding-top:20px; padding-left:50px; padding-right:50px; outline:none; margin-bottom:0pt;line-height:normal;margin-left:18pt;margin-right:17pt;font-size:8pt;" align="center">
+                    <p style="font-size: 8pt">
+                        We do not share your information outside of SunPower and your Dealer Partner. 
+                        <u>Privacy Statement</u>
+                    </p>
+                    <p style="font-size: 8pt">
+                        © 2014 SunPower Corporation. All Rights Reserved. SUNPOWER, the SUNPOWER logo, and MORE ENERGY. FOR LIFE.are trademarks or registered trademarks of SunPower Corporation in the U.S. and other countries.
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

@@ -1,0 +1,108 @@
+<apex:page tabStyle="Credit_Application__c" title="CREDIT APPLICATION" standardController="Credit_Application__c" extensions="CreditApplicationController" showHeader="false">
+   
+<script>
+
+    function removeAttach(id){
+      removeAttachment(id);
+    }
+ 
+             function showPopUp(){
+                if(confirm("Your credit application will be submitted to SunPower")) {
+                    return true;
+                }
+                else {
+                   return false;
+                }
+        
+             }
+             function attachFile() {
+                var fullPath =  fnGetFullPath();
+                if(fullPath != null){
+                    var url = fullPath + '/AttachFile?Pid={!creditAppId}';
+                    window.open(url,"self","height=240,width=410,status=yes,toolbar=no,menubar=no,location=no");
+                }
+                
+                
+             }
+             function reloadList() {
+                   reload();
+             }
+             function fnGetFullPath() {
+                   var url = document.location.href;
+                   var iPos = url.lastIndexOf('/');
+                   if(iPos>0){
+                        return url.substring(0, iPos);
+                   }
+             }
+           
+            function loadPdf(id){
+            	var newURL = window.location.href;
+            	if(newURL != null){
+            	   try{
+		            	newURL = newURL.substring(0,newURL.lastIndexOf('/')); 
+		            	newURL += "/CreditAppPdf?id={!creditAppId}";
+		            	window.open(newURL);
+		            }catch(e){
+		            }	
+            	}
+            }
+  </script>
+    <apex:form >
+    <!--  Header Part -->
+        <apex:outputPanel layout="block">
+            <table width="100%" style="background-color:black" border="0" height="70px">
+                <tr>
+                    <td colspan="2" align="left" style="padding-left:10px"><font color="#FFFFFF" size="5"><b>CREDIT</b>&nbsp;</font><font color="#FBB917" size="5"><b>APPLICATION</b></font></td>
+                </tr>
+                
+            </table>
+            <table width="100%" style="background-color:#FBB917" border="0">
+                <tr>
+                    <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>REFERENCE INFORMATION</B></font>
+                    </td> 
+                    <td width="50%" align="right" style="padding-right:10px"><font color="#000000" size="2"><B>PAGE 4 OF 4</B></font>
+                    </td>
+                </tr>
+            </table>
+        </apex:outputPanel> 
+        <apex:pageMessages />
+        <apex:pageBlock >
+             <apex:pageBlockSection columns="1" >
+                <apex:outputLabel value="Your credit application has been submitted to SunPower. You should receive a confirmation email shortly. We recommend that you print a copy of the credit application for your records. You may use the attach file below to send us as many attachments as you would like. When you are finished, you may close this browser." id="saveMsg" />
+                <apex:outputPanel style="text-align:center;width:100%;vertical-align:bottom;" layout="block"> 
+                    <apex:commandButton value="Print" onclick="loadPdf('{!creditAppId}');return false;"/>
+                </apex:outputPanel>    
+            </apex:pageBlockSection>       
+      </apex:pageBlock>
+         </apex:form>
+         
+                  <apex:form id="form2">
+         <apex:actionFunction name="reload" action="{!showAttachedFiles}" reRender="block1,panel1" status="statusUpdating" immediate="false" />
+         <apex:actionFunction name="removeAttachment" action="{!remove}" reRender="block1,panel1" status="statusRemoving" immediate="false" >
+                <apex:param assignTo="{!idToRemove}" value="" name="id"></apex:param>
+         </apex:actionFunction>
+         <apex:actionStatus startText="Updating..." id="statusUpdating" stopText="" startStyle="color:red"/> 
+         <apex:actionStatus startText="Removing..." id="statusRemoving" stopText="" startStyle="color:red"/> 
+         <apex:pageblock title="Attachements" id="block1">
+                <apex:pageBlockButtons >
+                    <input type="button" value="Attach File" onclick="attachFile()" class="btn" />
+                </apex:pageBlockButtons>
+                <apex:outputPanel id="attachmentList" id="panel1" style="width:100%" rendered="{!renderAttachedFiles}">    
+                    <apex:dataTable value="{!attachments}" var="attach" style="width:100%">
+                        <apex:column width="20%"> <a href="javascript:void(0)" onclick="removeAttach('{!attach.Id}')" class="actionLink">Remove</a>
+                            <apex:facet name="header">Action</apex:facet>
+                        </apex:column>
+                       
+                        <apex:column width="80%">{!attach.Name}
+                            <apex:facet name="header">File</apex:facet>
+                        </apex:column>
+                         
+                    </apex:dataTable>
+                    
+                  </apex:outputPanel>
+
+           
+        </apex:pageblock>
+         </apex:form>   
+       
+</apex:page>

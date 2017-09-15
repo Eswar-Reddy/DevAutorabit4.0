@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$ConvertedOpportunity</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Owner.Name</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Name</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedDate</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.Reason_Won_Lost_comments__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.PartnerAccount</column>
+            <operator>equals</operator>
+            <value>SunPower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.StageName</column>
+            <operator>equals</operator>
+            <value>Flex Community - No Upgrade</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Reason_Won_Lost_comments__c</column>
+            <operator>notContain</operator>
+            <value>#rp</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead$ConvertedAccount.BillingCity</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Opps - Flex, No Upgrade</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_Campaign_and_converted_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$ConvertedDate</dateColumn>
+        <interval>INTERVAL_CURRENT</interval>
+    </timeFrameFilter>
+</Report>

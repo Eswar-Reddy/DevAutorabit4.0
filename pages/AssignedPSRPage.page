@@ -1,0 +1,203 @@
+<!-- ***********************************
+    Author: Appirio (Prakash G.)
+    Ref : PR-1990
+    Purpose: Store Assigned PSR Users in Account Object as comma separted .
+             Store IDs and Name in two separate fields 
+    Modified: 24 June 2009
+    ************************************ -->
+<apex:page standardController="Account" extensions="AssignedPSRController" id="pg" showHeader="false" sidebar="false">
+    <script>
+        if('{!closeStatus}' =='close'){
+            try{
+                self.close();
+                }catch(e){
+                    window.parent.close();
+                }
+        }else if('{!closeStatus}' =='save'){
+            try{
+                window.parent.opener.location.href= '/'+'{!accid}';
+                self.close();
+             }catch(e){
+                 window.parent.close(); 
+             }
+                
+        }
+    </script>
+      <apex:pageMessages />
+      <apex:form id="frm" rendered="{!NOT(HasMessages)}">
+      <apex:inputHidden value="{!acct.Assigned_PSR_IDS__c}" id="assignedids"/>    
+      <apex:inputHidden value="{!acct.Assigned_PSR_s__c}" id="assignedpsr"/>    
+    <apex:pageBlock id="blk" title="Users List">
+    <apex:pageBlockSection id="CustomerProjectSection">
+          <apex:pageblockSectionItem id="PMsection">
+          <apex:outputLabel for="selPM" />
+          <apex:outputPanel id="pnlPM">
+            <table cellspacing="0" cellpadding="0" border="0" class="multiSelectPicklistTable">
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td height="5" colspan="100"></td>
+                </tr>
+                <tr class="multiSelectPicklistRow">
+                  <td>
+                    <span><b>&nbsp;&nbsp;All</b>
+                      <apex:selectList id="selPM"  size="10"  style="width: 335px;" multiselect="true" ondblclick="handleMultiPickList('pg:frm:blk:CustomerProjectSection:PMsection:selPM','pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected')">
+                        <apex:selectOptions value="{!PSRUsersOptions}"/>
+                      </apex:selectList>
+                    </span>  
+                  </td>
+                  <td style="valign:bottom">
+                      <span><br/><br/><br/></span>
+                    <img width="17" height="17" align="texttop" onclick="listbox_move('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected','up')" title="Up" style="cursor: pointer;"  alt="Up" class ="upArrowIcon" src="/s.gif" />  
+                    <br/><br/>
+                    <img width="17" height="17" align="texttop" onclick="handleMultiPickList('pg:frm:blk:CustomerProjectSection:PMsection:selPM','pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected')" title="Add" style="cursor: pointer;"  alt="Add" class ="rightArrowIcon" src="/s.gif" />
+                    <br/>
+                    <img width="17" height="17" align="texttop" onclick="handleMultiPickList('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected','pg:frm:blk:CustomerProjectSection:PMsection:selPM')" title="Remove" style="cursor: pointer;"  alt="Remove" class ="leftArrowIcon" src="/s.gif" />
+                    <br/><br/>
+                    <img width="17" height="17" align="texttop" onclick="listbox_move('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected','down')" title="Down" style="cursor: pointer;"  alt="Down" class ="downArrowIcon" src="/s.gif" />  
+                  </td>
+                  <td>
+                    <span><b>&nbsp;&nbsp;Assigned </b>
+                      <apex:selectList id="selPM_selected"  size="10"  style="width: 335px;" multiselect="true"  ondblclick="handleMultiPickList('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected','pg:frm:blk:CustomerProjectSection:PMsection:selPM')" >
+                        <apex:selectOptions value="{!AssignedPSRUsersOptions}"/>
+                      </apex:selectList>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          <div class="errorMsg" id="pmErrorDiv" style="display:none">
+             <strong>Error: </strong>You must enter a value
+          </div>
+        </apex:outputPanel>
+        </apex:pageblockSectionItem>
+          
+</apex:pageBlockSection>
+<apex:pageBlockButtons >
+<apex:commandButton action="{!save1}" value="Save" onClick="return validate()"/>
+<apex:commandButton action="{!cancel}" value="Cancel" />
+
+</apex:pageBlockButtons>
+    </apex:pageBlock>
+          </apex:form>  
+          <script>
+          function handleMultiPickList(sourceId,destinationId) {
+      
+       var source = document.getElementById(sourceId);
+      var destination = document.getElementById(destinationId);
+      
+      var transfer = [];
+      var original = [];
+      if(destination.options != null) {
+        for(var i = destination.options.length -1; i > -1;i--) {
+          original.push(destination.options[i].text);
+          transfer.push(destination.options[i].value);
+          destination.options[i] = null;
+        }
+
+      
+      }
+
+
+      if(source.options != null) {
+        for(var i = source.options.length -1; i > -1;i--) {
+          if(source.options[i].selected) {
+            original.push(source.options[i].text);
+            transfer.push(source.options[i].value);
+            source.options[i] = null;
+          }
+        }
+      }
+
+     // original.sort(properSort);
+
+      for(var i = 0; i < original.length;i++) {
+        var option = document.createElement("option");
+        option.text = original[i];
+        option.value = transfer[i];
+        destination.options[i] = option;
+      }
+   }
+   /*
+   function properSort(a,b) {
+     if(a == "Other")
+       return -1;
+     if(b == "Other")
+       return 1;     
+     return (b < a) - (a < b);
+   }*/
+   function validate(){
+        var ref =document.getElementById('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected');
+        var optList = ref.options;
+        var allvalues='';
+        var allIDs ='';
+        for(var i=0; optList != null && i < optList.length;i++){
+            if(allvalues == '')
+                allvalues += optList[i].value;
+            else    
+                allvalues += ',' + optList[i].value;
+            if(allIDs == '')
+                allIDs = optList[i].text;
+            else            
+                allIDs += ',' + optList[i].text;
+        }     
+        document.getElementById('pg:frm:assignedpsr').value=allIDs ;
+        document.getElementById('pg:frm:assignedids').value=allvalues ;
+        document.getElementById('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected').selectedIndex = -1;
+        document.getElementById('pg:frm:blk:CustomerProjectSection:PMsection:selPM').selectedIndex = -1;
+
+        return true;
+   }
+   
+      function listbox_move(listID, direction) {  
+    
+      var listbox = document.getElementById(listID);  
+      var selIndex = listbox.selectedIndex;  
+    
+      if(-1 == selIndex) {  
+          return;  
+      }  
+    
+      var increment = -1;  
+      if(direction == 'up')  
+          increment = -1;  
+      else  
+          increment = 1;  
+    
+      if((selIndex + increment) < 0 ||  
+          (selIndex + increment) > (listbox.options.length-1)) {  
+          return;  
+      }  
+    
+      var selValue = listbox.options[selIndex].value;  
+      var selText = listbox.options[selIndex].text;  
+      listbox.options[selIndex].value = listbox.options[selIndex + increment].value;  
+      listbox.options[selIndex].text = listbox.options[selIndex + increment].text ; 
+      listbox.options[selIndex + increment].value = selValue;  
+      listbox.options[selIndex + increment].text = selText;  
+    
+      listbox.selectedIndex = selIndex + increment;  
+      
+  }
+   
+   window.onload = new function(){
+        var ref =document.getElementById('pg:frm:blk:CustomerProjectSection:PMsection:selPM_selected');
+        var optList = ref.options;
+        if(optList.length == 1){
+            if(optList[0].value== ''){
+                ref.options.length=0;
+            }
+        }
+        ref =document.getElementById('pg:frm:blk:CustomerProjectSection:PMsection:selPM');
+        optList = ref.options;
+        if(optList.length == 1){
+            if(optList[0].value== ''){
+                ref.options.length=0;
+            }
+        }
+        
+   }
+   
+          </script>
+</apex:page>

@@ -1,0 +1,283 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" standardController="Design__c" extensions="HelixDesignSummaryController">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+
+    <style type="text/css">
+        .sp-blue {
+            color: #0076be;
+            font-size: large;
+        }
+        .sp-grey {
+            color: #5e6367;
+        }
+        .section-header {
+            border-bottom: 2px solid #eee;
+            padding-left: 0px;
+            margin-bottom: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .sunpower-style h5, 
+        .sunpower-style .h5 {
+            margin-bottom: .5rem;
+            font-weight: 700;
+        }
+        .row-spacer {
+            margin-bottom: 1rem;
+        }
+        .table-condensed > thead > tr > th,
+        .table-condensed > tbody > tr > th,
+        .table-condensed > tfoot > tr > th,
+        .table-condensed > thead > tr > td,
+        .table-condensed > tbody > tr > td,
+        .table-condensed > tfoot > tr > td {
+            padding: 5px;
+        }
+        .sunpower-style .table tbody tr:nth-of-type(odd) {
+            background-color: transparent;
+            margin-bottom: .25rem;
+        }
+        .sunpower-style .table tbody tr:hover {
+            background-color: transparent;
+        }
+        .sunpower-style .table th, 
+        .sunpower-style .table td {
+            padding: .5rem;
+        }        
+    </style>
+
+    <body class="sunpower-style container-fluid" style="margin: 1rem; max-width: 900px; width: 90%; margin-left: auto; margin-right: auto;">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 style="margin-bottom: 2rem;">Design Summary</h3>
+            </div>
+        </div>
+
+        <div class="row row-spacer">
+            <div class="col-xs-6">
+                <h5>System Size (kWp)</h5>
+                <div class="sp-blue">
+                    <apex:outputText value="{0, number, ###,###.##}">
+                        <apex:param value="{!design.Actual_System_Size__c}" />
+                    </apex:outputText>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <h5>Product</h5>
+                <div class="sp-blue">{!design.HelixDesignType__c} {!IF(NOT(ISBLANK(design.Design_Package_Type__c)), (' - ' + design.Design_Package_Type__c),'')}</div>
+            </div>
+        </div>
+        <div class="row row-spacer">
+            <div class="col-xs-6">
+                <h5>Module Type</h5>
+                <div class="sp-blue">{!design.Module_Type__c}</div>
+            </div>
+            <div class="col-xs-6">
+                <h5>{!$ObjectType.Design__c.Fields.Module_Quantity__c.Label}</h5>
+                <div class="sp-blue">{!design.Module_Quantity__c}</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="section-header"></div>
+            </div>
+        </div>
+
+        <div class="row row-spacer">
+            <div class="col-xs-6">
+                <h5>Annual Production</h5>
+                <div class="sp-blue">
+                    <apex:outputText value="{0, number, ###,###.##}">
+                        <apex:param value="{!design.Actual_Annual_Production__c}" />
+                    </apex:outputText>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <h5>Monthly Production</h5>
+                <table class="table table-condensed">
+                    <tr class="sp-grey" style="line-height: .5rem;">
+                        <td>JAN</td>
+                        <td>FEB</td>
+                        <td>MAR</td>
+                        <td>APR</td>
+                        <td>MAY</td>
+                        <td>JUN</td>
+                    </tr>
+                    <tr class="sp-blue" style="line-height: .5rem; border-bottom: 1rem solid transparent !important;">
+                        <td>
+                            <apex:outputText value="{0, number,###,###}">
+                                <apex:param value="{!energyOutput.Jan__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Feb__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Mar__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Apr__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.May__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Jun__c}" />
+                            </apex:outputText>                          
+                        </td>
+                    </tr>
+                    <tr class="sp-grey" style="line-height: .5rem;">
+                        <td>JUL</td>
+                        <td>AUG</td>
+                        <td>SEP</td>
+                        <td>OCT</td>
+                        <td>NOV</td>
+                        <td>DEC</td>
+                    </tr>
+                    <tr class="sp-blue" style="line-height: .5rem;">
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Jul__c}" />
+                            </apex:outputText>
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Aug__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Sep__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Oct__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Nov__c}" />
+                            </apex:outputText>                          
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, number, ###,###}">
+                                <apex:param value="{!energyOutput.Dec__c}" />
+                            </apex:outputText>                          
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="section-header"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="sp-blue" style="font-size: small;">
+                    {!design.Site__r.Site_Address__c},&nbsp;{!design.Site__r.Site_City__c}&nbsp;{!design.Site__r.Site_State__c}&nbsp;{!design.Site__r.Site_Zip_Postal_Code__c}
+                </div>
+            </div>
+        </div>
+
+        <apex:outputPanel rendered="{!imageDisplayURL != ''}">
+            <div class="row">
+                <div class="col-xs-12">
+                    <img src="{!imageDisplayURL}" style="max-width: 600px; max-height: 400px;" />
+                </div>
+            </div>
+        </apex:outputPanel>
+                    
+        <apex:outputPanel rendered="{!imageDisplayURL == ''}">
+            <div class="row">
+                <div class="col-xs-12">
+                    <apex:map width="600px" height="400px" mapType="satellite" zoomLevel="18" center="{!addressString}" /> 
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!documents.size > 0 || atts.size > 0}">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="section-header"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Documents</h4>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr style="font-weight: bold;">
+                                <td>File Name</td>
+                                <td>Uploaded On</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!documents}" var="doc">
+                                <tr>
+                                    <td>{!if(right(doc.File_Name__c,4)='.dxf','Design Layout',if(right(doc.File_Name__c,4)='.png','Design Screenshot',doc.File_Name__c))}</td>
+                                    <td>
+                                        <apex:outputText value="{0,date,MM/dd/yyyy hh:mm a}"> 
+                                            <apex:param value="{!doc.CreatedDate}" /> 
+                                        </apex:outputText>
+                                    </td>
+                                    <td><a href="{!'https://'+doc.Bucket_Name__c+'.s3.amazonaws.com/'+doc.File_Name__c}"><i class="fa fa-download sp-blue" aria-hidden="true"></i></a></td>
+                                </tr>
+                            </apex:repeat>
+                            <apex:repeat value="{!atts}" var="att">
+                                <tr>
+                                    <td>{!att.Name}</td>
+                                    <td>
+                                        <apex:outputText value="{0,date,MM/dd/yyyy hh:mm a}"> 
+                                            <apex:param value="{!att.CreatedDate}" /> 
+                                        </apex:outputText>
+                                    </td>
+                                    <td><a href="/servlet/servlet.FileDownload?file={!att.Id}"><i class="fa fa-download sp-blue" aria-hidden="true"></i></a></td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </apex:outputPanel>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="section-header"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12" style="text-align: center;">
+                <a href="/SPCommunityOpportunityDetails?id={!design.Site__r.Opportunity_del__c}" class="btn btn-secondary">Close</a>
+            </div>
+        </div>
+
+    </body>
+
+    <c:SPCommunityAppResources_JS />
+    
+</apex:page>

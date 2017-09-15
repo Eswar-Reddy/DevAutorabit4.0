@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Sunpower_Spectrum_Debug_Log__c.Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_NAME</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Lead qualification notes integration</description>
+    <filter>
+        <booleanFilter>(((1 AND 2 AND 3) OR 4 )) AND 5</booleanFilter>
+        <criteriaItems>
+            <column>Sunpower_Spectrum_Debug_Log__c.Response__c</column>
+            <operator>notContain</operator>
+            <value>Updated Spectrum Id</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sunpower_Spectrum_Debug_Log__c.Response__c</column>
+            <operator>notContain</operator>
+            <value>recordId</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sunpower_Spectrum_Debug_Log__c.Response__c</column>
+            <operator>notContain</operator>
+            <value>success</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sunpower_Spectrum_Debug_Log__c.Response__c</column>
+            <operator>contains</operator>
+            <value>Error saving client</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sunpower_Spectrum_Debug_Log__c.JSON_Payload__c</column>
+            <operator>contains</operator>
+            <value>0018000000v6FpPAAU</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Sunpower_Spectrum_Debug_Log__c.Service__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>SFDC Spectrum SPD Lead qualification</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Sunpower_Spectrum_Debug_Log__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>CUST_CREATED_DATE</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-12-15</startDate>
+    </timeFrameFilter>
+</Report>

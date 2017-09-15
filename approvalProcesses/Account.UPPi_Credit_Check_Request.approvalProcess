@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>BarrySerafino</submitter>
+        <type>group</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>U_C_and_RLC_and_Off_Grid</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>alexandre.policarpopinheiro@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>First Level Credit Approval - UPPi</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Requested_Credit_Amount__c</field>
+                <operation>notEqual</operation>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>RejectRecord</ifCriteriaNotMet>
+        <label>First Level Credit Approval - UPPi</label>
+        <name>First_Level_Credit_Approval_UPPi</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>philippe.querbes@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Final Credit Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Amount_Approved__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 500,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Account.Theater__c</field>
+                <operation>equals</operation>
+                <value>Europe,Middle East and Africa</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Final Credit Approval</label>
+        <name>Final_Credit_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>UPPi Credit Check Request</description>
+    <emailTemplate>Account/Credit_Check_Request_Account</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Account.Credit_Check_Required__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.RecordType</field>
+            <operation>equals</operation>
+            <value>Standard,Infrastructure Account</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.Theater__c</field>
+            <operation>equals</operation>
+            <value>Europe,Middle East and Africa</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Credit_Check_Approved_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Credit_Check_Rejected_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>UPPi Credit Check Request</label>
+    <recallActions>
+        <action>
+            <name>Credit_Check_Recalled_On_Account_UPPi</name>
+            <type>Alert</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

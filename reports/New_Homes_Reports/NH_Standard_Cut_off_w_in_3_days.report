@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$Solar_Cut_Off_Date__c</field>
+    </columns>
+    <columns>
+        <field>Lead$Name</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Builder__c</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Name</field>
+    </columns>
+    <columns>
+        <field>Lead.CampaignMembers*Campaign$NH_Community__c.Community_Type__c</field>
+    </columns>
+    <columns>
+        <field>Lead$Status</field>
+    </columns>
+    <columns>
+        <field>Lead$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Lead$Appointment_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <booleanFilter>((((1 AND 2 AND 3 AND ((4 and 7) OR 6) AND 5))) AND 8)</booleanFilter>
+        <criteriaItems>
+            <column>Lead.CampaignMembers*Campaign$NH_Community__c.Builder__c</column>
+            <operator>contains</operator>
+            <value>KB Home,richmond american homes - southern,woodside</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Name</column>
+            <operator>notContain</operator>
+            <value>test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.StageName</column>
+            <operator>notEqual</operator>
+            <value>Verbal Commitment,Contract Signed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Solar_Cut_Off_Date__c</column>
+            <operator>lessOrEqual</operator>
+            <value>NEXT_N_DAYS:3</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Status</column>
+            <operator>notContain</operator>
+            <value>Disqualified</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Solar_Cut_Off_Date__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$Solar_Cut_Off_Date__c</column>
+            <operator>greaterThan</operator>
+            <value>YESTERDAY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead.CampaignMembers*Campaign$NH_Community__c.Community_Type__c</column>
+            <operator>equals</operator>
+            <value>Solar Standard</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NH Standard - Cut-off w/in 3 days</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_Campaign_and_converted_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$CreatedDate</dateColumn>
+        <interval>INTERVAL_LAST30</interval>
+    </timeFrameFilter>
+</Report>

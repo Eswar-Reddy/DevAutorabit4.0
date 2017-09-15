@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Opportunities$Closed_Won_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account.Opportunities$Primary_Campaign_Source_text__c</column>
+            <operator>equals</operator>
+            <value>15Q1 NA RES RGR Marketing Lead Pilot,15Q2 NA Res Centerfield Media - Paid Review Pilot,15Q2 NA Res RGR Marketing - Arizona,15Q2 NA Res RGR Marketing - Connecticut,15Q2 NA Res RGR Marketing - Massachusetts,15Q2 NA Res RGR Marketing - Nevada,15Q2 NA Res RGR Marketing - New York,1-800-My-Solar Lead Gen - New York,1-800-My-Solar Lead Gen - Vermont,CPA - Clean Energy Experts,CPA - Clean Energy Experts - Arizona,CPA - Clean Energy Experts - California,CPA - Clean Energy Experts - Connecticut,CPA - Clean Energy Experts - Hawaii,CPA - Clean Energy Experts - Nevada,CPA - Clean Energy Experts - New York,CPA - Clean Energy Experts - North Carolina,CPA - Clean Energy Experts - South Carolina,DPF - B Green Market Systems - Appt Setting,Energy Sage Marketplace - California,Lead Genesis - Arizona,Lead Genesis - California,Lead Genesis - Connecticut,Lead Genesis - Nevada,Lead Genesis - New York,NA B Green Enhanced Lead Service,NA B Green Lead Pilot,NA B Green Warm Transfer Pilot,NA RES 2015 - Lead Genesis Pilot</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Opportunities$StageName</column>
+            <operator>equals</operator>
+            <value>Contract Signed,Installation Completed</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Opportunities$RecordType</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Opportunities$StageName</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Opportunity closed Won Date</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Account_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Opportunities$CreatedDate</dateColumn>
+        <interval>INTERVAL_CURFY</interval>
+    </timeFrameFilter>
+</Report>

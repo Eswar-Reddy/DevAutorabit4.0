@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Issues__c.Product_Category__c</field>
+    </columns>
+    <columns>
+        <field>Issues__c.b_Product_Sub_Category__c</field>
+    </columns>
+    <columns>
+        <field>Issues__c.Part__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Issues Records Needing Update</description>
+    <filter>
+        <booleanFilter>1 AND ((2 or 3) or (2 and 3))</booleanFilter>
+        <criteriaItems>
+            <column>Issues__c.Part__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Issues__c.Product_Category__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Issues__c.b_Product_Sub_Category__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Issues Records Needing Update</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Issues__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Issues__c.Part__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CUST_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

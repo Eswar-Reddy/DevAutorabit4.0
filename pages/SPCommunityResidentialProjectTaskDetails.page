@@ -1,0 +1,17 @@
+<apex:page showHeader="false" sidebar="false" standardController="Project_Task__c">
+    <apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Residential Projects" />
+    <div style="max-width: 1200px; margin: auto;">
+        <apex:detail subject="{!Project_Task__c.Id}" inlineEdit="true" relatedListHover="false" showChatter="true" />
+    </div>
+    <c:SPCommunityAppResources_JS />
+    <script>
+    window.onload = function() {
+        UserRedirect();
+    }
+    </script>
+</apex:page>

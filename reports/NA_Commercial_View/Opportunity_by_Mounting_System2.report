@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity$Name</field>
+    </columns>
+    <columns>
+        <field>Opportunity$Probability</field>
+    </columns>
+    <columns>
+        <field>Opportunity.OpportunityLineItems$Product_Family__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity$System_SizePV__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.OpportunityLineItems$Product_Family__c</column>
+            <operator>contains</operator>
+            <value>mounting system</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Probability</column>
+            <operator>equals</operator>
+            <value>25,50</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>FiscalQuarter</dateGranularity>
+        <field>Opportunity$CloseDate</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Opportunity by Mounting System</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunities_with_Products_and_Schedules_and_Site__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Opportunity$CloseDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2011-01-03</startDate>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,517 @@
+<!--
+* OrderStorageConfiguration - Systems Order Configuration with Storage option page for cash based ordering system 
+* SFDC Release - WW29 - 2016
+* PT: #119616037, #116005357
+* SFDC Case: 00726072 - https://sunpower.my.salesforce.com/5003400000pWYCN 
+* Pivotal Tracker Updates:
+* ID #124934431, #123866151 - Remove Monitoring Opt Out for AC & SolarEdge - 07/10/2016
+* #130240625 - Remove racking table from Smart Pack Config page
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+*
+-->
+
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" docType="html-5.0" showHeader="{!IF(isPartnerUser,false,true)}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    
+    <style>
+        
+        .bs .label {
+            font-size: .90em;            
+        }
+        
+        .bs .body {
+            font-size: .90em;
+        }
+        .bs .form-control {
+            font-size: .90em !important;
+            height: 90%;
+        }
+        
+        .bs .table > thead > tr > th, .bs .table > tbody > tr > th, .bs .table > tfoot > tr > th, .bs .table > thead > tr > td, .bs .table > tbody > tr > td, .bs .table > tfoot > tr > td {
+        font-size: .90em;
+        }
+        .nopadding {
+        padding: 0 !important;
+        }
+
+        .modal-dialog{
+            position: relative;
+            display: table; //important  
+            overflow-y: initial !important;
+            overflow-x: auto;
+            width: auto;
+            min-width: 300px;   
+        }
+        .bs .modal-body {
+            max-height: calc(100vh - 212px);
+            overflow-y: auto;
+        }
+        
+    </style>  
+    
+    
+    <div class="bs">
+        <div class="container container-fluid" style="padding-top:1em; width: 90%">
+            
+            <apex:outputPanel id="errorMsgs">
+                <apex:messages styleClass="alert alert-danger" />
+            </apex:outputPanel>
+            <apex:iframe src="/apex/APPR_PUB__CustomMessages?tabName=Order" height="100"/>            
+            <ol class="breadcrumb" style="margin-bottom:0px;">
+                <li><a href="#" onclick="toOrderType();">{!$Label.Home}</a></li>
+                <li><a href="#" onclick="toOpportunity();">{!$Label.Opportunity}</a></li>
+                <li><a href="#" onclick="toShipping();">{!$Label.POWizardShippingLabel}</a></li>
+                <li style="color: #f7921e;">{!$Label.Configure}</li>
+                <li>{!$Label.Finalize}</li>
+            </ol>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Storage Configuration {!purchaseOrder.Name}</h4>
+                </div>
+                          
+                <div class="panel-body">
+                    <apex:form styleClass="form-horizontal" id="formId">      
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="modSelectDivOut" class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Module_Type__c.label}</label>
+                                            <div class="col-sm-8" id="modSelectDivOut">
+                                                <div id="modSelectDiv">
+                                                    <apex:actionRegion >
+                                                        <apex:selectList value="{!selectedModuleTypeIdentifier}" styleClass="form-control" size="1">
+                                                            <apex:actionSupport event="onchange"
+                                                                                action="{!buildManufacturers}"
+                                                                                rerender="manufacturers, inverterPanel, rackingList, rackingQtyPanel, invRatioTable, monitoringCheckboxInput" status="typeStatus"/>
+                                                            <apex:selectOptions value="{!moduleTypes}"/>
+                                                        </apex:selectList>
+                                                    </apex:actionRegion>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="modQtyDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Module_Quantity__c.label}</label>
+                                            <div class="col-sm-8" id="modQtyDiv">
+                                                <apex:inputField id="modQty" styleClass="form-control" value="{!purchaseOrder.Module_Quantity__c}" type="number" html-min="1">                  
+                                                    <apex:actionSupport event="onchange"
+                                                                        action="{!calculateInverterCapacity}"
+                                                                        rerender="invRatioTable" status="invRatioStatus" oncomplete="calcRacking();" />
+                                                    <apex:actionFunction action="{!calculateRacking}" name="calcRacking" reRender="rackingQtyPanel"/>
+                                                </apex:inputField>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <apex:outputPanel id="inverterPanel">
+                        <apex:outputPanel rendered="{!selectedConfigurationModel == 'DC'}">
+                            <div id="inverterSection" >
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Inverter_Manufacturer__c.label}</label>
+                                                        <div class="col-sm-8" >
+                                                            <apex:outputPanel id="manufacturers">
+                                                                <apex:selectList value="{!selectedManufacturer}" styleClass="form-control" size="1">
+                                                                    <apex:actionSupport event="onchange"
+                                                                                        action="{!buildInverterTypes}"
+                                                                                        rerender="inverterPanel, monitoringPanel, storageSelectPanel" status="typeStatus" />
+                                                                    <apex:selectOptions value="{!inverterManufacturerOptions}"/>
+                                                                </apex:selectList>       
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--start inverter table stuff here-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-6">      
+                                            <apex:outputPanel id="theTablePanel" rendered="{!selectedManufacturer != '' && selectedManufacturer != null}">
+                                                <apex:dataTable value="{!orderLines}" var="oline" id="theTable" rowClasses="odd,even" styleClass="table" >
+                                                    <apex:variable value="{!0}" var="row"/>
+                                                    <apex:column width="20px">
+                                                        <apex:facet name="header">{!$Label.Remove}</apex:facet>
+                                                        <button type="button" class="close" style="color:red;" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <apex:actionSupport event="onclick"
+                                                                            action="{!removeOrderLine}"
+                                                                            rerender="theTablePanel, invRatioTable, storageSelectPanel" status="typeStatus">
+                                                            <apex:param name="index" value="{!row}"/>
+                                                        </apex:actionSupport> 
+                                                        <apex:variable var="row" value="{!row+1}"/> 
+                                                    </apex:column>
+                                                    <apex:column >
+                                                        <apex:facet name="header">{!$Label.Inverter}</apex:facet>
+                                                        <apex:selectList value="{!oline.Item_ID__c}" styleClass="form-control" size="1">
+                                                            <apex:actionSupport event="onchange"
+                                                                                action="{!calculateInverterCapacity}"
+                                                                                rerender="invRatioTable, storageSelectPanel" status="invRatioStatus"/>
+                                                            <apex:selectOptions value="{!inverterTypeOptions}"/>
+                                                        </apex:selectList>
+                                                    </apex:column>
+                                                    <apex:column >
+                                                        <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                                                        <apex:inputField value="{!oline.Quantity__c}" styleClass="form-control" type="number" html-min="1">
+                                                            <apex:actionSupport event="onchange"
+                                                                                action="{!calculateInverterCapacity}"
+                                                                                rerender="invRatioTable, theTablePanel, storageSelectPanel" status="invRatioStatus"/>
+                                                        </apex:inputField>
+                                                    </apex:column>
+                                                </apex:dataTable>
+                                                <apex:commandButton action="{!addOrderLine}" value="{!$Label.Add_Inverter}" styleClass="btn btn-default btn-xs" style="color: #f7921e; font-weight:bold;" reRender="theTablePanel, storageSelectPanel" />
+                                            </apex:outputPanel>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <apex:outputPanel id="invRatioTable">
+                                                        <table class="table" >
+                                                            <thead style="text-align: center;">
+                                                                <tr>
+                                                                    <th>{!$Label.Inverter_Capacity}</th>
+                                                                    <th>{!$Label.Module_Capacity}</th>
+                                                                    <th>{!$Label.Inverter_Module_Ratio}</th>
+                                                                </tr>
+                                                            </thead>
+                                                            
+                                                            <tbody style="text-align: center;">
+                                                                <tr>
+                                                                    <td>{!inverterCapacity}</td>
+                                                                    <td>{!moduleCapacity}</td>
+                                                                    <td>{!invModuleRatio}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <a href="#" role="button" data-toggle="modal" data-target="#invModRatioModal" data-backdrop="static" style="float:right;">{!$Label.What_s_This}</a>
+                                                            </div>
+                                                        </div>
+                                                    </apex:outputPanel>
+                                                </div>
+                                            </div>
+                                        </div><!--end ratio table-->
+                                    </div><!--end inverter selection table-->
+                                </div>
+
+                                <hr/>
+                                <div class="row" style="padding-top: 1em;"><!--HI STORAGE #119616037-->
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Storage__c.label}</label>
+                                                        <div class="col-sm-8" >
+                                                            <apex:outputPanel id="storageSelectPanel">
+                                                                <apex:selectList value="{!selectedStorageId}" styleClass="form-control" size="1">
+                                                                <apex:selectOptions value="{!storageOptions}"/>
+                                                                </apex:selectList>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Storage_Quantity__c.label}</label>
+                                                        <div class="col-sm-8" >
+                                                            <apex:inputField value="{!purchaseOrder.Storage_Quantity__c}" styleClass="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- End Inverter Section  --> 
+                        </apex:outputPanel>                   
+                    </apex:outputPanel>                   
+                    <hr/>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="monitoringOptOutDiv" class="col-sm-4" style="padding-right: 1em;">
+                                                {!$ObjectType.Purchase_order__c.fields.Monitoring_Opt_Out__c.label}
+                                                <img height="14" width="14" src="{!$Resource.customhelp_disabled}" data-toggle="tooltip" data-placement="bottom" title="{!$Label.Monitoring_Tooltip}"/><!--help text here-->
+                                            </label>
+                                            <apex:outputPanel id="monitoringPanel">
+                                                <div class="col-sm-8" id="monitoringOptOutDiv">
+                                                    <apex:inputCheckbox id="monitoringCheckboxInput" value="{!purchaseOrder.Monitoring_Opt_Out__c}" disabled="{!blockMonitoringOptOut}"/>
+                                                    <apex:actionSupport event="onchange"
+                                                                        action="{!defaultMonitoringQuantity}"
+                                                                        reRender=""
+                                                                        status="monQtyStatus"/>
+                                                </div>
+                                            </apex:outputPanel>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="rackingOptOutDiv" class="col-sm-4" style="padding-right: 1em;">{!$ObjectType.Purchase_Order__c.Fields.Racking_Opt_Out__c.Label}</label>
+                                    <div class="col-sm-8" id="rackingOptOutDiv">
+                                        <apex:inputCheckbox id="rackingOptOut" value="{!purchaseOrder.Racking_Opt_Out__c}" onchange="toggleRacking()">
+                                            <apex:actionSupport event="onchange"
+                                                                action="{!calculateRacking}"
+                                                                rerender="rackingQtyPanel" status="rackingStatus"/>
+                                            <apex:selectOptions value="{!RackingOptions}"/>
+                                        </apex:inputCheckbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">
+                                <div id="rackingPanel" name="rackingPanel"><!--should hide when opting out of racking-->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <apex:outputPanel id="rackings">
+                                                    <label for="rackSelectionDiv" class="col-sm-4">{!$ObjectType.Purchase_Order__c.fields.Racking_Type__c.label}</label>
+                                                    <div class="col-sm-8" id="rackSelectionDiv">
+                                                        <apex:selectList id="rackingList" value="{!purchaseOrder.Racking_Type__c}" styleClass="form-control" size="1">
+                                                            <apex:actionSupport event="onchange"
+                                                                                action="{!calculateRacking}"
+                                                                                rerender="rackingQtyPanel" status="rackingStatus"/>
+                                                            <apex:selectOptions value="{!RackingOptions}"/>
+                                                        </apex:selectList>       
+                                                    </div>    
+                                                </apex:outputPanel>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                        <apex:actionFunction action="{!saveFromOrderConfig}" name="saveOrderConfig"/>
+                        <apex:actionFunction name="toOpportunity" action="{!ToOpportunitySelect}" />
+                        <apex:actionFunction name="toOrderType" action="{!ToOrderType}"/>
+                        <apex:actionFunction name="toShipping" action="{!ToShipping}"/>
+                        <apex:actionFunction name="doCallout" action="{!doCallout}" reRender="thePricingPanel, errorMsgs" oncomplete="toggleSpinner(false); enableNextStep();"/>
+                    </apex:form>
+                    
+                    <div>
+                        <div class="col-sm-12" id="alaCarteDiv">
+                            <i id="alacarteCaret" class="fa fa-caret-right"></i>
+                            <h4>&nbsp;&nbsp;{!$Label.A_La_Carte}</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">                        
+                                <div id="alaCarteComponent" class="collapse">
+                                  <c:AlaCarteComponent controllerForPage="{!this}" componentName="alacarteComponent" shippingStateString="{!sts.State__c}"/>
+                                </div><!--end Ala Carte-->
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div id="calcPriceDiv" style="padding-top:1em;">
+                        <div class="row">
+                            <div id="ajaxLoading" class="row" style="text-align:center; display: none">
+                                <span><i class="fa fa-spinner fa-spin" style="font-size:24px"></i>{!$Label.Calculating_Price}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="text-align:center;">
+                                <a href="#" onclick="calculatePrice(event);" class="btn" role="button" style="background-color:#69b342; font-weight: bold; color:#ffffff;">{!$Label.Calculate_Price}</a>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <apex:outputPanel id="thePricingPanel" >
+                                <apex:dataTable value="{!returnLines}" var="line" id="thePriceTable" rowClasses="odd,even" styleClass="table" rendered="{!returnLines.size != 0 && returnLines != null}" columns="6">
+                                    <apex:column width="60%">
+                                        <apex:facet name="header">{!$Label.Description}</apex:facet>
+                                        <apex:outputText value="{!line.item_description}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.PAS_Item}</apex:facet>
+                                        <apex:outputText value="{!line.ordered_item}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                                        <apex:outputText value="{!line.ordered_quantity}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.POWizardUnitPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                        <apex:outputText value="{!line.unit_priceFORMATTED}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.POWizardExtendedPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                                        <apex:outputText value="{!line.extended_priceFORMATTED}"/>
+                                    </apex:column>
+                                    <apex:column >
+                                        <apex:facet name="header">{!$Label.Line_Type}</apex:facet>
+                                        <apex:outputText value="{!line.product_line_type}"/>
+                                    </apex:column>
+                                </apex:dataTable>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <blockquote class="blockquote-reverse">
+                                            <apex:outputText rendered="{!totalPriceFormatted != null && totalPriceFormatted != ''}" value="{!$Label.POWizardTotalPriceHeading}: {!totalPriceFormatted} ({!currentUser.CurrencyISOCode})"/>
+                                        </blockquote>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </div><!--end pricing table-->
+                    </div><!--end calc price div-->
+                    
+                </div><!--end panel body-->
+                <div style="text-align:center; margin-bottom:10px;">
+
+                    <a class="btn btn-primary" onclick="toShipping();" role="button">{!$Label.POWizardPrevStep}</a>
+                    <a id="nextStepButton" onClick="setOkToLeave(); saveOrderConfig();" class="btn btn-primary disabled" role="button">
+                        {!$Label.POWizardNextStep}
+                    </a>
+                        
+                    <!-- Alacarte stuff -->
+                    <apex:outputPanel id="rerenderPanel">
+                        <script type="text/javascript">
+                            if('{!alacarteController.selProductItemsJSON}' && '{!orderLines}'){
+                                var alacarteProductItems = JSON.parse('{!alacarteController.selProductItemsJSON}');
+                                var otherProductItems = JSON.parse('{!orderLines}');
+                            }
+                        </script>
+                    </apex:outputPanel>
+                </div>
+            </div><!--end panel-->
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="invModRatioModal" tabindex="-1" role="dialog" aria-labelledby="invModRatioModalLabel" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title" id="shippingSiteModalLabel">{!$Label.Important_Information}</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            {!$Label.Inv_Module_Ratio_Help_Text}
+                        </p>    
+                        
+                        <apex:dataTable value="{!flexiRatios}" var="ratio" styleClass="table table-condensed" rowClasses="odd,even" columns="3">
+                            <apex:column headerValue="{!$Label.Lower_Limit}"><apex:outputText >{!(ratio.lowerLimit + 0.01)}</apex:outputText></apex:column>
+                            <apex:column headerValue="{!$Label.Upper_Limit}" value="{!ratio.upperLimit}" />
+                            <apex:column value="{!ratio.ratioLimit}" headerValue="{!$Label.Ratio_Limit}" />
+                        </apex:dataTable>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal" style="color: #f7921e; border-color: darkgray;" role="button">{!$Label.Got_It}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end container-->
+
+
+    <script>
+    var okToLeave = false;
+
+    window.onbeforeunload = function(test3){
+        if(!okToLeave){
+            return '{!$Label.Cash_Orders_Navigation_Warning}';
+        }
+    }
+
+    function setOkToLeave(){
+        okToLeave = true;
+    }
+
+    function enableNextStep(){
+        $('#nextStepButton').removeClass('disabled');
+    }
+
+    function calculatePrice(event) {
+        console.log('event');
+        console.log(event);
+        event.preventDefault();
+        toggleSpinner(true); 
+        doCallout();
+    }
+    
+    $("#alaCarteDiv").click(function () {
+        $("#alaCarteComponent").slideToggle(400, function(){console.log('DONE');});
+        
+        var caretIcon = $("#alacarteCaret");
+        if(caretIcon.hasClass('fa-caret-down')){
+            caretIcon.removeClass('fa-caret-down').addClass('fa-caret-right');
+        }else if(caretIcon.hasClass('fa-caret-right')){
+            caretIcon.removeClass('fa-caret-right').addClass('fa-caret-down');
+        }
+    });
+    
+    function toggleRacking() {
+        $( "#rackingPanel" ).toggle('fast');
+    }
+    
+    $(document).ready(function() {
+        $("#rackingQty").disabled = true;
+
+        var x = $('[id$=rackingOptOut]');
+        try {
+            if(x[0].checked == true)
+                 $( "#rackingPanel" ).hide();
+            else
+                 $( "#rackingPanel" ).show();
+        } catch(err) {
+            console.log('err$rci'+err);
+        }
+        
+        //more onload()  
+        
+    });
+
+    function toggleSpinner(showSpinner){
+        if(showSpinner){
+            $('#ajaxLoading').show();
+        }else{
+            $('#ajaxLoading').hide();
+        }
+    }
+    
+    </script>
+</apex:page>

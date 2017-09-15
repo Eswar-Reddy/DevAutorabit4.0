@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Estimate__c$Estimator__c</field>
+    </columns>
+    <columns>
+        <field>Estimate__c$Name</field>
+    </columns>
+    <columns>
+        <field>Estimate__c.Quote_Line_Items__r$ServiceDate</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Estimate__c.Quote_Line_Items__r$Quantity</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Average</aggregateTypes>
+        <field>Estimate__c.Quote_Line_Items__r$Cost__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Estimate__c$Status__c</column>
+            <operator>equals</operator>
+            <value>Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Estimate__c.Quote_Line_Items__r$Product_Family__c</column>
+            <operator>notEqual</operator>
+            <value>PV Module</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Estimate__c$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>NA Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Estimate__c.Quote_Line_Items__r$Cost__c</column>
+            <operator>notEqual</operator>
+            <value>USD 0</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Estimate__c$Opportunity__c.Sub_Region__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Estimate__c.Quote_Line_Items__r$Product_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Estimate by Product &amp; Region</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Estimates_and_Quote_Line_Items__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Estimate__c$Estimate_Complete_Date__c</dateColumn>
+        <endDate>2012-12-29</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2011-12-31</startDate>
+    </timeFrameFilter>
+</Report>

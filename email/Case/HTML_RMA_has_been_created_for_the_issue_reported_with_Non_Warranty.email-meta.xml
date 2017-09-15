@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>RMA has been created for the issue reported with Non-Warranty(html version)</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>HTML RMA has been created for the issue reported with Non-Warranty</name>
+    <style>none</style>
+    <subject>RMA Notification Case# {!Case.CaseNumber} - {!Case.Subject}</subject>
+    <textOnly>Dear Partner,
+
+An RMA has been created for the issue reported.
+
+Please see below details for your reference:
+
+RMA # :   {!if(Case.RMA_Num__c =&apos;&apos;,&apos;To be provided by your PSR&apos; ,Case.RMA_Num__c)}
+Homeowner&apos;s Name :   {!if(Case.Homeowner_Name__c = &apos;&apos;,&apos;Not provided by caller during troubleshooting&apos;, Case.Homeowner_Name__c)}
+Estimated Delivery Date of Replacement :   {!if(ISBLANK(Case.Est_Delivery_Date_of_Replacement_Text__c) , &apos;To be provided by your PSR&apos;, Case.Est_Delivery_Date_of_Replacement_Text__c)}
+
+If you need assistance with return tags, BOL and pick-up request, kindly coordinate with your Partner Service Representative (PSR).
+
+NOTE: RMA validity is 30 calendar days from the invoice date of replacement unit/s. If replaced unit will not be returned within the specified time range, debit or invoice amount will become overdue, thus, can affect orders and deliveries. Kindly confirm pick-up details by replying back to this email maximum of 3 days from replacement delivery date:
+
+
+a. Pick-up date
+
+b. Pick-up address
+
+c. Contact person, phone, email
+
+Thank you.
+SunPower</textOnly>
+    <type>custom</type>
+</EmailTemplate>

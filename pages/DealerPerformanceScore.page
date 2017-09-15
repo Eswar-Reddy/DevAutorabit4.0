@@ -1,0 +1,65 @@
+<apex:page controller="DealerPerformanceScoreCx" standardstylesheets="true" showChat="false">
+
+    <style>
+        .vfHelpText a            {position:relative;}
+        .vfHelpText a span       {display: none;}
+        .vfHelpText a:hover span {
+            display: block;
+            position:absolute;
+            top:1.25em;
+            padding:2px 5px;
+            right:-15em; width:15em;
+            z-index:100;
+            border:1px solid orange;
+            background-color:#FEFDB9;
+            color:black;
+            text-decoration: none;
+        }
+        body .bPageBlock .pbTitle {
+            padding: 5px 12px;
+            white-space: nowrap;
+        }
+        .apexp .bPageBlock.apexDefaultPageBlock .pbBody {
+            margin: 0px 0px;
+        }
+        body .apexp .pbBody table.list {
+            border: 0px solid #E0E3E5;
+        }
+        .headertextclass {
+        text-align:center;
+        }
+
+    </style>
+
+    <apex:pageBlock title="Dealer Lead Performance Score" helpTitle="How to Improve Your Lead Score" helpUrl="/servlet/servlet.FileDownload?file={!$Label.Improve_Your_Lead_Score_Doc_Id}">
+        
+        <apex:pageblockTable value="{!lMetricWrappers}" var="m">
+            
+            <apex:column >
+                <apex:facet name="header">
+                    Metric &nbsp;
+                    <!--<img src="/s.gif" alt="Help" class="helpIcon" title="This is help text"/>-->
+                </apex:facet>
+                <apex:outputText value="{!m.metric}" style="{!IF(m.metric == 'TOTAL', 'font-weight:bold;', '')}"/>                
+            </apex:column>
+            
+            <apex:column headerValue="Max Pts" headerClass="headertextclass" style="text-align:center;">
+                <apex:outputText value="{!m.maxpoints}" style="{!IF(m.metric == 'TOTAL', 'font-weight:bold;', '')}"/>                                     
+            </apex:column>
+            
+            <apex:column headerValue="Your Value" headerClass="headertextclass" style="text-align:center;">
+                <apex:outputText value="{!m.yourvalue}" style="{!IF(m.metric == 'TOTAL', 'font-weight:bold;', '')}"/>                                     
+            </apex:column>
+            
+            <apex:column headerValue="Your Pts" headerClass="headertextclass" style="text-align:center;">
+                <apex:outputText value="{!m.yourpoints}" style="{!IF(m.metric == 'TOTAL', 'font-weight:bold;', '')}"/>                                     
+            </apex:column>
+            
+        </apex:pageblockTable>        
+        <br/>
+        <!--
+        &nbsp;&nbsp;&nbsp;&nbsp;<a style="text-decoration:underline;cursor: pointer;" onclick="window.open('{!$Site.CurrentSiteUrl}servlet/servlet.FileDownload?file={!$Label.Improve_Your_Lead_Score_Doc_Id}','How to Improve Your Lead Score', 'width=1024,height=768,resizable=yes,toolbar=yes,status=yes,scrollbars=yes,menubar=yes,directories=no,location=yes,dependant=no'); return false">How to Improve Your Lead Score</a>
+        <br/>  <br/> -->      
+    </apex:pageBlock>
+    
+</apex:page>

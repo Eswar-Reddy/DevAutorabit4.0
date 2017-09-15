@@ -1,0 +1,289 @@
+<apex:page sidebar="false" standardstylesheets="false" showheader="false" doctype="html-5.0" standardController="Residential_Project__c" extensions="skedInspectionJobController">
+    
+    <head>
+        <meta charset="UTF-8" />
+        <title>Schedule Field Service Technicians</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.sked_SLDS, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.skedSun, 'dist/vendor/jquery-ui-custom/jquery-ui.min.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.skedSun, 'dist/vendor/jquery-ui-custom/jquery-ui.theme.min.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.skedSun, 'dist/vendor/toastr/toastr.min.css')}" />
+        <!-- Styles -->
+        <link rel="stylesheet" href="{!URLFOR($Resource.skedSun, 'dist/styles/skedManageServiceDelivery.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.skedSun, 'dist/styles/main.css')}" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.skedSun, 'dist/styles/datepicker.css')}" />
+        <style>
+            .TimeSlot .sked-time-slot.sked-time-slot--is-available.is-highlighted {
+            background-color: #aad281;
+            }
+            .footer--fixed {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            padding: 10px;
+            border-top: solid 1px #d8dde6;
+            background-color: #fff;
+            width: 100%;
+            text-align: right;
+            }
+        </style>
+        
+        <script src="{!URLFOR($Resource.skedSun, 'dist/vendor/jquery.min.js')}">
+        </script>
+        <script src="{!URLFOR($Resource.skedSun, 'dist/vendor/lodash.min.js')}">
+        </script>
+        <script src="{!URLFOR($Resource.skedSun, 'dist/vendor/moment.min.js')}">
+        </script>
+        <script src="{!URLFOR($Resource.skedSun, 'dist/vendor/toastr/toastr.min.js')}">
+        </script>
+        <script src="{!URLFOR($Resource.skedSun, 'dist/vendor/jquery-ui-custom/jquery-ui.min.js')}">
+        </script>
+    </head>
+    
+    <body>
+        <apex:form id="mainForm">
+            <c:skedAjaxLoading />
+            
+            <apex:actionFunction name="onLoadBookingGrid" action="{!Cmd_LoadBookingGrid}" status="overlayStatus" reRender="divBookingGrid">
+                <apex:param name="selectedDate" value="" />
+            </apex:actionFunction>
+            
+            <apex:actionFunction name="onSaveJob" action="{!Cmd_SaveJob}" status="overlayStatus" reRender="divBookingGrid" oncomplete="onSaveJobComplete();"></apex:actionFunction>
+            
+            <!-- Namespacing -->
+            <div class="slds slds-text-body--small">
+                <div class="slds-m-top--medium" style="padding-bottom: 40px;">
+                    <div class="ScheduleBooking">
+                        <div class="row" style="margin: 0;">
+                            <apex:outputPanel rendered="{!showBookingGrid}" styleClass="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left-right">
+                                <div class="BookingGridHeader slds-has-divider--bottom-space">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+                                                <div class="slds-text-heading--large slds-truncate">
+                                                    Schedule Field Service Technicians
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                                <div class="slds-form-element slds-float--right">
+                                                    <div class="slds-form-element__control">
+                                                        <button type="button" class="slds-button slds-button--icon-border" data-change-week="1">
+                                                            <img src="{!URLFOR($Resource.sked_SLDS, '/assets/icons/utility/chevronright_120.png')}" alt="" width="16" class="slds-input__icon slds-icon-text-default" />
+                                                            <span class="slds-assistive-text">Next</span>
+                                                        </button>
+                                                    </div>
+                                                </div> 
+                                                
+                                                <div class="slds-form-element slds-float--right slds-m-right--x-small">
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                                                            <img src="{!URLFOR($Resource.sked_SLDS, '/assets/icons/utility/event_120.png')}" alt="" aria-hidden="true" class="slds-input__icon slds-icon-text-default" />
+                                                            <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default" data-show-picker="true"></svg>
+                                                            <input id="date" class="slds-input" type="text" placeholder="Pick a Date" style="width: 140px;" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="slds-form-element slds-float--right slds-m-right--x-small">
+                                                    <div class="slds-form-element__control">
+                                                        <button type="button" class="slds-button slds-button--icon-border" data-change-week="-1">
+                                                            <img src="{!URLFOR($Resource.sked_SLDS, '/assets/icons/utility/chevronleft_120.png')}" alt="" width="16" class="slds-input__icon slds-icon-text-default" />
+                                                            <span class="slds-assistive-text">Previous</span>
+                                                        </button>
+                                                        <strong class="slds-m-horizontal--x-small week-label">Calendar</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="BookingGridHeader slds-has-divider--bottom-space">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                <div class="slds-form--inline">
+                                                    <div class="slds-form-element" style="margin-right: 0;">
+                                                        <label class="slds-form-element__label" for="select-job-type">Job Type</label>
+                                                        <div class="slds-select_container" style="display: inline-block;">
+                                                            <apex:inputField id="cbbJobType" styleClass="slds-select" html-tabindex="1" value="{!Wrapper.Job.sked__Type__c}">
+                                                            </apex:inputField>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                <div class="slds-form--inline">
+                                                    <div class="slds-form-element" style="margin-right: 0;">
+                                                        <label class="slds-form-element__label" for="select-job-type">Job Duration</label>
+                                                        <div class="slds-select_container" style="display: inline-block;">
+                                                            <apex:selectList id="cbbDuration" value="{!Wrapper.Duration}" styleClass="slds-select" style="width: 100%;" multiselect="false" size="1">
+                                                                <apex:selectOptions value="{!durationOptions}"></apex:selectOptions>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="slds-form--inline slds-float--right">
+                                                    <div class="slds-form-element" style="margin-right: 0;">
+                                                        <label class="slds-form-element__label" for="select-nearest-office">Nearest Office</label>
+                                                        <div class="slds-select_container" style="display: inline-block;">
+                                                            <apex:selectList id="cbbOffice" value="{!Wrapper.Job.sked__Region__c}" styleClass="slds-select" style="width: 100%;" multiselect="false" size="1">
+                                                                <apex:selectOptions value="{!regionOptions}"></apex:selectOptions>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <apex:outputPanel id="divBookingGrid" layout="div" styleClass="BookingGridSlots slds-grid slds-wrap slds-m-top--medium slds-p-left--medium">
+                                    <apex:inputHidden id="hddSelectedDateTime" value="{!Wrapper.SelectedDateTime}"></apex:inputHidden>
+                                    <apex:repeat value="{!bookingGrid.groups}" var="dateslot">
+                                        <div class="slds-col slds-m-top--large date-slot">
+                                            <p class="slds-text-align--center sked-widget__day ">{!dateslot.label}</p>
+                                            <apex:repeat value="{!dateslot.slots}" var="timeslot">
+                                                <div class="TimeSlot slds-m-right--medium slds-m-top--medium">
+                                                    <!--timeslot's selected class - is-highlighted-->
+                                                    <div class="slds-box sked-time-slot{!IF(timeslot.isAvailable, ' sked-time-slot--is-available', '')}" 
+                                                         data-selected-time="{!timeslot.slotKey}">
+                                                        <p class="slds-text-align--center ">{!timeslot.label}</p>
+                                                        <span class="sked-time-slot__resource-count">
+                                                            <span class="">{!timeslot.noOfAvailRes}</span><span>/</span><span class="">{!timeslot.noOfQualifiedRes}</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </apex:repeat>
+                                        </div>
+                                    </apex:repeat>
+                                    <script>
+                                    errorMessage = '{!errorMessage}';
+                                    $(function () {
+                                        initTimeslots();
+                                    })
+                                    </script>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{! !showBookingGrid}" styleClass="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding-left-right">
+                                <div class="BookingGridHeader slds-has-divider--bottom-space">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+                                                <div class="slds-text-heading--large slds-truncate">
+                                                    Schedule Inspection
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-p-around--large slds-text-align--center" style="height: 200px; display: flex; flex-direction: column; justify-content: center;">
+                                    <p>
+                                        <img src="{!URLFOR($Resource.sked_SLDS, '/assets/icons/utility/warning_120.png')}" alt="" width="16" aria-hidden="true" class="slds-input__icon slds-icon-text-default" />
+                                        {!entryMessage}
+                                    </p>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputPanel rendered="{!showBookingGrid}" styleClass="footer--fixed">
+                    <button id="btnCreateJob" type="button" class="slds-button slds-button--brand">Save Job</button>
+                </apex:outputPanel>
+            </div>
+        </apex:form>
+        
+        <script>
+        var parent_domain = '{!JSENCODE($CurrentPage.parameters.parent_domain)}';
+        var rootRecordId = '{!rootRecordId}';
+        var errorMessage;
+        var selectedDateString = '{!selectedDate}';
+        
+        function initDatePicker() {
+            var selectedDate = moment(selectedDateString, '"YYYY-MM-DD"');
+            
+            var $date = $('#date').datepicker({
+                constrainInput: true,
+                dateFormat: "D, m/d/y",
+                firstDay: 0,
+                minDate: 0,
+                onSelect: function (value) {
+                    selectedDate = moment($(this).datepicker('getDate'));
+                    var selectedDateString = selectedDate.format('"YYYY-MM-DD"');
+                    onLoadBookingGrid(selectedDateString);
+                }
+            })
+            .datepicker('setDate', selectedDate.toDate());
+            
+            $(document).on('click', '[data-change-week]', function () {
+                var dir = $(this).data('change-week')
+                if (dir === 1) {
+                    selectedDate.add(1, 'week')
+                } else if (dir === -1) {
+                    selectedDate.subtract(1, 'week')
+                }
+                $date.datepicker('setDate', selectedDate.toDate());
+                $('.ui-datepicker-current-day').click();
+            });
+            
+            $(document).on('click', '[data-show-picker]', function () {
+                $date.datepicker('show');
+            });
+        }
+        
+        function saveJob() {
+            var selectedDateTime = $('input[id$=hddSelectedDateTime]').val();
+            if (selectedDateTime == '') {
+                toastr.error('Please select timeslot prior to create job.', 'Error');
+            }
+            else {
+                onSaveJob();
+            }
+        }
+        
+        function onSaveJobComplete() {
+            if (errorMessage == '') {
+                window.open(parent_domain + '/' + rootRecordId , "_top");
+            }
+            else {
+                toastr.error(errorMessage, 'Error');
+            }
+        }
+        
+        function initTimeslots() {
+            $('.sked-time-slot--is-available').click(function() {
+                $('.is-highlighted').removeClass('is-highlighted');
+                $(this).addClass('is-highlighted');
+                var selectedTime = $(this).data('selected-time');
+                $('input[id$=hddSelectedDateTime]').val(selectedTime);
+            });
+        }
+        
+        $(function () {
+            initDatePicker();
+            
+            $('select[id$=cbbJobType]').prop('disabled', true);
+            
+            $('select[id$=cbbOffice]').change(function() {
+                selectedDate = moment($('#date').datepicker('getDate'));
+                var selectedDateString = selectedDate.format('"YYYY-MM-DD"');
+                onLoadBookingGrid(selectedDateString);
+            });
+            
+            $('select[id$=cbbDuration]').change(function() {
+                selectedDate = moment($('#date').datepicker('getDate'));
+                var selectedDateString = selectedDate.format('"YYYY-MM-DD"');
+                onLoadBookingGrid(selectedDateString);
+            });
+            
+            $('#btnCreateJob').click(function() {
+                saveJob();
+                return false;
+            });
+            
+            initTimeslots();
+        })
+        </script>
+    </body>
+    
+</apex:page>

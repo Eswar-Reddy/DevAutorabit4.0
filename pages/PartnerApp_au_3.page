@@ -1,0 +1,48 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationController" tabStyle="Partner_Application__c" showHeader="false">
+<apex:form >
+<c:PartnerAppHeader_au id="header" isCommercial="{!isCommercial}" pageNumber="3"/>
+<apex:pageMessages />
+<apex:pageBlock >
+ <apex:pageBlockButtons >
+                <apex:commandButton value="Back" action="{!step2_au}"/>
+                <apex:commandButton value="Submit" action="{!step4_au}"/>
+                <apex:commandButton value="Cancel" action="{!cancelPartner_au}"/>
+            </apex:pageBlockButtons>
+    <apex:pageblockSection columns="1">
+
+        <table width="100%">        
+
+        <tr style="font-weight:bold;font-size:14px;"><td width="100%" style="padding-top:25px;" align="center">APPLICATION FORM WAIVER</td></tr>        
+
+        <tr>
+
+            <td width="100%" style="padding-top:10px;" >
+                <apex:inputHidden value="{!partnerApp.Company_Name__c}" />   
+                In exchange for the consideration of this application by <input type="text" id ="partnerAppComp" /> (hereinafter called "The Company"), I agree that: 
+                Neither the acception of this application nor the subsequent entry into any type of contractual relationship, either in the role of a SunPower
+                <br/> <br/>
+                Dealer or any other position, shall serve to create an actual or implied Dealer Agreement, or to confer any rights to create a Dealer Agreement with SunPower.
+                <br/> <br/>
+                By submitting this application, I certify that all information herein is true and complete. I authorize SunPower Corporation to retain this                 application, to rely on the foregoing, to check and verify any information contain herein.
+            </td>
+
+        </tr>
+
+        </table>
+
+        <br/><br/>
+        
+    </apex:pageblockSection>
+       <table style="border:black 2px solid" width="100%" height="100px" >
+            <tr>
+
+                <td  style="padding-left:10px;white-space:nowrap;">
+                    I authorize investigation of all statements contained in this application, and hereby release the Company from any liability as a result
+                    of such investigation
+                </td>
+            </tr>
+
+        </table>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

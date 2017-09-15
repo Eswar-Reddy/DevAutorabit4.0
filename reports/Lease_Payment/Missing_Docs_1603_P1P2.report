@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Intrcnct_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$RSM__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Lease__c</column>
+            <operator>equals</operator>
+            <value>20441,70142,22745,177422,24401,186011,235479,238068,223685,184531,26173,192242,25680,25667,188997,169054,268622,186692,184770,188409,190621,196677,171791,184332,177590,22560,162289,165477,203927,182191,170099,201701,218517,82824,26175,201620,24441,218233,24195,24252,25528,250295,168912,23430A,26498,271001,188671,22296,24367,189878,289211,167546,222604,222021,258226,177789,52183,264355,204576,191440,166055,183614,24768,192519,25205,258623,22552,24284,24971,23766,21383A,258649,23977,260949,131884,26657,22897A,23663,23247B,25408,25401,25409,25250,25889,166571,198798,181928,20030,260437,24054,24822A</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Rejected,Legacy Rejected</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>equals</operator>
+            <value>Design Plan,PTO Letter,Commissioning Report</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r$Partner_Account__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Missing Docs 1603 P1P2</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Lease_Payments__r$Install_Pymnt_Apprvd__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

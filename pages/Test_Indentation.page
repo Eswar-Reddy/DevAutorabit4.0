@@ -1,0 +1,216 @@
+<apex:page standardController="Global_Dealer_Program__c" extensions="Test_Indentation" sidebar="false">
+    <apex:pageblock title="Global Dealer Program">
+        <apex:pageBlockTable value="{!Global_Dealer_Program__c}" var="gdp" style="width:50%">
+            <apex:column width="3%">
+             <apex:facet name="header">Country</apex:facet>
+             {!gdp.Countries_Supported__c}
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Account<br/>Type</apex:facet>
+             {!gdp.Account_Type__c}
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Performance<br/>Year</apex:facet>
+             {!gdp.Performance_Year__c}
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Performance<br/>Period</apex:facet>
+             {!gdp.Performance_Period__c}
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">First<br/>Quarter of<br/>Performance<br/>Period</apex:facet>
+             {!gdp.First_Quarter_of_Performance_Period__c}
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Second<br/>Quarter of<br/>Performance<br/>Period</apex:facet>
+             {!gdp.Second_Quarter_of_Performance_Period__c}
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Current<br/>Performance<br/>Period<br/>Start<br/>Date</apex:facet>
+                <apex:outputField value="{!gdp.Current_Performance_Period_Start_Date__c}"/>
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Currenct<br/>Performance<br/>Period<br/>End<br/>Date</apex:facet>
+             <apex:outputField value="{!gdp.Current_Performance_Period_End_Date__c}"/>
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Previous<br/>Performance<br/>Period<br/>Start<br/>Date</apex:facet>
+             <apex:outputField value="{!gdp.Previous_Performance_Period_Start_Date__c}"/>
+            </apex:column>
+            <apex:column width="3%">
+             <apex:facet name="header">Previous<br/>Performance<br/>Period<br/>End<br/>Date</apex:facet>
+             <apex:outputField value="{!gdp.Previous_Performance_Period_End_Date__c}"/>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageblock>
+   <apex:form >
+   <apex:pageblock >
+    <apex:pageBlockSection columns="1" >
+    <apex:pageBlockSectionItem >
+     <apex:OutputLabel value="Filter" style="font-weight:bold;font-size:1.3em" /> 
+     <apex:selectList value="{!prop_alphaSelected}" size="1" style="width:70px;text-align:left" id="Alp">
+       <apex:actionSupport event="onchange" reRender="Acc" />
+       <apex:selectOptions value="{!prop_alphaList}"/>
+      </apex:selectList> 
+      </apex:pageBlockSectionItem>
+       
+      <apex:pageBlockSectionItem >  
+      <apex:OutputLabel value="Account" style="font-weight:bold;font-size:1.3em" for="Acc"/>          
+      <apex:selectList value="{!prop_acctSelected}" size="1" style="width:400px" id="Acc" >
+       <apex:actionSupport event="onchange" action="{!showMetrics}" reRender="metricList" status="showProcess" />
+       <apex:selectOptions value="{!prop_accList}"/>
+      </apex:selectList>   
+      </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+      <apex:actionStatus StartText="Processing......" Startstyle="color:red;font-weight:bold" id="showProcess"/>
+      <apex:actionStatus id="checkStatus" StartText="Please Wait......" StartStyle="color:red;font-weight:bold"/>
+     </apex:pageblock>   
+      <apex:pageBlock title="Metrics">
+        <apex:pageBlockButtons >
+            <apex:commandButton value="Save" action="{!saveMetrics}" reRender="metricList"  status="updateStatus"/> <br/>
+            <apex:actionStatus id="updateStatus" StartText="Updating...." startStyle="color:green;font-weight:bold"/>              
+        </apex:pageBlockButtons>       
+            
+        <table width="100%">
+        <tr>
+           <td>
+            <th style="font-weight:bold;font-size:1.2em;background-color:#B0E0E6;border-style:hidden;text-align:center" width="20%" >
+             Metric Name
+            </th>
+          </td>
+          <td>
+            <th style="font-weight:bold;font-size:1.2em;background-color:#B0E0E6;border-style:hidden;text-align:center" width="20%">
+            Goal Original Values
+            </th>
+         </td>
+         <td width="2.7%">
+         </td>
+         <td>
+            <th style="font-weight:bold;font-size:1.2em;background-color:#B0E0E6;border-style:hidden;text-align:center" width="22%">
+             Goal Overidden Values
+            </th>
+         </td>
+         <td>
+            <th style="font-weight:bold;font-size:1.2em;background-color:#B0E0E6;border-style:hidden;text-align:center" width="15%">
+             Results Original values
+            </th>
+         </td>
+         <td width="2.8%">
+         </td>
+         <td>
+            <th style="font-weight:bold;font-size:1.2em;background-color:#B0E0E6;border-style:hidden;text-align:center" width="22.6%">
+             Results Overidden Values
+            </th>
+         </td>
+       </tr>
+        </table>  
+    <apex:outputPanel id="metricList" rendered="{!bool_rend}" >    
+     <apex:pageBlock >      
+      <apex:pageBlockTable value="{!prop_MetricList}" var="m"  columnsWidth="100%">
+        <apex:column width="10%">                          
+            <apex:image height="18px" value="{!$Resource.ChildImg}"  rendered="{!IF(m.Metric_parentChild__c=='child',true,false)}" />
+            <apex:image height="18px" value="{!$Resource.ParentImg}"  rendered="{!IF(m.Metric_parentChild__c=='child',false,true)}" style="padding-top:1px"/>
+         </apex:column>
+        <apex:column >
+        <apex:facet name="header">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Metric Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</apex:facet>
+        {!m.Metric_Name__c}
+        </apex:column>
+        <apex:column width="10%" >
+            <apex:facet name="header">Metric Type</apex:facet>
+            {!m.Type__c}
+        </apex:column> 
+        <apex:column width="30%" >
+            <apex:facet name="header">Goal For<br/>Bonus<br/>Display</apex:facet>
+            {!m.Goal_for_Bonus_Display__c}
+        </apex:column> 
+        
+        <apex:column width="3%" >
+            <apex:facet name="header">Goal For<br/>Bonus<br/>Value</apex:facet>
+            {!m.Goal_for_Bonus_Value__c}
+        </apex:column>  
+        <apex:column width="3%" >
+            <apex:facet name="header">Goal For<br/>Promotion<br/>Display</apex:facet>
+            {!m.Goal_for_Promotion_Display__c}
+        </apex:column>
+        <apex:column width="3%" >
+            <apex:facet name="header">Goal For<br/>Promotion<br/>Value</apex:facet>
+            {!m.Goal_for_Promotion_Value__c}
+        </apex:column>
+        <apex:column width="3%" >
+            <apex:facet name="header">Goal For<br/>Retention<br/>Display</apex:facet>
+            {!m.Goal_for_Retention_Display__c}
+        </apex:column>  
+        <apex:column width="3%" >
+            <apex:facet name="header">Goal For<br/>Retention<br/>Value</apex:facet>
+            {!m.Goal_for_Retention_Value__c}
+        </apex:column> 
+        <apex:column width="3%" >
+            <apex:facet name="header">Goal<br/>Override</apex:facet>
+            <apex:inputField value="{!m.Goal_Override__c}" /> 
+        </apex:column>
+        <apex:column width="3%" >
+            <apex:facet name="header">Bonus<br/>Display<br/>Overridden</apex:facet>            
+           <apex:inputText value="{!m.Goal_for_Bonus_Display_Overridden__c}"  size="4"/> 
+        </apex:column> 
+        <apex:column width="3%">
+            <apex:facet name="header">Goal For<br/>Bonus<br/>Value<br/>Overridden</apex:facet>           
+            <apex:inputText value="{!m.Goal_for_Bonus_Value_Overridden__c}"  size="4"/> 
+       </apex:column>
+       <apex:column width="3%">
+            <apex:facet name="header">Goal For<br/>Promotion<br/>Display<br/>Overridden</apex:facet>            
+            <apex:inputText value="{!m.Goal_for_Promotion_Display_Overridden__c}"  size="4"/>
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Goal For<br/>Promotion<br/>Value<br/>Overridden</apex:facet>            
+            <apex:inputText value="{!m.Goal_for_Promotion_Overridden__c}"  size="4"/>
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Goal For<br/>Retention<br/>Display<br/>Overridden</apex:facet>            
+            <apex:inputText value="{!m.Goal_for_Retention_Display_Overidden__c}"  size="4"/>
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Goal For<br/>Retention<br/>Value<br/>Overridden</apex:facet>            
+            <apex:inputText value="{!m.Goal_for_Retention_Overridden__c}"  size="4"/>
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Status<br/>for<br/>Bonus</apex:facet>            
+            {!m.Status_for_Bonus__c}
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Status<br/>for<br/>Promotion</apex:facet>            
+            {!m.Status_for_Promotion__c}
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Status<br/>for<br/>Retention</apex:facet>            
+            {!m.Status_for_Retention__c}
+        </apex:column>
+        <apex:column width="4%">
+            <apex:facet name="header">Result</apex:facet>            
+            {!m.Result__c}
+        </apex:column>
+        <apex:column width="4%">
+            <apex:facet name="header">Result<br/>Override</apex:facet>            
+            <apex:inputCheckbox value="{!m.Result_Override__c}" />
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Status<br/>for<br/>Bonus<br/>Overidden</apex:facet>            
+            <apex:inputField value="{!m.Status_for_Bonus_Overidden__c}"/>
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Status<br/>for<br/>Promotion<br/>Overidden</apex:facet>            
+            <apex:inputField value="{!m.Status_for_Promotion_Overidden__c}"/>
+        </apex:column>
+        <apex:column width="3%">
+            <apex:facet name="header">Status<br/>for<br/>Retention<br/>Overidden</apex:facet>            
+            <apex:inputField value="{!m.Status_for_Retention_Overidden__c}"/>
+        </apex:column>
+        <apex:column width="3%">            
+            <apex:facet name="header">Result<br/>Overidden</apex:facet>            
+            <apex:inputText value="{!m.Result_Overidden__c}"  size="4"/>           
+        </apex:column>        
+      </apex:pageBlockTable>
+     </apex:pageBlock>    
+    </apex:outputPanel>
+    </apex:pageBlock>
+   </apex:form>
+  </apex:page>

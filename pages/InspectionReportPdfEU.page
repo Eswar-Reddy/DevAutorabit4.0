@@ -1,0 +1,2340 @@
+<apex:page StandardController="Inspection__c" Extensions="InspectionReportEUController" sidebar="false" renderAs="pdf" language="{!lang}">
+<head>
+<script type="text/javascript"  src="{!URLFOR($Resource.yui1,'yui/yahoo-min.js')}"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.yui1,'yui/event-min.js')}"></script>
+<script src="/static/102207/js/spch.js" type="text/javascript"></script>
+
+<style type="text/css">
+@page {
+    
+    @bottom-right { 
+         white-space: pre;
+         content: "Page " counter(page) " of " counter(pages);
+         vertical-align: top;
+         text-align : right; 
+         font-size: 16px; 
+         
+        }    
+
+}
+</style>
+
+
+ <style>
+.popupdiv {   
+       DISPLAY: none; 
+       Z-INDEX: 108;
+       WIDTH: 500px; 
+       LEFT: 250px; 
+       POSITION: absolute;
+       TOP: 280px; 
+       
+ }
+
+.helpTextCustom {
+    background-color: #FFFFE1;
+    /*border: 1px solid;*/
+    margin-left: 4px;
+    margin-right: 4px;
+    padding: 1px 2px;
+}
+ 
+</style>
+
+</head>    
+<body>
+
+
+        <apex:pageblock id="pb" title="Inspection Report ">
+            
+            <apex:outputPanel id="idLang">
+            <apex:outputLabel value="Language->" rendered="true" />
+                <apex:outputLabel value="{!country}" />
+            </apex:outputPanel>
+ 
+            <apex:outputPanel id="pnlResidentialReport" title="Inspection Report">
+                <br/>
+                <apex:pageblockSection id="pbResidential" columns="2">
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none">
+                        <apex:image id="theImage" value="{!URLFOR($Resource.ImgSunPower)}"
+                            width="400px" height="100px"/>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none" />
+
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none;background-color:rgb(238, 199, 23);">
+                        <span
+                            style="text-align: left; padding-left: 10px; font-size: 20px; font-weight: lighter">
+                         {!message}</span>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem labelStyle="border-bottom:none"
+                        dataStyle="border-bottom:none;background-color:rgb(238, 199, 23);" >
+                        <span
+                            style="text-align: left; padding-left: 10px; font-size: 20px; font-weight: lighter">
+                         &nbsp;</span>
+                       </apex:pageBlockSectionItem>                     
+                    
+                    
+                    <apex:pageblockSectionItem />
+                    <apex:pageblockSectionItem id="sectionInspectionDate">
+                        <apex:outputLabel value="{!$Label.IR_Inspection_Date}" />
+                        <apex:outputfield style="width:210px;" id="txtInspectorDate" value="{!inspection.Inspection_Date__c}"/>
+                    </apex:pageblockSectionItem>
+      
+
+                    <apex:pageblockSectionItem />
+
+                    <apex:pageblockSectionItem id="sectionTxtInspector">
+                        <apex:outputLabel value="{!$Label.IR_Inspector}" />
+                        <apex:outputfield style="width:210px;" id="txtInspector"
+                            value="{!inspection.Contact__c}"/>
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem />
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="{!$Label.IR_Company}" />
+                        <apex:outputText style="width:210px;" id="sectionInspectorCompany" value="{!Inspector_company}"/>
+                    </apex:pageblockSectionItem>
+                    <apex:pageblockSectionItem />
+                    <apex:pageblockSectionItem id="sectionTxtReviewer">
+                        <apex:outputLabel value="{!$Label.IR_Review_by}" />
+                        <apex:outputText style="width:210px;" id="txtReviewer"
+                            value="{!Reviewer_Name}"/>
+                    </apex:pageblockSectionItem>
+
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="{!$Label.IR_Customer_Name}" />  
+                        <apex:outputPanel > 
+                     <!--   <apex:outputText style="width:230px;" id="sectionCustomerName"
+                            value="{!site_ContactLastName}"/> -->
+                             <apex:outputText style="width:230px;" id="sectionCustomerName"
+                            value="{!site_ContactName}"/> 
+                        </apex:outputPanel>
+                    </apex:pageblockSectionItem>                  
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:outputText style="width:210px;" id="sectionReviewerEmail" value="{!Reviewer_Email}"/>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="{!$Label.IR_Site_Address}" />
+                        <apex:outputText style="width:230px;" id="sectionSiteStreet"
+                            value="{!site_StreetAdd}"/>
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="{!$Label.IR_Dealer_Company}" />
+                        <apex:outputText style="width:210px;" id="sectionDealerCompany" value="{!Jobsupervisor_company}"/>
+                    </apex:pageblockSectionItem>
+                                       
+                    <apex:pageblockSectionItem >
+                       <apex:outputLabel value="{!$Label.IR_City_Region_Postal_Code}" /> <!-- Address -->
+                        <apex:outputText style="width:230px;" id="sectionSiteCityStateZip"
+                            value="{!Site_CityStateZip}" />
+                    </apex:pageblockSectionItem> 
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="{!$Label.IR_City_Region_Postal_Code}" />
+                        <apex:outputText style="width:210px;" id="sectionJobSupCityStateZip" value="{!JobSupervisor_cityStateZip}"
+                            />
+                    </apex:pageblockSectionItem>
+                    <apex:pageblockSectionItem >                    
+                        <apex:outputLabel value="{!$Label.IR_Telephone}" />
+                        <apex:outputText style="width:230px;" id="sectionTelephone" value="{!site_phone}"
+                            />
+                    </apex:pageblockSectionItem> 
+                    
+                    <apex:pageblockSectionItem id="sectionTxtLeadInstaller">
+                        <apex:outputLabel value="{!$Label.IR_Job_Supervisor}" />
+                        <apex:outputText style="width:210px;" id="txtLeadInstaller" 
+                            value="{!JobSupervisor_Name}"/>
+                    </apex:pageblockSectionItem>
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:outputText style="width:230px;" id="sectionEmail" value="{!site_Email}"/>
+                    </apex:pageblockSectionItem>                    
+
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="{!$Label.IR_Telephone}" />
+                        <apex:outputText style="width:210px;" id="sectionJobSupTelephone" value="{!JobSupervisor_phone}"/>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputlabel value="{!$Label.IR_Commission_Date}" />
+                          <apex:outputfield style="width:230px;" value="{!inspection.Residential_Commission_Date__c}" id="txtCommissionDate"/>
+                    </apex:pageblockSectionItem>
+                    
+                    <apex:pageblockSectionItem >
+                        <apex:outputLabel value="Email" />
+                        <apex:outputText style="width:210px;" id="sectionJobSupEmail" value="{!JobSupervisor_Email}" />
+                    </apex:pageblockSectionItem>               
+                
+                    
+                </apex:pageblockSection>
+                <apex:pageblockSection columns="2">
+
+                    <apex:pageblockSection columns="1">
+                        <apex:outputLabel value="{!$Label.IR_Customer_Communication}"
+                            style="text-align:left;font-weight:Bold;color:#cc0000" />
+                        <apex:pageblockSectionItem >
+                            <apex:outputfield value="{!inspection.Customer_Communication__c}"
+                                id="inputCustomerComm" style="width:400px;height:70px" />
+                        </apex:pageblockSectionItem>
+                    </apex:pageblockSection>
+
+                    <apex:pageblockSection columns="1" id="pbScore">
+                        <apex:pageBlockSectionItem />
+                        
+                        <apex:pageBlockSectionItem >
+                            <!--Score -->
+                            <apex:outputpanel >
+                                <apex:outputlabel value="{!$Label.IR_Scoring}"  style="font-weight:bold; vertical-align:middle;" />
+                            </apex:outputpanel>
+                            <apex:outputpanel >
+                            <apex:outputtext value="{0, number, 0.00}" style="width:120px;padding-left:15px;Height:50px;color:Red;font-size:22px;font-weight: bold;border:1px solid black;" id="inputScore" >
+                              <apex:param value="{!inspection.Score__c}" />
+                            </apex:outputtext>%
+                            </apex:outputpanel>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputlabel value=" " />
+                            <apex:outputlabel value="{!inspection.Residential_Result__c}" id="inputResult" style="text-align:center;width:100px;font-size:20px;font-weight:bold;color:#cc0000;"  />
+                        </apex:pageBlockSectionItem>
+                        
+                            
+                        <!-- <apex:pageBlockSectionItem >
+                           
+                            <apex:outputpanel >
+                                <apex:outputText value="" style="font-weight:bold; vertical-align:middle" />
+                            </apex:outputpanel>
+                           
+                            <input type="text" value="{!inspection.Score__c}" style="width:100px;padding-left:15px;Height:50px;color:Red;font-size:40px" id="inputScore"  />
+                            
+                        </apex:pageBlockSectionItem>
+
+                        <apex:pageBlockSectionItem >
+                         
+                            <apex:outputlabel value="{!$Label.IR_Result}" style="font-weight:bold; vertical-align:middle" />
+                            <input type="text" value="{!inspection.Residential_Result__c}" id="inputResult" style="text-align:center;width:100%;font-size:20px;font-weigth:bold;color:#cc0000" />
+                        </apex:pageBlockSectionItem> -->
+                        <!-- 
+                        <apex:pageBlockSectionItem >
+                            <apex:outputlabel value=" " />
+                            <input type="text" value="{!inspection.Result__c}" id="checkResult" />
+                        </apex:pageBlockSectionItem>
+                         -->
+                    </apex:pageblockSection>
+                </apex:pageblockSection>
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_ARRAY_MOUNTING}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:outputPanel id="pnlArrayandMounting" >
+                    <br />
+                    <span style="text-align: left; padding-left: 120px;">&nbsp;</span>
+                    <apex:outputLabel escape="false" style="font-weight: bold; color: Blue" value="{!$Label.IR_General_Help}" />                    
+                    <span style="text-align: left; padding-left: 3px;">&nbsp;</span>
+                </apex:outputPanel>
+                
+                <br />
+                <!-- Start of Array panel -->
+                <apex:outputPanel id="pnlArray">
+
+                    <apex:outputLabel value="{!$Label.IR_Array}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />                      
+                       <apex:outputfield value="{!inspection.Res_Photo_array_to_mounting__c}" />
+                    </apex:panelGrid>
+                    <!--  <apex:panelGrid columns="11" id="theGrid" border="0">
+
+                        <apex:outputText value="" />
+                        <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                        <apex:outputText value=""/>                        
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Overall_Array}"/>
+                        <apex:outputfield value="{!inspection.Residential_ARRAY_Overall__c}" />                        
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Array_grounding}"/>
+                        <apex:outputfield value="{!inspection.Residential_ARRAY_Grounding__c}" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Array_profile}"/>
+                        <apex:outputfield value="{!inspection.Residential_ARRAY_Profile__c}" />                        
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Array_J_box}"/>
+                        <apex:outputfield value="{!inspection.Residential_ARRAY_J_Box__c}" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Rooftop_Conduit}"/>
+                        <apex:outputfield value="{!inspection.Residential_ARRAY_Rooftop__c}" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Problem_areas}"/>
+                        <apex:outputfield value="{!inspection.Residential_ARRAY_Problem_Areas__c}" />
+                        <apex:outputText value="" />
+                        <apex:outputText value="" />
+                    </apex:panelGrid>-->
+                    <!-- Start Question 1 -->
+                    <apex:panelGrid columns="9" id="theGridQ1" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="1. {!$Label.IR_Module_Type}" />
+                        <apex:outputLabel value="SPR-" />
+                        <apex:outputfield value="{!inspection.Residential_Q01_SPR1_EU__c}"  id="inputSPR1"/>
+                        <apex:outputfield value="{!inspection.Residential_Q01_SPR1_ChkBox__c}" />
+                        <apex:outputLabel value="SPR-" />
+                        <apex:outputfield value="{!inspection.Residential_Q01_SPR2_EU__c}" id="inputSPR2"/>
+                        <apex:outputfield value="{!inspection.Residential_Q01_SPR2_ChkBox__c}" />
+                    </apex:panelGrid>
+                    <!-- End Question 1 -->
+                    
+                    <!-- Start Question 2 -->
+                    <apex:panelGrid columns="9" id="theGridQ2_0" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="2. {!$Label.IR_Quantity_Module}" />
+                        <label>&nbsp;&nbsp;&nbsp;</label>
+                        <apex:outputfield value="{!inspection.Residential_Q02_Text1__c}"   id="inputQuantitySPR1"/>
+                        <apex:outputfield value="{!inspection.Residential_Q02_Text1_ChkBox__c}" />
+                        <label>&nbsp;&nbsp;&nbsp;</label>
+                        <apex:outputfield value="{!inspection.Residential_Q02_Text2__c}" id="inputQuantitySPR2"/>
+                        <apex:outputfield value="{!inspection.Residential_Q02_Text2_ChkBox__c}" />
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ2_1" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q02_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="5" id="theGridQ2_2" border="0" style="padding-left:15px">
+                        <apex:outputLabel value="{!$Label.IR_Array_Power_DCSTC}" />
+                        <apex:outputText style="padding-left:10px" />
+                        
+                        <apex:outputText value="{!inspection.Residential_Q02_Array_Power__c}"  id="inputArrayPower" /> <!--   --> 
+
+                        <label>W</label>
+                        <apex:outputText style="padding-left:10px" />
+                    </apex:panelGrid>
+                     <!-- End Question 2 -->
+                    
+                    <!-- Start Question 3 -->
+                    <apex:panelGrid columns="10" id="theGridQ3_1" border="0">
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="3. {!$Label.IR_Array_tilt_angle}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>A</label>
+                            <apex:outputfield value="{!inspection.Residential_Q03_A__c}"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q03_A__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>B</label>
+                            <apex:outputfield value="{!inspection.Residential_Q03_B__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q03_B__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>C</label>
+                            <apex:outputfield value="{!inspection.Residential_Q03_C__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q03_C__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>D</label>
+                            <apex:outputfield value="{!inspection.Residential_Q03_D__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q03_D__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                    <!-- </apex:panelGrid> -->
+                    <!-- End Question 3 -->
+                    
+                    <!-- Start Question 4 -->
+                    <!--<apex:panelGrid columns="10" id="theGridQ4_1" border="0">-->
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="4. {!$Label.IR_Array_azimuth_angle}" />
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>A</label>
+                            <apex:outputfield value="{!inspection.Residential_Q04_A__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q04_A__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>B</label>
+                            <apex:outputfield value="{!inspection.Residential_Q04_B__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q04_B__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>C</label>
+                            <apex:outputfield value="{!inspection.Residential_Q04_C__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q04_C__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label>D</label>
+                            <apex:outputfield value="{!inspection.Residential_Q04_D__c}"
+                                style="width:60px" />
+                                <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q04_D__c==null)}" />
+                            <label>{!$Label.IR_degrees}</label>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ4_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q04_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!-- End Question 4 -->
+                    
+                    <!--Q5  Start -->
+                    <apex:panelGrid columns="4" id="theGridQ5_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="5." />
+                        <apex:outputLabel value="{!$Label.IR_array_free}" />
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Q05_Response__c}"  id="select_Q05" />
+                            <apex:outputlabel value="{!$Label.IR_5_Help}" escape="false" styleClass="helpTextCustom" rendered="false"/>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ5_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q05_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+
+                    <!--Q5  End -->
+                    
+                    <!--Q6  Start -->
+                    <apex:panelGrid columns="4" id="theGridQ6_1" border="0">                        
+                        <apex:outputLabel value="6. {!$Label.IR_array_secured}" />
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Residential_Q06_Response__c}"  id="select_Q06" />
+                        </apex:panelgroup>
+                         <apex:panelgroup >
+                           <span style="width:50px;padding-left:50px">&nbsp; </span>
+                         </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ6_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width:3px;padding-left:3px">&nbsp; </span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q06_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q6  End -->
+                    <!--Q7  Start -->
+                    <apex:panelGrid columns="4" id="theGridQ7_1" border="0">
+                        
+                        <apex:outputLabel value="7. {!$Label.IR_Module_Interconnects}" />
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Residential_Q07_Response__c}"     id="select_Q07"   />
+                           <apex:outputlabel value="(i.e. no gaps)" escape="false" styleClass="helpTextCustom" rendered="false" /> 
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <span style="width:220px;padding-left:220px">&nbsp; </span>
+                         </apex:panelgroup>
+                        </apex:panelGrid>
+                        
+                    <apex:panelGrid columns="4" id="theGridQ7_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q07_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q7  End -->
+                    <!--Q8  Start -->
+                    <apex:panelGrid columns="4" id="theGridQ8_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="8." />
+                        <apex:outputLabel value="{!$Label.IR_Conducts_Sealed}" />
+                        <apex:panelgroup >
+                          <apex:outputfield value="{!inspection.Residential_Q08_Response__c}"     id="select_Q08"   />
+                          
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ8_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q08_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q8  End -->
+                    <!--Q9  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ9_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="9."/>
+                        <apex:outputLabel value="{!$Label.IR_Modules_Grounded}" />                        
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Residential_Q09_Response__c}" id="select_Q09"   />                           
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <span style="width:40px;padding-left:40px">&nbsp; </span>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ9_2" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding-left: 20px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Size_Grounding_cable}" />
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Res_Grounding_Cable_Size__c}" />
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ9_3" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q09_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q9  End -->
+                    <!--Q10  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ10_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="10." />
+                        <apex:outputLabel value="{!$Label.IR_Conduit_secure}" />                        
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Residential_Q10_Response__c}" id="select_Q10" />                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 160px; padding-left: 160px">&nbsp;</span>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ10_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q10_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q10  End -->
+                    <!--Q11  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ11_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="11." />
+                        <apex:outputLabel value="{!$Label.IR_Type_monitoring }" />
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Res_Per_Monitoring_Sys__c}" id="select_Q11" />                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 160px; padding-left: 160px">&nbsp;</span>
+                        </apex:panelgroup>
+                        </apex:panelGrid>
+
+                    <apex:panelGrid columns="4" id="theGridQ11_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Res_Per_Monitoring_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                  <!--Q11  End -->
+                  </apex:outputPanel>  
+                   <!-- End of Array panel -->
+                   
+                   <!-- START of MOunting panel -->
+                   
+                  <apex:outputPanel id="pnlMounting">
+
+                    <apex:outputLabel value="{!$Label.IR_Mounting}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid_mounting" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />                       
+                       <apex:outputfield value="{!inspection.Res_Photo_Mounting__c}" />
+                    </apex:panelGrid>
+                    <!-- <apex:panelGrid columns="7" id="theGrid_mounting" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_L_Brackets_stanchions_flashings}</label>
+                       <apex:outputfield value="{!inspection.Residential_MOUNTING_L_Brackets__c}" />
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_Roof_Penetrations_overall_and_close_up}</label>
+                       <apex:outputfield value="{!inspection.Residential_MOUNTING_Roof_Penetrations__c}" />
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_Problem_Areas_Damage_to_roof_poor_flashing_or_sealing}</label>
+                       <apex:outputfield value="{!inspection.Residential_MOUNTING_Problem_Areas__c}" />          
+                    </apex:panelGrid> -->
+                    <!--Q12  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ12_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="12." />
+                        <apex:outputLabel value="{!$Label.IR_Mounting_location}" />
+                        <apex:panelgroup >
+                             <apex:outputfield value="{!inspection.Residential_Q11_Picklist__c}" />         
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+
+                    <apex:panelGrid columns="3" id="theGridQ12_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q11_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q12  End -->
+                    <!--Q13  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ13_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="13." />
+                        <apex:outputLabel value="{!$Label.IR_Degree_of_roof_integration}" rendered="{!isItaly}"/>
+                        <apex:outputLabel value="{!$Label.IR_Percentage_of_roof_integracion}" rendered="{!isGermany}"/>
+                        <apex:panelgroup >
+                             <apex:outputfield value="{!inspection.Residential_Degree_of_roof_integration__c}"  rendered="{!isItaly}"/>         
+                             <apex:outputfield value="{!inspection.Residential_Percentage_of_roof_integraci__c}"  rendered="{!isGermany}"/>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ13_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_EU_Q13_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q13  End -->
+                    <!--Q14  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ14_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="14." />
+                        <apex:outputLabel value="{!$Label.IR_Roof_Condition}" />
+                        <apex:outputfield value="{!inspection.Residential_Q12_Picklist__c}" />
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ14_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q12_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q14  End -->
+                    <!--Q15  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ15_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="15." />
+                        <apex:outputLabel value="{!$Label.IR_Roof_Material}:" />
+                        <apex:panelgroup >                              
+                                <apex:outputLabel value="{!roof}"/>
+                                                
+                             <!-- <apex:outputfield value="{!inspection.Residential_Q13_Picklist__c}" /> --> 
+                             <!--<apex:outputfield value="{!inspection.Res_Roofing_Material_Other__c}" /> -->       
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ15_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Res_Roofing_Material_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q15  End -->
+                    <!--Q16  Start -->
+                     <apex:panelGrid columns="5" id="theGridQ16_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="16." />
+                        <apex:outputLabel value="{!$Label.IR_Rack_Type}:" />
+                        <apex:panelgroup >
+                            
+                                <apex:outputText value="{!rack}"/>
+                            
+                             <!--  <apex:outputfield value="{!inspection.Residential_Q14_Picklist__c}" />-->
+                            <!-- <apex:outputfield value="{!inspection.Res_Rack_Type_Other__c}" />   -->     
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ16_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Res_Rack_Type_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q16  End -->
+                    <!--Q17  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ17_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="17." />
+                        <apex:outputLabel value="{!$Label.IR_Mounting_Type}:" />
+                        <apex:panelgroup >
+                            
+                                <apex:outputText value="{!mount}"/>
+                            
+                             <!-- <apex:outputfield value="{!inspection.Residential_Q15_Picklist__c}" />   
+                             <apex:outputfield value="{!inspection.Res_Mount_Type_Other__c}" />-->
+                             <apex:outputlabel value="{!$Label.IR_17_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />       
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="3" id="theGridQ17_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q15_Comments__c}" style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q17  End -->
+                    <!--Q18  Start -->
+                    <apex:panelGrid columns="4" id="theGridQ18_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="18." />
+                        <apex:outputLabel value="{!$Label.IR_Mounting_Penetrations}" />
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Q16_Response__c}"  id="select_Q18" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ18_2_n" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q16_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q18  End -->
+                    <!--Q19  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ19_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="19." />
+                        <apex:outputLabel value="{!$Label.IR_Electrical_Penetrations}" />
+                        <apex:panelgroup >
+                             <apex:outputfield value="{!inspection.Residential_Q17_Response__c}"  id="select_Q19" />                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <span style="width:40px;padding-left:40px">&nbsp; </span>
+                         </apex:panelgroup>                        
+                    </apex:panelGrid>
+                    
+                    
+                    
+                    <apex:panelGrid columns="4" id="theGridQ19_2_n" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q17_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q19  End -->
+                    <!--Q20  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ20_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="20." />
+                        <apex:outputLabel value="{!$Label.IR_Mounting_Racks}" />                        
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Residential_Q18_Response__c}"  id="select_Q20" />                         
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <span style="width:220px;padding-left:220px">&nbsp; </span>
+                         </apex:panelgroup>
+                     </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ20_2_n" border="0">
+                    <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q18_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!--Q20  End -->
+                    <!--Q21  Start -->
+                    <apex:panelGrid columns="5" id="theGridQ21_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="21." />
+                        <apex:panelgroup >
+                            <apex:outputLabel value="{!$Label.IR_Module_mounting}" />
+                            <apex:image id="theHelp_21" title="{!$Label.IR_21_Help}" value="/s.gif" width="25px" height="25px"  styleClass="helpIcon"/>                        
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Q19_Response__c}"  id="select_Q21" />                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                           <span style="width:280px;padding-left:280px">&nbsp; </span>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                   
+                    <apex:panelGrid columns="3" id="theGridQ21_2_n" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q19_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                  <!--Q21  End -->
+                    <!--Q22&Q23  Start -->
+                    <apex:panelGrid columns="9" id="theGridQ2223_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="22." />
+                        <apex:outputLabel value="{!$Label.IR_Time}" />
+                        <apex:outputfield value="{!inspection.Residential_Q20_Time__c}" />
+                        <apex:outputfield value="{!inspection.Residential_Q20_Time_Picklist__c}" />
+                        <apex:panelgroup >
+                         <span style="width:60px">&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                        <apex:outputlabel value="23." />
+                        <apex:outputLabel value="{!$Label.IR_Sky_Condition}" />
+                        <apex:outputfield value="{!inspection.Residential_Q21_Sky_Conditions__c}"  />
+                    </apex:panelGrid>
+                    <!--Q22&Q23  End -->
+                    <!--Q24  Start -->
+                    <apex:panelGrid columns="11" id="theGridQ24_1_n" border="0">
+                        <apex:outputText value="" />
+                        <apex:panelgroup >
+                            <apex:outputLabel value="24. {!$Label.IR_Module_Temperature}" />
+                            <apex:outputlabel value="{!$Label.IR_24_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >                            
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q22_1__c}"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q22_1__c==null)}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>C</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q22_2__c}"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q22_2__c==null)}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>C</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q22_3__c}"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q22_3__c==null)}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>C</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q22_4__c}"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q22_4__c==null)}" />                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>C</label>
+                        </apex:panelgroup>
+                    <!--</apex:panelGrid>-->
+                    <!--Q24  End -->
+                    <!--Q25  Start -->
+                    <!--<apex:panelGrid columns="10" id="theGridQ25_1_n" border="0">-->
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="25. {!$Label.IR_Irradiance}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q23_1__c}" id="inputIrradiance1"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q23_1__c==null)}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q23_2__c}" id="inputIrradiance2"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q23_2__c==null)}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q23_3__c}" id="inputIrradiance3"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q23_3__c==null)}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q23_4__c}" id="inputIrradiance4"
+                                style="width:60px" />
+                            <apex:outputLabel value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"  escape="false"   
+                               rendered="{!(inspection.Residential_Q23_4__c==null)}" />                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 20px; padding: left : 8px">&nbsp;</span>
+                            <label>W/m2</label>
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                     <apex:panelGrid columns="3" id="theGridQ25_2_n" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q23_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>   
+                    </apex:outputPanel>                 
+                    <!--Q25  End -->
+                    <!-- Array & Mounting End -->
+                    <!-- Electric Equipment Start -->
+                    <apex:pageBlockSection columns="1" id="pnlElectricalEquipment">
+                        <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                            <apex:outputLabel value="{!$Label.IR_ELECTRICAL_DEVICES}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                  <br />
+                 <apex:outputPanel id="pnlInverterNew">
+                  <apex:outputLabel value="{!$Label.IR_Inverter}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;text-decoration:underline" />
+                    <br />
+                    <br />
+    <apex:panelGrid columns="7" id="theGrid_Inverter" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />                       
+                       <apex:outputfield value="{!inspection.Res_Photo_Inverter__c}" />
+                    </apex:panelGrid>                                 
+<!--                    <apex:panelGrid columns="7" id="theGrid_Inverter" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Inverter_s_Overview}"/>                       
+                       <apex:outputfield value="{!inspection.Residential_INVERTER_Overview__c}" />                       
+                       <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Inverter_Interior_AC_DC_Grounding}" />
+                       <apex:outputfield value="{!inspection.Residential_INVERTER_Interior_Grounding__c}" />
+                       
+                       <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_Inverter_Interior_AC_DC_Terminals}"/>
+                       <apex:outputfield value="{!inspection.Residential_INVERTER_Interior_AC_DC__c}" />
+                       <apex:outputlabel style="font-style: italic; color: #cc0000" value="{!$Label.IR_DC_System_Grounding_Electrode}"/>
+                       <apex:outputfield value="{!inspection.Residential_INVERTER_DC_System__c}" />          
+                    </apex:panelGrid>-->
+                  
+                  <apex:outputLabel value="{!$Label.IR_Readings_Measurements}"
+                        style="font-weight:bold;font-size:12px;padding-left:15px;text-decoration:underline" />
+                  
+                  <!-- Start of 26 -->
+                    <apex:panelGrid columns="10" id="theGridQ26_1_n" border="0">
+                        <apex:outputText value="26." />
+                        <apex:outputLabel value="{!$Label.IR_Array_Voltage}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q24_1__c}" style="width:60px"  id="inputArrayVoltage1" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q24_2__c}"  id="inputArrayVoltage2" style="width:60px"/>
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q24_3__c}" id="inputArrayVoltage3"
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q24_4__c}" id="inputArrayVoltage4"
+                                style="width:60px" />
+                       </apex:panelgroup>
+                      
+                       <!-- End of 26 -->
+                       <!-- Start of 27 -->
+                       <apex:outputText value="27." />
+                        <apex:outputLabel value="{!$Label.IR_Array_Current}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q25_1__c}" id="inputArrayCurrent1" 
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q25_2__c}" id="inputArrayCurrent2"
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q25_3__c}" id="inputArrayCurrent3" 
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q25_4__c}" id="inputArrayCurrent4" 
+                                style="width:60px" />
+                       </apex:panelgroup>
+                       <!-- End of 27 -->
+                        <!-- Start of 28 -->
+                       <apex:outputText value="28." />
+                        <apex:outputLabel value="{!$Label.IR_AC_Power}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q26_1__c}" id="inputACSystemPower1" style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q26_2__c}" id="inputACSystemPower2" style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q26_3__c}" id="inputACSystemPower3" style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q26_4__c}" id="inputACSystemPower4" style="width:60px" />
+                       </apex:panelgroup>
+                       <!-- End of 28 -->
+                  <!-- Start of 29 -->
+                       <apex:outputText value="29." />
+                        <apex:outputLabel value="{!$Label.IR_System_Energy}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q27_1__c}" id="inputSystemLifetimeEnergy1" style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q27_2__c}" id="inputSystemLifetimeEnergy2" style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q27_3__c}" id="inputSystemLifetimeEnergy3" style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q27_4__c}" id="inputSystemLifetimeEnergy4" style="width:60px" />
+                       </apex:panelgroup>
+                       <!-- End of 29 -->
+                        <!-- Start of 30 -->                       
+                       <apex:outputText value="30." />
+                        <apex:outputLabel value="{!$Label.IR_Inverter_Model}" />
+                        <apex:panelgroup >
+                            <span style="width: 5px; padding-left: 1px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q28_1_EU__c}" id="inputInverterModel1" style="width:130px" />
+                            <apex:outputfield value="{!inspection.Residential_Q28_1_ChkBox__c}" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q28_2_EU__c}" id="inputInverterModel2" style="width:130px" />
+                         <apex:outputfield value="{!inspection.Residential_Q28_2_ChkBox__c}" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q28_3_EU__c}" id="inputInverterModel3" style="width:130px" />
+                            <apex:outputfield value="{!inspection.Residential_Q28_3_ChkBox__c}"/>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q28_4_EU__c}" id="inputInverterModel4" style="width:130px" />
+                            <apex:outputfield value="{!inspection.Residential_Q28_4_ChkBox__c}" />
+                       </apex:panelgroup>
+                     
+                     </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ30_2_n" border="0" rendered="{!isItaly}">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Other_Inverter}"/>
+                        <apex:outputfield value="{!inspection.Residential_Non_SPWR_Inverter__c}" style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="10" id="theGridQ30_3_n" border="0" rendered="{!isGermany}">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Operating_hours}"/>
+                        <apex:outputfield value="{!inspection.Residential_Inverter_operating_hours__c}" style="width:700px" />                       
+                        
+                    </apex:panelGrid>
+                       <!-- End of 30 -->
+                       
+                       <!-- Start of 31 -->
+                   <apex:panelGrid columns="10" id="theGridQ31_1" border="0">
+                       <apex:outputText value="31." />
+                        <apex:outputLabel value="{!$Label.IR_Inverter_SN}" />
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q29_1__c}"  id="inputInverterSerialNumber1"
+                                style="width:70px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q29_2__c}" id="inputInverterSerialNumber2"
+                                style="width:70px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q29_3__c}" id="inputInverterSerialNumber3"
+                                style="width:70px" /> 
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q29_4__c}" id="inputInverterSerialNumber4"
+                                style="width:70px" />
+                       </apex:panelgroup>
+                       
+                       <!-- End of 31 -->
+                        
+                       <!-- Start of 32 -->
+                       
+                       <apex:outputText value="32." />
+                        <apex:panelgroup >
+                        <apex:outputLabel value="{!$Label.IR_String_Configuration_Parallel}" />
+                        <apex:outputlabel value="{!$Label.IR_32_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_1_1__c}" id="inputParallel1"
+                                style="width:20px" />
+                            <label>X</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_1_2__c}" id="inputSeries1"
+                                style="width:20px" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_2_1__c}" id="inputParallel2"
+                                style="width:20px" />
+                            <label>X</label> 
+                            <apex:outputfield value="{!inspection.Residential_Q30_2_2__c}" id="inputSeries2"
+                                style="width:20px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_3_1__c}" id="inputParallel3"
+                                style="width:20px" />
+                            <label>X</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_3_2__c}" id="inputSeries3"
+                                style="width:20px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_4_1__c}" id="inputParallel4"
+                                style="width:20px" />
+                            <label>X</label>
+                            <apex:outputfield value="{!inspection.Residential_Q30_4_2__c}" id="inputSeries4"
+                                style="width:20px" />
+                       </apex:panelgroup>
+                       
+                       <apex:outputText value="" />
+                        <apex:outputLabel value="{!$Label.IR_String_Parallel}" />
+                        <apex:panelgroup >
+                            <span style="width: 5px; padding-left: 1px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_String_Parallel_1__c}" id="inputStringParallel1" style="width:130px" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_String_Parallel_2__c}" id="inputStringParallel2" style="width:130px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_String_Parallel_3__c}" id="inputStringParallel3" style="width:130px" />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputfield value="{!inspection.Residential_String_Parallel_4__c}" id="inputStringParallel4" style="width:130px" />
+                       </apex:panelgroup>
+                        
+                       <!-- Start of Array Input (DC@STC) -->
+                        <apex:outputText value="" />
+                        <apex:outputLabel value="{!$Label.IR_Array_Input}" />
+                        <apex:panelgroup >
+                        
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Q30_Array_Input_1__c}" id="inputArrayInput1"
+                               style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Q30_Array_Input_2__c}" id="inputArrayInput2"
+                                style="width:60px" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Q30_Array_Input_3__c}" id="inputArrayInput3"  style="width:60px"  />
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Q30_Array_Input_4__c}" id="inputArrayInput4" style="width:60px"/>
+                       </apex:panelgroup>
+                      <!-- End of Array Input (DC@STC) -->
+                       
+                       
+                       </apex:panelGrid>
+                 </apex:outputPanel>
+                 
+                 <apex:outputLabel value="Auto Calculations:"
+                        style="font-weight:bold;font-size:12px;padding-left:15px;text-decoration:underline" />
+                    
+                    
+                   <apex:panelGrid columns="10" id="theGridAutoCalculation" border="0">
+                        <!-- Start of 1 -->
+                        <apex:outputText value="" />                        
+                        <apex:panelgroup >
+                            <apex:outputLabel value="{!$Label.IR_Array_DC_Power}" />
+                            <apex:outputlabel value="{!$Label.IR_32_1_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputText value="" />
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_1_1__c}"  id="inputArrayDCPower1" 
+                                style="width:60px;background-color:gray; color: Black;"/>
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_1_2__c}" id="inputArrayDCPower2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_1_3__c}" id="inputArrayDCPower3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_1_4__c}" id="inputArrayDCPower4" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                        <!-- End of 1 -->
+                       <!--  Start of 2 -->
+                       
+                       <apex:outputText value="" />
+                        
+                        <apex:panelgroup >
+                        <apex:outputLabel value="{!$Label.IR_Inverter_Efficiency}" />
+                        <apex:outputlabel value="{!$Label.IR_32_2_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputText value="" />
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_2_1__c}" id="inputInverterEfficiency1" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_2_2__c}" id="inputInverterEfficiency2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_2_3__c}" id="inputInverterEfficiency3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_2_4__c}" id="inputInverterEfficiency4" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                      <!--  End of 2 -->
+                      <!--  Start of 3-->
+                       <apex:outputText value="" />
+                       
+                       <apex:panelgroup >
+                       <apex:outputLabel value="{!$Label.IR_System_Index}"  />
+                       <apex:outputlabel value="{!$Label.IR_32_3_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputText value="" />
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_3_1__c}"   id="inputSystemPerformance1" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_3_2__c}" id="inputSystemPerformance2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_3_3__c}" id="inputSystemPerformance3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_3_4__c}" id="inputSystemPerformance4" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                      <!--  End of 3-->
+                      
+                       <!--  Start of 4-->
+                       <apex:outputText value="" />
+                       
+                       <apex:panelgroup >
+                       <apex:outputLabel value="kWh / kWp(STC):"  />
+                       <apex:outputlabel value="{!$Label.IR_32_4_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <span style="width: 50px; padding-left: 32px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputText value="" />
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">1&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_4_1__c}" id="inputKWH1" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">2&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_4_2__c}" id="inputKWH2" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">3&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_4_3__c}" id="inputKWH3" 
+                                style="width:60px;background-color: gray; color: Black;" />
+                            
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 10px; padding: left : 8px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <label style="font-weight:bold;">4&nbsp;</label>
+                            <apex:outputText value="{!inspection.Residential_Auto_Calculations_4_4__c}" id="inputKWH4"
+                                style="width:60px;background-color: gray; color: Black;" />
+                       </apex:panelgroup>
+                      <!--  End of 4-->
+                    </apex:panelGrid>
+                     <!-- End of 32 -->
+                       <!-- Start of 33 -->
+                     <apex:panelGrid columns="4" id="theGridQ33_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="33."/>
+                        <apex:outputLabel value="{!$Label.IR_Module_Design_Recomm}" />                        
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Module_design_recomm__c}" id="select_Q33" />                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ33_2_n" border="0">
+                       <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                      <apex:outputlabel value="{!$Label.IR_Comment}" />
+                      <apex:outputfield value="{!inspection.Residential_Module_design_recomm_Comment__c}" style="width:700px" />
+                    </apex:panelGrid>                       
+                       <!-- End of 33 -->
+                       
+                       <!-- Start of 34 -->
+                     <apex:panelGrid columns="4" id="theGridQ34_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="34." Style="color:Red;" />
+                        <apex:outputLabel value="{!$Label.IR_Grounding_kit_installed}" />                        
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Grounding_kit_installed__c}" id="select_Q34" />                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ34_2_n" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Grounding_kit_installed_Comm__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>                       
+                       <!-- End of 34 -->
+                       
+                       <!-- Start of 35 -->
+                     <apex:panelGrid columns="4" id="theGridQ35_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="35."/>
+                        <apex:outputLabel value="{!$Label.IR_Phases_balanced}" />                        
+                        <apex:panelgroup >
+                        <apex:outputlabel value="{!$Label.IR_35_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <apex:outputfield value="{!inspection.Residential_Phases_balanced__c}" id="select_Q35" />                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ35_2_n" border="0">
+                       <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                      <apex:outputlabel value="{!$Label.IR_Comment}" />
+                      <apex:outputfield value="{!inspection.Residential_Phases_balanced_Comment__c}" style="width:700px" />
+                    </apex:panelGrid>                       
+                       <!-- End of 35 -->
+                       <!-- Start of 36 -->
+                       <apex:panelGrid columns="4" id="theGridQ36_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="36." Style="color:Red;" />
+                        <apex:outputLabel value="{!$Label.IR_Ground_Path}" />                        
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Res_GroundPath_Inverter_MSP__c}" id="select_Q36" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ36_2_n" border="0">
+                       <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                      <apex:outputlabel value="{!$Label.IR_Cable_Size}" />
+                      <apex:outputfield value="{!inspection.Residential_Cable_size__c}" />
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ36_3_n" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Res_GroundPath_Inverter_MSP_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                       <!-- End of 36 -->
+                       <!-- Start of 37 -->
+                     <apex:panelGrid columns="4" id="theGridQ37_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="37."/>
+                        <apex:outputLabel value="{!$Label.IR_Inverter_located}" />                        
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Inverter_located__c}" id="select_Q37" />                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ37_2_n" border="0">
+                      <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                      <apex:outputlabel value="{!$Label.IR_Comment}" />
+                      <apex:outputfield value="{!inspection.Residential_Inverter_located_Comment__c}" style="width:700px" />
+                    </apex:panelGrid>                       
+                       <!-- End of 37 -->
+                       
+                       <!-- Start of 38 -->
+                     <apex:panelGrid columns="4" id="theGridQ38_1_n" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="38."/>
+                        <apex:outputLabel value="{!$Label.IR_Midday_sunlight}" />                        
+                        <apex:panelgroup >
+                        <apex:outputlabel value="{!$Label.IR_38_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <apex:outputfield value="{!inspection.Residential_Q33_Response__c}" id="select_Q38" />                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ38_2_n" border="0">
+                       <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                      <apex:outputlabel value="{!$Label.IR_Comment}"  style="font-style:italic"/>
+                      <apex:outputfield value="{!inspection.Residential_Q33_Comments__c}" style="width:700px" />
+                    </apex:panelGrid>                       
+                       <!-- End of 38 -->
+                       <!-- Start of 39 -->
+                       <apex:panelGrid columns="5" id="theGridQ39_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="39." />
+                        <apex:outputLabel value="{!$Label.IR_Space_around}" />                        
+                        <apex:panelgroup >
+                        <apex:outputlabel value="{!$Label.IR_39_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <apex:outputfield value="{!inspection.Residential_Q34_Response__c}" id="select_Q39" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ39_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q34_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                       <!-- End of 39 -->
+                       <!-- End of Inverter panel -->
+                       
+                       <!-- Start of Array to Invertor Wiring -->
+                 <apex:outputPanel id="pnlArraytoInvertor">
+
+                    <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_Array_to_Inverter}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                    <br />
+                    <br />
+                    <apex:panelGrid columns="7" id="theGrid_ArraytoInvertor" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />                       
+                       <apex:outputfield value="{!inspection.Res_Photo_Array_to_Inverter__c}" />
+                    </apex:panelGrid>                    
+                    <!-- Start of 40 -->
+                     <apex:panelGrid columns="6" id="theGridQ40_1" border="0">
+                        <apex:outputText value="40."  style="width:5px;padding-left:5px" />
+                        <apex:outputLabel value="{!$Label.IR_1_way_distance}" style="width:300px"/>
+                        <apex:outputfield value="{!inspection.Residential_Q35_Distance__c}" style="width:60px" />
+                        <apex:outputLabel value="{!$Label.IR_size}" />
+                        <apex:outputfield value="{!inspection.Res_Array_Invertor_Conductor_Size__c}"style="width:80px" />
+                        <apex:outputLabel value="" />
+                        
+                        
+                        <apex:outputLabel value="" /> 
+                        <apex:outputLabel value="{!$Label.IR_quantity}" /> 
+                        <apex:outputfield value="{!inspection.Residential_Q35_Quantity__c}" style="width:60px" />
+                        <apex:outputLabel value="{!$Label.IR_quantity_1}" />
+                        <apex:outputLabel value="{!$Label.IR_Laying_system}" rendered="{!isGermany}"/>
+                        <apex:outputfield value="{!inspection.Residential_laying_system__c}" style="width:80px"  rendered="{!isGermany}"/>
+                        <apex:outputLabel value="" rendered="{!isItaly}"/>
+                        <apex:outputLabel value="" rendered="{!isItaly}" />
+                        
+                     </apex:panelGrid>
+                     <apex:panelGrid columns="3" id="theGridQ40_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q35_Comments__c}" style="width:700px" />
+                     </apex:panelGrid>
+                     
+                     <!-- End of 40 -->
+                     <!-- Start of 41 -->
+                     <apex:panelGrid columns="4" id="theGridQ41_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="41." />
+                        <apex:outputLabel value="{!$Label.IR_PV_Circuit}" />
+                        <apex:panelgroup >
+                            <apex:outputlabel value="{!$Label.IR_41_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                          <apex:outputfield value="{!inspection.Residential_Q36_Response__c}"  id="select_Q41" />                          
+                        </apex:panelgroup>
+                    </apex:panelGrid>                    
+                    <apex:panelGrid columns="3" id="theGridQ41_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q36_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                     <!-- End of 41 -->
+                     <!-- Start of 42 -->
+                     <apex:panelGrid columns="4" id="theGridQ42_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="42." />
+                        <apex:outputLabel value="{!$Label.IR_Overvoltage_protection}" />
+                        <apex:panelgroup >
+                          <apex:outputfield value="{!inspection.Residential_Overvoltage_protection_Q_40__c}"  id="select_Q42" />                          
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ42_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Overvoltage_protection_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!-- End of 42 -->
+                     <!-- Start of 43 -->
+                     <apex:panelGrid columns="4" id="theGridQ43_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="43." />
+                        <apex:outputLabel value="{!$Label.IR_Conductors_Insulated}" />
+                        <apex:panelgroup >
+                            <apex:outputlabel value="{!$Label.IR_42_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                          <apex:outputfield value="{!inspection.Residential_Conductors_Insulated__c}"  id="select_Q43" />
+                          
+                        </apex:panelgroup>                        
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ43_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Conductors_Insulated_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                     <!-- End of 43 -->
+                     <!-- Start of 44 -->
+                     <apex:panelGrid columns="4" id="theGridQ44_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="44."  Style="color:Red;" />
+                        <apex:outputLabel value="{!$Label.IR_Conductors_Installed}" />
+                        <apex:panelgroup >
+                          <apex:outputfield value="{!inspection.Residential_Conductors_Installed__c}"  id="select_Q44" />
+                          
+                        </apex:panelgroup>                        
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ44_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Conductors_Installed_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                     <!-- End of 44 -->
+                     
+                  </apex:outputPanel>
+                 <!-- End of Array to Invertor Wiring -->
+                       
+                 
+                     <!-- Start of AC DISCONNECT AND NEC LABELS -->
+                 <apex:outputPanel id="pnlACDISCONNECTANDNECLABELS">
+
+                     <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_DC_Disconnect_and_Safety_labels}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>      
+                     </apex:pageBlockSection> 
+                    <br />
+                    <!--<apex:panelGrid columns="7" id="theGrid_ACDISCONNECTANDNECLABELS" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_DC_Disc_Voltage_rating}</label>
+                       <apex:outputfield value="{!inspection.Residential_AC_DISCONNECT_NEC_Labels__c}" />          
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_Photovoltaic_Disc_and_labels}</label>
+                       <apex:outputfield value="{!inspection.Residential_AC_DISCONNECT_Problem_Areas__c}" />          
+                     
+                       </apex:panelGrid>
+                       -->
+                     <apex:panelGrid columns="4" id="theGrid_ACDISCONNECTANDNECLABELS" border="0">
+                        <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Photo_Labels__c}" rendered="{!isItaly}"/>
+                            <apex:outputfield value="{!inspection.Residential_Photo_Labels_de__c}" rendered="{!isGermany}"/>
+                       </apex:panelgroup>
+                    </apex:panelGrid>
+                     <apex:panelGrid columns="4" id="theGridQ45_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="45." Style="color:Red;" />
+                        <apex:outputLabel value="{!$Label.IR_DC_disconnects_rated}" />
+                        <apex:panelgroup >
+                        <apex:outputlabel value="{!$Label.IR_44_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <apex:outputfield value="{!inspection.Residential_DC_disconnects_rated__c}"  id="select_Q45" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ45_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_DC_disconnects_rated_Comment__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                    <apex:panelGrid columns="4" id="theGridQ46_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="46."/>
+                        <apex:outputLabel value="{!$Label.IR_Photovoltaic_Disc_and_labels}" />
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_PV_disconnects_labeled__c}"  id="select_Q46" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="4" id="theGridQ46_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_PV_disconnects_labeled_Comme__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                 
+                 </apex:outputPanel>
+                <!-- End of AC DISCONNECT AND NEC LABELS -->
+                       
+                    <!-- Start of lNVERTER TO MSP WIRING-->
+                  <apex:outputPanel id="pnlNVERTERTOMSPWIRING">
+                  
+                  <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_Inverter_to_MSP}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>    
+                     </apex:pageBlockSection>
+                     <br />
+                    <apex:panelGrid columns="7" id="theGrid_INVERTERTOMSPWIRING" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <!-- <label style="font-style: italic; color: #cc0000">{!$Label.IR_Conduit_Routing_Overview}</label>
+                       <apex:outputfield value="{!inspection.Residential_INVERTER_TO_MSP_Conduit__c}" />
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_Problem_Area_Incorrect_Conductor_Color_AC_circuit_breaker}</label>
+                       <apex:outputfield value="{!inspection.Residential_INVERTER_TO_MSP_Problem_Area__c}" /> -->
+                       <apex:outputfield value="{!inspection.Residential_Inverter_to_MSP_wiring__c}" />
+                    </apex:panelGrid>
+                     <!-- Start of 47 -->
+                    <apex:panelGrid columns="5" id="theGridQ47_1" border="0">
+                        <apex:outputText value="47."  style="width:5px;padding-left:5px" />
+                        <apex:outputLabel value="{!$Label.IR_1_way_distance}" style="width:300px"/>
+                        <apex:outputfield value="{!inspection.Residential_Q44_Distance__c}" style="width:60px" />
+                        <apex:outputLabel value="{!$Label.IR_size}" />
+                        <apex:outputfield value="{!inspection.Res_Invertor_MSP_Size__c}"style="width:60px" />
+                           
+                        <apex:outputLabel value="" />
+                        <apex:outputLabel value="{!$Label.IR_quantity} {!$Label.IR_quantity_2}." /> 
+                        <apex:outputfield value="{!inspection.Residential_Q44_Quantity__c}" style="width:60px" />                       
+                        <apex:outputLabel value="" />
+                        <apex:outputLabel value="" />
+                        
+                        <apex:outputText value=""  style="width:5px;padding-left:5px" rendered="{!isItaly}"/>
+                        <apex:outputLabel value="{!$Label.IR_1_way_distance}" rendered="{!isItaly}"/>
+                        <apex:outputfield value="{!inspection.Residential_Q46_Distance_EU__c}" style="width:60px" rendered="{!isItaly}"/>                        
+                        <apex:outputLabel value="{!$Label.IR_size}" rendered="{!isItaly}"/>
+                        <apex:outputfield value="{!inspection.Res_MSP_to_All_Size__c}" style="width:80px" rendered="{!isItaly}"/>
+                         
+                         
+                         <apex:outputLabel value="" rendered="{!isItaly}"/>  
+                        <apex:outputLabel value="{!$Label.IR_MSP_to_All}." rendered="{!isItaly}"/> 
+                        <apex:outputfield value="{!inspection.Residential_Q46_Quantity_EU__c}" style="width:60px" rendered="{!isItaly}"/>                        
+                        <apex:outputLabel value="" rendered="{!isItaly}"/>
+                        <apex:outputLabel value="" rendered="{!isItaly}"/>
+                        
+                        <apex:outputLabel value="" />
+                        <apex:outputLabel value="{!$Label.IR_Overvoltage_protection}"/>
+                        <apex:outputfield value="{!inspection.Residential_Overvoltage_protection_Q_46__c}" style="width:80px" />
+                          <apex:outputLabel value="" />
+                          <apex:outputLabel value="" />
+                     </apex:panelGrid>
+                     <apex:panelGrid columns="3" id="theGridQ47_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q44_Comments__c}" style="width:700px" />
+                     </apex:panelGrid>
+                     <!-- End of 47 -->
+                     <!-- Start of 48 -->
+                      <apex:panelGrid columns="4" id="theGridQ48_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="48." />
+                        <apex:outputLabel value="{!$Label.IR_Conduit_Runs}" />
+                        <apex:panelgroup >
+                           <apex:outputfield value="{!inspection.Residential_Q45_Response__c}" id="select_Q48" />
+                           
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ48_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q45_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!-- End of 48 -->
+                     
+                 </apex:outputPanel>
+                 <!-- End of lNVERTER TO MSP WIRING-->  
+                       
+                        <!-- Start of MAIN SERVICE PANEL  -->
+                  
+                 <apex:outputPanel id="pnlMAINSERVICEPANEL">
+
+                    <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_Main_Service_Panel}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>    
+                       </apex:pageBlockSection>
+                    <br />
+                    <!-- <apex:panelGrid columns="7" id="theGrid_MAINSERVICEPANEL" border="0">
+                       <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_Particular_switch_General}</label>
+                       <apex:outputfield value="{!inspection.Residential_MSP_Exterior__c}" />
+                       <label style="font-style: italic; color: #cc0000">{!$Label.IR_Particular_switch_PV_overview_MSP}</label>
+                       <apex:outputfield value="{!inspection.Residential_MSP_Interior__c}" />                                 
+                   </apex:panelGrid>
+                    -->
+                    <apex:panelGrid columns="4" id="theGrid_MAINSERVICEPANEL" border="0">
+                        <apex:outputText value="" style="width:10px;padding-left:15px" />
+                       <apex:outputText value="{!$Label.IR_Photos}" style="font-style:italic;color:#cc0000" />
+                       <apex:outputText value="" style="padding-left:35px" />
+                        <apex:outputfield value="{!inspection.Resindential_Photo_MSP__c}" />
+                    </apex:panelGrid>
+                    <!-- Start of 49 -->
+                    <apex:panelGrid columns="6" id="theGridQ49_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="49." />
+                        <apex:outputLabel value="{!$Label.IR_General_Breaker}" />
+                        <apex:panelgroup >
+                            <span style="width:65px; padding-left: 65px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                             <apex:outputfield value="{!inspection.Residential_Q50_Rating__c}"  id="select_Q49" />        
+                             <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <!-- End of 49 -->
+                    <!-- Start of 50 -->
+                  <apex:panelGrid columns="6" id="theGridQ50_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="50." />
+                        <apex:outputLabel value="{!$Label.IR_PV_Breaker}" />
+                        <apex:panelgroup >
+                            <span style="width: 65px; padding-left: 65px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                             <apex:outputfield value="{!inspection.Residential_PV_Breaker__c}" id="select_Q50" />     
+                                <span style="width: 3px; padding-left: 3px">&nbsp;</span>  
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    
+                                
+                    
+                    <apex:panelGrid columns="4" id="theGridQ50_2" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span> 
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q52_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!-- End of 50 -->
+                    
+                    <!-- Start of 51 -->      
+                    <apex:panelGrid columns="4" id="theGridQ51_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="51." />
+                        <apex:outputLabel value="{!$Label.IR_PV_Breaker_sized}" />
+                        
+                        <apex:panelgroup >
+                            <apex:outputfield value="{!inspection.Residential_Q53_Response__c}"  id="select_Q51" />
+                           
+                        </apex:panelgroup>
+                        <script>
+                         MaxOutputcontrolId = '{!$Component.maxOutputValue}';
+                         
+                        </script> 
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="3" id="theGridQ51_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q53_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    <!-- End of 51 -->
+                 </apex:outputPanel>
+                 <!-- End  of MAIN SERVICE PANEL  -->
+                    
+                    <!-- Start  of SYSTEM SAFETY  -->
+                 <apex:outputPanel id="pnlSystemSafty">
+                   <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_System_Safety}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>   
+                    </apex:pageBlockSection>
+                    <br />
+                 
+                 <apex:panelGrid columns="5" id="theGridQ52_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputlabel value="52." Style="color:Red;" />
+                        <apex:outputLabel value="{!$Label.IR_Visible_Hazards}"/>
+                        <apex:panelgroup >
+                        <apex:outputlabel value="{!$Label.IR_51_Help}" escape="false" styleClass="helpTextCustom" rendered="false" />
+                            <apex:outputfield value="{!inspection.Residential_Q54_Response__c}"  id="select_Q52" />
+                            
+                        </apex:panelgroup>
+                    </apex:panelGrid>
+                    <apex:panelGrid columns="3" id="theGridQ52_2" border="0">
+                         <apex:panelgroup >
+                            <span style="width: 6px; padding-left: 6px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_Q54_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                      
+                     <apex:panelGrid columns="3" id="theGridQ52_A" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 40px; padding-left: 40px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputfield value="{!inspection.Residential_SYSTEM_SAFETY_ChkBox__c}" />
+                        <apex:outputLabel value="{!$Label.IR_System_Operation}"/>
+                    </apex:panelGrid>
+                    
+                    <apex:panelGrid columns="4" id="theGridQ52_b" border="0">
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:panelgroup >
+                            <span style="width: 3px; padding-left: 3px">&nbsp;</span>
+                        </apex:panelgroup>
+                        <apex:outputLabel value="{!$Label.IR_Comment}" style="font-style:italic" />
+                        <apex:outputfield value="{!inspection.Residential_SYSTEM_SAFETY_Comments__c}"
+                            style="width:700px" />
+                    </apex:panelGrid>
+                    
+                    
+                 </apex:outputPanel>
+                <!-- End  of SYSTEM SAFETY  -->
+                       <!-- Start of Additional Comment  -->
+                <apex:outputPanel >
+                  <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem dataStyle="background-color:rgb(238, 199, 23);color:white;">
+                        <apex:outputLabel value="{!$Label.IR_Additional_comments}"
+                        style="font-weight:bold;font-size:15px;padding-left:15px;" />                       
+                    </apex:pageBlockSectionItem>      
+                       
+                       </apex:pageBlockSection>
+                    <br />
+                  <apex:panelGrid columns="2" id="theGridAdditionalComment_1" border="0">
+                        <apex:panelgroup >
+                            <span>&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                        <apex:outputText value="{!inspection.Residential_ADDITIONAL_COMMENTS__c}" style="width:500px"/>
+                </apex:panelGrid>
+               </apex:outputPanel>
+               <!-- End  of Additional Comment   -->
+               <!--Start  of button panel  -->
+               <apex:outputPanel id="pnlbuttons">
+                  <apex:panelGrid columns="2" id="theGridbuttons_1" border="0">
+                        <apex:panelgroup >
+                            <span style="width:650px;padding-left:650px">&nbsp;</span>
+                        </apex:panelgroup>
+                        
+                </apex:panelGrid>
+             </apex:outputPanel>
+                       
+           <!-- End  of button panel   -->
+      </apex:outputPanel>         
+    </apex:pageblock>
+    
+ </body>  
+</apex:page>

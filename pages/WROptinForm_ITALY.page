@@ -1,0 +1,475 @@
+<apex:page Controller="WarrantyRegistrationPDFController" renderAs="pdf" readOnly="true" showHeader="false" sidebar="false"  standardStylesheets="false">
+ <apex:stylesheet value="{!$Resource.PDFDocumentStyle_2}" />
+ <apex:form >
+           <apex:pageBlock >      
+            <apex:outputPanel style="font-family:Arial Regular;font-size:11px;">
+                <table width="100%" cellpadding="0px" cellspacing="0px">
+                    <tr>
+                        <td style="background:black;width:10%" rowspan="1"><apex:image url="{!$Resource.ImgSunPower}" height="44px"/></td>
+                        <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial;font-size:30px;" >
+                            <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                    Scheda per la registrazione della garanzia
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    <tr>
+                          <!-- Start 00118327 -->                    
+                        <td colspan="4" align="left">
+                            <apex:outputPanel style="font-family:Arial Regular;">                                
+                                  <br></br> Numero di registrazione della garanzia&nbsp;<apex:outputText value="{!warranty.Warranty_Number__c}"/>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <table  width="100%" cellpadding="0px" cellspacing="0px" style="font-size:13px">
+                        <tr>
+                            <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                                <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp; <b>{!$Label.Customer_Information}</b> </div>
+                                <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >                     
+                                    <tr>
+                                        <td valign="top" width="100%">
+                                        <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Name}" style="text-indent:justify"/><br></br>
+                                            <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingStreet}"/> &nbsp; <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingCity}"/> &nbsp;  <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingState}"/> &nbsp; 
+                                             <apex:outputText value="{!warranty.Customer_SFDC_ID__r.BillingPostalCode}"/> 
+                                             <br></br><br></br>
+                                             <br></br>
+                                             <apex:outputText value="{!warranty.Customer_SFDC_ID__r.Email__c}"/>                                         
+                                        </td>
+                           
+                                     </tr>
+                                </table> 
+                             </td>
+                <td style="width: 2%;"></td>
+                <td style="width: 49%;border: 1px solid #E9AB17;" valign="top">
+                    <div style="width: 100%;background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;line-height:18px; font-size: 16px;">&nbsp;<b>{!$Label.Partner_Information}:</b></div>
+                     <table style="line-height:20px;font-family:Arial Regular;font-size:15px;" cellpadding="2px" cellspacing="1px" width="100%" >
+                       <tr>
+                            <td valign="top" width="100%">
+                                <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Name}" style="text-indent:justify"/>&nbsp; <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingStreet}"/>   &nbsp;<apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingCity}"/> &nbsp;
+  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingState}"/> &nbsp;  <apex:outputText value="{!warranty.Partner_SFDC_ID__r.BillingPostalCode}"/>                                    <br></br> <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Phone}"/> <br></br> 
+                                        <apex:outputText value="{!warranty.Partner_SFDC_ID__r.Website}"/>                                                                               
+                            </td>
+                           
+                        </tr>
+                    </table> 
+                            </td> 
+                        </tr> 
+                    </table>
+                <apex:outputPanel rendered="{!NOT ISNULL(warranty.Delivery_Date__c)}">
+                        {!$Label.Date_Of_Delivery}:&nbsp;
+                        <!-- <apex:outputText value="{0,date,MM/dd/yy}"><apex:param value="{!warranty.Delivery_Date__c}" /></apex:outputText> -->
+                        <apex:outputField value="{!warranty.Delivery_Date__c}" />
+                </apex:outputPanel>                
+                <br/>
+                <br/>
+                 <!--Start Product Table -->
+                <apex:outputPanel > 
+                    <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;"> &nbsp;&nbsp;<b>{!$Label.Registered_Items}:</b>&nbsp;&nbsp;&nbsp; {!sNum} {!$Label.Total_Number_of_records}  </div>
+                                
+                        <table cellspacing="0" cellpadding="3" style="border: .06em solid #E9AB17;border-top-color:black;" width="100%" id="tblDetails">     
+                             <tbody>         
+                                   
+                                <!-- First Page Header Footer Section Starts -->
+                                <tr  style="background: #CCCCCC;" width="100%">
+                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                </tr>
+                
+                                 <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                                    
+                                    <apex:outputPanel layout="none" rendered="true">
+                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                    </apex:outputPanel>
+                                       
+                                </apex:outputPanel>
+                                <!--Loop List of List-->
+                                
+                                <apex:repeat value="{!wProductsWrapper}" var="wProduct">
+                                    
+                                        
+                                        <!--Loop Through Products-->
+                                        <apex:repeat value="{!wProduct}" var="Pro">
+                                            
+                                            <apex:outputPanel layout="none" id="OtherPagesHeader" rendered="{!IF(Pro.isPageBrk,true,false)}">
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="page-break-before: always;background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;">
+                                                <tr style="background: #CCCCCC;border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%">
+                                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                                </tr>
+                                                </table> <!-- End 00118327 -->
+                                                <apex:outputPanel id="panelHeaderFooter" 
+                                                    styleClass="footer_right"
+                                                    layout="block">
+                                                    
+                                                    <apex:outputPanel layout="none" rendered="true">
+                                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                                    </apex:outputPanel>
+                                                       
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 16px;"> 
+                                            <tr  style="background: #F5F5F5; font-size:12px;line-height: 20px;"  width="100%">
+                                                <td width="10%">    
+                                                   &nbsp;<apex:outPutText value="{!Pro.sNo}"/> 
+                                                </td>
+                                                
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Product_Name__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.product_type__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Serial_Number__c}</td>
+                                            </tr>                 
+                                                </table>
+                                            </apex:repeat>   
+                             </apex:repeat>  
+                           </tbody> 
+                        </table>  
+                        <br/>
+                        <br/>
+                </apex:outputPanel>  
+                <!--End Product Table --> 
+                </apex:outputPanel>        
+         
+         
+         <div style="page-break-after:always">&nbsp;</div>
+         
+<!--       <c:PDFHeaderFooter type="footer" position="right">            -->
+<!--           <apex:outputPanel style="font-size: 12px; text-align:left" layout="block"> PAGINA 2 DA COMPILARE E FIRMARE A CURA DEL CLIENTE FINALE.<br/></apex:outputPanel>-->
+<!--           <apex:outputPanel style="font-size: 11px; text-align:right"><i>Document #001-59331 Rev.*A</i><br/>Page <span class="pageNumber"></span> of <span class="pageCount"></span> </apex:outputPanel>-->
+<!--        </c:PDFHeaderFooter>   -->
+        <apex:outputPanel id="panelHeaderFooter1" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                 
+           <apex:outputPanel style="font-size: 12px; text-align:left" layout="block"> PAGINA 2 DA COMPILARE E FIRMARE A CURA DEL CLIENTE FINALE.<br/></apex:outputPanel>
+           <apex:outputPanel style="font-size: 11px; text-align:right"><i>Document #001-59331 Rev.*A</i><br/>Page <span class="pageNumber"></span> of <span class="pageCount"></span> </apex:outputPanel>
+                    
+        </apex:outputPanel>  
+        <apex:outputPanel style="font-size:14px;font-family:Arial Regular;">
+             <table  style="font-size:14px; width:100%; border:0px;  cellpadding:0px; cellspacing:0px">
+                <tr>
+                    <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px" /></td>
+                    <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial;font-size:30px;" >
+                        <apex:outputPanel style="font-family:Arial Regular;font-size:18px;">                                
+                                Scheda Per LA Registra Zione Della Garanzia
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+               
+                <tr>
+                    <td>&nbsp;</td> 
+                </tr>
+                <tr >               
+                    <td width="100%" height="23px" bgcolor="#E9AB17;" colspan="4" style="font-size:15px">&nbsp;&nbsp;&nbsp;DATI DEL CLIENTE FINALE</td>              
+                </tr>
+                <tr>
+                    <td>&nbsp;</td> 
+                </tr>
+                <tr>
+                    <td  width="100%" colspan="4" style="padding-top:10px;"><apex:outputText value="Nome e Cognome:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:550px;float:left;">{!warranty.Customer_SFDC_ID__r.Name}&nbsp;</span></td>  
+                </tr>
+                
+                <tr>
+                    <td colspan="4" style="padding-top:10px;"><span style="border-bottom:1px solid;float:left;width:96.6%">{!warranty.Customer_SFDC_ID__r.Contact_Name__c }&nbsp;</span></td>               
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding-top:10px;"><apex:outputText value="Indirizzo:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;float:left;width:605px">{!warranty.Customer_SFDC_ID__r.BillingStreet}&nbsp;</span></td>
+                </tr>
+                <tr>
+                    <td width="50%" colspan="2" style="padding-top:10px;"><apex:outputText value="Città:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:86%;float:left;">{!warranty.Customer_SFDC_ID__r.Billingcity}&nbsp;</span></td>              
+                    <td colspan="2"><apex:outputText value="Provincia:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:79%;float:left;">{!warranty.Customer_SFDC_ID__r.BillingState}&nbsp;</span></td>             
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding-top:10px;"><apex:outputText value="CAP:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:86%;float:left;">{!warranty.Customer_SFDC_ID__r.BillingCountry}&nbsp;</span></td>             
+                    <td colspan="2"><apex:outputText value="Tel:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:88%;float:left;">{!warranty.Customer_SFDC_ID__r.Phone}&nbsp;</span></td>              
+                </tr>
+    
+                <tr>
+                    <td colspan="4" style="padding-top:10px;"><apex:outputText value="Email:" style="float:left;padding-right:2px;"/>&nbsp;<span style="border-bottom:1px solid;width:91%;float:left;">{!warranty.Customer_SFDC_ID__r.Email__c}&nbsp;</span></td>             
+                </tr>
+                <tr>
+                    <td colspan="4">
+                    <p style="text-align:justify">In conformità con il decreto legislativo 196/2003 (<b>Codice in
+                    materia di Protezione dei Dati Personali</b>), Sunpower Italia S.r.l. Vi
+                    informa in questa sede che i Vs. dati personali saranno raccolti,
+                    elaborati e comunicati per le finalità relative alla vendita dei
+                    prodotti ai clienti. I Vs. dati personali potranno essere utilizzati
+                    in conformità con il Codice in materia di Protezione dei Dati
+                    Personali e potranno essere soggetti a trattamento conformemente ai
+                    nostri standard di confidenzialità. I Vostri dati personali potranno
+                    essere trasmessi a SunPower Corporation, con sede registrata c/o 393
+                    North First Street, San Josè, CA 95134, U.S.A. e ad altre compagnie
+                    del Gruppo con sede nei paesi dell’Unione Europea e all’esterno
+                    della medesima. Potrete esercitare tutti i diritti previsti dal
+                    Codice in materia di Protezione dei Dati Personali mediante il
+                    Dipartimento di Customer Care chiamando al n° 00800-SUNPOW ER
+                    (00800-78676937) o inviando un’e-mail al seguente indirizzo di posta
+                    elettronica: solarit@sunpowercorp.com.</p>
+                    <p style="text-align:justify">In conformità con l’art. 23 del Codice in materia di
+                    Protezione dei Dati Personali, autorizzo l’elaborazione,
+                    l’archiviazione e il trattamento dei miei dati personali, inclusa
+                    l’eventuale trasmissione dei medesimi negli USA, conformemente a
+                    quanto sopracitato. Sono consapevole che posso revocare il mio
+                    consenso in qualsiasi momento.</p>
+                    <p style="text-align:justify">Inoltre, autorizzo l’elaborazione e il trattamento dei miei
+                    dati personali per le seguenti finalità:</p>               
+                    </td>
+                 </tr>
+                <tr>
+                    <td colspan="4"><b>(a) Marketing,</b> includendo informazioni sui prodotti e servizi SunPower:</td>
+                </tr>
+                <tr>
+                    <td colspan="4" >&nbsp;&nbsp;
+                        <img height="14" width="14" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif"/>&nbsp;Sì&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img height="14" width="14" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif"/>&nbsp;No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>           
+                </tr>
+                <tr>
+                    <td colspan="4"><b>(b) Azioni per la Garanzia e la Qualità:</b></td>
+                </tr>
+                <tr>
+                    <td colspan="4">&nbsp;&nbsp;
+                        <img height="14" width="14" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif"/>&nbsp;Sì&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img height="14" width="14" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif"/>&nbsp;No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>               
+                </tr>
+                <tr>
+                    <td colspan="4"><b>(c) Inchieste di Customer Service:</b></td>
+                </tr>
+                <tr>
+                    <td colspan="4" >&nbsp;&nbsp;
+                        <img height="14" width="14" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif"/>&nbsp;Sì&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img height="14" width="14" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif"/>&nbsp;No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>           
+                </tr>
+                <tr>
+                    <td>&nbsp;</td> 
+                </tr>
+                 <tr>
+                    <td  colspan="4">Data _______________________ Firma_______________________</td> 
+                </tr>
+                 <tr>
+                    <td>&nbsp;</td> 
+                </tr>
+                <tr>
+                    <td>&nbsp;</td> 
+                </tr>
+                <tr >               
+                    <td height="23px" width="100%" bgcolor="#FFCC33" colspan="4" style="font-size:15px">&nbsp;&nbsp;&nbsp;LA SUA OPINIONE E` IMPORTA NTE PER NOI</td>              
+                </tr>
+                <tr>
+                    <td colspan="4">
+                    <p style="text-align:justify">SunPower è sempre attenta alle esigenze dei suoi clienti ed è a tal proposito che Le chiediamo aiuto, per valutare il Suo grado
+                    di soddisfazione in merito ai servizi da noi offerti. La preghiamo di selezionare le caselle desiderate tra quelle sopra riportate
+                    ed indicare un indirizzo mail al quale eventualmente potremo inviare un breve questionario. In questo modo, potrà dare la Sua
+                    opinione sui servizi offerti dal nostro Partner e da Sunpower. Vi ringraziamo per aver scelto Sunpower.</p>
+                    </td>
+                 </tr>
+                 <tr style="page-break-after:always">
+                      <td colspan="4">&nbsp;</td>
+                 </tr>
+               
+                 <!-- COMMENT START  <c:PDFHeaderFooter type="footer" position="right">            
+                   <hr width="80%"/>                  
+                   <apex:outputPanel style="font-size: 13px;  text-align:center" layout="block"><b>SunPower Italia Srl</b></apex:outputPanel>
+                   <apex:outputPanel style="font-size: 11px;  text-align:center" layout="block"> Tel: 00800 SUNPOWER (00800 78676937) ? www.sunpowercorp.it</apex:outputPanel>
+                   <apex:outputPanel style="font-size: 11px; text-align:right"><i>Document#: 001-45964 Rev *D</i><br/>Page <span class="pageNumber"></span> of <span class="pageCount"></span> </apex:outputPanel>
+                </c:PDFHeaderFooter>  COMMENT END-->                
+               
+                <c:PDFHeaderFooter type="footer" position="right">               
+                   <hr width="80%"/> 
+                   <apex:image url="{!$Resource.ImgPdfFooter}" height="100px" width="100%"/>
+                </c:PDFHeaderFooter> 
+
+
+
+                <c:PDFHeaderFooter type="footer" position="right">            
+                   <hr width="80%"/>
+                   <apex:image url="{!$Resource.ImgPdfFooter2}" height="100px" width="100%"/>              
+               
+                </c:PDFHeaderFooter> 
+                
+<!--== START CHANGE ==-->              
+            <table style="align:center" width="100%">
+                <tr>
+                    <td>
+                        <H2><SPAN style="color:#A6A7A7">GARANZIA CONVENZIONALE LIMITATA SUI MODULI FOTOVOLTAICI (“GARANZIA CONVENZIONALE”)</SPAN></H2>
+                        <SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">
+                            La presente Garanzia Convenzionale si applica nel territorio italiano ai moduli fotovoltaici SunPower acquistati in Europa ed acenti la marcatura CE, che includano l’indicazione “SPR” nel numero di serie e venduti da SunPower successivamente al 1° luglio 2012 (i “Moduli Fotovoltaici”).
+                        </SPAN>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            1.&nbsp;GARANZIA CONVENZIONALE
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                                SunPower Italia S.r.l., con sede legale in via Rombon 11 – Milano (di seguito “SunPower”), società produttrice, garantisce al cliente acquirente dei Moduli Fotovoltaici (il “Cliente”) che, a partire dalla Data di Inizio della Garanzia1 e per i successivi venticinque anni (il “Periodo di Garanzia”), i Moduli Fotovoltaici saranno immuni da vizi di materiali e di lavorazione (i “Difetti”) in condizioni di normale impiego, installazione, utilizzo e manutenzione e che i Moduli Fotovoltaici avranno altresì un funzionamento pari ad almeno il 95% della Potenza Minima di Picco2 per un periodo di 5 anni, che potrà diminuire di non oltre lo 0,4% per ciascun anno, durante i venti anni successivi, in modo tale che il funzionamento al termine dei venticinque anni del Periodo di Garanzia sia almeno pari all’87% della Potenza Minima di Picco (cumulativamente le “Prestazioni”).
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">
+                            Nel caso in cui, nel corso del Periodo di Garanzia, uno o più Moduli Fotovoltaici acquistati dal Cliente non siano conformi alla presente Garanzia Convenzionale e sul presupposto che ogni calo di potenza e di Prestazioni non sia dovuto o causato da uno degli eventi di cui all’articolo 3 che segue, SunPower, a propria scelta, riparerà o sostituirà il Modulo Fotovoltaico o i Moduli Fotovoltaici difettosi, ovvero rimborserà al Cliente il prezzo di acquisto pagato per i Moduli Fotovoltaici difettosi.
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">
+                            SunPower farà tutti i ragionevoli sforzi per riparare i Moduli Fotovoltaici difettosi o per sostituirli con Moduli Fotovoltaici ad essi compatibili da un punto di vista elettrico e meccanico, aventi potenza di picco equivalente o superiore. Ove questo non fosse fattibile da un punto di vista commerciale, SunPower rimborserà al Cliente il prezzo di acquisto pagato dal Cliente per i Moduli Fotovoltaici difettosi. La riparazione, sostituzione o rimborso del prezzo qui previsti costituiranno l’unico ed esclusivo rimedio esperibile dal Cliente ai sensi della Garanzia Convenzionale. La Garanzia Convenzionale per ciascun Modulo Fotovoltaico riparato o sostituito cesserà allo scadere del Periodo di Garanzia originariamente previsto per i Moduli Fotovoltaici riparati o sostituiti.
+                            </SPAN>
+                        </p>
+                        <br/><!-- ADDED ###-->
+                        <br/>
+                        <br/>
+                        <p>
+                            <hr color="Black"/>
+                            <!--<br/> COMMENTED-->
+                            <SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">
+                                    <!--ol style="list-style-type:lower-roman;"-->
+                                    <ol style="list-style-type:decimal;">
+                                    <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">La “Data di Inizio della Garanzia” è quella anteriore tra (i) la data di interconnessione degli array e (ii) 6 mesi successivi alla data di consegna al rivenditore/installatore da parte di SunPower Italia S.r.l.. Se la data di consegna non può essere verificata, al suo posto verrà considerata la data di produzione.</SPAN></li>
+                                    <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">“Potenza Minima di Picco” è definita quale Potenza di Picco meno il coefficiente di tolleranza per la potenza di picco oppure la potenza nominale minima come indicato nell’etichetta. Potenza di Picco è definita quale il picco in watt alle condizioni standard di test, come descritte nella IEC61215, misurate mediante IEC60904, e tolleranze calcolate mediante EN50380. I moduli SunPower in ogni caso richiederanno uno tempo di campionamento di non meno di 200ms al fine di assicurare una misurazione accurata della potenza. SunPower può fornire, a richiesta, una procedura di test dettagliata ovvero una lista di agenzie di test ufficialmene riconosciute.</SPAN></li>
+                                    </ol>
+                            </SPAN>
+                       <!-- </p>                            
+                        <p> -->
+                            <SPAN class="txt">                            
+                                Nel caso in cui il Cliente azioni validamente la Garanzia Convenzionale con riferimento a Moduli Fotovoltaici installati da SunPower, da un affiliato di SunPower o da un installatore autorizzato, la Garanzia Convenzionale coprirà quanto segue:
+                                <ol style="list-style-type:lower-roman;">
+                                    <li><SPAN class="txt"> costi di trasporto per la restituzione dei Moduli Fotovoltaici difettosi che siano ragionevoli e d’uso;</SPAN></li>
+                                    <li><SPAN class="txt"> costi di trasporto per la rispedizione al Cliente dei Moduli Fotovoltaici riparati o sostituitivi; e</SPAN></li>
+                                    <li><SPAN class="txt"> costi inerenti all’installazione, rimozione e reinstallazione dei Moduli Fotovoltaici.</SPAN></li>
+                                </ol>
+                            </SPAN>
+                        </p>
+                        
+                        <p>
+                            <SPAN class="txt">
+                            La Garanzia Convenzionale è in ogni caso senza pregiudizio, né costituisce limite, ed è quindi in aggiunta, alla garanzia prevista dal Codice Civile, nonché alla garanzia legale di conformità biennale e agli altri rimedi e diritti previsti dal D.lgs. n. 206/2005 (“Codice del Consumo”) a favore del Cliente nel caso in cui quest’ultimo rivesta la qualifica di “consumatore” ai sensi e per gli effetti dell’art. 3, lett. a), del Codice del Consumo (persona fisica che agisce per scopi estranei all’attività imprenditoriale, commerciale, artigianale o professionale eventualmente svolta - di seguito “Consumatore”). Il Cliente che rivesta la qualifica di Consumatore potrà pertanto in ogni caso esercitare i rimedi e i diritti previsti dal Codice del Consumo, nei limiti e con le modalità previsti dal medesimo Codice, in relazione ai Moduli Fotovoltaici.
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            2.&nbsp;CONDIZIONI GENERALI PER I RECLAMI AI SENSI DELLA GARANZIA CONVENZIONALE
+                        </DIV>
+
+                        <p>
+                        
+                            <SPAN class="txt">                          
+                                <ol style="list-style-type:lower-latin;">
+                                    <li><SPAN class="txt">I reclami in base alla Garanzia Convenzionale devono essere presentati al più tardi entro il termine di 30 giorni successivi alla scadenza del Periodo di Garanzia.</SPAN></li>
+                                    <li><SPAN class="txt">Fermo restando quanto stabilito da norme inderogabili di legge, i reclami possono essere presentati in via esclusiva da o nell’interesse dell’originario Cliente che abbia acquistato i Moduli Fotovoltaici per i propri bisogni e non a fini di rivendita, come indicato, a seconda dei casi, nel certificato di garanzia o nella fattura di acquisto, ovvero da altro soggetto che abbia acquistato successivamente la proprietà dei Moduli Fotovoltaici dall’originario Cliente come indicato, a seconda dei casi, nel certificato di garanzia ovvero nella fattura di acquisto. In quest’ultimo caso, il richiedente dovrà fornire prova adeguata dell’acquisto dei Moduli Fotovoltaici dal Cliente originario.</SPAN></li>
+                                    <li><SPAN class="txt">Laddove i Moduli Fotovoltaici fossero installati su una piattaforma mobile di qualsiasi tipo, quale ad esempio un veicolo, il Periodo di Garanzia sarà limitato a 12 anni.</SPAN></li>
+                                    <li><SPAN class="txt">La proprietà di qualsiasi Modulo Fotovoltaico, o relativo componente, sostituito spetterà a SunPower.</SPAN></li>
+                                </ol>
+                            </SPAN>
+                        
+                            <!-- COMMENTED ####
+                                <br/><br/>
+                                <hr color="Black"/>
+                                <br/>
+                            <SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">
+                                    <ol style="list-style-type:decimal;">
+                                    <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">La “Data di Inizio della Garanzia” è quella anteriore tra (i) la data di interconnessione degli array e (ii) 6 mesi successivi alla data di consegna al rivenditore/installatore da parte di SunPower Italia S.r.l.. Se la data di consegna non può essere verificata, al suo posto verrà considerata la data di produzione.</SPAN></li>
+                                    <li><SPAN style="font-family:'sans-serif', 'Futura Std Light'; font-size:9pt; font-style:italic; font-weight:normal; color:#0B0A0A">“Potenza Minima di Picco” è definita quale Potenza di Picco meno il coefficiente di tolleranza per la potenza di picco oppure la potenza nominale minima come indicato nell’etichetta. Potenza di Picco è definita quale il picco in watt alle condizioni standard di test, come descritte nella IEC61215, misurate mediante IEC60904, e tolleranze calcolate mediante EN50380. I moduli SunPower in ogni caso richiederanno uno tempo di campionamento di non meno di 200ms al fine di assicurare una misurazione accurata della potenza. SunPower può fornire, a richiesta, una procedura di test dettagliata ovvero una lista di agenzie di test ufficialmene riconosciute.</SPAN></li>
+                                    </ol>
+                            </SPAN>
+                        --> 
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            3.&nbsp;ESCLUSIONI E LIMITAZIONI DELLA GARANZIA CONVENZIONALE
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                            La Garanzia Convenzionale non si applica e/o è soggetta alle limitazioni che seguono:
+                                <ol style="list-style-type:lower-latin;">
+                                    <li><SPAN class="txt">Moduli Fotovoltaici che siano stati soggetti a utilizzo improprio, cattivo uso, trascuratezza o incidenti, alterazioni, installazione, impiego o rimozione impropri (ivi inclusi, a titolo meramente esemplificativo e non esaustivo, l’installazione, l’impiego o la rimozione da parte di soggetti diversi dai rivenditori autorizzati di SunPower ovvero dai tecnici approvati da SunPower); il mancato rispetto delle istruzioni di SunPower sull’installazione, delle istruzioni per gli utenti e/o per la manutenzione ovvero non conformità con le norme nazionali e locali in materia elettrica; condizioni eccedenti le specifiche relative ai carichi di tensione, di vento o di neve; sovratensioni elettriche momentanee; fulmini, inondazioni, incendi, danni causati da persone, insetti, animali o esposizione ad agenti chimici; rotture di vetri dovute ad urti nonché qualsiasi altro evento non imputabile a SunPower;</SPAN></li>
+                                    <li><SPAN class="txt">difetti superficiali derivanti da normale uso ed usura dei materiali dei Moduli Fotovoltaici o altre alterazioni estetiche che non causino perdita di potenza e/o diminuzione delle Prestazioni oltre quanto garantito dalla presente Garanzia Convenzionale; il normale logorio dei materiali che compongono i Moduli Fotovoltaici può comprendere, ma non è limitato a: scolorimento delle cornici, deterioramento del rivestimento del vetro e aree di colorazione marrone o grigia intorno o all’interno delle singole celle;</SPAN></li>
+                                    <li><SPAN class="txt">Moduli Fotovoltaici installati in luoghi che possono essere soggetti a contatto diretto con acqua salata;</SPAN></li>
+                                    <li><SPAN class="txt">Moduli Fotovoltaici le cui etichette riportanti il tipo di prodotto ed il numero di serie siano state alterate, rimosse o rese illeggibili;</SPAN></li>
+                                    <li><SPAN class="txt">Moduli Fotovoltaici che siano stati spostati dalla loro collocazione originaria senza l’espresso consenso scritto di SunPower.</SPAN></li>
+                                </ol>
+                            Fermo restando quanto stabilito da norme inderogabili di legge, SunPower non potrà in alcun modo essere ritenuta responsabile nei confronti del Cliente, né di terzi, per qualsiasi inadempimento o ritardato adempimento a qualsiasi termine e/o condizione di vendita, ivi inclusa alla presente Garanzia Convenzionale, per eventi di forza maggiore, guerre, sommosse, scioperi, incendi, inondazioni, ovvero qualsiasi altra causa al di fuori del ragionevole controllo di SunPower.
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            4.&nbsp;AMBITO DELLA GARANZIA CONVENZIONALE - ESONERO DI RESPONSABILITÀ
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                            I diritti e rimedi inerenti ai Moduli Fotovoltaici previsti dalla Garanzia Convenzionale, nonché dal Codice Civile e dal Codice del Consumo, ove applicabili, in caso di Difetti o di Prestazioni non conformi, sono gli unici spettanti al Cliente.
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">
+                            Resta esclusa ogni altra garanzia esplicita o implicita, comprese, a titolo di esempio, le garanzie di commerciabilità e di idoneità ad uno scopo o ad un utilizzo particolari e ogni altra obbligazione o responsabilità da parte di SunPower, a meno che tali altre garanzie, obbligazioni o responsabilità siano espressamente concordate per iscritto, sottoscritte ed approvate da SunPower.
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">
+                            Salvo il caso in cui il Cliente rivesta la qualifica di Consumatore e, in ogni caso, nei limiti di cui all’art. 1229 del Codice Civile:
+                            <ol style="list-style-type:lower-roman;">
+                                    <li><SPAN class="txt">SunPower non sarà soggetta ad alcuna responsabilità od obbligazione di alcun tipo per qualsiasi danno o per altre perdite o lesioni derivanti da qualunque causa originata da o connessa a qualsiasi prodotto, incluso, senza limitazioni, qualunque difetto nei Moduli Fotovoltaici, ovvero derivanti dall’utilizzo e/o dall’installazione degli stessi oppure dalla prestazione della Garanzia Convenzionale;</SPAN></li>
+                                    <li><SPAN class="txt">SunPower non sarà responsabile per qualsiasi danno di qualunque genere, sia esso danno emergente o lucro cessante. Le perdite di utilizzo, di profitti, di produzione e/o di ricavi del Cliente sono pertanto specificamente, ma senza limitazioni, escluse.</SPAN></li>
+                                </ol>
+                                Nessuna delle disposizioni o clausole contenute nel presente documento potrà comunque escludere o limitare la responsabilità di SunPower in caso di:
+                                <ol style="list-style-type:lower-roman;">
+                                    <li><SPAN class="txt">morte o danno alla persona del Cliente risultante da un fatto o da un’omissione di SunPower;</SPAN></li>
+                                    <li><SPAN class="txt">danno cagionato da prodotto difettoso, ai sensi dell’art. 114 e seguenti del Codice del Consumo.</SPAN></li>
+                                </ol>
+                            Qualora una o più disposizioni della presente Garanzia Convenzionale sia ritenuta invalida o inefficace, tale invalidità o inefficacia non renderà invalida o inefficace l’insieme delle condizioni della Garanzia Convenzionale, ma la presente Garanzia Convenzionale si riterrà redatta come se non contenesse le specifiche clausole invalide o inefficaci.
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/>
+                        <DIV style="font-family:'sans-serif', 'Futura Std Book'; font-size:11pt; font-weight:normal; color:#464442; background-color:#D7D7D7; width:100%;padding:4px 2px 4px 2px">
+                            5.&nbsp;MODALITÀ E TERMINI DI ESERCIZIO DELLA GARANZIA CONVENZIONALE
+                        </DIV>
+
+                        <p>
+                            <SPAN class="txt">
+                                Qualora il Cliente ritenga di avere un reclamo giustificato coperto dalla presente Garanzia Convenzionale, dovrà darne comunicazione scritta entro il termine massimo di 30 giorni dalla scoperta del vizio: (i) al rivenditore o all’installatore dei Moduli Fotovoltaici, oppure (ii) a qualsiasi installatore autorizzato SunPower, oppure (iii) direttamente a SunPower Italia S.r.l. ai seguenti recapiti: via Vittime Civili di Guerra 5 – fax 0546 46900.
+                            </SPAN>
+                        </p>
+                        <p>
+                            <SPAN class="txt">
+                                L’installatore, il rivenditore o SunPower, consiglieranno il Cliente su come gestire il proprio reclamo, e in particolare sulle modalità di presentazione del certificato di garanzia, delle informazioni sulla registrazione della garanzia, della fattura ovvero della prova della consegna dei Moduli Fotovoltaici, dei numeri seriali e del numero di prodotto dei Moduli Fotovoltaici difettosi, nonché della prova dei Difetti o della non conformità alle Prestazioni. La restituzione dei Moduli Fotovoltaici difettosi sarà accettata solo a seguito di autorizzazione scritta di SunPower.
+                            </SPAN>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+<!--==END CHANGE==-->
+                
+                </table>
+             </apex:outputPanel>
+             </apex:pageBlock>              
+    </apex:form>  
+</apex:page>

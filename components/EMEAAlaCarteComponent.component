@@ -1,0 +1,405 @@
+<apex:component id="ItemListPage" controller="AlaCarteController">
+    <apex:attribute name="controllerForPage"
+      type="PageControllerBase"
+      assignTo="{!pageController}"
+      required="true"
+      description="The controller for the page." />
+      
+
+    <apex:attribute name="componentName"
+        type="String"
+        assignTo="{!Key}"
+        description="The key given to this component so the page can easily get access to it" />
+
+    <apex:attribute name="shippingStateString"
+        type="String"
+        assignTo="{!shippingState}"
+        description="test"
+    />
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+    <apex:stylesheet value="{!URLFOR($Resource.NSBootstrap, '/NSBootstrap.css')}"/>
+    
+    <style>
+        .bPageBlock {
+            border-top: 1px solid #0076be !important;
+            border-radius: 0px !important;
+        }
+        .customnotabTab .secondaryPalette, .individualPalette .customnotabBlock .secondaryPalette {
+            background-color: #ffffff !important;
+        }
+        body .pbBody table.list tr.headerRow td, body .pbBody table.list tr.headerRow th {
+            text-align: center;
+        }
+        .customHeaderLeftPad {
+            text-align: left;
+            padding-left: 1em;
+        }
+        
+    </style>
+    
+    <script type="text/javascript">
+    var recordSep=';';
+    var dataSep='~';
+    var QtyMAP = function(count){
+        //Properties 
+        var editQtyID = new Array();
+        var editQtyVal = new Array();
+        var counter =count;
+    }
+    //Methods
+    QtyMAP.prototype.put = function(id,val){
+        if(this.counter == 0){
+            this.editQtyID[0] = id; 
+            this.editQtyVal[0]= val;
+            this.counter++;
+        }else{
+            var pos = this.getIndex(id);
+            if(pos == -1){
+                this.editQtyID[this.counter] = id; 
+                this.editQtyVal[this.counter]= val;
+                this.counter++;     
+            }else{
+                this.editQtyVal[pos]= val;
+            }
+        }
+    }
+    QtyMAP.prototype.getIndex = function(id){
+        if(this.counter == 0) return -1;
+        for(var i =0;i < this.counter;i++){
+            if(this.editQtyID[i] == id) return i;
+        }
+        return -1; //if not exists
+    }
+    QtyMAP.prototype.clear = function(){
+        this.counter=0;
+        this.editQtyID = new Array();
+        this.editQtyVal = new Array();
+    }
+    
+    QtyMAP.prototype.remove = function(id){
+        if(this.counter == 0) return;
+        for(var i=0;i < this.counter;i++){
+            if(this.editQtyID[i]==id){
+                isEnter =true;
+                for(var j=i; j < this.counter-1;j++){
+                    this.editQtyID[j] = this.editQtyID[j+1]; 
+                    this.editQtyVal[j] = this.editQtyVal[j+1];  
+                }
+                this.counter--;
+                break;
+            }
+        }
+    }//function ends
+    QtyMAP.prototype.convertToString= function(){
+       
+        var retStr='';
+        if(this.counter <=0) return null;
+        for(var i=0;i < this.counter; i++){
+            retStr +=   this.editQtyID[i] + dataSep + this.editQtyVal[i] + recordSep;
+        }
+        return retStr;  
+    }
+    
+    var mapJS = new QtyMAP(0);
+    mapJS.clear();
+    
+    function updateItemList(){
+        updateProductLineItemList();
+        return false;
+    }
+    
+    function fillValue(prodId){      
+
+        document.getElementById("{!$Component.priceItemListFrm.changedQty}").value=mapJS.convertToString();  
+        document.getElementById("{!$Component.priceItemListFrm.singleAddedprodId}").value=prodId;
+        document.getElementById("{!$Component.priceItemListFrm.inputQuantity}").value=1; 
+        addItemToList();
+        mapJS.clear();            
+        return false;        
+    }
+    
+    function showHideEdit(id,orQty){
+        var orgQty='orig_quan_'+id;
+        var strid = 'itemPgBlkTable';
+        strid='lnkRemove';
+        strid='contDiv';
+        var orig =document.getElementById('orig_quan_'+id);
+        var edt =document.getElementById('change_quan_'+id);
+        if(orig.style.display =='block'){
+            orig.style.display ='none';
+            edt.style.display = 'block';
+            var txtQty = document.getElementById('txt_'+id);
+            if(txtQty.value == null || txtQty.value =='')
+                txtQty.value = orQty;
+        }
+        else{
+            edt.style.display = 'none';
+            orig.style.display ='block';
+        }
+    }
+    
+    function hideMeandResetValue(id,val){
+        
+        lockScreen(true);
+        var orig =document.getElementById('orig_quan_'+id);
+        var edt =document.getElementById('change_quan_'+id);
+
+        var txtQty = document.getElementById('txt_'+id);                          
+        if(!txtQty || txtQty ==null) {
+            lockScreen(false);
+            return false;
+        }
+        var qtyVal = txtQty.value;      
+
+        if(parseInt(qtyVal) == Number(qtyVal) && parseInt(qtyVal)>0){ 
+            
+            orig.style.display ='block';
+            var td1_ID = document.getElementById('td1_'+id);
+            var td2_ID = document.getElementById('td2_'+id);
+            td1_ID.innerHTML = '<font color=red><b>'+ txtQty.value+'</b></font>';
+            
+            mapJS.put(id,qtyVal);
+
+            var anchorTags = edt.getElementsByTagName('a');
+            
+            if(anchorTags != null && anchorTags.length >0){                    
+                td2_ID.innerHTML=getOuterHTML(anchorTags[0]);
+            }
+            edt.style.display = 'none';
+            
+        }else{
+            document.getElementById('txt_'+id).value = qtyVal;
+            document.getElementById('txt_'+id).focus();
+               
+            return false;
+        }
+        document.getElementById("{!$Component.priceItemListFrm.changedQty}").value=qtyVal;        
+        document.getElementById("{!$Component.priceItemListFrm.singleAddedprodId}").value=id;
+
+        updateQuantity();
+        
+    }         
+    
+    function CaptureEvt(evt,itemID,itemQty){      
+        evt = (evt) ? evt : event;      
+        var charCode = (evt.which) ? evt.which : evt.keyCode;     
+        if(charCode==13) {  
+            hideMeandResetValue(itemID,itemQty);       
+            return false;
+        }
+    }
+    
+    function resetFieldByValue(id, qty){       
+        var orig =document.getElementById('orig_quan_'+id);
+        var edt =document.getElementById('change_quan_'+id);
+        orig.style.display ='block';
+        var td1_ID = document.getElementById('td1_'+id);
+        var td2_ID = document.getElementById('td2_'+id);
+        
+        td1_ID.innerHTML =qty;
+        td2_ID.innerHTML= '<img src="/img/func_icons/util/pencil12.gif"/>';
+        orig.style.display ='none';
+        edt.style.display ='block';
+        
+        var txtQty = document.getElementById('txt_'+id);
+        
+        txtQty.value = qty;
+        edt.style.display ='none';
+        orig.style.display ='block';
+        
+        mapJS.remove(id);        
+        getErrormssg(false); 
+    }
+    
+    //When click on Del link of any Product Line Item
+    function removeLineItem(Id){
+        if(document.getElementById("{!$Component.priceItemListFrm.hdnDelProdLineId}")){
+            document.getElementById("{!$Component.priceItemListFrm.hdnDelProdLineId}").value=Id;
+            if(confirm('{!$Label.Remove_Line_Item_Confirm}'))
+            {
+                document.getElementById("{!$Component.priceItemListFrm.changedQty}").value=mapJS.convertToString();                
+                delItemFromList();
+                mapJS.clear();
+            }
+            return false;
+        }
+        return false;
+    }
+    
+    function getOuterHTML(object) {
+        var element;
+        if (!object) return null;
+        element = document.createElement("div");
+        element.appendChild(object.cloneNode(true));
+        var t = element.innerHTML;
+        
+        return t;
+    }
+    
+    function UpdateProductLineItemsByFilter(){
+        moveAccordingToFilter();
+        return false;
+    }
+    
+    
+    
+    </script>
+    
+    
+    
+    <div >
+        <apex:form id="priceItemListFrm" styleClass="form-horizontal">
+
+            <c:WaitingComponent />
+            <apex:actionFunction action="{!updateProductLineItemList}"
+                                 name="updateProductLineItemList" reRender="out" status="statusChage">
+            </apex:actionFunction>
+            
+            <apex:actionFunction action="{!addItemToList}" name="addItemToList" reRender="selectedprod, calculatePriceButton" status="statusPending" onComplete="setTimeout('lockScreen(false)', 12000);">
+                <apex:param name="singleAddedprodId" value="" assignTo="{!singleAddedprodId }" />
+            </apex:actionFunction>
+            
+            <apex:actionFunction action="{!delItemFromList}"
+                                 name="delItemFromList" reRender="selectedprod, calculatePriceButton" status="statusPending">
+            </apex:actionFunction>
+
+            <apex:actionFunction action="{!updateQuantity}"
+                                 name="updateQuantity" reRender="selectedprod" status="statusPending" onComplete="lockScreen(false);">
+            </apex:actionFunction>
+            
+            <apex:actionFunction action="{!getQunatityMessage}" status="statusPending" 
+                                 name="getErrormssg" reRender="pnlMessage" onComplete="if({!showQuantityMessage}){lockScreen(false);}">
+                <apex:param name="a" value="" assignTo="{!showQuantityMessage}"/>
+            </apex:actionFunction>
+            
+            <apex:actionFunction action="{!moveAccordingToFilter}"
+                                 name="moveAccordingToFilter" reRender="prodLineItemsId,out" status="statusMove">
+            </apex:actionFunction>
+            
+            
+            
+            <apex:inputHidden value="{!changedQty}" id="changedQty"/>
+            <apex:inputHidden value="{!inputQuantity}" id="inputQuantity"/>
+            <apex:inputHidden value="{!singleAddedprodId}" id="singleAddedprodId"/>
+            <apex:inputHidden value="{!hdnDelProdLineId}" id="hdnDelProdLineId"/>              
+            
+            <div class="row" style="padding-top:1em;">
+
+                <apex:pageBlock id="lineItemblock" mode="maindetail" >
+                    <h4 style="padding-left:1em; margin-top:1em;">
+                        {!$Label.POWizardLineItemsHeading}
+                    </h4>
+                    <apex:outputPanel layout="block" style="text-align:center;" >   &nbsp;
+                        <apex:actionStatus startStyle="color:#cc0000;font-weight:bold;"
+                                           startText="{!$Label.POWizardPendingStatusText}" id="statusPending" onstop="setTimeout('lockScreen(false)',12000);" />
+                    </apex:outputPanel>
+                    
+                    <!-- Table Here -->
+                    <apex:outputPanel id="selectedprod">
+                        <apex:pageBlockTable value="{!selProductItems}" var="item" styleClass="table table-condensed">
+                            <apex:column width="5%">
+                                <apex:facet name="header">
+                                    {!$Label.Remove}
+                                </apex:facet>
+                                <apex:outputLink Id="lnkRemove" styleClass="close"  onclick="return removeLineItem('{!item.ID}')" style="color:red; text-decoration:none;" >x</apex:outputLink>
+                            </apex:column>
+                            <apex:column width="40%" style="text-align:left;">
+                                <apex:facet name="header">
+                                    {!$Label.POWizardProductNameHeading}
+                                </apex:facet>
+                                <p style="padding-left:3em;padding-top:.5em;">{!item.Name}</p>
+                            </apex:column>
+                            
+                            <apex:column width="10%">
+                                <apex:facet name="header">
+                                    {!$Label.POWizardQuantityHeading}
+                                </apex:facet>
+                                <div id="orig_quan_{!item.ID}" style="display:block;text-decoration:none;text-align: center;">
+                                    <div id ="contDiv" style="width:100px;" ondblclick="showHideEdit('{!item.ID}','{!item.Qty}')"> 
+                                        <div id="td1_{!item.ID}" style="display:inline;width:70px">{!item.Qty}
+                                        </div>
+                                        <div id="td2_{!item.ID}" style="padding-left:15px;display:inline;width:30px;"><img src="/img/func_icons/util/pencil12.gif"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inlineEditDiv" id="change_quan_{!item.ID}" style="display:none">
+                                    <apex:actionRegion id="inlineEditRegion">
+                                        <input style="text-align: center; padding-top:.5em;" id="txt_{!item.ID}" type="text" maxlength="5" size="5" onblur="hideMeandResetValue('{!item.ID}','{!item.Qty}')" onkeypress="return CaptureEvt(event,'{!item.ID}','{!item.Qty}');"/>
+                                    </apex:actionRegion>
+                                    <a class="inlineEditUndoLink" href="javascript:resetFieldByValue('{!item.ID}','{!item.Qty}');" style="display: inline;">
+                                        <img class="inlineEditUndo" height="16px" width="16px" alt="Undo" src="/s.gif"/>
+                                    </a>
+                                </div>
+                                    
+                                <apex:outputPanel rendered="{!item.error != null}">
+                                    <div style="color:red;">
+                                        {!$Label.POWizardBundleError}&nbsp;{!item.error}
+                                    </div>
+                                </apex:outputPanel>
+                            </apex:column>
+                            
+                            
+                        </apex:pageBlockTable> 
+                    </apex:outputPanel>                    
+                </apex:pageBlock>            
+            </div><!--end line item table-->
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <label for="categorySearch">{!$Label.ContentHeaderCategory}</label> 
+                            <apex:selectList value="{!selectedCategoryKey}" onChange="updateItemList()" multiselect="false" styleClass="form-control" style="border-radius:4px;" size="1">
+                                <apex:selectOptions value="{!CategoryKeys}"/>
+                            </apex:selectList>
+                            
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="input-group"> 
+                                    <label for="prodDescFilterDiv">{!$Label.Search}</label>
+                                    <div id="prodDescFilterDiv">
+                                        <apex:inputText styleClass="form-control" style="border-radius:4px;" value="{!prodDescFilter}" id="prodDescFilter" onkeyup="filterProds();">
+                                            <apex:actionFunction action="{!moveAccordingToFilter}" name="filterProds" rerender="out" onComplete="lockScreen(false);" />
+                                        </apex:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end search row-->
+            
+            
+            <div class="row" style="padding-top: 1em;">             
+                <apex:pageblock rendered="true" mode="maindetail" title="     ">
+                    <apex:outputPanel id="out">
+                        <apex:pageBlockTable value="{!products}" var="prodObj" styleClass="table table-condensed" id="selectTable">
+                            <apex:column headerValue="{!$Label.POWizardAddProductLineItem}" headerClass="customHeaderLeftPad"  >
+                                <apex:outputLink onClick="addItemToList('{!prodObj.ID}'); mapJS.clear();return false;" >              
+                                    {!prodObj.Name}
+                                </apex:outputLink>
+                            </apex:column>                                   
+                            <apex:column value="{!prodObj.Category__c}" style="text-align: center;"/>
+                        </apex:pageBlockTable>
+
+                        <apex:commandButton styleClass="btn btn-link" disabled="{!NOT(setCon.hasPrevious)}" value="|<" action="{!first}" rerender="out"/>&nbsp;
+                        <apex:commandButton styleClass="btn btn-link" disabled="{!NOT(setCon.hasPrevious)}" value="<" action="{!previous}" rerender="out"/>&nbsp;
+                        <apex:outputText rendered="{!(setCon.pageNumber * setCon.pageSize) < setCon.ResultSize}" value="{!setCon.pageNumber * setCon.pageSize} Of {!setCon.ResultSize}"></apex:outputText>
+                        <apex:outputText rendered="{!(setCon.pageNumber * setCon.pageSize) >= setCon.ResultSize}" value="{!setCon.ResultSize} Of {!setCon.ResultSize}"></apex:outputText>&nbsp;
+                        <apex:commandButton styleClass="btn btn-link" disabled="{!NOT(setCon.hasNext)}" value=">" action="{!next}" rerender="out"/>&nbsp;
+                        <apex:commandButton styleClass="btn btn-link" disabled="{!NOT(setCon.hasNext)}" value=">|" action="{!last}" rerender="out"/>&nbsp;                        
+                        
+                    </apex:outputPanel>
+                </apex:pageblock>
+            </div>
+            
+        </apex:form>
+
+    </div>
+    
+</apex:component>

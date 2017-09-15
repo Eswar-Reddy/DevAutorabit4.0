@@ -1,0 +1,181 @@
+<apex:page controller="EnergyLinkPostSurveyController" language="{!language}" showHeader="false">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet" />
+
+    <style type="text/css">
+       html {
+            display: block;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+       body {
+            box-sizing: border-box;
+            font-family:"Open Sans", sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1.5;
+            padding: 5px;
+            margin: 5px;
+            overflow: auto;
+            height: 100%;
+    }
+    .row{
+        margin: 0 auto 10px;
+        max-width: 45rem;
+        width: 100%;
+    }
+    fieldset{
+        margin: 0 -10px;
+    }
+    .heading{
+        box-sizing: border-box;
+        margin-bottom:10px;
+        background: #0076be;
+        color: #FFFFFF;
+        padding: 3px 0 3px 23px;
+        font-size: 18px;
+    }
+     .survey-form{
+        margin:0 25px 10px 25px;
+     }
+     .survey-form h3{
+       
+       margin-bottom:5px;
+       font-size:16px;
+       font-weight: bold;
+       opacity: 0.8;
+       color:#5E6367;
+    }
+     .survey-form p{
+      
+       margin-top:2px;
+       font-size:14px;
+       color:#5E6367;
+       font-weight: bold;
+       opacity: 0.7;
+
+    }
+    tr,td{
+      font-size:12px;
+      color:#5E6367;
+      padding-right: 25px;
+    }
+    
+    .survey-button{
+     
+      float:right !important;
+      color: #FFFFFF !important;
+      border-radius:0.2rem !important;
+      background: #0076be !important;
+      cursor: pointer !important;
+      padding: 10px !important;
+      border-width: 0px !important;
+      font-size: 14px!important;
+
+    }
+    .survey-button :hover{
+      background-color: #005e98;
+    }
+    
+    .thank-you-form{
+       margin:0 25px 10px 25px;
+    }
+    
+    .thank-you{
+       font-size: 16px;
+       font-weight: bold;
+       opacity: 0.8;
+       color:#5E6367;
+     }
+     .opinion{
+       font-size: 14px;
+       font-weight: normal;
+       color:#5E6367;
+     }
+     .close-button{
+      width: 7rem;
+      margin-top:20px;
+          
+     }
+    </style>
+   <div class="row">
+    <apex:form >
+     
+        <apex:outputPanel rendered="{!AND(surveyEnabled, surveyRendered)}" id="surveyPanel" styleClass="center" layout="block" style="overflow:auto;">
+          <div class="heading">
+               
+                Chat with SunPower
+            
+            </div>
+        <div class="survey-form">
+         <h3>How did we do?</h3>
+         <p>Please rate your experience chatting with this agent.</p>
+        <table>
+            <apex:repeat value="{!lineWrapperList}" var="W">
+                <tr>
+                    <td>{!W.rowNum}. {!W.question.Question__c}</td>
+                </tr>
+                <tr>
+                    <td>
+                    <apex:selectRadio value="{!W.selectedAnswer}" rendered="{!W.question.Type__c = 'Single Choice'}">
+                        <apex:selectOptions value="{!W.answerOptions}">
+                        </apex:selectOptions>
+                    </apex:selectRadio>
+                    <apex:inputtextarea value="{!W.selectedAnswer}" style="width:400px;height:50px"
+                        rendered="{!W.question.Type__c = 'Text Area'}"/>
+                    </td>
+                </tr>
+            </apex:repeat>
+        </table>
+                    
+                    <apex:commandButton value="send feedback" styleClass="survey-button" action="{!submitSurvey}"/>
+                      
+        <apex:outputText value="{!message}" id="message"></apex:outputText>
+        </div>
+
+        </apex:outputPanel>
+     
+        <apex:outputPanel rendered="{!AND(surveyEnabled, thankYouRendered)}" id="thankYouPanel" layout="block">
+             <div class="heading">
+               
+                Chat with SunPower
+            
+            </div>
+        <div class="thank-you-form">
+                <P class="thank-you">Thank You</p>
+                <p class="opinion">Your opinions are very important to us and we appreciate you taking time to take our survey.</p>
+          </div>  
+          <div align="center">
+                <img style="width:500px; height:320px" src="{!$Resource.EnergyLinkPostSurveyChatImage}"/>    
+           </div>      
+           <div>    
+                <button onclick="window.close();return false" class="survey-button close-button">close</button>   
+           </div>                   
+        
+        </apex:outputPanel>
+       
+        <apex:outputPanel rendered="{!NOT(surveyEnabled)}" id="thankYouPanel2" style="width:700px" styleClass="center" layout="block">
+        <table>
+            <tr>
+                <td align="center">
+                    <c:LiveChatSunpowerImage />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">{!$Label.Live_Chat_Survey_Thank_you_for_participating}</td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <apex:outputLink onclick="window.close();return false">
+                        {!$Label.Live_Chat_Survey_close_window}
+                    </apex:outputLink>
+                </td>
+            </tr>
+        </table>
+        
+        </apex:outputPanel>
+    </apex:form>
+    </div>
+</apex:page>

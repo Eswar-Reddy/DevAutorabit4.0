@@ -1,0 +1,39 @@
+<apex:page showHeader="false" sidebar="false" standardController="Roof_Design__c">
+<apex:includeScript value="{!$Resource.SPCommunityUserLinks}"/>  
+    <script>
+        removeISDTP();
+    </script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <body class="detail-container">
+        <apex:detail subject="{!Roof_Design__c.Id}" inlineEdit="true" relatedListHover="false" showChatter="true" />
+    </body>
+    <c:SPCommunityAppResources_JS />
+
+
+    <script src="/soap/ajax/37.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/37.0/apex.js" type="text/javascript"></script>
+    <script>
+    window.onload = function() {
+        var recId='{!Roof_Design__c.Id}';
+        
+        var queryResult1 = sforce.connection.query('SELECT Origin__c from Roof_Design__c WHERE id =\''+recId+'\'');
+        var records1 = queryResult1.getArray('records');
+        var origin = records1[0].Origin__c;
+            
+        if(String(origin) != "Self Service") {
+        	hideButtonsBF('pair_array',origin);
+        }
+        function hideButtonsBF(buttonName,origin){
+            var x = document.getElementsByName(buttonName);
+            var i;
+            for (i = 0; i < x.length; i++){
+                if (x[i].type == "button"){
+                    x[i].style.display="none";
+                }
+            }
+        }
+   	}
+ 
+    </script>
+</apex:page>

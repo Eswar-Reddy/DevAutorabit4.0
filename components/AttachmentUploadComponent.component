@@ -1,0 +1,123 @@
+<apex:component controller="AttachmnetUploadCtrl" layout="block" allowDML="true">
+    <apex:attribute name="parentId" type="String" description=""/>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>  
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" /> 
+    <style>
+    .sunpower-style .btn--small {
+      font-size: 0.75rem !important;
+    }
+    </style>
+    <div class="sunpower-style" style="margin-top:5px;">
+    <h5> Attachments</h5>
+    <div style="border:1px solid #CBD0D5;padding:5px;margin-top:10px;">
+    <apex:form >
+    <div class="row">
+        <div id="docListSpinner" class="spinner spinner--center"></div>
+    </div>
+    <apex:outputPanel id="documentListOutput" style="font-size:14px;">
+        <div class="row">
+            <div class="col-xs-7">
+                <ul id="docList" class="fa-ul" style="margin-top: 0px;">
+                </ul>
+            </div>
+        </div>
+    </apex:outputPanel> 
+    <div style="font-size:0.9rem;">
+    <c:DocumentAttachmentUploadComponent parentIds="{!parentId}" attachmentOnly="true"/>
+    </div>
+    <apex:actionFunction name="deleteDocument" action="{!deleteDesignDocuments}" oncomplete="fetchDesignDocuments()" reRender="documentListOutput">
+        <apex:param assignTo="{!docIdToDelete}" name="docIdToDelete" value="" />
+    </apex:actionFunction>
+    </apex:form>
+    </div>
+    </div>
+    <script type="text/javascript">
+        var parentId = '{!parentId}';
+        var allDocs = [];
+        var finalDocs = [];
+        var wordDocContentArray = ['.doc', '.docx'];
+        var excelContentArray = ['.xls', '.csv', '.xlsx'];
+        var imageContentArray = ['.png', '.jpeg', '.gif', '.bmp'];
+        
+
+        $( document ).ready(function() {
+            
+            fetchDesignDocuments();
+
+            //Event listener for click of Upload button
+            $("#uploadButton").click(function() {
+                prepareFileUploads();
+                setTimeout(function(){ fetchDesignDocuments(); }, 5000);
+                setTimeout(function(){ fetchDesignDocuments(); }, 10000);
+            });
+            
+            //Event listener to clear upload details/status bars once upload is complete
+            $("#clear").on('click',function() {  
+                $(".upload").remove();
+            });
+
+        });
+        
+        function toggleSpinner(spinState) {
+            if(spinState)
+                $( '#docListSpinner' ).show();
+            else
+                $( '#docListSpinner' ).hide();
+        }
+
+        function fetchDesignDocuments() {
+            toggleSpinner(true);
+            AttachmnetUploadCtrl.fetchAttachments(parentId, function(result, event) {
+                console.log(event+'===');
+                if(event.status) {
+                    if(result.success) {
+                        allDocs = result.payloadMap.attachments;
+                        var newTableString = '';
+                        for(var i = 0; i < allDocs.length; i++) {
+                            if(allDocs[i]) {
+                                var fileType = 'fa-file';
+                                var contentStr = allDocs[i].Name.substr(allDocs[i].Name.lastIndexOf("."));
+                                console.log('data==', allDocs[i].Name);
+                                if(wordDocContentArray.indexOf(contentStr) != -1) {
+                                    fileType += '-word-o';
+                                } else if(contentStr == '.pdf') {
+                                    fileType += '-pdf-o';
+                                } else if(contentStr == '.zip') {
+                                    fileType += '-archive-o';
+                                } else if(excelContentArray.indexOf(contentStr) != -1) {
+                                    fileType += '-excel-o';
+                                } else if(imageContentArray.indexOf(contentStr) != -1) {
+                                    fileType += '-image-o';
+                                } else {
+                                    console.log('unfound file type extension', contentStr);
+                                    fileType += '-o';
+                                }
+                                var iClass = 'fa fa-trash-o fa-pull-right';
+                                newTableString += '<li name="'+allDocs[i].Name+'"><i class="fa-li fa '+fileType+'"></i><a href="/servlet/servlet.FileDownload?file='+allDocs[i].Id+'" target="_blank">'+allDocs[i].Name+'</a><a href="#"  id="'+allDocs[i].ParentId+'"><i class="'+iClass+'" aria-hidden="true" onclick="deleteDocument(\''+allDocs[i].Id+'\')"></i></a></li>';//'+allDocs[i].Id+'
+                            }
+                        }
+                        
+                        toggleSpinner(false);
+                        $( "#docList" ).html(newTableString);
+
+                    } else {
+                        toggleSpinner(false);
+                        alert(result.payload[0]);
+                    }
+                } else {
+                    toggleSpinner(false);
+                    alert(event.status);
+                }
+                toggleSpinner(false);
+            });
+            toggleSpinner(false);
+        }
+        
+        function setFocus() {
+            console.log('focusing');
+            window.scrollTo(0, 0);
+        }
+        
+</script>
+</apex:component>

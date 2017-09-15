@@ -1,0 +1,19 @@
+<apex:page standardController="Task" extensions="TaskViewOverride">
+<apex:form >
+  <script>
+  function goBack(){    
+     window.location.href = '{!retU}';    
+     return false;      
+  }
+  if('{!isAuthorizedUser}'=='true'){
+      window.location.href = '{!newURL}';
+  }
+  </script>
+  <apex:pageBlock title="Error">
+      <apex:pageBlockButtons location="bottom">
+          <apex:commandButton rendered="{!NOT(ISNULL(retU))}" value="Back" onclick="return goBack();"/>
+      </apex:pageBlockButtons>
+      <apex:outputLabel style="color:red;" value="{!$Label.NotAuthorized}"></apex:outputLabel>
+  </apex:pageBlock> 
+</apex:form>
+</apex:page>

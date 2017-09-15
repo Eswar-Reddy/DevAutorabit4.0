@@ -1,0 +1,114 @@
+<apex:page standardController="WR_FDS_Product__c" extensions="Warranty_SearchFDSAdminClass">
+    <apex:form >
+
+        <c:WaitingComponent />
+
+        <apex:pageBlock title="Search FDS ">
+            <apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:selectList value="{!searchKey}" size="1" id="pklSO" onchange="changeSalesOrderLabel(this.value);">
+                    <apex:selectOption itemLabel="{!$Label.Customer_PO}" itemValue="w.WR_ORACLE_SalesOrder__r.Purchase_Order__c" />
+                    <apex:selectOption itemLabel="{!$Label.Sales_Order}" itemValue="w.WR_ORACLE_SalesOrder__r.Sales_Order__c" />
+                    <apex:selectOption itemLabel="{!$Label.Packing_List}" itemValue="w.Packing_Slip__c" />
+                    <apex:selectOption itemLabel="{!$Label.Serial_Number}" itemValue="w.Serial_Number__c" />
+                </apex:selectList>
+                <apex:inputText value="{!searchValue}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!searchRecords}" value=" Search " id="theButton" onclick="lockScreen(true);" onComplete="lockScreen(false);" rerender="table1" />
+                <apex:commandButton action="{!exportCSV}" value=" Export to CSV "/> 
+            </apex:pageBlockButtons>   
+        </apex:pageBlock>   
+        <apex:pageblock id="table1" >
+        <apex:outputPanel id="salesOrders" layout="block">
+            <apex:outputPanel style="text-align:center;" rendered="{!NOT(ISBLANK(setCon))}">
+                <div class="paginator"><span class="prevNextLinks"> <span class="left"> </span> <span class="prevNext"> <apex:commandLink rendered="{!setCon.hasPrevious}" action="{!setCon.first}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                    <apex:image value="/s.gif" alt="{!$Label.First}" styleClass="first" />
+                    </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.First}" title="First" styleClass="firstoff" rendered="{!NOT(setCon.hasPrevious)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!setCon.hasPrevious}" action="{!setCon.previous}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                    <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prev" />
+                    </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Previous}" title="Previous" styleClass="prevoff" rendered="{!NOT(setCon.hasPrevious)}" /> </span> &nbsp;&nbsp;&nbsp;&nbsp; <span class="prevNext"> <apex:commandLink rendered="{!setCon.hasNext}" action="{!setCon.next}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                    <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="next" />
+                    </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Next}" title="Next" styleClass="nextoff" rendered="{!NOT(setCon.hasNext)}" /> </span> <span class="prevNext"> <apex:commandLink rendered="{!setCon.hasNext}" action="{!setCon.last}" rerender="salesOrders" onclick="lockScreen(true);" onComplete="lockScreen(false);">
+                    <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="last" />
+                    </apex:commandLink> </span> <span class="prevNext"> <apex:image value="/s.gif" alt="{!$Label.Last}" title="Last" styleClass="lastoff" rendered="{!NOT(setCon.hasNext)}" /> </span> </span>
+                </div>
+            </apex:outputPanel>
+        <!--  <apex:pageblocktable value="{!FdsRecords}" var="fds">
+            <apex:column headerValue="Product">
+                <apex:outputLink target="_blank" value="/{!fds.id}">{!fds.Name}</apex:outputLink>
+            </apex:column>
+            <apex:column value="{!fds.Dealer_Name__c}" />
+            <apex:column value="{!fds.Packing_Slip__c}" />
+            <apex:column value="{!fds.Alternate_Packing_Slip__c}"/>
+            <apex:column value="{!fds.Serial_Number__c}" />
+            <apex:column headerValue="Product Type(Group)">
+                <apex:outputField value="{!fds.Product_Type__c}" />
+            </apex:column>
+            <apex:column value="{!fds.Product_Name__c}" />
+            <apex:column headerValue="Customer PO">
+                 <apex:outputField value="{!fds.WR_ORACLE_SalesOrder__r.Purchase_Order__c}" />
+            </apex:column>
+            <apex:column value="{!fds.WR_ORACLE_SalesOrder__r.Sales_Order__c}" />
+            <apex:column value="{!fds.PickUpDate__c}" />
+            
+            <apex:column headerValue="FDS Date Pushed">
+                <apex:outputField value="{!fds.LastModifiedDate}" />
+            </apex:column>
+            
+            <apex:column headerValue="Oracle Date Pushed" >
+                <apex:outputField value="{!fds.WR_ORACLE_SalesOrder__r.LastModifiedDate}" rendered="{!fds.WR_ORACLE_SalesOrder__c != null}"/>
+            </apex:column>
+            <!-- <apex:repeat value="{!fds.WR_Line_Items__r}" var="li">
+            	<apex:column headerValue="Warranty Number" value="{!li.Warranty_Registration__r.Warranty_Number__c}"/>
+				<apex:column headerValue="Status" value="{!li.Warranty_Registration__r.Status__c}"/>
+				<apex:column headerValue="Date" value="{!li.Warranty_Registration__r.Delivery_Date__c}"/>
+            </apex:repeat> -->
+            
+			
+              <!-- <apex:column headerValue="Warranty Details">
+            
+            
+			<apex:datatable value="{!fds.WR_Line_Items__r}" var="li">
+				<apex:column value="{!li.Warranty_Registration__r.Warranty_Number__c}"/>
+				<apex:column value="{!li.Warranty_Registration__r.Status__c}"/>
+				<apex:column value="{!li.Warranty_Registration__r.Delivery_Date__c}"/>
+			</apex:datatable>  
+			</apex:column>                 
+            <apex:column headerValue="Theater">
+                <apex:outputField value="{!fds.WR_ORACLE_SalesOrder__r.Theater__c}" />
+            </apex:column>
+        </apex:pageblocktable>-->
+        <apex:pageblocktable value="{!prodWarrantyWrapperLst}" var="fds">
+            <apex:column headerValue="Product">
+                <apex:outputLink target="_blank" value="/{!fds.product.id}">{!fds.product.Name}</apex:outputLink>
+            </apex:column>
+            <apex:column value="{!fds.product.Dealer_Name__c}" />
+            <apex:column value="{!fds.product.Packing_Slip__c}" />
+            <apex:column value="{!fds.product.Alternate_Packing_Slip__c}"/>
+            <apex:column value="{!fds.product.Serial_Number__c}" />
+            <apex:column headerValue="Product Type(Group)">
+                <apex:outputField value="{!fds.product.Product_Type__c}" />
+            </apex:column>
+            <apex:column value="{!fds.product.Product_Name__c}" />
+            <apex:column headerValue="Customer PO">
+                 <apex:outputField value="{!fds.product.WR_ORACLE_SalesOrder__r.Purchase_Order__c}" />
+            </apex:column>
+            <apex:column value="{!fds.product.WR_ORACLE_SalesOrder__r.Sales_Order__c}" />
+            <apex:column value="{!fds.product.PickUpDate__c}" />
+            
+            <apex:column headerValue="FDS Date Pushed">
+                <apex:outputField value="{!fds.product.LastModifiedDate}" />
+            </apex:column>
+            
+            <apex:column headerValue="Oracle Date Pushed" >
+                <apex:outputField value="{!fds.product.WR_ORACLE_SalesOrder__r.LastModifiedDate}" rendered="{!fds.product.WR_ORACLE_SalesOrder__c != null}"/>
+            </apex:column>
+            <apex:column headerValue="Warranty Number" value="{!fds.warrantyNumber}" />
+            <apex:column headerValue="Warranty Status" value="{!fds.warrantyStatus}" />
+            <apex:column headerValue="Warranty Date" value="{!fds.warrantyDate}" />
+           </apex:pageblocktable>
+        </apex:outputPanel> 
+        </apex:pageblock>
+    </apex:form>
+</apex:page>

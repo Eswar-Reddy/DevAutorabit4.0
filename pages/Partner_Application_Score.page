@@ -1,0 +1,356 @@
+<apex:page id="partnerApplicationScore" standardController="Partner_Application__c" extensions="PartnerApplicationScoreController">
+<apex:form >
+
+<apex:pageBlock mode="detail" id="detailPageBlock" title="Partner Application Score">
+  <apex:pageBlockButtons >
+    <apex:commandButton action="{!returnToApplication}" value="Return to Application"/>
+  </apex:pageBlockButtons>
+  
+  <apex:pageBlockSection title="Application Score" id="applicationScore">
+    <apex:outputField value="{!Partner_Application__c.Application_Score__c}"/>
+  </apex:pageBlockSection>
+  <apex:pageBlockSection title="Application Score Details" id="applicationScoreDetails" columns="1">
+    <apex:outputPanel layout="block">   
+          <table width="100%">
+                <tr>
+                    <td align="left"><b>Description</b></td>
+                    <td align="center" ><b>Score</b></td>                   
+                    <td align="center" ><b>Max Score</b></td>
+                    <td><b>Scoring Formula </b></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="25%">Years in Business</td>
+                    <td width="15%" align="center"><apex:outputField value="{!Partner_Application__c.Years_in_Business_Score__c}"/></td>
+                    <td width="15%" align="center">5</td>
+                    <td width="45%"><apex:outputLabel value="1 point for every 2 years, zero point = 2 years, max = 5 points" /></td>
+                    
+                </tr>   
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <!--
+                <tr>
+                    <td>Website</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Website_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>if available</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>-->
+                
+                <tr>
+                    <td>Electrician (on-staff)</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Electrician_on_staff_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point = yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>CAD Designer Available</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.CAD_Designer_Available_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point = yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sales Employees</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Sales_Employees_Score__c}"/></td>
+                    <td align="center">10</td>
+                    <td>1 pt <= 3 people, 4 pts 4- 6, 6 pts 7-10, 8 pts 11-16, 10 points >17+ people</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Marketing Employees</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Marketing_Employees_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 point = yes; 3 pts >= 3 people; 5 pts >= 6 people</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Operations/Administration Employees</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Operations_Employees_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 point = yes; 3 pts >= 3 people; 5 pts >= 6 people</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Customer Service Employees</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Customer_Service_Employees_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 pt. for every 2 customer service employees, max 5 pts.</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Logistics/Tech Support Employees</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Technical_Employees_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 pt. for every 2 logistics/tech support employees, max 5 pts.</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Installation Employees</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Installation_Employees_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 pt. for every 3 install employees, max 5 pts.</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <!--
+                <tr>
+                    <td>Total Employee Base</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Total_Employee_Base_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 pt for every 5 employees, max = 5 points</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>-->
+                
+                <tr>
+                    <td>Projects Completed Last Year</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Projects_Completed_Last_Year_Score__c}"/></td>
+                    <td align="center">20</td>
+                    <td>
+                      <apex:outputPanel rendered="{!Partner_Application__c.RecordType.Name == 'NA Commercial Partner Application'}">
+                        5 pts (0-10 projects), 10 pts (11-25), 15 pts (25-49), 20 pts (50+ projects)
+                      </apex:outputPanel>
+                      <apex:outputPanel rendered="{!NOT(Partner_Application__c.RecordType.Name == 'NA Commercial Partner Application')}">
+                        5 pts (0-100 projects), 10 pts (101-249), 15 pts (250-499), 20 pts (500+ projects)
+                      </apex:outputPanel>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Annual Revenue 1 year ago (% Compared to 2 years ago)</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Annual_Revenue_1_year_ago_Score__c}"/></td>
+                    <td align="center">3</td>
+                    <td>If YOY > 20% then 1 pt; if >= 30% then 2 pts; if >= 50% then 3pts</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <!--
+                <tr>
+                    <td>Company Profitable</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Company_Profitable_Score__c}"/></td>
+                    <td align="center"> 5</td>
+                    <td>5 points if yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>-->
+                
+                <tr>
+                    <td>Revenue per Sales Person (Annual Revenue 1 yr ago/ total slaes employees)</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Revenue_per_Sales_Person_Yr_Ago__c}"/></td>
+                    <td align="center">3</td>
+                    <td>If YOY >$50,000 then 1pt; if >=$100,000 then 2 pts; if >=$250,000 then 3pts</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Projected current FY (% Compared to 1 year ago)</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Projected_current_FY_Score__c}"/></td>
+                    <td align="center">3</td>
+                    <td>If YOY > 20% then 1 pt; if >= 30% then 2 pts; if >= 50% then 3pts.</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Projected Next FY (% Compared to this FY)</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Projected_Next_FY_Score__c}"/></td>
+                    <td align="center">3</td>
+                    <td>If YOY > 20% then 1 pt; if >= 30% then 2 pts; if >= 50% then 3pts. </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <!--
+                <tr>
+                    <td>Review Credit Standing</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Credit_Report_Score__c}"/></td>
+                    <td align="center">1</td>
+                    <td>1 point = yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>-->
+                
+                <!--
+                <tr>
+                    <td>Business Plan</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Business_Plan_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>5 point = yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>-->
+                
+                <tr>
+                    <td>Geographic Coverage</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Geographic_Coverage_Score__c}"/></td>
+                    <td align="center">6</td>
+                    <td>2 pt. for each one listed, max = 6 pts</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Customer Base</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Customer_Base_Score__c}"/></td>
+                    <td align="center">5</td>
+                    <td>1 pt = 11-100; 3 pts = 101 to 1000; 5 pts = 1000+</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <!--
+                <tr>
+                    <td>Existing/Pending Litigation</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Existing_Pending_Litigation_Score__c}"/></td>
+                    <td align="center">3</td>
+                    <td>3 point if no litigation</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>-->
+                
+                <tr>
+                    <td>Marketing Source 1</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Marketing_Source_1_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point if more than 5% </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Marketing Source 2</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Marketing_Source_2_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point if more than 5% </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Formalized Referral Program</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Formalized_Referral_Program_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point = yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Consumer Reporting Agency</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Consumer_Reporting_Agency_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point = yes</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                
+                <!--              
+                <tr>
+                    <td>Member of Local Business Orgs</td>
+                    <td align="center"><apex:outputField value="{!Partner_Application__c.Member_of_Local_Business_Orgs_Score__c}"/></td>
+                    <td align="center">2</td>
+                    <td>2 point = yes</td>
+                </tr>-->
+          </table>  
+     </apex:outputPanel> 
+   </apex:pageBlockSection>
+</apex:pageBlock>
+
+</apex:form>    
+</apex:page>

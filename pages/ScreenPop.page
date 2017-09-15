@@ -1,0 +1,104 @@
+<apex:page controller="ScreenPopController" tabStyle="Account" sidebar="true">
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_11_3)}"/>
+    <apex:includeScript value="/support/console/36.0/integration.js"/>
+    <script>
+        var ani = '{!ani}';
+    </script>
+    <style>
+        .myOuterTable td {vertical-align:top}
+        .myFieldLabel {font-weight:bold;}
+        .myCaseTable {border-collapse:collapse;}
+        .myCaseTable td {border:1px solid grey; padding:5px}
+        .myColumnLabel {font-weight:bold;}
+    </style>
+    <apex:includeScript value="{!$Resource.ScreenPop}"/>
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:form >
+        <apex:pageBlock title="Inbound Call: {!ani}">
+            <table class="myOuterTable">
+                <tr>
+                    <td width="60%">
+                        <table>
+                            <tr><td class="myFieldLabel">Account Name</td></tr>
+                            <tr><td>
+                            <a class="account" href="/{!selectedAccount.Id}" id="{!selectedAccount.Id}" target="_blank" title="{!selectedAccount.Name}">
+                            {!selectedAccount.Name}
+                            </a>
+                            </td></tr>
+                            <tr><td class="myFieldLabel">Account Display Name</td></tr>
+                            <tr><td><apex:OutputField value="{!selectedAccount.Account_Display_Name__c}"/></td></tr>
+                            <tr><td class="myFieldLabel">Phone</td></tr>
+                            <tr><td><apex:OutputField value="{!selectedAccount.Phone}"/></td></tr>
+                            <tr><td class="myFieldLabel">Record Type</td></tr>
+                            <tr><td><apex:OutputField value="{!selectedAccount.RecordType.Name}"/></td></tr>
+                        </table>
+                    </td>                
+                    <td width="40%">
+                        <table>
+                            <tr><td class="myFieldLabel">Contact</td></tr>
+                            <tr><td>
+                            <a class="contact" href="/{!selectedContact.Id}" id="{!selectedContact.Id}" target="_blank" title="{!selectedContact.Name}">
+                                {!selectedContact.Name}
+                            </a>
+                            </td></tr>
+                            <tr><td class="myFieldLabel">Opportunity assigned to phone number</td></tr>
+                            <tr><td>
+                            <a class="opportunity" href="/{!selectedOpportunity.Id}" id="{!selectedOpportunity.Id}" target="_blank" title="{!selectedOpportunity.Name}">
+                                {!selectedOpportunity.Name}
+                            </a>
+                            </td></tr>
+                            <tr><td class="myFieldLabel">Primary Campaign Source</td></tr>
+                            <tr><td>
+                            <a class="campaign" href="/{!selectedOpportunity.CampaignId}" id="{!selectedOpportunity.CampaignId}" target="_blank" title="{!selectedOpportunity.Campaign.Name}">
+                                {!selectedOpportunity.Campaign.Name}
+                            </a>
+                            </td></tr>
+                            <tr><td class="myFieldLabel">Dealer Selection</td></tr>
+                            <tr><td>
+                            <a class="dealer" href="/{!selectedOpportunity.Dealer_Selection__c}" id="{!selectedOpportunity.Dealer_Selection__c}" target="_blank" title="{!selectedOpportunity.Dealer_Selection__r.Name}">
+                                {!selectedOpportunity.Dealer_Selection__r.Name}
+                            </a>
+                            </td></tr>
+                        </table>    
+                    </td>                
+                </tr>  
+            </table>
+
+            <div class="myFieldLabel">Last Case Created</div>
+            <table class="myCaseTable">
+                <tr class="myColumnLabel">
+                    <td width="10%">Case Number</td>
+                    <td width="30%">Subject</td>
+                    <td width="10%">Date/Time Opened</td>
+                    <td width="10%">Priority</td>
+                    <td width="10%">Status</td>
+                    <td width="20%">Reason for Escalation</td>
+                    <td width="10%">Case Record Type</td>
+                </tr>
+                <apex:repeat value="{!caseList}" var="C">
+                <tr>
+                    <td>
+                    <a class="case" href="/{!C.Id}" id="{!C.Id}" target="_blank" title="{!C.CaseNumber}">
+                        {!C.CaseNumber}
+                    </a>
+                    </td>
+                    <td><apex:OutputField value="{!C.Subject}"/></td>
+                    <td><apex:OutputField value="{!C.CreatedDate}"/></td>
+                    <td><apex:OutputField value="{!C.Priority}"/></td>
+                    <td><apex:OutputField value="{!C.Status}"/></td>
+                    <td><apex:OutputField value="{!C.Reason_for_Escalation__c}"/></td>
+                    <td><apex:OutputField value="{!C.RecordType.Name}"/></td>
+                </tr>
+                </apex:repeat>
+            </table>
+            <apex:outputPanel rendered="{!caseList.size = 0}">
+                <div>No cases for this account</div>
+            </apex:outputPanel>
+    
+        </apex:pageBlock>
+        <apex:pageBlock title="Debug" rendered="false">
+            ani: {!ani} <br/>
+            dnis: {!dnis} <br/>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

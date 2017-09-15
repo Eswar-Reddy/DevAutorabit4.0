@@ -1,0 +1,79 @@
+<apex:page showHeader="true" sidebar="true" standardController="Project_Task__c" extensions="ProjectTaskDocumentsController" standardStylesheets="false">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <apex:stylesheet value="{!URLFOR($Resource.SPStyleGuide, 'css/sunpower-styleguide.css')}" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+
+    <style type="text/css">
+        li
+        {
+            margin-left:0 !important;
+        }
+    </style>
+    <div class="sunpower-style container container-fluid" style="font-size:12px;">
+        <apex:form >
+            <div class="tabs">
+                <div class="tabs__header-container">
+                    <ul class="tabs__header">
+                        <li class="tabs__header-item{!IF(currTab == 0,' tabs__header-item--active','')}" data-tab-id="1">
+                            <span>Project</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tabs__content-container">
+                    <div class="tabs__content">
+                        <div class="tabs__content-item{!IF(currTab == 0,' tabs__content-item--active','')}" data-tab-content="1">
+                            <apex:commandLink styleClass="btn" value="Save Changes" action="{!saveFile}" style="background:LightBlue;padding:4px;font-size:12px;position:absolute;top:0rem;left:26rem;">
+                                <apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+                            </apex:commandLink>
+
+                            <apex:outputPanel style="position: absolute; top: 10px; left: 34rem;" rendered="{!pageSize[0]>rowsOnPage}">
+                                Records Found:  <apex:outputText >{!pageSize[0]}</apex:outputText>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <apex:commandLink action="{!prevPage}" value="Previous" rendered="{!pagePtr[0]>1}">
+                                    <apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+                                </apex:commandLink>
+                                <apex:outputPanel style="color:grey" rendered="{!pagePtr[0]==0}">Previous</apex:outputPanel> 
+                                &nbsp;({!pageptr[0]+1}&nbsp;-&nbsp;{!IF(pageptr[0]+rowsOnPage > pageSize[0],pageSize[0],pagePtr[0]+rowsOnPage)})&nbsp;&nbsp;
+                                <apex:commandLink action="{!nextPage}" value="Next" rendered="{!pagePtr[0]+rowsOnPage<pageSize[0]}">
+                                    <apex:param name="currTab" value="0" assignTo="{!currTab}"/>
+                                </apex:commandLink>
+                                <apex:outputPanel style="color:grey" rendered="{!pagePtr[0]+rowsOnPage>=pageSize[0]}">Next</apex:outputPanel> 
+                            </apex:outputPanel>
+                            
+                            <apex:dataTable value="{!projDocRows}" var="doc" id="documents" styleClass="table table-responsive" cellpadding="10px" rows="{!rowsOnPage}" first="{!pagePtr[0]}">
+                                <apex:column headerValue="Document" headerClass="underline">
+                                    <apex:outputLink value="/{!doc.dId}" target="_blank">{!doc.title}</apex:outputLink>
+                                </apex:column>
+
+                                <apex:column headerValue="Filename" headerClass="underline">
+                                    <apex:outputPanel rendered="{! NOT(ISBLANK(doc.attId))}">
+                                        <a href="/servlet/servlet.FileDownload?file={!doc.attId}" target="_blank">{!doc.attFileName}</a>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!ISBLANK(doc.attId)}">
+                                        {!doc.attFileName}
+                                    </apex:outputPanel>
+                                </apex:column>
+                                
+                                <apex:column headerValue="Action" headerClass="underline">
+                                    <apex:commandLink action="{!deleteDoc}" styleClass="secondary-link" rendered="{!doc.canDelete}" style="float:left;"> <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        Delete
+                                        <apex:param name="deleteDocId" value="{!doc.attId}" assignTo="{!deleteDocId}"/>
+                                    </apex:commandLink>
+
+                                    <apex:inputFile styleClass="file-input" value="{!doc.attBody}" filename="{!doc.attName}" rendered="{!!doc.canDelete && ISBLANK(doc.attId)}"/>
+
+                                </apex:column>
+
+                            </apex:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:form>
+    </div>    
+    <!-- Keep at bottom of page -->
+    <script type="text/javascript" src="{!URLFOR($Resource.SPStyleGuide, 'javascripts/main.bundle.js')}"></script>
+
+</apex:page>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_90643440</developerName>
+        <masterLabel>Actual vs Pending</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>Approved</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Completed</sourceValue>
+            </sourceValues>
+            <value>Rough Complete</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Not Started</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>In Progress</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Needs Rework</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Hold</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Pending Rework</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Pending Approval</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Cancelled</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Pending Cancellation</sourceValue>
+            </sourceValues>
+            <value>Pending</value>
+        </values>
+    </buckets>
+    <chart>
+        <backgroundColor1>#FFFFFF</backgroundColor1>
+        <backgroundColor2>#FFFFFF</backgroundColor2>
+        <backgroundFadeDir>Diagonal</backgroundFadeDir>
+        <chartSummaries>
+            <aggregate>Sum</aggregate>
+            <axisBinding>y</axisBinding>
+            <column>NH_Community__c.Residential_Projects__r$System_Wattage_DC__c</column>
+        </chartSummaries>
+        <chartType>VerticalColumnStacked</chartType>
+        <enableHoverLabels>true</enableHoverLabels>
+        <expandOthers>true</expandOthers>
+        <groupingColumn>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</groupingColumn>
+        <legendPosition>Right</legendPosition>
+        <location>CHART_TOP</location>
+        <secondaryGroupingColumn>BucketField_90643440</secondaryGroupingColumn>
+        <showAxisLabels>true</showAxisLabels>
+        <showPercentage>false</showPercentage>
+        <showTotal>false</showTotal>
+        <showValues>false</showValues>
+        <size>Large</size>
+        <summaryAxisRange>Auto</summaryAxisRange>
+        <textColor>#000000</textColor>
+        <textSize>12</textSize>
+        <title>NH Rough: Forecast to Actual</title>
+        <titleColor>#000000</titleColor>
+        <titleSize>18</titleSize>
+    </chart>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>NH_Community__c.Residential_Projects__r$System_Wattage_DC__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$PV_Install_Promised__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$RecordType</field>
+    </columns>
+    <columns>
+        <field>NH_Community__c.Residential_Projects__r$SunPower_Deal_Type__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Name</column>
+            <operator>equals</operator>
+            <value>Complete Rough Wire</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$RecordType</column>
+            <operator>equals</operator>
+            <value>Residential_Project__c.New_Home</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>NH_Community__c.Residential_Projects__r$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled,Completed,Pending Cancellation</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Week</dateGranularity>
+        <field>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>BucketField_90643440</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>NH_Community__c.Residential_Projects__r.Project_Tasks__r$Assigned_To__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>NH_Community__c$Region__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Roughs: Forecast to Actual</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>NH_Communities_w_Residential_Proj_w_Proj_Tasks__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>NH_Community__c.Residential_Projects__r$Rough_Wire_Promised__c</dateColumn>
+        <interval>INTERVAL_CURNEXTQ</interval>
+    </timeFrameFilter>
+</Report>

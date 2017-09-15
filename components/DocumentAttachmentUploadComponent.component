@@ -1,0 +1,255 @@
+<apex:component layout="block" >
+
+    <!--In order for this component to work and look right, please include the sunpower style guide css/js and jquery in the page-->
+    <apex:attribute name="parentIds" type="String" description="Parent record where attachment would be attached. Comma delimited list for multiple parents used only when attachmentOnly set to true"/><!--need multiple parents here -->
+    <apex:attribute name="attachmentOnly" type="Boolean" description="Set true if only creating attachment records passing 1 parentId, Set to false to create Document (Document__c) records tied to one or more parents" />
+
+    <style type="text/css">
+
+        .fileName{
+            float: left;
+            overflow: hidden;
+            position: absolute;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .upload{
+            background-color: white;
+            margin-top: 6px;
+            padding: 4px;
+        }
+
+        .uploadBox{
+            color: #0076be;
+        }
+
+        .uploadTable{
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .clear{
+            clear:both;
+        }
+
+    </style>
+
+
+    <!--page component-->
+    <div class="row">
+        <div id="docUploadSpinner" class="spinner spinner--center" ></div>
+    </div>
+    <div class="row" id="errorPanel"> </div>
+    <div class="col-xs-12 uploadBox">
+        <div class="col-xs-12" style="margin-bottom: 20px;">
+            <span>
+            	<input type="file" multiple="true" id="filesInput" name="file" />
+        		<div class="col-xs-6" style="float: right;">
+        			<input id="uploadButton" type="button" title="Upload" class="btn btn-primary btn--small" value=" Upload "/>&nbsp;&nbsp;
+        		</div>
+    		</span>
+        </div>
+    </div>
+    
+    <!--end page component-->
+
+    <script>
+	//MULTI-DOC UPLOADER
+        var files = [];
+        var currentFile;
+        var $upload;
+        var isCommunities = false;
+        var sfdcHostName = window.location.host.split('.')[1];
+        console.log('host', window.location.host);        
+        
+        if(window.location.origin.indexOf('visual') != -1) {
+          console.log('isInternal');
+        } else {
+          console.log('isCommunities');
+          isCommunities = true;
+        }        
+        
+        //Executes when start Upload button is selected
+        function prepareFileUploads(){
+            $("#errorPanel").html("");
+            $( '#docUploadSpinner' ).show();
+            
+            //Get the file(s) from the input field
+            files = document.getElementById('filesInput').files;
+
+            //Only proceed if there are files selected
+            if(files.length == 0){
+                alert('Please select a file!');
+                $( '#docUploadSpinner' ).hide(); 
+                return; //end function
+            }
+
+            //Disable inputs and buttons during the upload process
+            $(".uploadBox input").attr("disabled", "disabled");
+            $(".uploadBox button").attr({
+                disabled: "disabled",
+                class: "btnDisabled"
+            });
+          
+            //Build out the upload divs for each file selected
+            var uploadMarkup = '';
+            for(i = 0; i < files.length; i++){
+                //Determine file display size
+                if(files[i].size < 1000000){
+                    var displaySize = Math.floor(files[i].size/1000) + 'K';
+                }else{
+                    var displaySize  = Math.round((files[i].size / 1000000)*10)/10 + 'MB';
+                }
+                
+                //For each file being uploaded create a div to represent that file, includes file size, status bar, etc. data-Status tracks status of upload
+                uploadMarkup += '<div class="upload" style="display:none;" data-status="pending" data-index="'+i+'"></div>'; //index used to correspond these upload boxes to records in the files array
+            }
+            
+            //Add markup to the upload box
+            $('.uploadBox').append(uploadMarkup);
+            
+            //Once elements have been added to the page representing the uploads, start the actual upload process            
+            checkForUploads();  
+        }
+
+        var totalCount = 0;
+        var finalCount = 0;
+
+        function checkForUploads() {
+
+            $upload = $( ".upload" ).filter( "[data-status='pending']" );            
+
+            if($upload.length !== 0) {
+                totalCount = $upload.length;                
+                
+                for(var i = 0; i < $upload.length; i++) {
+                    if(files[i]) {
+
+                        var xhr = new XMLHttpRequest();
+                                
+                        var sfdcurl = '';
+
+                        var filename = files[i].name.substring(0,79); //chop file name to prevent DML exception
+                        if(isCommunities) {
+                            sfdcurl = window.location.origin + '/services/apexrest/MultiDocUpload/v1?FileName='+encodeURIComponent(filename)+'&cType='+encodeURIComponent(files[i].type)+ '&parentIds={!parentIds}&attachmentOnly={!attachmentOnly}';
+                            xhr.open('POST', sfdcurl );
+                        } else {
+                            sfdcurl = 'https://'+sfdcHostName+'.salesforce.com/services/apexrest/MultiDocUpload/v1?FileName='+encodeURIComponent(filename)+'&cType='+encodeURIComponent(files[i].type)+ '&parentIds={!parentIds}&attachmentOnly={!attachmentOnly}';
+                            xhr.open('POST', '/services/proxy' ); //- works only for internal
+                        }
+
+                        xhr.setRequestHeader("Authorization","Bearer {!$Api.Session_ID}");
+                        xhr.setRequestHeader('SalesforceProxy-Endpoint', sfdcurl);
+                        xhr.setRequestHeader('X-User-Agent', 'MultiUploader v1.0');
+
+                        function transferComplete(evt) {
+                            console.log("--------------------------> The transfer is complete.");
+                            var resp = '';
+                            try {
+                            	resp = JSON.parse(evt.target.response);
+                            	if(resp.success) {
+                                    $("#filesInput").replaceWith('<input type="file" name="file" multiple="true" id="filesInput">');
+                                    $upload.attr('data-status','complete');
+                                    fetchDesignDocuments();
+                            	} else {
+                                    if(resp.statusCode == 415) {
+                                        $("#errorPanel").html("<div class='alert alert--danger'><span>"+resp.result+"</span></div>");
+                                        $("#filesInput").replaceWith('<input type="file" multiple="true" id="filesInput" name="file" />');
+                                        $upload.attr('data-status','complete');
+                                        totalCount = 0;
+                                        runSpinner();
+                                        $( '#docUploadSpinner' ).hide();
+                                        try {
+                                            determineSpinner(true,true);
+                                        } catch(ex) { }
+                                    } else {
+                                        handleError();
+                                    }                                  
+                            	}
+                            } catch(ex) {
+                            	$("#errorPanel").html("<div id='errorSpan' class='alert alert--danger'><span>{!$Label.Cash_Orders_General_Exception}</span></div>");
+                                $("#filesInput").replaceWith('<input type="file" multiple="true" id="filesInput" name="file" />');
+                                totalCount = 0;
+                                runSpinner();
+    	                		console.log('ex parsing', ex);
+                            }
+                            totalCount -= 1;
+                            runSpinner();
+                        }
+
+                        function handleError() {
+                        	$("#errorPanel").html("<div class='alert alert--danger'><span>{!$Label.Cash_Orders_General_Exception}</span></div>");
+                            totalCount = 0;
+                            runSpinner();
+                            $("#filesInput").replaceWith('<input type="file" multiple="true" id="filesInput" name="file" />');
+                            $( '#docUploadSpinner' ).hide();
+                        }
+
+                        function transferFailed(evt) {
+                            console.log("--------------------------> An error occurred while transferring the file.");
+                            console.log('failEvt', evt);
+                            console.log(evt.target.response);
+                            handleError();
+                            $upload.attr('data-status','complete');
+                            totalCount = 0;
+                            $("#filesInput").replaceWith('<input type="file" multiple="true" id="filesInput" name="file" />');
+                            runSpinner();
+                        }
+
+                        xhr.addEventListener("load", transferComplete);
+                        xhr.addEventListener("error", transferFailed);
+
+                        xhr.onreadystatechange=function() {
+                            if (xhr.readyState==4 && xhr.status != 200) {
+                                if(xhr.responseText)
+                                    alert(xhr.responseText);
+                                else {
+                                    try {
+    		                    		$( ".alert--danger" ).children().text('{!$Label.Cash_Orders_General_Exception}');
+    		                		} catch(ex) {
+    		                			console.log('ex adding alert');
+    		                		}
+                                }
+                            }
+                        };
+
+                        xhr.send(files[i]); //Proceed if there were no errors with the remoting call
+                    }
+
+                }
+
+                //All uploads completed, enable the input and buttons
+                $(".uploadBox input").removeAttr("disabled");
+                $(".uploadBox button").removeAttr("disabled").attr("class","btn");
+                runSpinner();
+
+            } else {
+
+                //All uploads completed, enable the input and buttons
+                $(".uploadBox input").removeAttr("disabled");
+                $(".uploadBox button").removeAttr("disabled").attr("class","btn");
+                
+                //Remove the browse input element and replace it, this essentially removes
+                //the selected files and helps prevent duplicate uploads
+                $("#filesInput").replaceWith('<input type="file" name="file" multiple="true" id="filesInput">');
+            } 
+        }
+
+        function runSpinner() {
+            console.log('totalCount', totalCount);
+            if(totalCount > finalCount) {
+                $( '#docUploadSpinner' ).show();
+            }
+            else {
+                $( '#docUploadSpinner' ).hide();
+                $( '.uploadBox[data-]' )
+            }
+        }
+
+        $( document ).ready(function() {
+            $( '#docUploadSpinner' ).hide();
+        });
+
+	</script>
+
+</apex:component>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Dealer_Name__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Lease__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Dealer_Fee_PO__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Proj_Admin_Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Proj_Admin_Status__c</column>
+            <operator>contains</operator>
+            <value>orig,apprvd</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Partner_Account__c</column>
+            <operator>contains</operator>
+            <value>Suntime Energy Builders</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>All Origination Apprvd Suntime - Updated</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Lease_Payments__r.Invoice_Documents__r$Date_Delivered__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

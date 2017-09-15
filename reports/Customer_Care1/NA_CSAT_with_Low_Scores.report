@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account$BillingCountry</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Survey_Results1__r$Survey_Response_Date__c</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Survey_Results1__r$Advocacy_for_SunPower__c</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Survey_Results1__r$Aggregate_Score_New__c</field>
+    </columns>
+    <columns>
+        <field>Account$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Survey_Results1__r$Opportunity_ID__c</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Survey_Results1__r$Name</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Review H/O comments and check if any complaints are &quot;hidden&quot;</description>
+    <filter>
+        <booleanFilter>1 AND (2 OR 3 OR 4 ) AND 5</booleanFilter>
+        <criteriaItems>
+            <column>Account.Customer_Survey_Results1__r$Survey_Status__c</column>
+            <operator>equals</operator>
+            <value>Responded</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Customer_Survey_Results1__r$Aggregate_Score_New__c</column>
+            <operator>lessThan</operator>
+            <value>80</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Customer_Survey_Results1__r$Advocacy_for_Partner__c</column>
+            <operator>lessThan</operator>
+            <value>9</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Customer_Survey_Results1__r$Advocacy_for_SunPower__c</column>
+            <operator>lessThan</operator>
+            <value>9</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$BillingCountry</column>
+            <operator>contains</operator>
+            <value>United States</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>NA CSAT with Low Scores</name>
+    <params>
+        <name>co</name>
+        <value>0</value>
+    </params>
+    <reportType>Customer_Survey_vs_Accounts__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Customer_Survey_Results1__r$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2011-04-01</startDate>
+    </timeFrameFilter>
+</Report>

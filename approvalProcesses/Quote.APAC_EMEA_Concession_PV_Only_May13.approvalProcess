@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>GlobalSupport</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>role</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Europe Sales Director:: (Region = Europe, Turkey,Romania,Bulgaria,Greece,Italy,Belgium)</description>
+        <entryCriteria>
+            <booleanFilter>1 and 2 and 3</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.Price__c</field>
+                <operation>greaterThan</operation>
+                <value>USD 0</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Romania,Turkey,Bulgaria,Greece,Belgium,Italy</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Europe Sales Director:: (Region = Europe, Turkey,Romania,Bulgaria,Greece,Italy,Belgium)</label>
+        <name>Europe_Sales_Director_Region_Europe_Turkey_Romania_Bulgaria_Greece_Italy_Belgium</name>
+        <rejectionActions>
+            <action>
+                <name>Budgetary_Pricing_Rejection_Notification</name>
+                <type>Alert</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mario.riello@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Europe Sales Director: (Countries India, Middle East, South Africa)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.Price__c</field>
+                <operation>greaterThan</operation>
+                <value>USD 0</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>Middle East,India,South Africa</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Europe Sales Director: (Countries India, Middle East, South Africa)</label>
+        <name>Europe_Sales_Director_Countries_India_Middle_East_South_Africa</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>reinhard.lampe@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Europe Sales Director: (Other Europe Countries)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>France,Greece,Belgium,Turkey,Romania,Bulgaria,Israel,Italy</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.Price__c</field>
+                <operation>greaterThan</operation>
+                <value>USD 0</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Europe Sales Director: (Other Europe Countries)</label>
+        <name>Europe_Sales_Director_Other_Europe_Countries</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>MEA/APAC Sales Director Approval (APAC, MEA &amp; Not AUS/NZ</description>
+        <entryCriteria>
+            <booleanFilter>(1 AND 2 and 3)</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>APAC,MEA</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.Price__c</field>
+                <operation>greaterThan</operation>
+                <value>USD 0</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>notEqual</operation>
+                <value>Australia,New Zealand</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>MEA/APAC Sales Director Approval (APAC, MEA &amp; Not AUS/NZ</label>
+        <name>MEA_APAC_Sales_Director_Approval_APAC_MEA_Not_AUS_NZ</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+        <rejectionActions>
+            <action>
+                <name>Budgetary_Pricing_Rejection_Notification</name>
+                <type>Alert</type>
+            </action>
+        </rejectionActions>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>claude.escala@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Step (Off grid)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Off_Grid__c</field>
+                <operation>equals</operation>
+                <value>True</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Approval Step (Off grid)</label>
+        <name>Approval_Step_Off_grid</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>manuel.brachet@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Europe VP Approval (France, Israel, Greece, Belgium, Italy, Turkey, Bulgaria, Romania)</description>
+        <entryCriteria>
+            <booleanFilter>(1 AND 2) or 3</booleanFilter>
+            <criteriaItems>
+                <field>Opportunity.Region1__c</field>
+                <operation>equals</operation>
+                <value>Europe</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Quote.Price__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 20,000&quot;</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Country__c</field>
+                <operation>equals</operation>
+                <value>France,Greece,Belgium,Turkey,Romania,Bulgaria,Israel,Italy</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Europe VP Approval (France, Israel, Greece, Belgium, Italy, Turkey, Bulgaria, Romania)</label>
+        <name>Europe_VP_Approval_France_Israel_Greece_Belgium_Italy_Turkey_Bulgaria_Romania</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>howard.wenger@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>VP Approval</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Price_Concession__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 50,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>VP Approval</label>
+        <name>VP_Approval</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>APAC/EMEA - Concession PV Only (May13)</description>
+    <emailTemplate>Quote/Price_Concession_Approval_Requested</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <booleanFilter>(1 AND 2 and 3 and 4)</booleanFilter>
+        <criteriaItems>
+            <field>Quote.Price__c</field>
+            <operation>greaterThan</operation>
+            <value>USD 0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Quote.RecordType</field>
+            <operation>equals</operation>
+            <value>Components</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Region1__c</field>
+            <operation>equals</operation>
+            <value>APAC,Europe,MEA</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Contract_Type__c</field>
+            <operation>equals</operation>
+            <value>PV Only</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Budgetary_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Price_Concession_Approval_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Budgetary_Pricing_Rejection_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Price_Concession_Rejected_Alert</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Budgetary_Pricing_Submission_Field_Updat</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>APAC/EMEA - Concession PV Only (May13)</label>
+    <recallActions>
+        <action>
+            <name>Binding_Offer_Recall_Field_Update</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Price_Concession_Recalled_Alert</name>
+            <type>Alert</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

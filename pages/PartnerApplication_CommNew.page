@@ -1,0 +1,803 @@
+<apex:page standardController="Partner_Application__c" extensions="PartnerApplicationControllerNew" tabStyle="Partner_Application__c" showHeader="false">
+
+ <apex:form >
+
+
+<html>
+<head>
+    <title>Sunpower Commercial Dealer Application Form</title>
+   <link href="https://sunpower.secure.force.com/partners/resource/1359548143000/ResiCSS" rel="stylesheet" />
+   <script src="https://sunpower.secure.force.com/partners/resource/1359353700000/Resjquery183" type="text/javascript"></script>
+    <script src="https://sunpower.secure.force.com/partners/resource/1359353700000/Resjqueryui192custom" type="text/javascript"></script>
+   
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var icons = {
+                header: "defaultIcon",
+                activeHeader: "selectedIcon"
+            };
+
+           $("#accordion").accordion({heightStyle: "content", icons: icons});
+
+           var progressbarValue = 0;
+           $( "#progressbar" ).progressbar({
+            value: progressbarValue
+           });
+           $(".datepicker").datepicker();
+
+           $("div.disabled input, div.disabled select, div.disabled textarea").attr("disabled", true);
+           $("div.disabled").addClass("grayed");
+           $("div.disabled .buttonSection").hide();
+
+           $("#validateFields").bind("click", function(event){
+              var companyName = $(".companyName").val();
+              var businessAddress = $(".companyName").val();
+              var coPhone = $(".coPhone").val();
+              var EIN = $(".EIN").val();
+              var yearsInBusiness = $(".yearsInBusiness").val();
+              var city = $(".city").val();
+              var state = $(".state").val();
+
+              if(companyName == "" || businessAddress == "" || coPhone=="" || EIN == "" || yearsInBusiness == "" || city == "" || state == "")
+              {
+                  $(".errors").text("Please fill out all required fields before attempting to continue!");
+              }
+              else
+              {
+                  $(".errors").text("");
+                  if($(this).parent().parent().next().next().hasClass("disabled"))
+                  {
+                      $(this).parent().parent().next().next().removeClass("disabled");
+                      $(this).parent().parent().next().next().find("input, select, textarea").removeAttr("disabled");
+                      $(this).parent().parent().next().next().removeClass("grayed");
+                      $(this).parent().parent().next().next().children(".buttonSection").show();
+                  }
+                  increaseProgressBar($(this));
+                  if(!$(this).parent().parent().prev("h3").hasClass("completed"))
+                  {
+                        $(this).parent().parent().prev("h3").addClass("completed");
+                  }
+                  $(this).parent().parent().next("h3").trigger("click");
+              }
+              event.preventDefault();
+           });
+
+           $(".back").bind("click", function(event){
+              $(this).parent().parent().prev().prev().prev("h3").trigger("click");
+              event.preventDefault();
+           });
+
+           $(".continue").bind("click", function(event){
+              if($(this).parent().parent().next().next().hasClass("disabled"))
+              {
+                      $(this).parent().parent().next().next().removeClass("disabled");
+                      $(this).parent().parent().next().next().find("input, select, textarea").removeAttr("disabled");
+                      $(this).parent().parent().next().next().removeClass("grayed");
+                      $(this).parent().parent().next().next().children(".buttonSection").show();
+              }
+              increaseProgressBar($(this));
+              if(!$(this).parent().parent().prev("h3").hasClass("completed"))
+              {
+                    $(this).parent().parent().prev("h3").addClass("completed");
+              }
+              $(this).parent().parent().next("h3").trigger("click");
+              event.preventDefault();
+           });
+
+           var increaseProgressBar = function(element){
+           if(element.hasClass("firstTime"))
+           {
+                element.removeClass("firstTime");
+                progressbarValue += 10;
+                $("#progressbarState").text(progressbarValue);
+                $( "#progressbar" ).progressbar("value", progressbarValue );
+           }
+           }
+        });
+    </script>
+    <script type="text/javascript">
+            function callContinue() {
+            var test= document.getElementById('j_id0:j_id1:Plz').value;
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.PartnerApplicationControllerNew.newstep2}',
+                test,function(result,event){
+                 if(result==1)
+                 {                 
+                  alert('Partner Application has already been submitted for the company'+'  '+test);
+                 }             
+                else
+                {
+                  var mybtn = document.getElementById("validateFields");
+                  mybtn.click();
+                }
+                },
+                {escape: true});
+             }
+   </script> 
+<style type="text/css">
+
+body, html
+{
+    margin: 0;
+    padding: 0;
+    font-family: Arial,Helvetica,sans-serif;
+}
+#container
+{
+    width: 1024px;
+    height: auto;
+    margin: 0 auto;
+}
+.headerTop
+{
+    background-color: black;
+    height: 60px;
+    padding: 20px 20px 0px 20px;
+}
+.headerBot
+{
+    height: 30px;
+    background-color: #FBB917;
+    padding: 15px 20px 0px 20px;
+    font-size: 14px;
+}
+#content
+{
+    margin: 10px auto;
+    width: auto;
+    font-weight: bold;
+    font-size: 13px;
+}
+#accordion h3
+{
+    text-transform: uppercase;
+}
+#accordion > div
+{
+    font-size: 13px;
+}
+#accordion span.numbers
+{
+    color: black;
+    background-color: white;
+    padding: 1px 5px 1px 5px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px solid #ef842b;
+}
+.requiredMark
+{
+    color: #b3262e;
+    font-weight: bold;
+}
+button.continue, .submitButton, #validateFields
+{
+    color: white;
+    font-size: 14px;
+    border: 2px solid #666;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    height: 28px;
+    width: 120px;
+    padding: 0px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EF783E), to(#C15D2C));
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #EF783E, #C15D2C);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #EF783E, #C15D2C);
+    /* IE 10 */
+    background: -ms-linear-gradient(top, #EF783E, #C15D2C);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, #EF783E,#C15D2C);
+    /* IE only */
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#EF783E', endColorstr='#C15D2C');
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+}
+button.back
+{
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    border: 2px solid #999;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    height: 28px;
+    width: 90px;
+    padding: 0px;
+    cursor: pointer;
+    text-decoration: none;
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#D2D2D2));
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #FFFFFF, #D2D2D2);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #FFFFFF, #D2D2D2);
+    /* IE 10 */
+    background: -ms-linear-gradient(top, #FFFFFF, #D2D2D2);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(top, #FFFFFF,#D2D2D2);
+    /* IE only */
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#D2D2D2');
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+}
+div.errors
+{
+   color: #b3262e;
+   font-size: 14px;
+   padding-left: 5px;
+}
+.grayed
+{
+    color: gray;
+}
+a:link.footer {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+a:hover.footer {
+    text-decoration: underline;
+}
+
+a:active.footer {
+    text-decoration: none;
+}
+
+a:visited.footer {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+a:visited:hover.footer {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+div.buttonSection
+{
+    text-align: right;
+    width: 95%;
+    margin-top: 15px;
+}
+</style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <div class="headerTop">
+                <div style="float: left;font-weight: bold;font-size: 24px;">
+<!--                    <span style="color: white;">COMMERCIAL DEALER</span> <span style="color: orange;">APPLICATION</span>-->
+                        <img src="https://sunpower.secure.force.com/partners/resource/1359353699000/CommHeader" alt="dealer app" height="50" width="419"/>
+                </div>
+                <div style="float: right;">
+                    <img src="https://sunpower.secure.force.com/partners/resource/1359353699000/ResiLogo" alt="sun power" height="50" width="340"/>
+                </div>
+            </div>
+            <div class="headerBot">
+                <div style="float: left;">
+                    <div>
+                        <b>INSTRUCTIONS</b>  Please complete all sections of the dealer application
+                    </div>
+                </div>
+                <div style="float: right;width: 320px;">
+                    <div id="progressbar"></div>
+                </div>
+                <div style="float: right;">
+                    <b>COMPLETENESS <span id="progressbarState">0</span>%&nbsp;&nbsp;</b>
+                </div>
+            </div>
+        </div>
+        <apex:pageMessages />
+        <div id="content">
+            <form id="j_id0:j_id2" name="j_id0:j_id2" method="post"  action="test.php"   enctype="application/x-www-form-urlencoded">
+            <input type="hidden" name="j_id0:j_id2" value="j_id0:j_id2" />
+            <div id="accordion">
+                    <h3><span class="numbers">1</span> General Information</h3>
+                    <div>
+                        <div style="height: 25px;">
+                        <div style="color: gray;font-size: 13px;font-weight: normal;float: left;">
+                        <span Style="color: #b3262e;font-weight: bold;">*</span> Denotes required fields
+                        </div>
+                        <div style="float: left;margin-left: 58px;" class="errors">
+                        </div>
+                    </div>
+                        <div style="height: 180px;margin-top: 2px;">
+                            <div style="width: 450px;float: left;">
+                                <table width="100%" cellspacing="2" cellpadding="3">
+                                    <tr>
+                                        <td width="180">Company Name:</td>
+                                        <td width="5"><span Style="color: #b3262e;font-weight: bold;">* </span></td>
+                                        <td>                                    
+                                        <apex:inputField styleClass="companyName" style="width:90%" value="{!partnerApp.Company_Name__c}" id="Plz" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">Owner:</td>
+                                        <td></td>
+                                        <td>
+                                        <apex:inputField style="width:90%" value="{!partnerApp.Owner__c}"/>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">Business Address: </td>
+                                        <td width="5"><span Style="color: #b3262e;font-weight: bold;">* </span></td>
+                                        <td>
+                                        <apex:inputField StyleClass="businessAddress" style="width:90%" value="{!partnerApp.Address__c}"  />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">Co.Phone#:</td>
+                                        <td width="5"><span Style="color: #b3262e;font-weight: bold;">* </span></td>
+                                        <td>
+                                        <apex:inputField Styleclass="coPhone" style="width:90%" value="{!partnerApp.Phone__c}" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">Business Focus</td>
+                                        <td></td>
+                                        <td>
+                                        <apex:inputField style="width:90%" value="{!partnerApp.Current_Industry__c}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="width: 450px;float: left;margin-left: 15px;">
+                                <table width="100%" cellspacing="2" cellpadding="3">
+                                    <tr>
+                                        <td width="180">Date:</td>
+                                        <td></td>
+                                        <td>
+                                        <apex:inputField Styleclass="datepicker" style="width:60%" value="{!partnerApp.Application_Date__c}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">EIN:</td>
+                                        <td><span Style="color: #b3262e;font-weight: bold;">* </span></td>
+                                        <td>
+                                        <apex:inputField Styleclass="EIN" style="width:90%" value="{!partnerApp.EIN__c}" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">Years in Business: </td>
+                                        <td><span Style="color: #b3262e;font-weight: bold;">* </span></td>
+                                        <td>
+                                        <apex:inputField Styleclass="yearsInBusiness" style="width:90%" value="{!partnerApp.Years_in_Business__c}" required="true" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="180">City, State:</td>
+                                        <td><span Style="color: #b3262e;font-weight: bold;">* </span></td>
+                                        <td><apex:inputField Styleclass="city" value="{!partnerApp.City__c}"  style="width:48%; Size:20;"  />&nbsp;&nbsp;<apex:inputField Styleclass="state" value="{!partnerApp.State__c}" Style="width:25%; Size:20;" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td width="180">Co. Website:</td>
+                                        <td></td>
+                                        <td>
+                                        <apex:inputField style="width:90%" value="{!partnerApp.Website__c}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="width: 95%;text-align: right;">
+                             
+                            <button id="validateFields" hidden ="true" class="firstTime" >CONTINUE</button> &nbsp;
+                       <apex:commandButton style="background:#d47141;color: white;font-size: 14px; border: 2px solid #666; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; height: 28px; width: 120px;"
+                         id="validateFields1" value="CONTINUE"  oncomplete="callContinue()"/>
+               
+                       
+                        
+                        </div>
+                    </div>
+                    <h3><span class="numbers">2</span> Contractor Qualification</h3>
+                    <div class="disabled">
+                        <table  border="0" cellpadding="2" width="100%">
+                          <tr>
+                            <td align="left" style="padding-left:5px" width="26%">Contractors License Number:</td>
+                            <td width="18%">
+                            <apex:inputField style="width:75%" value="{!partnerApp.Contractor_License_Number__c}"/>
+                            </td>
+                            <td align="left" style="margin-left:2px;padding-left:5px" width="33%">Building Permits pulled in the last 36 months:</td>
+                            <td width="23%">
+                            <apex:inputField style="width:75%" value="{!partnerApp.Building_Permits_last_36_months__c}"/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding-left:5px">Solar License/Certification? :</td>
+                            <td><apex:inputfield value="{!partnerApp.Solar_License_Certification__c}"/></td>
+                            <td align="left" style="padding-left:5px">Electrical Permits pulled in the last 36 months:</td>
+                            <td><apex:inputField style="width:75%" value="{!partnerApp.Electrical_Permits_last_36_months__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding-left:5px">Roofing License? :</td>
+                            <td><apex:inputfield value="{!partnerApp.Roofing_License__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding-left:5px">Additional License/Certification (Specify)</td>
+                            <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_1_Specify__c}"/></td>
+                            <td align="left" style="padding-left:5px">Additional License/Certification (Specify)</td>
+                            <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_2_Specify__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding-left:5px">Additional License/Certification (Specify)</td>
+                            <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_3_Specify__c}"/></td>
+                            <td align="left" style="padding-left:5px;">Additional License/Certification (Specify)</td>
+                            <td><apex:inputField style="width:75%" value="{!partnerApp.Additional_License_4_Specify__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding-left:5px">Professional Engineer Available?:</td>
+                            <td align="left"><apex:inputField value="{!partnerApp.Professional_Engineer_Available__c}"/></td>
+                            <td align="left" style="padding-left:5px;">Project Manager (on-staff) :</td>
+                            <td><apex:inputField value="{!partnerApp.Project_Manager_on_staff__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding-left:5px">Electrician on-staff?:</td>
+                            <td><apex:inputfield value="{!partnerApp.Electrician_on_staff__c}"/></td>
+                            <td align="left" style="padding-left:5px;">&nbsp;</td>
+                            <td>&nbsp;</td>
+                          </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                        </div>
+                    </div>
+                    <h3><span class="numbers">3</span> Current Personnel</h3>
+                    <div class="disabled">
+                        <table cellpadding="2" cellspacing="3" width="100%">
+                          <tr>
+                            <td align="left" colspan="8" style="padding:7px;">Indicate in the spaces below the number of employees at the manager level and field level for each category:</td>
+                          </tr>
+                          <tr align="left" style="font-weight:bold;">
+                            <td style="width:5%"></td>
+                            <td align="center">Sales</td>
+                            <td align="center">Marketing</td>
+                            <td align="center">Installation</td>
+                            <td align="center">Operations</td>
+                            <td align="center">Design</td>
+                            <td align="center">Finance</td>
+                            <td align="center">Other</td>
+                          </tr>
+                          <tr>
+                            <td align="center" style="">Manager</td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Sales_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Marketing_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Installation_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Operations_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Design_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manager_Finance_Employees__c}"/></td>
+                            <td><apex:inputField style="width:90%" value="{!partnerApp.Manager_Other_Employees__c}"/></td>
+                         </tr>
+                          <tr>
+                            <td align="center" style="">Field Level</td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Sales_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Marketing_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Installation_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Operations_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Design_Employees__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Field_Level_Finance_Employees__c}"/></td>
+                            <td><apex:inputField style="width:90%" value="{!partnerApp.Field_Level_Other_Employees__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="left" colspan="8" style="">Does your company currently provide coverage for worker's compensation?&nbsp;&nbsp;
+                            <apex:inputfield value="{!partnerApp.Insurance_Coverage__c}"/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="8">&nbsp;</td>
+                          </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                        </div>
+                    </div>
+                    <h3><span class="numbers">4</span> Company Growth and Financials</h3>
+                    <div class="disabled">
+                        <table cellpadding="2" cellspacing="3" width="100%">
+                          <tr>
+                            <td align="left" colspan="3" style="padding-left:5px;">Please indicate the number of projects your company sold or completed last year</td>
+                            <td align="left" colspan="2" style="padding-left:10px"> 
+                            <apex:selectList value="{!partnerApp.Projects_completed_last_year__c}" size="1">
+                            <apex:selectOptions value="{!Proj_Comp_Last_Year_Options}" />
+                            </apex:selectList>
+                           </td>
+                          </tr>
+                          <tr>
+                            <td align="left" colspan="4" style="padding:7px;">Indicate in the spaces below the amount of revenue generated and forecasted from your existing business:</td>
+                          </tr>
+                          <tr>
+                            <td align="right" style="padding-left:5px;" width="25%">Annual Revenue 2 Yrs. ago</td>
+                            <td align="left" width="25%"><B>$</B>&nbsp;
+                            <apex:inputField style="width:90%" value="{!partnerApp.Annual_Revenue_2_year_ago__c}"/></td>
+                            <td align="right" style="padding-left:5px;" width="25%"> Projected Revenue This Yr.</td>
+                            <td align="left" width="25%"><B>$</B>&nbsp;
+                            <apex:inputField style="width:90%" value="{!partnerApp.Projected_Revenue_This_Year__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="right" style="padding-left:5px;">Annual Revenue 1 Yr. ago</td>
+                            <td align="left"><B>$</B>&nbsp;
+                            <apex:inputField style="width:90%" value="{!partnerApp.Annual_Revenue_1_year_ago__c}"/></td>
+                            <td align="right" style="padding-left:5px;">Projected Revenue Next Yr.</td>
+                            <td align="left"><B>$</B>&nbsp;
+                            <apex:inputField style="width:90%" value="{!partnerApp.Projected_Revenue_Next_Year__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="right" style="padding-left:5px;">Is your company profitable today? :</td>
+                            <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Company_Profitable__c}"/></td>
+                            <td align="right" style="padding-left:5px;">Do you have a Business Plan available for your existing company?</td>
+                            <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Business_Plan__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="right" style="padding-left:5px;">Has your company ever secured a performance bond? :</td>
+                            <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Secured_Performance_Bond__c}"/></td>
+                            <td align="right" style="padding-left:5px;">Are you currently bondable? :</td>
+                            <td align="left" style="padding-left:15px"><apex:inputfield value="{!partnerApp.Currently_Bondable__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td align="right" colspan="3" style="padding-left:5px;">Are you OK with SunPower requesting additional information on your current credit standing? :</td>
+                            <td align="left"  style="padding-left:15px">
+                            <apex:inputfield value="{!partnerApp.Credit_Report__c}"/></td>
+                          </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                        </div>
+                    </div>
+                    <h3><span class="numbers">5</span> Business Segments</h3>
+                    <div class="disabled">
+                          <table  cellpadding="2" cellspacing="3" width="100%">
+                          <tr>
+                            <td align="left" colspan="4" style="padding:7px;">Please indicate the current mix of total business that is residential / commercial focused (out of 100% combined)</td>
+                          </tr>
+                          <tr style="font-weight:bold;">
+                            <td align="right" style="padding-left:7px;" width="35%">Residential Focus (from 0 to 100%)</td>
+                            <td width="15%"><apex:inputField style="width:80%" value="{!partnerApp.Residential_Focus__c}"/></td>
+                            <td align="right" style="padding-left:7px;" width="35%">Commercial Focus (from 0 to 100%)</td>
+                            <td width="15%"><apex:inputField style="width:80%" value="{!partnerApp.Commercial_Focus__c}"/></td>
+                          </tr>
+                          <tr style="font-weight:bold;">
+                            <td align="right" style="padding-left:7px;">kW of Residential PV Systems Installed to date: (if applicable)</td>
+                            <td><apex:inputField style="width:80%" value="{!partnerApp.Residential_Systems_installed_to_date__c}"/></td>
+                            <td align="right" style="padding-left:7px;">kW of Commercial Systems Installed to date: (if applicable)</td>
+                            <td><apex:inputField style="width:80%" value="{!partnerApp.Commercial_Systems_installed_to_date__c}"/></td>
+                          </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                        </div>
+                    </div>
+                    <h3><span class="numbers">6</span> Geographic Coverage</h3>
+                    <div class="disabled">
+                      <table cellpadding="2" cellspacing="3" width="100%">
+                      <tr>
+                        <td align="left" colspan="2" style="padding:7px;">Indicate in the spaces below the locations of up to 3 offices, and # of employees at each location</td>
+                      </tr>
+                      <tr style="font-weight:bold;">
+                        <td align="left" style="padding-left:7px;">Location (City, State)</td>
+                        <td align="left" style="padding-left:7px;"># of Employees at Location</td>
+                      </tr>
+                      <tr>
+                       <td><apex:inputField style="width:90%" value="{!partnerApp.Location_1__c}"/></td>
+                       <td><apex:inputField style="width:90%" value="{!partnerApp.Location_1_Number_of_Employees__c}"/></td>     
+                 </tr>
+                      <tr>
+                        <td><apex:inputField style="width:90%" value="{!partnerApp.Location_2__c}"/></td>
+                        <td><apex:inputField style="width:90%" value="{!partnerApp.Location_2_Number_of_Employees__c}"/></td>
+                      </tr>
+                      <tr>
+                        <td><apex:inputField style="width:90%" value="{!partnerApp.Location_3__c}"/></td>
+                        <td><apex:inputField style="width:90%" value="{!partnerApp.Location_3_Number_of_Employees__c}"/></td>
+                      </tr>
+                    </table>
+                    <div class="buttonSection">
+                        <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                    </div>
+                    </div>
+                    <h3><span class="numbers">7</span> Products</h3>
+                    <div class="disabled">
+                        <table  border="0" cellpadding="2" cellspacing="3" width="100%">
+                          <tr>
+                            <td align="left" colspan="3" style="">&nbsp;&nbsp;Please indicate your direct from manufacturer and/or distributor relationships and credit terms you have available</td>
+                          </tr>
+                          <tr style="font-weight:bold;">
+                            <td align="left" style="padding-left:7px;" width="50%">Manufacturer or Distributor</td>
+                            <td align="left" style="padding-left:7px;">Product Type (Brands)</td>
+                            <td align="left" style="padding-left:7px;">Credit Line Available</td>
+                          </tr>
+                          <tr>
+                           <td><apex:inputField style="width:100%" value="{!partnerApp.Manufacturer_1__c}"/></td>
+                           <td><apex:inputField style="width:100%" value="{!partnerApp.Product_Type_1__c}"/></td>
+                           <td><apex:inputField style="width:98%" value="{!partnerApp.Manufacturer_1_Credit_Line__c}"/></td>
+                          </tr>
+                          <tr>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manufacturer_2__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Product_Type_2__c}"/></td>
+                            <td> <apex:inputField style="width:98%" value="{!partnerApp.Manufacturer_2_Credit_Line__c}"/> </td>
+                          </tr>
+                          <tr>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Manufacturer_3__c}"/></td>
+                            <td><apex:inputField style="width:100%" value="{!partnerApp.Product_Type_3__c}"/></td>
+                            <td><apex:inputField style="width:98%" value="{!partnerApp.Manufacturer_3_Credit_Line__c}"/></td>
+                          </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                        </div>
+                    </div>
+                    <h3><span class="numbers">8</span> Potential Client Base / Existing Commercial Customer Base</h3>
+                    <div class="disabled">
+                        <table  cellpadding="2" cellspacing="3" width="100%">
+                          <tr>
+                            <td colSpan="2" align="left" valign="top" class="data2Col  first "><span id="page1:form1:pgbl2:pbs2:j_id59">Please indicate your estimated customer base from existing clients, referrals, etc.</span>:</td>
+                            <td colSpan="2" align="left" valign="top" class="data2Col  last "><span id="page1:form1:pgbl2:pbs2:j_id61">
+                              <apex:inputField value="{!partnerApp.Commercial_Customer_Base__c}"/>
+                              </span>
+                            </td>
+                          </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                        </div>
+                    </div>
+                    <h3><span class="numbers">9</span> Insurance</h3>
+                    <div class="disabled">
+                        <table  cellpadding="2" cellspacing="3" width="100%">
+                              <tr>
+                                <td colspan="4">&nbsp;</td>
+                              </tr>
+                              <tr style="font-weight:bold;">
+                                <td align="left" style="padding-left:7px;">Insurance Type</td>
+                                <td align="left" style="padding-left:7px;">Carrier</td>
+                                <td align="left" style="padding-left:7px;">Coverage</td>
+                                <td align="left" style="padding-left:7px;">Policy Number</td>
+                              </tr>
+                              <tr>
+                                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_1__c}"/></td>
+                                <td> <apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_1__c}"/></td>
+                                <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_1__c}"/></td>
+                                <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_1__c}"/></td>
+                              </tr>
+                            <tr>
+                              <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_2__c}"/></td>
+                              <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_2__c}"/></td>
+                              <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_2__c}"/></td>
+                              <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_2__c}"/></td>
+                           </tr>
+
+                         <tr>
+                          <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_3__c}"/></td>
+                          <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_3__c}"/></td>
+                          <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_3__c}"/></td>
+                          <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_3__c}"/></td>
+                       </tr>
+
+                      <tr>
+                       <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Type_4__c}"/></td>
+                       <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Carrier_4__c}"/></td>
+                       <td><apex:inputField style="width:100%" value="{!partnerApp.Insurance_Coverage_4__c}"/></td>
+                       <td><apex:inputField style="width:98%" value="{!partnerApp.Insurance_Policy_Number_4__c}"/></td>
+                     </tr>
+                              <tr>
+                                <td align="left" colspan="4" style="padding:5px;">Does the company have existing/pending claims, liability, court-cases, litigation?&nbsp;&nbsp;
+                                  <apex:inputfield value="{!partnerApp.Existing_Pending_Litigation__c}"/>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="left" style="padding:5px;" valign="top">If Yes please specify:</td>
+                                <td align="right" colspan="3" style="padding:5px;">
+                                <apex:inputField style="width:85%" value="{!partnerApp.Existing_Pending_Litigation_Specify__c}"/></td>
+                              </tr>
+                            </table>
+                            <div class="buttonSection">
+                                <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                            </div>
+                    </div>
+                    <h3><span class="numbers" style="padding: 1px 2px 1px 2px;">10</span> Marketing / Lead Generation</h3>
+                    <div class="disabled">
+                        <table  cellpadding="2" cellspacing="3" width="100%">
+                              <tr>
+                                <td align="left" colspan="4" style="padding:7px;">Please indicate your most used lead generation sources and the percent of your business each accounts for</td>
+                              </tr>
+                              <tr style="font-weight:bold;">
+                                <td align="left" colspan="3" style="padding-left:7px;">Marketing Source</td>
+                                <td align="left" style="padding-left:7px;">% of Business</td>
+                              </tr>
+                              <tr>
+                                <td colspan="3"><apex:inputField style="width:100%" value="{!partnerApp.Marketing_Source_1__c}"/></td>
+                                <td><apex:inputField style="width:98%" value="{!partnerApp.Marketing_Source_1_Percent__c}"/></td>
+                              </tr>
+                              <tr>
+                                 <td colspan="3"><apex:inputField style="width:100%" value="{!partnerApp.Marketing_Source_2__c}"/></td>
+                                 <td><apex:inputField style="width:98%" value="{!partnerApp.Marketing_Source_2_Percent__c}"/></td>
+                              </tr>
+                              <tr>
+                                <td align="left" colspan="3" style="padding:5px;">Are you listed through the Better Business Bureau or other consumer reporting agency?</td>
+                                <td align="left" style="padding:5px;"><apex:inputCheckbox value="{!partnerApp.Consumer_Reporting_Agency__c}"/></td>
+                              </tr>
+                              <tr>
+                                <td align="left" style="padding-left:5px;" width="29%">Are you a member of local business organizations?</td>
+                                <td align="left" width="14%"><apex:inputCheckbox value="{!partnerApp.Member_of_Local_Business_Orgs__c}"/></td>
+                                <td align="left" style="padding-left:5px;" width="24%">If Yes please specify:</td>
+                                <td align="center" width="33%"><apex:inputField value="{!partnerApp.Member_of_Local_Business_Orgs_Details__c}" style="width:98%"/></td>
+                              </tr>
+                            </table>
+                            <div class="buttonSection">
+                                <button class="back">&laquo; BACK</button>&nbsp;&nbsp;<button class="continue firstTime">CONTINUE</button>
+                            </div>
+                    </div>
+                    <h3><span class="numbers" style="padding: 1px 2px 1px 2px;">11</span> Application Certification, Waiver And Submisson</h3>
+                    <div class="disabled">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <tr style="font-weight:bold;font-size:18px;">
+                                          <td align="center" style="padding-top:25px;" width="100%">APPLICATION FORM WAIVER</td>
+                                        </tr>
+                                        <tr>
+                                          <td style="padding-top:10px;" width="100%"></td>
+                                        </tr>
+                                        <tr>
+                                          <td><apex:inputHidden value="{!partnerApp.Company_Name__c}" /></td>
+                                        </tr>
+                                        <tr>
+                                          <td>
+                                              <p style="padding:8px; line-height:16px;text-align: justify;">In exchange for the consideration of this application by
+                                                <input id="partnerAppComp" type="text" />
+                                            (hereinafter called "The Company"), I agree that:
+                                            Neither the acception of this application nor the subsequent entry into any type of contractual relationship, either in the role of a SunPower Dealer or any other position, shall serve to create an actual or implied Dealer Agreement, or to confer any rights to create a Dealer Agreement with SunPower.<br />
+                                            <br />
+                                            By submitting this application, I certify that all information herein is true and complete. I authorize SunPower Corporation to retain this application, to rely on the foregoing, to check and verify any information contain herein.<br/>
+                                            <br />
+                                              </p>
+                                              <div style="text-align: center;border: 2px solid black;height: 50px;color: black;padding-top: 15px;">
+                                                  <strong>I authorize investigation of all statements contained in this application, <br/>
+                                                  and hereby release the Company from any liability as a result of such investigation.</strong>
+                                              </div>
+                                          </td>
+                                        </tr>
+                        </table>
+                        <div class="buttonSection">
+                            <button class="back">&laquo; BACK</button>&nbsp;&nbsp;
+                            <apex:commandButton value="Submit" styleClass="submitButton" action="{!step3}" />
+                        </div>
+                    </div>
+            </div>
+            </form>
+            <!-- 
+              <span id="ajax-view-state-page-container" style="display: none">
+              <span id="ajax-view-state" style="display: none">
+              <input type="hidden"  id="com.salesforce.visualforce.ViewState" name="com.salesforce.visualforce.ViewState" value="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" />
+              <input type="hidden"  id="com.salesforce.visualforce.ViewStateMAC" name="com.salesforce.visualforce.ViewStateMAC" value="AOGYIHZpEokWG/wJmPP73Ua6gmaI" />
+              </span>
+              </span>
+               
+              <script type="text/javascript">Sfdc.onReady(function(){
+                    SfdcApp.Visualforce.VSManager.vfPrepareForms(["j_id0:j_id2"]);
+            });
+            </script>
+            -->
+        </div>
+        <div id="footer">
+            <div align="center" style="background-color:#000; height:120px;">
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size:12px; color: #999; padding:20px 20px 0px 20px">© 2012 SUNPOWER CORPORATION</p>
+            <p style="font-family: Arial, Helvetica, sans-serif; font-size:12px; color: #FFF; padding:0px 20px"><a href="http://us.sunpowercorp.com/privacy/" target="_blank" class="footer" >Privacy Statement</a> | <a href="http://us.sunpowercorp.com/terms/" target="_blank" class="footer">Terms of Use Agreement</a> | <a href="http://us.sunpowercorp.com/human-rights/" target="_blank" class="footer">Human Rights</a> | <a href="http://us.sunpowercorp.com/dmca/" target="_blank" class="footer">DMCA Notice</a> | <a href="http://us.sunpowercorp.com/sitemap/html/" target="_blank" class="footer">Site Map</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+ </apex:form>
+
+</apex:page>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Cases$Subject</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$Requested_Date__c</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$Completed_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.Cases$Estimated_Time_Hrs__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.Cases$Actual_Time_Hrs__c</field>
+    </columns>
+    <columns>
+        <field>Account.Cases$Status</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Open &amp; Close Cases</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.Cases$RecordType</column>
+            <operator>equals</operator>
+            <value>Case.Case_Inspection_Audit</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Cases$Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>RLC</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Cases$Type</column>
+            <operator>equals</operator>
+            <value>BOM With Racking,Commercial Design Package,Commercial Inspection,Customer Complaint,Layout proposal,Project Issue,PV &amp; Inverter BOM,PV Sim,Residential Inspection,Site Audit,Site Audit With BOM,String Sizing,Warranty,Admin Request,Commendation,Compliment,Customer Service,Feedback,Field Failure,Inspection,Others,Problem,Product Feedback,Question,RMA,Services Feedback,Tech Support - General,Tech Support - Incident</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Cases$Status</column>
+            <operator>equals</operator>
+            <value>Appirio Completed,Completed,Approved,Cancelled,Closed,Completed Pending Release,Escalated,Failed - Holding,On Hold,Pending Support Response,Pending User Acceptance,Pending User Response,Rejected,Sent to Appirio,Sent to Inspector,User Unresponsive,Waiting for Customer Input,Waiting for Partner Response,Appirio In Progress,Appirio Received,Assigned,For Eng&apos;g Review,For SPNA Review,For SSO Review,In Process,In Progress,Not Started,Pending Approval,Requires Approval,Under Evaluation,Waiting on User Response</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Cases$Owner</column>
+            <operator>notEqual</operator>
+            <value>Isaac Opalinsky,Gemainne Mazaredo,Maciej Gajda</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Cases$Promised_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Cases$Owner</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Cases$Region__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>SSO GD - CASE TRACKER</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Account_with_Case__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Account.Cases$Promised_Date__c</dateColumn>
+        <interval>THIS_FISCALWEEK</interval>
+    </timeFrameFilter>
+</Report>

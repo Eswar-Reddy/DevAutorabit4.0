@@ -1,0 +1,1074 @@
+<apex:page docType="html-5.0"  controller="MetaSearchTool">
+    <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" />
+    <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/jsforce/1.2.0/jsforce.min.js" />
+    <apex:includeScript value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/js/kendo.all.min.js" />
+    
+    <apex:stylesheet value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/styles/kendo.common.min.css" />
+    <apex:stylesheet value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/styles/kendo.rtl.min.css" />
+    <apex:stylesheet value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/styles/kendo.silver.min.css" />
+<script type="text/x-kendo-template" id="result-gridtb-template">
+    <div class="toolbar">
+        <label for="pagesize-cb" id="pagesize-label">Page Size:</label>
+        <input type="search" id="pagesize-cb" style="width: 150px"/>
+    </div>
+</script>
+
+<script>
+var SITE_URL = '{!mInstanceUrl}';
+var SETUP_URL = 'setup/forcecomHomepage.apexp'
+var TASK_INTERVAL = 100;
+var TASK_TOTAL    = 100000;
+var conn = new jsforce.Connection({ accessToken: '{!$Api.Session_Id}' });
+var META_LIST_LIMIT = 10;
+var APEX_LIST_LIMIT = 100;
+var gThisResult = {};
+var gSearchOptions = {};
+var gSearchResult = [];
+var gResultGrid;
+var gSearchText;
+var gSearchPattern;
+var iSearchIndex = 0;
+var iRunCount = 0;
+var runningTask;
+var listMetaTypes = [];
+var indxSum = 0;
+var gIdIndex = 0;
+var gIdList = [];    
+var gContent = {};
+var gCurrMetaType = '';
+var arySummary = [
+    {type:'ApexPage', match:0, searched:0, total: 0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'ApexClass', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'ApexTrigger', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'Report', match:0, searched:0, total:0, select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'ReportType', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'Workflow', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'ApprovalProcess', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'Layout', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'EmailTemplate', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false},
+    {type:'CustomObject', match:0, searched:0, total:0,select:false, done:false, error:false, waitSOAP:false, submitApex:false, submitted:false}
+    ];
+    
+/*
+var fullNames = [ 'Account', 'Contact' ];
+conn.metadata.read('CustomObject', fullNames, function(err, metadata) {
+  if (err) { console.error(err); }
+  console.log("length: " + metadata.length);
+  for (var i=0; i < metadata.length; i++) {
+    var meta = metadata[i];
+    console.log("Full Name: " + meta.fullName);
+    console.log("Fields count: " + meta.fields.length);
+    console.log("Sharing Model: " + meta.sharingModel);
+  }
+});
+*/
+function uiStatusUpdate(opt, out){
+    
+    if (!gSearchOptions.logStatus){
+        return;
+    }
+    
+    if (opt === 'STATUS'){
+        $('#search_STATUS').text('Searching: ' + '"'+ gSearchText + '"'+ ' in ' + arySummary[indxSum].type + ', Status : ' + out).css("color", "green");;
+    }
+    else if (opt === 'SUCCESS'){
+        $('#search_STATUS').text('Searching: ' + '"'+ gSearchText + '"'+ ' Success!' + out).css("color", "green");
+    }
+}
+
+function updateSearchSummary(){
+
+    var currSearch  = $('#search_STATUS').text();
+    uiStatusUpdate('STATUS', arySummary[indxSum].state);
+    
+    // console.log('indxSum: ' + indxSum + 'arySummary' + JSON.stringify(arySummary[indxSum]));
+    for ( var i=0; i < arySummary.length; i++){
+        if (arySummary[i].select){
+            var outId = arySummary[i].type + '_OUT';            
+            var newText = '(' + arySummary[i].match + '/' + arySummary[i].searched 
+                + '/' + arySummary[i].total + ') '; // + arySummary[i].state;
+            //console.log('newText' + newText);
+            $('#' + outId).text(newText).css("color", "green");
+        }
+    }
+}
+
+function searchJsonNode(key, node){
+    if (node == null){
+        console.log('node null, key: ' + key); 
+        return;
+    }
+    var content = node.toString();
+    var result= content.match(new RegExp(gSearchPattern, "i"));
+    if (result){
+        //console.log('found: ' + key + ' :' + content); 
+        gThisResult.Matches = gThisResult.Matches + '[' + key + ']' + ': ' + content + '\n';
+    }
+    
+}
+function jsonTraverse(key, node) {
+    var type = typeof node;
+    if (type == "object") {
+        for (var subKey in node) {
+            var newKey = key + '.'+ subKey;
+            jsonTraverse(newKey, node[subKey]);
+        }
+    } else {
+        searchJsonNode(key, node);
+    }
+}
+
+
+function findString(strContent)
+{
+    var result   = {};
+    var findings = [];
+    var col = -1;
+    
+    var div = document.createElement('div');
+    div.innerHTML = strContent;
+    var decoded = div.firstChild.nodeValue;
+    var brk = /\r\n|\n\r|\n|\r/g;
+    
+    var arrayOfLines = decoded.replace(brk,"\n").split("\n");
+    //var arrayOfLines = strContent.match(/[^\r\n]+/g);
+    var matches    = '';
+    
+    result.length = 0;
+    for (var i=0; i < arrayOfLines.length; i++) {
+        //col = arrayOfLines[i].search(strSearch);
+        col = arrayOfLines[i].search(new RegExp(gSearchPattern, "i"));
+        
+        if (col != -1){  
+            var location = '[' + (i+1) + ',' + (col+1) + ']';
+            var content  = arrayOfLines[i];
+            matches    += location + ': ' + content + '\n';
+            
+            //indxs.push({lin: i, col: col, line: arrayOfLines[i]});
+            findings.push({loc: location, con: content});
+            result.length++;
+        }
+    }
+    result.finds = findings;
+    result.matches = matches;
+   
+    return result;
+}       
+
+function searchWorkflowContent(strSearch, strType, listFullNames){
+    conn.metadata.read(strType, listFullNames, function(err, metadata) {
+      if (err) { console.error(err); }
+      var data = [];
+  
+      // handle the case when fullNames has only one Name in it
+      if (metadata.hasOwnProperty('length')){
+        data = metadata;
+      }
+      else{
+        data.push(metadata);
+      }
+      //console.log("MetaData returned: " + data);
+      //arySummary[indxSum].searched += data.length;
+      
+      for (var k=0; k < data.length; k++) {
+        var meta = data[k];
+        console.log(arySummary[indxSum].type + " "+ (arySummary[indxSum].searched++) + ": " + JSON.stringify(meta));
+        jsonTraverse(meta.fullName, meta);      
+      }
+      
+      if (arySummary[indxSum].searched >= arySummary[indxSum].total){
+        arySummary[indxSum].done = true;
+      }
+    });
+}
+    
+function searchMetaWithContent(strSearch, strType, listFullNames){
+    conn.metadata.read(strType, listFullNames, function(err, metadata) {
+      if (err) { console.error(err); }
+      var data = [];
+  
+      // handle the case when fullNames has only one Name in it
+      if (metadata.hasOwnProperty('length')){
+        data = metadata;
+      }
+      else{
+        data.push(metadata);
+      }
+      console.log("MetaData returned: " + data);
+      arySummary[indxSum].searched += data.length;
+      
+      for (var k=0; k < data.length; k++) {
+        var meta = data[k];
+        console.log("Meta : " + JSON.stringify(meta));
+        
+        var content = atob(meta.content);
+        var findings = findString(content);
+    
+        // if find any matches
+        if (findings.length > 0 ){
+            console.log(meta.fullName + " :" + JSON.stringify(findings));
+        }
+      }
+      
+      if (arySummary[indxSum].searched >= arySummary[indxSum].total){
+        arySummary[indxSum].done = true;
+      }
+    });
+}
+
+function searchJSONContent(data){
+    for (var k=0; k < data.length; k++) {
+        var meta = data[k];
+        gThisResult = {};
+        gThisResult.MetaType = arySummary[indxSum].type;
+        if (meta.Id != null){
+            gThisResult.sf_id = meta.Id;
+        }
+        else{
+            gThisResult.sf_id = SETUP_URL;
+        }
+        gThisResult.Name  = meta.fullName;
+        gThisResult.Content = JSON.stringify(meta);
+        gThisResult.Matches = '';
+        //console.log("search " + k + ": " + JSON.stringify(meta));
+        jsonTraverse(meta.fullName, meta); 
+        
+        if (gThisResult.Matches != ''){
+            if ( gCurrMetaType === 'ReportType'){
+                gThisResult.SObject = meta.baseObject;
+            }
+            else{
+                gThisResult.SObject = 'All';
+            }
+            
+            gSearchResult.push(gThisResult);
+            arySummary[indxSum].match++;
+        }
+    }      
+}
+
+function searchTextContent(data){
+    for (var k=0; k < data.length; k++) {
+        var meta = data[k];
+        var content;
+        var findings;
+            
+        gThisResult = {};
+        gThisResult.MetaType = arySummary[indxSum].type;
+        gThisResult.sf_id = meta.Id;
+        gThisResult.Name  = meta.Name;
+        gThisResult.Content = JSON.stringify(meta);
+        gThisResult.SObject = 'All';
+
+        //console.log('search: ' + JSON.stringify(meta));
+        if (arySummary[indxSum].type === 'ApexPage'){
+            content = meta.Markup;
+        }
+        else{
+            content = meta.Body;
+        }
+        findings = findString(content);
+        if (findings.length > 0 ){
+            gThisResult.Matches = findings.matches;
+            gSearchResult.push(gThisResult);
+            arySummary[indxSum].match++;
+        }        
+    }      
+}
+    
+function saveMetaContent(metadata){
+    var data = [];
+    
+    // handle the case when fullNames has only one Name in it
+    if (metadata.hasOwnProperty('length')){
+        data = metadata;
+    }
+    else{
+        data.push(metadata);
+    }
+    arySummary[indxSum].searched += data.length;
+    
+    for (var k=0; k < data.length; k++) {
+        var meta = data[k];
+        gContent[gCurrMetaType].MetaBody.push(meta);
+    }
+    
+}    
+    
+function handleApexResult(result, event){
+    if (event.status){ 
+        saveMetaContent(result);
+    }
+    else{
+        console.log(event.message);
+        arySummary[indxSum].error = true;
+    }
+    if (arySummary[indxSum].searched >= arySummary[indxSum].total){
+        arySummary[indxSum].state = 'GetMetaDataDone';
+    }
+    arySummary[indxSum].waitSOAP = false;   
+}
+
+function submitApexId(){
+    
+    //console.log('arySummary[indxSum]: ' + JSON.stringify(arySummary[indxSum]));
+    if (!arySummary[indxSum].waitSOAP && arySummary[indxSum].submitApex){
+        var begin = gIdIndex*APEX_LIST_LIMIT;
+        var end   = (gIdIndex+1)*APEX_LIST_LIMIT;
+        var listId = [];
+        
+        console.log('submitApex begin: ' + begin + 'gIdIndex:' + gIdIndex);
+        arySummary[indxSum].waitSOAP = true;
+        for (var k = begin; k < end; k++){
+            if (k < gIdList.length){
+                listId.push(gIdList[k].Id);
+            }
+        }
+        //console.log('submit: ' + JSON.stringify(listId));           
+        if ( arySummary[indxSum].type === 'ApexPage'){
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.MetaSearchTool.searchApexPageWithId}',
+                listId,
+                handleApexResult);
+        }
+        else if ( arySummary[indxSum].type === 'ApexClass'){
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.MetaSearchTool.searchApexClassWithId}',
+                listId,
+                handleApexResult);
+        }
+        else if ( arySummary[indxSum].type === 'ApexTrigger'){
+            Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.MetaSearchTool.searchApexTriggerWithId}',
+                    listId,
+                    handleApexResult);
+        }
+        gIdIndex++;
+        if (gIdIndex*APEX_LIST_LIMIT >= gIdList.length){
+            arySummary[indxSum].submitApex = false;
+        }        
+    }
+}
+
+function asynHandleApexId(result, event)
+{
+    if (event.status){        
+        arySummary[indxSum].total = result.length;
+        gIdList = result;
+    }
+    else{
+        console.log(event.message);
+        arySummary[indxSum].error = true;
+    }
+    
+    arySummary[indxSum].waitSOAP = false;
+}
+
+function asynHandleApexNames(result, event)
+{
+    if (event.status){        
+        arySummary[indxSum].total = result.length;
+        //gContent[gCurrMetaType].MetaNames = result;
+        for (var i = 0 ; i < result.length; i++){
+            //console.log('gContent[gCurrMetaType].MetaNames', result[i].DeveloperName);
+            gContent[gCurrMetaType].MetaNames.push(result[i].DeveloperName);
+            //gContent[gCurrMetaType].NameIdMap[result[i].DeveloperName] = result[i].Id;            
+        }
+        //console.log('gContent[gCurrMetaType].MetaNames', gContent[gCurrMetaType].MetaNames.toString());
+        arySummary[indxSum].state = 'ListMetaNamesDone';
+
+    }
+    else{
+        console.log(event.message);
+        arySummary[indxSum].error = true;
+    }
+    
+    arySummary[indxSum].waitSOAP = false;
+}
+
+function asynMapApexNames(result, event)
+{
+    if (event.status){        
+        for (var i = 0 ; i < result.length; i++){
+            //console.log('gContent[gCurrMetaType].MetaNames', result[i].DeveloperName);
+            gContent[gCurrMetaType].NameIdMap[result[i].DeveloperName] = result[i].Id;            
+        }
+        //console.log('gContent[gCurrMetaType].NameIdMap', JSON.stringify(gContent[gCurrMetaType].NameIdMap));
+        arySummary[indxSum].state = 'GetMetaNameMapDone';
+    }
+    else{
+        console.log(event.message);
+        arySummary[indxSum].error = true;
+    }
+    
+    arySummary[indxSum].waitSOAP = false;
+}
+
+function asynGetMetaData(strType, listFullNames){
+    conn.metadata.read(strType, listFullNames, function(err, metadata) {
+      if (err) { console.error(err); }
+      var data = [];
+  
+      // handle the case when fullNames has only one Name in it
+      if (metadata.hasOwnProperty('length')){
+        data = metadata;
+      }
+      else{
+        data.push(metadata);
+        console.log("MetaData: " + JSON.stringify(metadata));
+      }
+      //if ( data.length != 10){
+      //  console.log("MetaData returned: " + data.length + ' content:'+ JSON.stringify(data));
+      //}
+      arySummary[indxSum].searched += data.length;
+      gContent[gCurrMetaType].nameSearched += data.length;
+      
+      for (var k=0; k < data.length; k++) {
+        var meta = data[k];
+        gContent[gCurrMetaType].MetaBody.push(meta);
+      }
+      
+      if (arySummary[indxSum].searched >= arySummary[indxSum].total){
+        arySummary[indxSum].state = 'GetMetaDataDone';
+      }
+      else if ( gContent[gCurrMetaType].nameSearched 
+                 >= gContent[gCurrMetaType].nameEndNumber){
+        arySummary[indxSum].state = 'GetMetaData';
+        if (gSearchOptions.oneBatch){
+            arySummary[indxSum].state = 'GetMetaDataDone';
+        }
+      }
+    });
+}
+function asynListMetaNames(metaType, metaFolder)
+{
+    console.log("asynListMetaNames: " + metaType 
+                    + 'metaFolder: ' + metaFolder);
+    var searchType = {type: metaType, folder: metaFolder};
+    
+    conn.metadata.list(searchType, function(err, metadata) {
+        var listMetaNames = [];
+        if (err) { 
+            console.error(err); 
+            arySummary[indxSum].error = true;
+        }
+        if (metadata != null) {
+            if (metadata.hasOwnProperty('length')){
+                arySummary[indxSum].total += metadata.length;
+                for (var j=0; j < metadata.length; j++) {
+                    var meta = metadata[j];
+                    gContent[gCurrMetaType].MetaNames.push(meta.fullName.toString());
+                    //console.log(metaType + ' ' + metaFolder + ' :' + j + meta.fullName.toString());
+                }
+            }
+            else{
+                if (metadata.fullName == null){
+                    console.log(metaType + ' ' + metaFolder + ' :' + JSON.stringify(metadata));
+                    arySummary[indxSum].error = true;
+                }
+                else{
+                    gContent[gCurrMetaType].MetaNames.push(metadata.fullName.toString());
+                    arySummary[indxSum].total++;
+                }
+            }
+        }
+        gContent[gCurrMetaType].folderSearched++;
+        console.log("Length: " + gContent[gCurrMetaType].folders.length 
+                    + 'searched: ' + gContent[gCurrMetaType].folderSearched );        
+        
+        if ( gContent[gCurrMetaType].folderSearched 
+            >= gContent[gCurrMetaType].folders.length){
+            arySummary[indxSum].state = 'ListMetaNamesDone';
+            //console.log("ListMetaNamesDone: " + gContent[gCurrMetaType].MetaNames.toString());
+        }
+        else if ( gContent[gCurrMetaType].folderSearched 
+            >= gContent[gCurrMetaType].folderEndNumber){
+            arySummary[indxSum].state = 'ListMetaNames';
+        }
+        
+    }); 
+}
+function asynListMetaNamesNoFolder(metaType)
+{
+    console.log("asynListMetaNamesNoFolder: " + metaType);
+    var searchType = {type: metaType};
+    
+    conn.metadata.list(searchType, function(err, metadata) {
+        var listMetaNames = [];
+        if (err) { 
+            console.error(err); 
+            arySummary[indxSum].error = true;
+        }
+        if (metadata != null) {
+            if (metadata.hasOwnProperty('length')){
+                arySummary[indxSum].total += metadata.length;
+                for (var j=0; j < metadata.length; j++) {
+                    var meta = metadata[j];
+                    gContent[gCurrMetaType].MetaNames.push(meta.fullName.toString());
+                    //console.log(metaType + ' :' + j + meta.fullName.toString());
+                }
+            }
+        }
+        arySummary[indxSum].state = 'ListMetaNamesDone';
+    }); 
+}
+
+function GetMetaStateMachine()
+{
+    if (arySummary[indxSum].state === 'ListMetaNamesDone'){
+        //asynVerifyApexFolder('Report');
+        arySummary[indxSum].state ='GetMetaData';
+    }
+    else if (arySummary[indxSum].state === 'GetMetaDataDone'){
+        arySummary[indxSum].state = 'GetMetaDataId';
+        
+        if (gCurrMetaType === 'Report'){
+            asynGetReportNames();
+        }
+        else if (gCurrMetaType === 'EmailTemplate'){
+            asynGetEmailTemplateNames();
+        }
+        else{
+            arySummary[indxSum].state = 'GetMetaDataAllDone';
+        }
+    }
+    else if (arySummary[indxSum].state === 'GetMetaNameMapDone'){
+        var contents = gContent[gCurrMetaType].MetaBody;
+
+        for (var i = 0; i < contents.length; i++){
+            if ( contents[i].fullName != null){
+                var names = contents[i].fullName.split('/');
+                var devName = names[names.length - 1];
+                contents[i].Id = gContent[gCurrMetaType].NameIdMap[devName];
+            }
+            else{
+                console.log('contents[i]' + i + 'no fullName :' + JSON.stringify(contents[i]));
+            }
+        }
+        //console.log('contents[i].Id' + contents[0].Id);
+        arySummary[indxSum].state = 'GetMetaDataAllDone';
+    }
+    else if (arySummary[indxSum].state === 'GetMetaDataAllDone'){
+        var contents = gContent[gCurrMetaType].MetaBody;
+        console.log('contents 0 ' +  JSON.stringify(contents[0]));
+        if (gCurrMetaType === 'Report'
+            || gCurrMetaType === 'ReportType' 
+            || gCurrMetaType === 'Workflow' 
+            || gCurrMetaType === 'ApprovalProcess' 
+            || gCurrMetaType === 'CustomObject' 
+            || gCurrMetaType === 'Layout' 
+            || gCurrMetaType === 'EmailTemplate'){
+            searchJSONContent(contents);
+        }
+        else if (gCurrMetaType === 'ApexPage' 
+                 || gCurrMetaType === 'ApexClass' 
+                 || gCurrMetaType === 'ApexTrigger'){
+            searchTextContent(contents);
+        }
+        
+        for (var i = 0; i < gSearchResult.length; i++){
+            if (gSearchResult.sf_id == null){
+                gSearchResult.sf_id = '';
+            }
+        }
+        arySummary[indxSum].state = 'SearchMetaDataDone';
+        arySummary[indxSum].done = true;
+    }
+    else if (arySummary[indxSum].state === 'ListMetaNames'){
+        var folders = gContent[gCurrMetaType].folders;
+        var begin = gContent[gCurrMetaType].folderEndNumber;
+        var end   = begin + APEX_LIST_LIMIT;
+        gContent[gCurrMetaType].folderEndNumber = end;
+
+        for (var i = begin; i < end; i++){
+            if ( i < folders.length){
+                console.log('submit folder: ' + i + ' ' + folders[i].DeveloperName + ' ' + folders[i].Id);
+                asynListMetaNames(gCurrMetaType, folders[i].DeveloperName);
+            }
+        }
+        arySummary[indxSum].state = 'ListMetaNamesSubmit';
+    }
+    else if (arySummary[indxSum].state === 'GetMetaData'){
+        var metaNames = gContent[gCurrMetaType].MetaNames;
+        var first = gContent[gCurrMetaType].nameEndNumber;
+        var last = first + gContent[gCurrMetaType].batchNumber;
+        gContent[gCurrMetaType].nameEndNumber = last;
+        console.log('gContent[gCurrMetaType].batchNumber ' +  gContent[gCurrMetaType].batchNumber);
+        console.log('submit: ' + first + ' ' + last);
+
+        for (var i = first; i < last; i += META_LIST_LIMIT){
+            
+            if ( i < metaNames.length){
+                var begin = i;
+                var end   = i + META_LIST_LIMIT;
+                if (end >= metaNames.length){
+                    end = metaNames.length;
+                }
+                var fullNames = metaNames.slice(begin,end);      
+                //console.log('submit: ' + i + ' ' + fullNames);
+                asynGetMetaData(gCurrMetaType, fullNames);
+            }
+        }
+        arySummary[indxSum].state = 'GetMetaDataSubmit';
+    }
+}
+
+function asynVerifyFolderResult(result, event)
+{
+    if (event.status){
+        
+        if (gContent[gCurrMetaType].folders.length == result.length){
+        }
+        
+        arySummary[indxSum].state = 'ListMetaNames';
+     }
+    else{
+        console.log(event.message);
+        arySummary[indxSum].error = true;
+    }
+    
+    arySummary[indxSum].waitSOAP = false;
+}
+
+function asynHandleFolderResult(result, event)
+{
+    if (event.status){
+        gContent[gCurrMetaType].folders = result;        
+        //gContent[gCurrMetaType].folders = [];        
+
+        var pubFolder = {DeveloperName: 'unfiled$public'};
+        gContent[gCurrMetaType].folders.push(pubFolder);
+    
+        arySummary[indxSum].state = 'ListMetaNames';
+     }
+    else{
+        console.log(event.message);
+        arySummary[indxSum].error = true;
+    }
+    
+    arySummary[indxSum].waitSOAP = false;
+}
+
+function asynSearchApexPage()
+{
+    arySummary[indxSum].waitSOAP = true;
+    arySummary[indxSum].submitApex = true;
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchApexPageId}',asynHandleApexId);
+}
+
+function asynSearchApexClass()
+{
+    arySummary[indxSum].waitSOAP = true;
+    arySummary[indxSum].submitApex = true;
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchApexClassId}',asynHandleApexId);
+}
+
+function asynSearchApexTrigger()
+{
+    arySummary[indxSum].waitSOAP = true;
+    arySummary[indxSum].submitApex = true;
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchApexTriggerId}',asynHandleApexId);
+}
+
+    
+function asynGetReportNames()
+{
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchReportNames}', asynMapApexNames);
+}
+
+function asynGetEmailTemplateNames()
+{
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchEmailTemplateNames}', asynMapApexNames);
+}
+
+    
+function asynSearchReport()
+{
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchReportNames}',asynHandleApexNames);
+}
+
+
+
+function asynSearchApexFolder(folderType)
+{
+    // Create work order and line item via Apex
+    arySummary[indxSum].waitSOAP = true;
+    arySummary[indxSum].submitApex = true;
+    //console.log("asynSearchApexFolder: " );
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchApexFolders}', folderType, asynHandleFolderResult);
+}
+
+function asynVerifyApexFolder(folderType)
+{
+    // Create work order and line item via Apex
+    arySummary[indxSum].waitSOAP = true;
+    arySummary[indxSum].submitApex = true;
+    //console.log("asynSearchApexFolder: " );
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.MetaSearchTool.searchApexFolders}', folderType, asynVerifyFolderResult);
+}
+
+
+function taskIsRunning(){
+
+    var listMetaNames = [];
+    var strSearch = gSearchText;
+    iRunCount++;
+    
+    if (indxSum < arySummary.length){
+        gCurrMetaType = arySummary[indxSum].type;
+        submitApexId();
+        GetMetaStateMachine();
+        updateSearchSummary();
+    }
+    else{
+        clearInterval(runningTask);
+        return;
+    }
+    
+    if (iRunCount >= TASK_TOTAL){
+        var currSearch  = $('#search_STATUS').text();
+        $('#search_STATUS').text(currSearch + ' Time Out');
+        console.log("Searching Time Out. ");
+        clearInterval(runningTask);
+    }
+
+    if (arySummary[indxSum].done){
+        console.log("Searching : "+ arySummary[indxSum].type + " success.");
+
+        while (++indxSum < arySummary.length){
+            if (arySummary[indxSum].select){
+                break;  
+            } 
+        } 
+
+        if (indxSum >= arySummary.length){
+            
+            $("#SearchResult_TABLE").data("kendoGrid").dataSource.data(gSearchResult);
+            $("#SearchResult_TABLE").data("kendoGrid").refresh();
+            uiStatusUpdate('SUCCESS', '');
+            
+            //console.log("Search Result : " + JSON.stringify(gSearchResult));
+            clearInterval(runningTask);
+        }
+    }
+    else if (arySummary[indxSum].error){
+        console.log("Searching : "+ arySummary[indxSum].type + " failure.");
+        var currSearch  = $('#search_STATUS').text();
+        $('#search_STATUS').text(currSearch + ' Error!');
+        clearInterval(runningTask);
+    }
+
+    if (indxSum < arySummary.length && arySummary[indxSum].select){
+    
+        if (arySummary[indxSum].done == false && arySummary[indxSum].submitted == false){
+            arySummary[indxSum].submitted = true;
+            arySummary[indxSum].waitSOAP = false;
+            arySummary[indxSum].submitApex = false;
+            gCurrMetaType = arySummary[indxSum].type;
+            gIdIndex = 0;
+            gIdList = [];    
+                
+            console.log("Searching start for :"+ arySummary[indxSum].type );
+            
+            if ( arySummary[indxSum].type === 'ApexPage'){
+                asynSearchApexPage();
+            }
+            else if ( arySummary[indxSum].type === 'ApexClass'){
+                asynSearchApexClass();
+            }
+            else if ( arySummary[indxSum].type === 'ApexTrigger'){
+                asynSearchApexTrigger();
+            }
+            else if ( arySummary[indxSum].type === 'Report'){
+                //console.log("GetMetaFolders" );
+                gContent[gCurrMetaType].batchNumber = META_LIST_LIMIT*50;
+                
+                arySummary[indxSum].state = 'GetMetaFolders';
+                asynSearchApexFolder('Report');
+                
+                //asynSearchReport();
+            }
+            else if ( arySummary[indxSum].type === 'EmailTemplate'){
+                gContent[gCurrMetaType].batchNumber = APEX_LIST_LIMIT*META_LIST_LIMIT;               
+                arySummary[indxSum].state = 'GetMetaFolders';
+                asynSearchApexFolder('Email');
+                
+                //asynSearchReport();
+            }
+            else if (arySummary[indxSum].type === 'ReportType'){
+                gContent[gCurrMetaType].batchNumber = META_LIST_LIMIT*5;
+                asynListMetaNamesNoFolder(arySummary[indxSum].type);
+            }
+            else if (arySummary[indxSum].type === 'Workflow'){
+                gContent[gCurrMetaType].batchNumber = META_LIST_LIMIT*10;
+                asynListMetaNamesNoFolder(arySummary[indxSum].type);
+            }
+            else if (arySummary[indxSum].type === 'ApprovalProcess'){
+                gContent[gCurrMetaType].batchNumber = META_LIST_LIMIT*5;
+                asynListMetaNamesNoFolder(arySummary[indxSum].type);
+            }
+            else if (arySummary[indxSum].type === 'CustomObject'){
+                gContent[gCurrMetaType].batchNumber = META_LIST_LIMIT*5;
+                asynListMetaNamesNoFolder(arySummary[indxSum].type);
+            }
+            else if (arySummary[indxSum].type === 'Layout'){
+                gContent[gCurrMetaType].batchNumber = META_LIST_LIMIT*5;
+                asynListMetaNamesNoFolder(arySummary[indxSum].type);
+            }
+            else{
+                console.log("run Other: " + arySummary[indxSum].type);
+                var searchType = {type: arySummary[indxSum].type};
+                //var searchType = {type: 'Report', folder: 'Global_Design'};
+
+                conn.metadata.list(searchType, function(err, metadata) {
+                    if (err) { console.error(err); }
+                    arySummary[indxSum].total = metadata.length;
+                    console.log("arySummary[indxSum].total " + indxSum + "  :" +  metadata.length);
+                
+                    var j = 0;
+                    for (j=0; j < metadata.length; j++) {
+                          var meta = metadata[j];
+                          listMetaNames.push(meta.fullName.toString());
+                    }
+                    console.log("list of MetaType: " + listMetaNames.toString());
+            
+                    for (j=0; j*META_LIST_LIMIT < metadata.length; j++){
+                        var begin = j*META_LIST_LIMIT;
+                        var end   = (j+1)*META_LIST_LIMIT;
+                        var fullNames = listMetaNames.slice(begin,end);
+                        
+                        searchWorkflowContent(strSearch, arySummary[indxSum].type, fullNames);          
+                    }
+                }); 
+            }
+        }
+    }
+
+}
+
+function selectAllMeta(){
+    for (var i = 0; i < arySummary.length; i++){
+        var cbId = arySummary[i].type + '_CB';
+
+        if ($('#SelectAll_CB').prop('checked')){
+            $("#" + cbId).prop('checked', true);
+        }
+        else{
+            $("#" + cbId).prop('checked', false);
+        }
+    }
+    
+}    
+    
+function doSearch(strSearch)
+{
+    var fullNames = [];
+    gSearchResult = [];
+    gSearchOptions = {};
+    var pattern = '';
+
+    iSearchIndex = 0;
+    iRunCount = 0;
+    indxSum = -1;
+
+    $('#search_STATUS').text('Search for:  ' + strSearch + '  ');
+    $("label[id$=_OUT]").text('0/0/0').css("color", "black");
+    //console.log(JSON.stringify(arySummary));
+    
+    gSearchOptions.oneBatch = false;
+    gSearchOptions.logStatus = true;
+    gSearchOptions.Exact     = $('#ExactMatch_CB').prop('checked');
+    gSearchOptions.reFetch   = $('#FetchAgain_CB').prop('checked');
+    gSearchText = strSearch;    
+    
+    if (gSearchOptions.Exact){
+        pattern = '(^|[\\W])' + gSearchText + '($|[\\W])';
+    }
+    else{
+        pattern = gSearchText;
+    }
+    gSearchPattern = pattern;
+    console.log(gSearchPattern);
+
+    console.log(gSearchOptions, JSON.stringify(gSearchOptions));
+    
+    for (var i = 0; i < arySummary.length; i++){
+        var cbId = arySummary[i].type + '_CB';
+        arySummary[i].select = false;
+        arySummary[i].submitted = false;
+        arySummary[i].done = false;
+        arySummary[i].match = 0;
+        arySummary[i].waitSOAP = false;
+        arySummary[i].submitApex = false;
+        
+        if ($("#" + cbId).prop('checked')){
+            if (indxSum == -1){
+                indxSum = i;
+            }
+            if ( arySummary[i].state != null &&
+               gSearchOptions.reFetch == false &&
+               arySummary[i].state === 'SearchMetaDataDone'){
+                    arySummary[i].state = 'GetMetaDataAllDone';
+                    arySummary[i].submitted = true;
+            }
+            else{
+                gContent[arySummary[i].type] = {};
+                gContent[arySummary[i].type].folderSearched = 0;
+                gContent[arySummary[i].type].folderEndNumber = 0;
+                gContent[arySummary[i].type].nameSearched   = 0;
+                gContent[arySummary[i].type].nameEndNumber = 0;
+                gContent[arySummary[i].type].NameIdMap     = {};
+                gContent[arySummary[i].type].MetaNames = [];
+                gContent[arySummary[i].type].MetaIds = [];
+                gContent[arySummary[i].type].MetaBody = [];
+
+                arySummary[i].searched = 0;
+                arySummary[i].total = 0;
+                arySummary[i].state = 'Init';
+            }
+            arySummary[i].select = true;
+        }
+    }
+    
+    if (indxSum != -1){
+        runningTask = setInterval(taskIsRunning, TASK_INTERVAL);
+    }
+} 
+
+function getHtmlNewLines(text) {
+    var regexp = new RegExp('\n', 'g');
+    var html = $('<div/>').text(text).html();
+    return html.replace(regexp, '<br>');
+}
+
+$(document).ready(function() {
+
+    var templMetaLink = kendo.template('<a href="' + SITE_URL + '${sf_id}" target="_blank">#= Name #</a>');
+    var templMatches  = kendo.template('#= getHtmlNewLines(Matches) #');  
+
+    var grid = $("#SearchResult_TABLE").kendoGrid({
+          dataSource: {
+              data: gSearchResult,
+              pageSize: 50
+          },
+          scrollable: true,
+          sortable: true,
+          pageable: true,
+          filterable: true,
+          resizable: true,
+          toolbar: kendo.template($("#result-gridtb-template").html()),
+          height: 1000,
+          reorderable: true,
+          schema: {
+              model: {
+                  fields: {
+                      sf_id:       { type: "string" },
+                      MetaType:    { type: "string" },
+                      SObject:     { type: "string" },
+                      Name:        { type: "string" },
+                      Content:     { type: "string" },
+                      Matches:     { type: "string" }
+                  }
+              }
+          },
+          columns: [ 
+              { field: "MetaType", title: "MetaType", width: 150},
+              { field: "Name",    title: "Name", width: 250, template:  templMetaLink},
+              { field: "Matches", title: "Matches", encoded: false, template:  templMatches}
+          ],
+      });
+      
+      gResultGrid = $("#SearchResult_TABLE").data("kendoGrid");
+      
+      var dropDown = $("#pagesize-cb").kendoDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+                { text: 50  },
+                { text: 100 },
+                { text: 200 },
+                { text: 500 },
+                { text: 1000 }
+            ],
+          change: function() {
+              var pgSize = this.value();
+              if (pgSize) {
+                gResultGrid.dataSource.pageSize(parseInt(pgSize));
+                gResultGrid.refresh();
+              }
+          }
+      });
+      // $('#pagesize-label').text('Page Size:').css('color', 'green');
+      //console.log('dropDown: ' + JSON.stringify(dropDown));    
+});      
+</script>
+  
+    <apex:sectionHeader title="Meta Search Tool"/>
+
+    <apex:pageBlock id="SearchMetaBlock">
+        <apex:pageBlockSection columns="1" title="Search MetaData">
+            <apex:pageBlockSectionItem >
+                <input id="search_IP" value="" style="width:500px;" />
+                <button onclick="doSearch(document.getElementById('search_IP').value);"><b>Search</b></button>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <input type="checkbox" id="SelectAll_CB" onclick = "selectAllMeta()" /><b>Select All&nbsp;&nbsp;</b>
+                <input type="checkbox" id="FetchAgain_CB" /><b>Refresh From Server&nbsp;&nbsp;</b>
+                <input type="checkbox" id="ExactMatch_CB" /><b>Whole Word&nbsp;&nbsp;</b>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection columns="1" title="Search Types">
+            <apex:pageBlockSectionItem >
+                <input type="checkbox" id="ApexPage_CB" /><b>ApexPage&nbsp;&nbsp;</b>
+                <input type="checkbox" id="ApexClass_CB" /><b>ApexClass&nbsp;&nbsp;</b>
+                <input type="checkbox" id="ApexTrigger_CB" /><b>ApexTrigger&nbsp;&nbsp;</b>
+                <input type="checkbox" id="Report_CB" /><b>Report&nbsp;&nbsp;</b>
+                <input type="checkbox" id="ReportType_CB" /><b>ReportType&nbsp;&nbsp;</b>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <input type="checkbox" id="Workflow_CB" /><b>Workflow&nbsp;&nbsp;</b>
+                <input type="checkbox" id="ApprovalProcess_CB" /><b>ApprovalProcess&nbsp;&nbsp;</b>
+                <input type="checkbox" id="Layout_CB" /><b>PageLayout&nbsp;&nbsp;</b>
+                <input type="checkbox" id="EmailTemplate_CB" /><b>EmailTempate&nbsp;&nbsp;</b>
+                <input type="checkbox" id="CustomObject_CB" /><b>All Objects&nbsp;&nbsp;</b>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection columns="1" title="Search Summary">
+            <apex:pageBlockSectionItem >
+                <b>&nbsp;&nbsp;</b> <label><b  id="search_STATUS">Click Search to Start ...</b></label>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <b>&nbsp;&nbsp;ApexPage:&nbsp;</b> <label id="ApexPage_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>ApexClass:&nbsp;</b> <label id="ApexClass_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>ApexTrigger:&nbsp;</b> <label id="ApexTrigger_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>Report:&nbsp;</b> <label id="Report_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>ReportType:&nbsp;</b> <label id="ReportType_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <b>&nbsp;&nbsp;Workflow:&nbsp;</b> <label id="Workflow_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>ApprovalProcess:&nbsp;</b> <label id="ApprovalProcess_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>PageLayout:&nbsp;</b> <label id="Layout_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>EmailTemplate:&nbsp;</b> <label id="EmailTemplate_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+                <b>All Objects:&nbsp;</b> <label id="CustomObject_OUT">0/0/0</label><b>&nbsp;&nbsp;</b>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection columns="1" title="Search Result">
+            <apex:pageBlockSectionItem >
+                <table id="SearchResult_TABLE"></table>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+    </apex:pageBlock>
+
+</apex:page>

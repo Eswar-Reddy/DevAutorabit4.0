@@ -1,0 +1,661 @@
+<apex:page standardController="Account" extensions="AccountExtension" showHeader="false" standardStylesheets="false" sidebar="false" id="pg">
+
+<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+<c:CommunitiesMainNavComponent activeTab="Accounts"/>
+        <!-- Edit Page for NA and EU Residential Customer -->
+        <!--<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet" />-->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&v=3.exp&sensor=false&libraries=places&language=en"/>
+
+        <link rel="stylesheet" href="{!URLFOR($Resource.jquery_ui_18, 'css/smoothness/jquery-ui-1.8.16.custom.css')}" type="text/css" media="all" />
+        <apex:stylesheet value="{!$Resource.StyleguideExpansion_CSS}" />
+        <script src="{!URLFOR($Resource.jquery_16min)}" type="text/javascript"></script>
+        <script src="{!URLFOR($Resource.jquery_ui_18, 'js/jquery-ui-1.8.16.custom.min.js')}"></script>
+        <script src="{!URLFOR($Resource.deal_registration)}" type="text/javascript"></script>
+
+        <style type="text/css">
+            .btnGo, .btnImportant, .btnSharing, .btnDisabled, .btn,
+            .bEditBlock .btnGo, .bEditBlock .btnImportant, .bEditBlock .btnSharing,
+            .bEditBlock .btnDisabled, .bEditBlock .btn, .btnCustomAction, .btnOverriddenAction {
+                margin: 0 2px;
+                padding: 5px 10px;
+            }
+
+            .labelStyle{
+                font-family:sans-serif;
+                font-size: 13px;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+            }
+
+            .labelStyle2{
+                font-family: sans-serif;
+                font-size: 10px;
+                font-weight: bold;
+                top:1px;
+            }
+            
+            .inputStyle{
+                height: 40px;
+                width: 90%;
+                margin-top: -10px;
+                border-radius: 5px;
+                border: 0px;
+                /*background-color: #edeeef;*/
+                background-color: #eaeae4;
+                
+            }
+            
+            .rowMargin{
+                margin-bottom:30px;
+            }
+            input::-webkit-input-placeholder {
+            color: grey !important;
+            }
+             
+            input:-moz-placeholder { /* Firefox 18- */
+            color: grey !important;  
+            }
+             
+            input::-moz-placeholder {  /* Firefox 19+ */
+            color: grey !important;  
+            }
+             
+            input:-ms-input-placeholder {  
+            color: grey !important;  
+            }
+            input:disabled, textarea:disabled {
+               background-color: white !important;
+    
+            }
+            .labelDiv{
+                text-align:right;
+            }
+            .errorStyle{
+                font-size: .95rem;
+                margin-bottom:15px !important;
+            }
+            .errorStyle ul{
+                margin-top:-35px !important;
+            }
+            .errorStyle li{
+                padding-top:0px !important;
+            }
+            .errorStyle table{
+                background-color:#ffc !important;
+            }
+            .disablesavebuttons{
+                background-color:#095077 !important;
+            }
+            #cancelbutton{
+                float: left;
+                margin-bottom: 1rem;
+            }
+            #savequotebtbottom{
+                float: left;
+                margin-bottom: 1rem;
+            }
+            #savebtbottom{
+                float: right;
+                margin-bottom: 1rem;
+            }
+            
+            @media only screen and (max-width: 768px) {
+                .labelDiv{
+                    text-align:left !important;
+                }
+                .hiderow{
+                    display:none !important;
+                }
+                #map-canvas{
+                    height:250px !important;
+                }
+                #cancelbutton{
+                    float: none;
+                    width:100%
+                }
+                #savequotebtbottom{
+                    float: none;
+                    width:100%
+                }
+                #savebtbottom{
+                    float: none;
+                    width:100%
+                }
+                .lastNameInput, .firstNameInput, .emailInput{
+                    margin-bottom:20px;
+                }
+            }
+            .dateFormat {
+                display: none;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var geocoder;
+            function initialize() {
+                var mapOptions = {
+                    center: ("{!RIGHT(partnerAccount.Country_Domain__c,2) == 'au'}" == "false") ? new google.maps.LatLng(37.405178, -121.946483) : new google.maps.LatLng(-33.857767, 151.214993),
+                    zoom: 18,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE
+                };
+
+                var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                var input = /** @type {HTMLInputElement} */(document.getElementById('searchTextField'));
+                var autocomplete = new google.maps.places.Autocomplete(input);
+
+                autocomplete.bindTo('bounds', map);
+
+                var infowindow = new google.maps.InfoWindow();
+                var marker = new google.maps.Marker({ map: map,draggable: true});
+                
+                google.maps.event.addListener(marker, 'dragend', function() {
+                    console.log(marker.getPosition()+'=====');
+                    geocodePosition(marker.getPosition());
+                  });
+                
+                google.maps.event.addListener(autocomplete, 'place_changed', function(){
+                    infowindow.close();
+                    marker.setVisible(false);
+                    input.className = '';
+                    var place = autocomplete.getPlace();
+
+                    if (!place.geometry) { // Inform the user that the place was not found and return.
+                        input.className = 'notfound';
+                        return;
+                    }
+
+                    // If the place has a geometry, then present it on a map.
+                    if (place.geometry.viewport){
+                        map.fitBounds(place.geometry.viewport);
+                    }
+                    else{
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(20);
+                    }
+
+                    marker.setIcon(/** @type {google.maps.Icon} */({
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(35, 35)
+                    }));
+
+                    marker.setPosition(place.geometry.location);
+                    marker.setVisible(true);
+                    var locationvalu  = place.formatted_address ;
+                    var address = '';
+
+                    if (place.address_components){
+                        address = [(place.address_components[0] && place.address_components[0].short_name || ''),
+                                   (place.address_components[1] && place.address_components[1].short_name || ''),
+                                   (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
+                    }
+
+                    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                    var lat = place.geometry.location.lat();
+                    var lng= place.geometry.location.lng();
+/*                    alert('hi1');
+                    alert(lat);
+                    alert(lng);*/
+
+                    geocoder = new google.maps.Geocoder();
+                    codeLatLng(lat, lng, place.name);
+                });
+
+                // Sets a listener on a radio button to change the filter type on Places
+                // Autocomplete.
+                /*function setupClickListener(id, types){
+                    var radioButton = document.getElementById(id);
+                    google.maps.event.addDomListener(radioButton, 'click', function(){  autocomplete.setTypes(types); });
+                }
+
+                setupClickListener('changetype-all', []);*/
+                function geocodePosition(pos) {
+                  geocoder.geocode({
+                    latLng: pos
+                  }, function(responses) {
+                    if (responses && responses.length > 0) {
+                      marker.formatted_address = responses[0].formatted_address;
+                      marker.address_components = responses[0].address_components;
+                      document.getElementById('searchTextField').value = marker.formatted_address;
+                      document.getElementById('pg:frm:lat').value = responses[0].geometry.location.lat();
+                      document.getElementById('pg:frm:log').value = responses[0].geometry.location.lng();
+                      document.getElementById('pg:frm:billLat').value = responses[0].geometry.location.lat();
+                      document.getElementById('pg:frm:billLong').value = responses[0].geometry.location.lng();
+                      document.getElementById('pg:frm:pinAdjusted').value = true;
+                      //console.log('====='+marker.address_components+'===='+marker.address_components.length);
+                      var route='';
+                      var street = '';
+                      for (var i=0; i<marker.address_components.length; i++){
+                          for (var y=0;y<marker.address_components[i].types.length;y++){
+                            // Street Number
+                            if (marker.address_components[i].types[y] == "street_number"){
+                                street= marker.address_components[i].short_name;
+                                //document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi3:state1').value = State.short_name;
+                                document.getElementById('pg:frm:BillingStreet').value = street+' '+route;
+                                break;
+                            }
+                            // State
+                            if (marker.address_components[i].types[y] == "route"){
+                                route= marker.address_components[i].long_name;
+                                //document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi3:state1').value = State.short_name;
+                                document.getElementById('pg:frm:BillingStreet').value = street+' '+route;
+                                break;
+                            }                              
+                            // State
+                            if (marker.address_components[i].types[y] == "administrative_area_level_1"){
+                                State= marker.address_components[i];
+                                //document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi3:state1').value = State.short_name;
+                                document.getElementById('pg:frm:state1').value = State.short_name;
+                                break;
+                            }
+                            //Country
+                            if (marker.address_components[i].types[y] == "country"){
+                                country= marker.address_components[i];
+                                document.getElementById('pg:frm:country').value = country.long_name ;
+                                break;
+                            }
+                            //postal code
+                            if (marker.address_components[i].types[y] == "postal_code"){
+                                postal_code= marker.address_components[i];
+                                document.getElementById('pg:frm:zipCode1').value = postal_code.long_name ;
+                                break;
+                            }
+                            //city
+                            if (marker.address_components[i].types[y] == "locality"){
+                                locality= marker.address_components[i];
+                                local = locality.long_name;
+                                document.getElementById('pg:frm:city1').value = locality.long_name ;
+                                break;
+                            }
+                          } 
+                      
+                      }
+                    } else {
+                      marker.formatted_address = 'Cannot determine address at this location.';
+                    }
+                    console.log('==marker response=='+marker.formatted_address);
+                    //infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
+                    //infowindow.open(map, marker);
+                  });
+                }
+            }//End Func initialize
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+            function codeLatLng(lat, lng, place){
+                var latlng = new google.maps.LatLng(lat, lng);
+                document.getElementById('pg:frm:lat').value = lat ;
+                document.getElementById('pg:frm:log').value = lng ;
+                document.getElementById('pg:frm:billLat').value = lat;
+                document.getElementById('pg:frm:billLong').value = lng;
+                var local;
+                var sublocal;
+/*                alert('hi');
+                alert(lat);
+                alert(lng);*/
+                geocoder.geocode({'latLng': latlng}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK){
+                        if (!Function.prototype.bind && typeof console != 'undefined' && typeof console.log == 'object')
+                            Function.prototype.call.call(console.log, console, Array.prototype.slice.call(results));
+                            console.log('=result=='+results[1]);
+                        if(results[1]){
+                            for (var i=0; i<results[0].address_components.length; i++){
+                                for (var b=0;b<results[0].address_components[i].types.length;b++){
+                                    console.log('=inner loop=='+results[0].address_components[i].types);
+                                    //Street
+                                    if (results[0].address_components[i].types[b] == "route"
+                                            || results[0].address_components[i].types[b] == "street_number"){
+                                        route= results[0].address_components[i];
+                                        document.getElementById('pg:frm:BillingStreet').value =  place ;
+                                        break;
+                                    }
+                                    // State
+                                    if (results[0].address_components[i].types[b] == "administrative_area_level_1"){
+                                        State= results[0].address_components[i];
+                                        //document.getElementById('pg:frm:pb:addpbs1:addpbs2:pbsi3:state1').value = State.short_name;
+                                        document.getElementById('pg:frm:state1').value = State.short_name;
+                                        break;
+                                    }
+                                    //Country
+                                    if (results[0].address_components[i].types[b] == "country"){
+                                        country= results[0].address_components[i];
+                                        document.getElementById('pg:frm:country').value = country.long_name ;
+                                        break;
+                                    }
+                                    //postal code
+                                    if (results[0].address_components[i].types[b] == "postal_code"){
+                                        postal_code= results[0].address_components[i];
+                                        document.getElementById('pg:frm:zipCode1').value = postal_code.long_name ;
+                                        break;
+                                    }
+                                    //city
+                                    if (results[0].address_components[i].types[b] == "locality"){
+                                        locality= results[0].address_components[i];
+                                        local = locality.long_name;
+                                        document.getElementById('pg:frm:city1').value = locality.long_name ;
+                                        break;
+                                    }
+                                    if (results[0].address_components[i].types[b] == "sublocality"){
+                                        sublocality= results[0].address_components[i];
+                                        sublocal = sublocality.long_name;
+                                       // document.getElementById('').value = sublocality.long_name ;
+                                        break;
+                                    }
+                                    if (place != ''
+                                            && document.getElementById('pg:frm:BillingStreet').value == ''){
+                                        document.getElementById('pg:frm:BillingStreet').value =  place ;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(local == null)
+                            {
+                                document.getElementById('pg:frm:city1').value = sublocal;
+                            }
+                        }
+                        else{
+                            alert("No results found");
+                        }
+                    }
+                    else{
+                        alert("Geocoder failed due to: " + status);
+                    }
+                });
+            }//End Func codeLatLng
+
+            function validatephone(event)
+            {
+                var v = document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value;
+                var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+
+                if(v.length < 15){
+                    if (((event.keyCode > 95 && event.keyCode < 106)) || (((event.keyCode > 47) && (event.keyCode < 58)))){
+                        if (v.match(/^\d{2}$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        }
+                        else if (v.match(/^\d{2}\ \d{2}$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        }
+                        else if (v.match(/^\d{2}\ \d{2}\ \d{2}\$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        }
+                        else if (v.match(/^\d{2}\ \d{2}\ \d{2}\ \d{2}\$/) !== null){
+                            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                        }
+                    }
+                    else if((event.keyCode > 64) && (event.keyCode < 223) && v.length < 14){
+                        document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v.substr(0,v.length-1);
+                    }
+                }
+                else{
+                    document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v.substr(0,v.length-1);
+                }
+            }//End Func validatephone
+
+            function setAccountNameToOptyName(value) {
+                var accFeldRef = document.getElementById('pg:frm:pb:oppbs:pb2:accId');
+                accFeldRef.value  = value;
+                return false;
+            }//End Func setAccountNameToOptyName
+
+            function disableSaveButton(){
+                console.log("we are here disable==");
+                var obj2= document.getElementById('savebtbottom')
+                var obj4= document.getElementById('savequotebtbottom');
+               
+                obj2.className += ' disablesavebuttons';
+                obj2.onclick = "";
+                obj4.className += ' disablesavebuttons';
+                obj4.onclick = "";
+                return true;
+            }//End Func disableSaveButton
+            
+            function enableSaveButton(){
+                var obj2= document.getElementById('savebtbottom')
+                var obj4= document.getElementById('savequotebtbottom');
+               
+                obj2.className = obj2.className.replace(" disablesavebuttons","");
+                obj2.onclick = function(){
+                    validateAndSave();
+                    disableSaveButton();
+                    return false;                    
+                }
+                obj4.className = obj4.className.replace(" disablesavebuttons","");
+                obj4.onclick = function(){
+                    isCprQuote=true;
+                    validateAndSave();
+                    disableSaveButton();
+                    return false;                    
+                }
+                return true;
+            }//End Func enableSaveButton
+
+            // Added by Ganesh Chedella for Multi-State project to display Alert message when the partner clicks Save and Quote and does not have valid Business Registartion in the state of the Customer
+            function doesBrExistsOrValid(brParam, customerId){
+                if(brParam != null && brParam.length > 0){
+                    alert('{!$Label.Business_Registration_Invalid}');
+                    window.open('/'+customerId,'_self');
+                }
+            }
+            
+            function checkErrorMsg(){
+                if (jQuery('.message').length > 0){
+                    enableSaveButton();
+                    document.getElementById('pageErrors').scrollIntoView();
+                }
+            }
+
+        </script>
+<body class="sunpower-style container-fluid" style="margin-top: 1rem; max-width: 1200px;width:75%;margin-left:auto;margin-right:auto;">
+        <div class="detail-container">
+           <div class="row" style="margin-top:3rem;">
+            <div class="col-xs-12">
+                <div class="form-group">
+                <H2>New Account</H2>
+                </div>
+            </div>
+        </div> 
+        <div style="font-weight:100;font-size:1.35rem;">Account Information</div>
+           <div id="citySelectionDialog"><p></p></div>
+           <div id="navigateToCprDialog"><p></p></div>
+           
+            <apex:form id="frm">
+            <div class="row errorStyle" id="pageErrors">
+            <div class="col-xs-12">
+            <apex:outputPanel id="errorMessages">
+                        <apex:pageMessages ></apex:pageMessages>
+                    </apex:outputPanel>
+                    </div>
+                    </div>
+        <div class="row" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="FirstName">Customer First Name</label>
+            </div>
+            <div class="col-md-4 col-xs-12 firstNameInput">
+            <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-right:2px;padding-left:10px;" value="{!contact.FirstName}" required="true"/>
+            </div>
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="AccountRecordType">Account Record Type</label>
+            </div>
+            <div class="col-md-4 col-xs-12">
+            <label>{!recType}</label>
+            </div>
+        </div> 
+        <div class="row" style="margin-bottom:25px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="LastName">Customer Last  Name</label>
+            </div>
+            <div class="col-md-4 col-xs-12 lastNameInput">      
+                <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;" value="{!contact.LastName}"/>
+            </div>
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="OppStage">{!$Label.Stage}</label>
+            </div>
+            <div class="col-md-4 col-xs-12">      
+                <apex:outputText value="{!opp.StageName}"/>
+            </div>
+        </div> 
+        <div class="row" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="Email">{!$Label.E_mail}</label>
+            </div>
+            <div class="col-md-4 col-xs-12 emailInput">      
+                <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;" value="{!newCustomer.Email__c}" required="true"/>
+            </div>
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="Phone">{!$Label.Phone}</label>
+            </div>
+            <div class="col-md-4 col-xs-12">
+            <apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;" value="{!newCustomer.Phone}" required="true"/>
+            </div>
+        </div> 
+        <div class="row" style="margin-bottom:10px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+            <label class="labelStyle" for="Close Date">{!$Label.Close_Date}</label>
+            </div>
+            <div class="col-md-4 col-xs-8 datepicker">
+            <apex:inputField html-placeholder="MM-DD-YYYY" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;" value="{!opp.CloseDate}"/>
+            </div>
+            <div class="col-md-2 col-xs-12 labelStyle">
+            	<apex:outputLabel >Contact language</apex:outputLabel>
+            </div>    
+            <div class="col-md-4 col-xs-12">
+            	<apex:inputField style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;"  value="{!Account.Contact_Language__c}"></apex:inputField>
+            </div>
+        </div>
+        
+        <hr style="background-color:#FFDFB8;color:#FFDFB8;height:1px;border:0px;margin-top:40px;margin-bottom:40px;" />
+        <div style="font-weight:100;font-size:1.35rem;margin-bottom:30px;">Address Information</div>
+        <div class="row" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+                <label class="labelStyle" for="Location">Billing Address</label>
+            </div>    
+            <div class="col-md-4 col-xs-12">
+                <input id="searchTextField" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;" type="text" size="106" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"/>
+            </div> 
+        </div>  
+        <div class="row" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+                <label class="labelStyle" for="Street">{!$Label.Street}</label>
+            </div>  
+            <div class="col-md-4 col-xs-12">
+                <apex:inputField id="BillingStreet" value="{!newCustomer.BillingStreet}" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;background-color: #F5F5F5;padding-left:10px;" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}" required="true"></apex:inputField>
+            </div>  
+        </div>
+        <div class="row hiderow" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+                <label class="labelStyle" for="City">{!If(RIGHT(partnerAccount.Country_Domain__c,2) == 'us',$Label.City,$Label.City)}</label>
+            </div>   
+            <div class="col-md-4 col-xs-12">
+                <apex:inputField id="city1" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;" value="{!newCustomer.BillingCity}"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"></apex:inputField>
+            </div> 
+            <script>
+                document.getElementById('pg:frm:city1').disabled = true;
+            </script>
+        </div>
+        <div class="row hiderow" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+                <label class="labelStyle" for="State">{!$Label.State}</label>
+            </div>    
+            <div class="col-md-4 col-xs-12">
+                <apex:inputField id="state1" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;"  value="{!newCustomer.BillingState}"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}" required="true"></apex:inputField>
+            </div> 
+            <script>
+                document.getElementById('pg:frm:state1').disabled = true;
+            </script>
+        </div>
+        <div class="row hiderow" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+                <label class="labelStyle" for="Country">{!$Label.Country}</label>
+           </div>    
+            <div class="col-md-4 col-xs-12">
+                <apex:InputField id="country" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;" value="{!newCustomer.BillingCountry}"></apex:inputField>
+            </div> 
+            <script>
+                document.getElementById('pg:frm:country').disabled = true;
+            </script>
+        </div>
+        <div class="row hiderow" style="margin-bottom:20px;">
+            <div class="col-md-2 col-xs-12 labelDiv">
+                <label class="labelStyle" for="Postal Code">{!IF(RIGHT(partnerAccount.Country_Domain__c,2) == 'us',"Postal Code","Postal Code")}</label>
+            </div>   
+            <div class="col-md-4 col-xs-12">
+                <apex:inputField id="zipCode1" style="height: 40px;width: 90%;margin-top: -10px;border-radius: 5px;border: 0px;" value="{!newCustomer.BillingPostalCode}" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"></apex:inputField>
+            </div>  
+            <script>
+                document.getElementById('pg:frm:zipCode1').disabled = true;
+            </script>
+        </div>      
+        <div class="row" style="margin-bottom:30px;">
+            <div class="col-xs-12">
+                <div id="map-canvas" style="width:100%;height:450px;margin:5px 0 5px 5px;"></div>
+            </div>    
+        </div>       
+        <hr style="background-color:#FFDFB8;color:#FFDFB8;height:1px;border:0px;margin-top:40px;margin-bottom:40px;" />
+        <apex:inputHidden value="{!validatedAddress}" id="validatedAddress" />
+        <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="oracleCounty" />
+        <apex:InputHidden value="{!newcustomer.Lat__c}" id="lat" />
+        <apex:inputHidden value="{!newcustomer.Log__c}" id="log" />
+        <apex:InputHidden value="{!newcustomer.billinglatitude}" id="billLat" />
+        <apex:inputHidden value="{!newcustomer.billinglongitude}" id="billLong" />
+        <apex:inputHidden value="{!newcustomer.Google_Pin_Adjusted__c}" id="pinAdjusted" />
+        
+        <div class="row" style="margin-top:20px">
+                        <div class="col-md-6" id="spaceholder"> </div>
+                        <div class="col-xs-12 col-md-2">
+                            <a class="btn btn-secondary btn--small" id="cancelbutton" onclick="cancelaction();">{!$Label.Cancel}</a>
+                        </div>
+                        <div class="col-xs-12 col-md-2" id="savenquoteholder">
+                            <a class="btn btn-primary btn--small" id="savequotebtbottom" onclick="isCprQuote=true;validateAndSave();disableSaveButton();return false;" >{!$Label.Save_and_Quote}</a>
+                        </div>
+                        <div class="col-xs-12 col-md-2">
+                            <a class="btn btn-primary btn--small" id="savebtbottom" onclick="validateAndSave();disableSaveButton();return false;">{!$Label.Save}</a>
+                        </div>
+                        
+        </div>
+        <apex:pageBlock id="pb" mode="maindetail">
+            <apex:outputPanel >
+                <script type="text/javascript">
+					window.onload = function() {
+                        console.log('{!showSaveandQuoteBtn}');
+                        if({!showSaveandQuoteBtn}==false){
+                            console.log('hello onload');
+                            document.getElementById('savenquoteholder').style.display='none';
+                            document.getElementById('spaceholder').className = 'col-md-8';
+                            document.getElementById('cancelbutton').style.float='right';
+                        }
+                    };
+                    function openCprCheck(){
+                        if (isCprQuote == true ){
+                          // Commented by Ganesh Chedella as part of Multi-state project
+                          /*  if("{!newOpp.Id}" != "" ){
+                                openCprQuotePage( "{!newCustomer.Id}", "{!contact.Id}", "{!newOpp.Id}", "{!normalRedirectUrl}" );
+                            }  */
+                        }
+                        else{
+                            var normalRedirect = "{!normalRedirectUrl}";
+                            if(normalRedirect != "")
+                                currentPageRedirect(normalRedirect);
+                        }
+                    }//End Func openCprCheck
+
+                    initialize();
+                </script>
+            </apex:outputPanel>
+
+
+            <apex:actionFunction name="save" action="{!save}" reRender="errorMessages,pbbuttns,pb" oncomplete="openCprCheck();checkErrorMsg();setupListeners();"/>
+            <apex:actionFunction name="save_and_quote" action="{!saveAndQuote}" reRender="errorMessages,pbbuttns,pb" oncomplete="openCprCheck();checkErrorMsg();setupListeners();doesBrExistsOrValid('{!businessRegParameter}','{!newCustomer.Id}');"/>
+            <apex:actionFunction name="cancelaction" action="{!cancel}" oncomplete="openCprCheck();setupListeners();"/>
+           
+       </apex:pageBlock>
+    </apex:form>
+    </div>
+</body>
+    <!-- Load JS Scripts Last -->
+    <c:SPCommunityAppResources_JS />
+    <apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" /> 
+</apex:page>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Dealer_Name__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c.Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Date_Delivered__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Note_to_Dealer_Install__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Cancellation,Pending Termination,Terminated,Contract Pending</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Partner_Account__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Terminated</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$RecordType</column>
+            <operator>notEqual</operator>
+            <value>LeasePayment__c.FR_LeasePayment</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Dealer Compliance - Q1&apos;14</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Delivered__c</dateColumn>
+        <endDate>2014-06-30</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2014-04-01</startDate>
+    </timeFrameFilter>
+</Report>

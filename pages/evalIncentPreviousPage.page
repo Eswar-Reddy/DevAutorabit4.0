@@ -1,0 +1,28 @@
+<apex:page controller="evalIncentPreviousCls"><!-- tabStyle="X2010_Channel_Program__tab"-->
+    <apex:pagemessages ></apex:pagemessages>  
+  <apex:form >  
+    
+  <apex:outputPanel rendered="{!IsFrenchPortal}"> 
+    <apex:image value="{!$Resource.Program2010Message}" width="80%" height="80%"> 
+    </apex:image>
+  </apex:outputPanel>
+  
+  <apex:outputPanel rendered="{!NOT(IsFrenchPortal)}">
+  <apex:pageBlock title="{!$Label.perEvalandIncentive}">
+      
+      <apex:tabPanel switchType="server" selectedTab="incentive">
+          
+          <apex:tab label="{!$Label.Bonus}" name="incentive" id="incentiveD" rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="SPframe1" src="{!IncentDetail}"></apex:iframe>
+          </apex:tab>
+          
+          <apex:tab label="{!$Label.Requirement}" name="eval" >
+              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="SPframe" src="{!EvalPerformance}"></apex:iframe>
+          </apex:tab>         
+                    
+      </apex:tabPanel>
+      
+  </apex:pageBlock>  
+  </apex:outputPanel>  
+  </apex:form>
+</apex:page>

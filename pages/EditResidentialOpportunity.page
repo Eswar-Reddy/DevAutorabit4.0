@@ -1,0 +1,258 @@
+<apex:page standardController="Opportunity" extensions="AccountExtension" sidebar="true" id="pg" >
+
+<!--  Create Page for EU Partner User Residential Opty -->
+<link rel="stylesheet" href="{!URLFOR($Resource.jquery_ui_18, 'css/smoothness/jquery-ui-1.8.16.custom.css')}" type="text/css" media="all" />
+<script src="{!URLFOR($Resource.jquery_16min)}" type="text/javascript"></script>
+<script src="{!URLFOR($Resource.jquery_ui_18, 'js/jquery-ui-1.8.16.custom.min.js')}"></script>
+<script src="{!URLFOR($Resource.deal_registration)}" type="text/javascript"></script>
+<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet" />
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMho2gSPS8vhquCCtSKwv1p9dckBKQLQ&v=3.exp&sensor=false&libraries=places&language=en"/>
+
+<script>
+function disableSaveButton(){
+    var obj= document.getElementById('pg:frm:pb:savebttop');
+    var obj2= document.getElementById('pg:frm:pb:savebtbottom')
+    //alert(obj + ' ---  ' + obj2);
+    obj.disabled=true;
+    obj2.disabled=true;
+    obj.className = 'btnDisabled';
+    obj2.className = 'btnDisabled';
+    return true;
+}
+
+function enableSaveButton(){
+    var obj= document.getElementById('pg:frm:pb:savebttop');
+    var obj2= document.getElementById('pg:frm:pb:savebtbottom')
+    //alert(obj + ' ---  ' + obj2);
+    obj.disabled=false;
+    obj2.disabled=false;
+    obj.className = 'btn';
+    obj2.className = 'btn';
+    return true;
+}
+</script>
+<script type="text/javascript">
+    function validatephone(event)
+    {
+        var v = document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value;
+        var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+        
+        if(v.length < 15){
+            if (((event.keyCode > 95 && event.keyCode < 106)) || (((event.keyCode > 47) && (event.keyCode < 58)))){ 
+                if (v.match(/^\d{2}$/) !== null){
+                    document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                } 
+                else if (v.match(/^\d{2}\ \d{2}$/) !== null){
+                    document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                } 
+                else if (v.match(/^\d{2}\ \d{2}\ \d{2}\$/) !== null){
+                    document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                } 
+                else if (v.match(/^\d{2}\ \d{2}\ \d{2}\ \d{2}\$/) !== null){
+                    document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v + ' ';
+                }
+            }
+            else if((event.keyCode > 64) && (event.keyCode < 223) && v.length < 14){
+                document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v.substr(0,v.length-1);
+            }
+        }
+        else{
+            document.getElementById('{!$Component.pg:frm:pb:oppbs1:pbsiphone:phoneid}').value = v.substr(0,v.length-1);
+        } 
+    }//End Func validatephone
+    
+    function setAccountNameToOptyName(value) {
+        var accFeldRef = document.getElementById('pg:frm:pb:oppbs:pb2:accId');
+        accFeldRef.value  = value;
+        return false;
+    }//End Func setAccountNameToOptyName
+
+    function disableSaveButton(){
+        var obj= document.getElementById('pg:frm:pb:savebttop');
+        var obj2= document.getElementById('pg:frm:pb:savebtbottom')
+        var obj3= document.getElementById('pg:frm:pb:savequotebttop');
+        var obj4= document.getElementById('pg:frm:pb:savequotebtbottom');
+
+        obj.disabled=true;
+        obj2.disabled=true;
+        obj3.disabled=true;
+        obj4.disabled=true;
+        
+        obj.className = 'btnDisabled';
+        obj2.className = 'btnDisabled';
+        obj3.className = 'btnDisabled';
+        obj4.className = 'btnDisabled';
+        return true;
+    }//End Func disableSaveButton    
+
+    // Added by Ganesh Chedella for Multi-State project to display Alert message when the partner clicks Save and Quote and does not have valid Business Registartion in the state of the Customer 
+    function doesBrExistsOrValid(brParam, customerId){
+        if(brParam != null && brParam.length > 0){
+            alert('{!$Label.Business_Registration_Invalid}');
+            window.open('/'+customerId,'_self');
+        }
+    }   
+
+</script>
+
+<style type="text/css">
+                .labelStyle {
+                font-family: 'Arial','Verdana',sans-serif;
+                font-size: 10px;
+                font-weight: bold;
+                
+                }
+  </style>   
+   <apex:sectionHeader title="{!$Label.Opportunity} {!$Label.Edit}" subtitle="{!opp.name}"/>
+   <div id="citySelectionDialog"><p></p></div>
+    <apex:form id="frm">
+        <apex:pageBlock id="pb" mode="edit">
+        <apex:outputPanel id="errorMessages">
+           <apex:pageMessages ></apex:pageMessages>
+        </apex:outputPanel>
+        
+           
+   
+    <apex:actionFunction name="save" action="{!save}" reRender="errorMessages,pbbuttns,pb" oncomplete="setupListeners();"/>            
+     <apex:outputPanel id="Buttons">
+            <center>
+                <apex:commandButton id="savebttop" value="{!$Label.Save}" onclick="validateAndSave();disableSaveButton();return false;" 
+                oncomplete="setupListeners();" reRender="errorMessages,Buttons,Buttons2,pb" />
+                <apex:commandButton value="{!$Label.Cancel}" action="{!cancel}" immediate="true"  />    
+            </center>
+
+            </apex:outputPanel>
+         
+            <!-- Case I : Create Opty, Account and Contact Case START -->
+        <apex:pageBlockSection showHeader="true" id="oppbs1" title="{!$Label.Opportunity_Details}" rendered="{!isEdit != 'Y'}" >
+   
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Opportunity_Name}" styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Name}" required="true"  />
+                </apex:pageBlockSectionItem>  
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Stage}" styleClass="labelStyle" />
+                    <apex:inputField value="{!opp.StageName}" required="true"/>
+                </apex:pageBlockSectionItem> 
+
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$Label.Close_Date}" styleClass="labelStyle"/>
+                 <apex:inputField value="{!opp.CloseDate}" required="true" />
+                </apex:pageBlockSectionItem> 
+
+                
+          </apex:pageBlockSection>    
+
+        <apex:pageBlockSection showHeader="true" id="opctpbs1" title="{!$Label.Opportunity_Contact_Information}" rendered="{!isEdit != 'Y'}" >
+           <apex:pageBlockSectionItem >               
+                <apex:outputLabel value="{!$Label.E_mail}" styleClass="labelStyle" /> 
+                <apex:inputField value="{!newCustomer.Email__c}"            
+                    required="{!RIGHT(partnerAccount.Country_Domain__c,2) == 'us'}" />
+            </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.Best_Time_To_Call}"  styleClass="labelStyle"/>   
+                    <apex:inputField value="{!opp.Best_Time_To_Call__c}" />
+                </apex:pageBlockSectionItem>
+                   <apex:pageBlockSectionItem rendered="{!if(RIGHT(partnerUser.Contact.Account.Country_Domain__c,2)=='be', true, false)}">
+                    <apex:outputText >{!$Label.Contact_Language}</apex:outputText>
+                    <apex:selectList value="{!contact.Contact_Language__c}" size="1" >
+                    <apex:selectoption itemValue="Dutch" itemLabel="Dutch" />
+                    <apex:selectoption itemValue="French" itemLabel="French" />
+                    </apex:selectList> 
+                    </apex:pageBlockSectionItem>                               
+           <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="{!$Label.Phone}" styleClass="labelStyle" />   
+                 <apex:inputField value="{!newCustomer.Phone}"/>
+            </apex:pageBlockSectionItem> 
+            <!-- Start Case 00100955 -->
+            <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="{!$ObjectType.Contact.fields.mobilePhone.label}" styleClass="labelStyle" />   
+                 <apex:inputField value="{!contact.mobilePhone}"/>          
+            </apex:pageBlockSectionItem>
+            <!-- End Case 00100955 -->
+         </apex:pageBlockSection>          
+            <apex:pageBlockSection showHeader="true" title="{!$Label.Address_Information}" id="addpbs1" columns="1">    
+                <apex:pageBlockSectionItem id="pbsi11">
+                    <apex:InputHidden value="{!newcustomer.Lat__c}" id="lat" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="pbsi12">
+                    <apex:inputHidden value="{!newcustomer.Log__c}" id="log" />
+                </apex:pageBlockSectionItem>
+
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <apex:pageBlockSection id="addpbs2"  columns="1">
+                    <apex:inputHidden />
+                    <apex:pageBlockSectionItem id="pbsi2">
+                        <apex:outputLabel value="{!$Label.Street}" styleClass="labelStyle" />
+                        <!-- textarea rows="4" cols="50" id="BillingStreet" value="{!newCustomer.BillingStreet}" / --> 
+                        <apex:inputField value="{!newCustomer.BillingStreet}" id="BillingStreet" style="font-family: 'MS Shell Dlg';font-size:13.3333px;width:150px" required="true" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"></apex:inputField>  
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi1">
+                         <apex:outputLabel value="{!If(RIGHT(partnerAccount.Country_Domain__c,2) == 'us',$Label.City,$Label.City)}" styleClass="labelStyle"/>   
+                        <apex:inputField value="{!newCustomer.BillingCity}" required="true" id="city1"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"/> 
+                    </apex:pageBlockSectionItem> 
+            
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi10">
+                        <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="county" /> 
+                    </apex:pageBlockSectionItem>
+         
+                    <apex:inputHidden />
+
+                    <apex:pageBlockSectionItem id="pbsi3">
+                        <apex:outputLabel value="{!$Label.State}" styleClass="labelStyle" /> 
+                        <apex:inputField value="{!newCustomer.BillingState}" required="{!RIGHT(partnerAccount.Country_Domain__c,2) == 'us'}" id="state1"  onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"/>
+                    </apex:pageBlockSectionItem>
+                 
+                    <apex:inputHidden />
+            
+                    <apex:pageBlockSectionItem id="pbsi">
+                        <apex:outputLabel value="{!$Label.Country}" styleClass="labelStyle" /> 
+                        <apex:inputField value="{!newCustomer.BillingCountry}" required="true" id="country1"/>
+                    </apex:pageBlockSectionItem>
+            
+                    <apex:inputHidden />
+                     
+                    <apex:pageBlockSectionItem id="pbsi4">
+                        <apex:outputLabel value="{!IF(RIGHT(partnerAccount.Country_Domain__c,2) == 'us',"Postal Code","Postal Code")}" styleClass="labelStyle" /> 
+                        <apex:inputField value="{!newCustomer.BillingPostalCode}" required="true" id="zipCode1" onkeydown="if(event.keyCode==13){this.blur();actionFunction();}"/> 
+                    </apex:pageBlockSectionItem>
+          
+                    <apex:inputHidden />       
+                    <apex:inputHidden />
+                    <apex:inputHidden />
+                    
+                    <apex:inputHidden value="{!validatedAddress}" id="validatedAddress" />
+                    <apex:inputHidden value="{!newCustomer.Oracle_County__c}" id="oracleCounty" />
+                    
+                    <apex:inputHidden />
+
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>         
+        <div style="padding-top:75px">    
+           <apex:outputPanel id="Buttons2">
+            <center>
+                <apex:commandButton id="savebtbottom" value="{!$Label.Save}" onclick="validateAndSave();disableSaveButton();return false;"
+                    oncomplete="setupListeners();" reRender="errorMessages,Buttons,Buttons2,pb" />
+                <apex:commandButton value="{!$Label.Cancel}" action="{!cancel}" immediate="true"  />    
+            </center>
+
+            </apex:outputPanel>
+       </div>   
+       </apex:pageBlock>
+      
+       
+    </apex:form>
+    
+    
+</apex:page>

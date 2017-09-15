@@ -1,0 +1,16 @@
+<messaging:emailTemplate subject="{!$Label.TemplateSubjectNewPwd}" recipientType="Contact" relatedToType="User" language="{!relatedTo.languageLocaleKey}">
+<messaging:HTMLEmailBody >
+{!$Label.TemplateTextDear}<!-- SunPower Portal User--> &nbsp;{!$Label.TemplateTextPartner},
+<!--<apex:outputLabel value="{!IF(recipient.Partner_Portal_User__r.languageLocaleKey=='de', recipient.LastName, recipient.FirstName)}" rendered="{!IF(recipient.Partner_Portal_User__r.languageLocaleKey=='fr',false, true)}"/>-->
+<br/><br/>
+<apex:outputLabel escape="false" value="{!$Label.TemplateResetPwdText}" />
+<br/><br/>
+{!$Label.TemplateTextThanks}<br/>
+{!$Label.TemplateTextThanksByDetail}<br/>
+<apex:OutputLink value="https://www.sunpowerpartnerconnect.com/">www.sunpowerpartnerconnect.com</apex:OutputLink>
+
+<!--
+<apex:outputLabel value="{!$Label.TemplateTextPortalURL}" rendered="{!IF(RIGHT(recipient.Account.Country_Domain__c, 2)!='be',true, false)}"/>
+<apex:outputLabel value="http://www.sunpowerportal.com" rendered="{!IF(RIGHT(recipient.Account.Country_Domain__c, 2)=='be',true, false)}"/>-->
+</messaging:HTMLEmailBody>
+</messaging:emailTemplate>

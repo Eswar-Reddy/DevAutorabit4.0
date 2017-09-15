@@ -1,0 +1,56 @@
+<!--cdevarapalli -- SPD Communications -- page to display desgin and accept response from Customer-->
+<apex:page controller="homewonerdesignController" showHeader="false" sidebar="false" action="{!authenticateOpportunityID}">
+<!--<apex:page controller="homewonerdesignController" showHeader="false" sidebar="false">-->
+    <apex:pageMessages />
+    <apex:outputPanel id="crPanel" rendered="{!showcrPanel}">
+        <apex:form >
+            <apex:pageBlock id="crBlock" title="Opportunity {!oppty.Name}" mode="edit" rendered="{! !crcaptured}">
+            
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton action="{!saveOppty}" value="Save" />
+                </apex:pageBlockButtons>
+                
+                <apex:pageBlockSection id="pbS" columns="1" title="Customer Response" >
+                    <apex:outputField value="{!opdesign.Design_Photo__c}"/>
+           
+                    <apex:actionRegion >
+                        <apex:pageBlockSection columns="1" >
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Agree with the Design?</apex:outputLabel>
+                                <apex:selectList id="chooseOption" value="{!string}" size="1" onchange="responseSelect();">
+                                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                </apex:selectList>
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                        <apex:actionFunction name="responseSelect" action="{!responseToggle}" reRender="cP"/>
+                    </apex:actionRegion>
+                    
+        <apex:pageblockSection id="cP">
+            <apex:pageBlockSectionItem rendered="{!displayComments}">
+                <apex:outputLabel >Customer Response Comments</apex:outputLabel>
+                <apex:inputField value="{!opdesign.Customer_Response_Comments__c}" style="width:150%;" required="true"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageblockSection>
+      </apex:pageBlockSection>
+      
+    </apex:pageBlock>
+    
+  </apex:form>
+  
+  <apex:pageBlock title="Opportunity {!oppty.Name}" rendered="{!crcaptured}" >
+      <apex:pageBlockSection columns="1" title="Customer Response" collapsible="false" >
+          Response received and saved. Thank you!
+      </apex:pageblockSection>
+  </apex:pageBlock>
+  
+  </apex:outputPanel>
+  
+  <apex:outputPanel id="statusPanel" rendered="{!showStatusPanel}" > 
+      <apex:pageBlock title="Opportunity {!oppty.Name}">
+          <div style="color:red;font:bold; font-size:150%;">
+          <h3>{!opportunityStatus}</h3>
+          </div>
+      </apex:pageBlock>
+  </apex:outputPanel>
+</apex:page>

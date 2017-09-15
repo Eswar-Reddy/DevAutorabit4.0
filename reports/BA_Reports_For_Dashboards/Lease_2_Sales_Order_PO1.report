@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c.Lease__c</field>
+    </columns>
+    <columns>
+        <field>CUST_ID</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Dealer_Fee_PO__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Origination_Inv_Amount__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Install_Inv_Amount__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Intrcnct_Inv_Amount__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c.Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled with RMA,Cancelled,Expired,Duplicate,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination,Disposed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.SPEB_SO__c</column>
+            <operator>notEqual</operator>
+            <value>Lease 1.0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Lease__c</column>
+            <operator>notContain</operator>
+            <value>001</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_NAME</column>
+            <operator>notContain</operator>
+            <value>test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_RECORDTYPE</column>
+            <operator>equals</operator>
+            <value>LeasePayment__c.Loan,LeasePayment__c.New_RecordType</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Lease 2 Sales Order_PO</name>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$LeasePayment__c@LeasePayment__c.Partner_Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>DUE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

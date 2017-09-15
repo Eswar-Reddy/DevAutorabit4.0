@@ -1,0 +1,76 @@
+<apex:page Controller="RenderAsPDf" renderAs="pdf" applyBodyTag="false">
+    <head>
+        <style> 
+            body { font-family: 'Arial Unicode MS'; }
+           
+            hr {
+border: 0;
+width: 100%;
+color: #9cbccd;
+background-color: #9cbccd;
+height: 10px;
+}
+
+#bottom{
+position:fixed; 
+width:100%; 
+bottom:0px;
+text-align: center;
+
+}
+
+#bottom h3 {
+  color: #5e6367;
+  font-size: 10px;
+}
+#j1 {
+Text-align: jusitfy;
+}
+#j2 {
+Text-align: jusitfy;
+}
+        </style>
+    </head>
+    
+    
+    <body width="100%">
+ <apex:image id="sunPowerLogo" value="{!$Resource.InspectionViewerSunpowerFinal}" width="450px" height="50px"/>
+ <br/><br/>
+<!--<apex:image id="bluelebel" value="{!$Resource.blueLebelForPDF}" width="100%" height="20"/>-->
+<hr/>
+    <br/>
+<div id="j1">
+ Thank you for submitting your request for SunPower to inspect the solar
+ system being installed at the following location:<br/><br/><br/>
+</div>
+
+<apex:outputText value="{!showAddress}" escape="false"/>
+<br/><br/>
+<div id ="j2">
+This e-mail is to notify you that SunPower Capital, LLC officially waives its
+right to inspect this installation, so you may proceed with the next steps in
+the process (This notice should not be considered a notice to proceed 
+or interconnect), as outlined in your Dealer Participation Agreement. 
+This waiver however, does not relieve you of any other obligations as specified 
+in your Dealer Participation Agreement, nor does SunPower waive any
+other rights as specified therein.<br/><br/><br/>
+</div>
+Thank you,<br/>
+SunPower Financing<br/>
+PO BOX 82387, Austin, TX 78708-2387 <br/>
+Office 1-800-7867693 <br/>
+Fax 1-512-6840288 <br/>
+<apex:outputlink value="sunpowerfinancing@sunpower.com">sunpowerfinancing@sunpower.com</apex:outputlink>
+<br/>
+<!--<div id="bottom" style="position:fixed; width:100%; bottom:0px; ">-->
+<div id="bottom">
+<!--<apex:image id="bluelebel" value="{!$Resource.blueLebelForPDF}" width="100%" height="20"/>-->
+<hr/>
+<!--<apex:image id="copyright" value="{!$Resource.CopyRightTextSunPower}" width="100%" height="50"/>  <br/>-->
+<!--<apex:image id="bluelebel" value="{!$Resource.blueLebelForPDF}" width="100%" height="20"/>-->
+<h3>©2016 SunPower Corporation. All Rights Reserved. 77 Rio Robles,San Jose,California 95134 <br/>
+SUNPOWER and the SUNPOWER logo are registered trademarks of SunPower Corporation in the U.S. and other countries.</h3>
+<hr/>
+  </div>     
+    </body>
+</apex:page>

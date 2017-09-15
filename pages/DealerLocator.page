@@ -1,0 +1,69 @@
+<apex:page controller="DealerLocator2Controller" sidebar="false" showHeader="false" standardStylesheets="true">
+    <apex:form >
+   
+     <apex:pageBlock title="Test Dealer Locator" mode="edit">     
+        <apex:pageBlockSection id="dealersearchtest" columns="1" collapsible="false">  
+                                    
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputText value="Business Unit(Commercial OR Residential) "/>
+                                        <apex:inputText value="{!BusinessUnit}" required="true"></apex:inputText>
+                                    </apex:pageBlockSectionItem>
+ 
+                                    <apex:pageBlockSectionItem >
+                                        <apex:outputText value="PostalCode"/>
+                                        <apex:inputText value="{!postalCode}" ></apex:inputText>
+                                    </apex:pageBlockSectionItem> 
+
+ 
+                                    <apex:pageBlockSectionItem > 
+                                        <apex:outputText value="Lat"/>
+                                        <apex:outputText value="{!lat}"/>
+                                    </apex:pageBlockSectionItem>   
+                                    
+                                    <apex:pageBlockSectionItem > 
+                                        <apex:outputText value=""/>
+                                        <apex:outputText value=""/>
+                                    </apex:pageBlockSectionItem>   
+                                    
+                                    <apex:pageBlockSectionItem > 
+                                        <apex:outputText value="Lon"/>
+                                        <apex:outputText value="{!lon}"/>
+                                    </apex:pageBlockSectionItem>   
+
+                                    <apex:pageBlockSectionItem > 
+                                        <apex:outputText value="Count"/>
+                                        <apex:outputText value="{!dealerRows.size}"/>
+                                    </apex:pageBlockSectionItem>  
+
+                                    <apex:pageBlockSectionItem >
+                                         <apex:commandButton action="{!doGetDealers}" value="Get Dealers" id="getdealers"/>
+                                    </apex:pageBlockSectionItem>            
+
+                                     <apex:pageBlockSectionItem >
+                                         <apex:commandButton action="{!doGetAllDealers}" value="Get All Dealers" id="getAlldealers"/>
+                                    </apex:pageBlockSectionItem> 
+                                       
+            <apex:pageBlockTable value="{!dealerRows}" var="r"   rendered="{!(dealerRows.size != 0)}"  rules="rows">   
+                <apex:column headervalue="Account" ><apex:outputLink value="/{!r.AccountID}" target="_blank">{!r.AccountName}</apex:outputLink></apex:column>
+                <apex:column headervalue="Distance"><apex:outputText style="color:Red"  value="{!r.Distance }" /></apex:column>
+                <apex:column headervalue="Score"> 
+                    <apex:outputText value="{0,number,###,###,##0}">       
+                    <apex:param value="{!r.Score}"/>
+                    </apex:outputText>
+                </apex:column>
+                <apex:column headervalue="Type"><apex:outputText value="{!r.AccountType }" /></apex:column>
+                <apex:column headervalue="Phone"><apex:outputText value="{!r.AccountPhone }" /></apex:column>
+                <apex:column headervalue="Address"><apex:outputText value="{!r.AccountAddress }" /></apex:column>
+                <apex:column headervalue="Website"><apex:outputText value="{!r.AccountWebSite }" /></apex:column>
+                <apex:column headervalue="Oracle Number"><apex:outputText value="{!r.AccountOracleNumber }" /></apex:column>
+                <apex:column headervalue="Description"><apex:outputText value="{!r.AccountDescription }" /></apex:column>
+                <apex:column headervalue="Facts"><apex:outputText value="{!r.AccountPartnerFacts }" /></apex:column>
+                <apex:column headervalue="Alliance Program Parnter"><apex:inputCheckbox disabled="true" value="{!r.AllianceProgramPartner }" /></apex:column>
+                <apex:column headervalue="Lead Flow Opt Out"><apex:inputCheckbox disabled="true" value="{!r.LeadFlowOptOut }" /></apex:column>
+            </apex:pageBlockTable>
+
+       </apex:pageBlockSection>
+    
+      </apex:pageBlock>
+    </apex:form>
+</apex:page>

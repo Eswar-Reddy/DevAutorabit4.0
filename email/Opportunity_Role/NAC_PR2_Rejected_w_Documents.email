@@ -1,0 +1,111 @@
+<messaging:emailTemplate subject="Rejected (PR2) - {!relatedTo.Opp_Name__r.Name}" recipientType="User" relatedToType="Opportunity_Role__c">
+    <messaging:htmlEmailBody >
+    <html>
+        <style type="text/css">
+            body {
+                background-color: #FFFFFF;
+                //margin-left: 0px;
+                //margin-top: 0px;
+                //margin-right: 0px;
+                //margin-bottom: 0px;
+                font-family: Futura, Arial;
+                color: #555555;
+            }
+            p,
+            li,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            table {
+                margin-top: 0pt;
+            }
+            p,table{
+                font-size: 11pt;
+            }
+            a { color:#0070c0; text-decoration:none}
+            a:visited { color:#0070c0; text-decoration:none}
+            a:link { color:#0070c0; text-decoration:none}
+            a:hover { color:#0070c0; text-decoration:none}
+
+            li {
+                line-height:20px;
+                margin-bottom: 10pt;
+                display: list-item;
+                padding-bottom:5px;
+            }
+            .customtable {
+                font-size:12px;
+                text-shadow: 1px 1px 0px #fff;
+                width:90%;
+                -moz-border-radius:3px;
+                -webkit-border-radius:3px;
+                border-radius:3px;
+                -moz-box-shadow: 0 1px 2px #d1d1d1;
+                -webkit-box-shadow: 0 1px 2px #d1d1d1;
+                box-shadow: 0 1px 2px #d1d1d1;
+            }
+            .customtable th {
+                padding:6px 10px 6px 10px;
+                border-top:1px solid #fafafa;
+                border-bottom:1px solid #e0e0e0;
+                background: #ededed;
+                background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+                background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+                text-align:center;
+            }
+            .customtable tr {
+                text-align: center;
+            }
+        
+        </style>
+        
+        <body>
+            <table id="topTable" width="100%" cellpadding="0" cellspacing="0" >
+                <tr valign="middle" >
+                    <td  style=" vertical-align:middle; height:60; text-align:left; background-color:#FFFFFF; bLabel:header; bEditID:r1st1;">
+                        <img style="margin-left:0px;" id="r1sp1" bLabel="headerImage" border="0" bEditID="r1sp1" src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000000h4rS&oid=00D80000000ZF1L" />
+                    </td>
+                </tr>
+            </table>
+            <hr size="1" color="#5496CC"/>
+            <br/>
+            
+            <p>
+                <h5>
+                    The following {!relatedTo.RecordType.Name} request is now Rejected (PR2).
+                </h5>
+            </p>
+            <p>
+                Record Details:
+                <ul>
+                    <li>Opportunity Role: <apex:outputlink styleClass="a" value="{!LEFT($Api.Partner_Server_URL_290,FIND('.com',$Api.Partner_Server_URL_290)+4) + relatedTo.Id}"> {!relatedTo.Name}</apex:outputlink></li>
+                    <li>Opportunity: <apex:outputlink styleClass="a" value="{!LEFT($Api.Partner_Server_URL_290,FIND('.com',$Api.Partner_Server_URL_290)+4) + relatedTo.Opp_Name__c}"> {!relatedTo.Opp_Name__r.Name}</apex:outputlink></li>
+                    <li>Account: <apex:outputlink styleClass="a" value="{!LEFT($Api.Partner_Server_URL_290,FIND('.com',$Api.Partner_Server_URL_290)+4) + relatedTo.Account__c}"> {!relatedTo.Account__r.Name}</apex:outputlink></li>
+                </ul>
+            </p>
+            
+            <p>
+                Click<apex:outputlink styleClass="a" value="{!LEFT($Api.Partner_Server_URL_290,FIND('.com',$Api.Partner_Server_URL_290)+4) + 'apex/OppRoleDocumentUpload?id=' + relatedTo.Id}"> here </apex:outputlink>
+                to view the following documents.
+                <table class="customtable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                    </tr>
+                    <apex:repeat var="doc" value="{!relatedTo.UC_Documents__r}">
+                      <apex:outputPanel rendered="{! IF(doc.Document_Status__c != 'Not Submitted', true, false)}">    
+                        <tr>
+                            <td>{!doc.Name}</td>
+                            <td>{!doc.Document_Type__c}</td>
+                        </tr>
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </table>
+            </p>
+        </body>
+    </html>
+
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

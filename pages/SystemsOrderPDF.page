@@ -1,0 +1,258 @@
+<!--
+* SystemsOrderPDF - PDF output page for cash based ordering system 
+* Created per request of Pivitol Tracker ID #114754041 - Print Order - 3/18/16
+* Pivotal Tracker Updates:
+* ID #114921295 - Remove Shipping Method Selection - WW32
+* 
+* 
+* 
+* 
+* 
+* 
+-->
+
+<apex:page standardController="Purchase_Order__c" extensions="OrderAppController" showHeader="false" sideBar="false" cache="true" renderAs="pdf"  label="Order Details" docType="html-5.0" applyHtmlTag="false">
+<html>
+    <head>
+
+    <!--This page was created per specification of Pivitol Tracker ID# ##114754041 --> 
+        <link class="user" href="/sCSS/25.0/sprites/1344358478000/Theme3/default/gc/elements.css" rel="stylesheet" type="text/css"/>
+        <link class="user" href="/sCSS/25.0/sprites/1344358478000/Theme3/default/gc/common.css" rel="stylesheet" type="text/css"/>
+        <link class="user" href="/sCSS/25.0/sprites/1343420890000/Theme3/gc/dStandard.css" rel="stylesheet" type="text/css"/>
+        <link class="user" href="/sCSS/25.0/sprites/1344358478000/Theme3/default/gc/extended.css" rel="stylesheet" type="text/css"/>
+
+        <style type="text/css">  
+            @page {
+
+                @top-center {
+                    content: element(header);
+                }
+
+                @bottom-left {
+                    content: element(footer);
+                }
+
+                margin-top: 80px;
+                margin-bottom: 80px;
+            }
+
+            div.header {
+                padding: 10px;
+                position: running(header);
+            }
+
+            div.footer {
+                display: block;
+                padding: 5px;
+                position: running(footer);
+            }
+
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            body {           
+                font-size:10px;
+                font-family: 'Arial Unicode MS';
+            }
+
+            .customtable {
+                border: 1px solid black; 
+                padding: 4px;
+                word-wrap: break-word;
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            .headerCenter {
+                text-align: center;
+            }
+
+        </style> 
+    </head>
+
+    <div class="header">
+        <table border="0" style="width: 100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <span style="font-weight: bold; font-size: 24px; white-space: nowrap;">
+                            {!$Label.POWizardPurchaseOrderTitle}
+                        </span>
+                    </td>
+                    <td class="col-plain-center"></td>
+                    <td>
+                        <div>
+                            <apex:image value="{!$Resource.SP_2014_logo}" height="32px" width="288px" style="float: right"/>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <table border="0" style="width: 100%" cellspacing="0" cellpadding="0">
+            <tbody>
+                <tr>
+                    <td>
+                        <span style="font-size: 07pt">
+                        Page<span class="pagenumber" /> of <span class="pagecount" /></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <apex:pageBlock >
+        <apex:pageBlockSection title="{!$Label.Order_Information}">
+            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="accName">
+                    {!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}
+                </apex:outputLabel>
+                <apex:outputText id="accName" value="{!currentUser.Contact.Account.Name}" />
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="poName">
+                    {!$ObjectType.Purchase_Order__c.Fields.Name.Label}
+                </apex:outputLabel>
+                <apex:outputlabel id="poName" value="{!purchaseOrder.Name}" />
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="custOpp">
+                    {!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}
+                </apex:outputLabel>
+                <apex:outputText value="{!opp.Name}" id="custOpp" />
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="sysSize">
+                    {!$ObjectType.Purchase_Order__c.Fields.System_Size__c.Label}
+                </apex:outputLabel>
+                <apex:outputLabel id="sysSize">
+                    {!purchaseOrder.System_Size__c}
+                </apex:outputLabel>
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Order_Total__c.Label}</apex:outputLabel> 
+                <apex:outputlabel id="purchaseOrderTotal" value="{!totalPriceFormatted} ({!currentUser.CurrencyISOCode})" />
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >
+                    {!$ObjectType.Purchase_Order__c.Fields.Is_Taxible_Order__c.Label}
+                </apex:outputLabel>
+                <apex:outputField value="{!purchaseOrder.Is_Taxible_Order__c}"/>
+            </apex:pageBlockSectionItem>
+           
+        </apex:pageBlockSection>
+        <br/>
+
+        <apex:pageBlockSection title="{!$Label.POWizardShippingInfoTitle}">
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="shipToCon">
+                    {!$ObjectType.Purchase_Order__c.Fields.Ship_To_Contact__c.Label}
+                </apex:outputLabel>            
+                <apex:outputlabel id="shipToCon" value="{!shipContact.Name}"/>
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="stsAddress" >{!$Label.POWizardShipToAddress}</apex:outputLabel>
+                <apex:outputLabel id="stsAddress">{!sts.Address__c}</apex:outputLabel>
+            </apex:pageBlockSectionItem>
+            <br/>
+
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel for="reqDate">
+                    {!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}
+                </apex:outputLabel>
+                <apex:outputText id="reqDate" value=" {0,date,dd-MMM-yyyy}">
+                    <apex:param value="{!purchaseOrder.Requested_Delivery_Date__c}" />
+                </apex:outputText>
+            </apex:pageBlockSectionItem>
+            <br/>
+            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >
+                    {!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}
+                </apex:outputLabel>
+                <apex:outputLabel >
+                    {!purchaseOrder.Special_Instructions__c}
+                </apex:outputLabel>
+            </apex:pageBlockSectionItem>
+
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection title="{!$Label.POWizardBillingInfoTitle}" >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >
+                    {!$Label.POWizardBillToAddress}
+                </apex:outputLabel>
+                <apex:outputLabel >
+                    {!bts.Address1__c}
+                </apex:outputLabel>
+            </apex:pageBlockSectionItem>            
+        </apex:pageBlockSection>            
+
+        <apex:pageBlockSection title="{!$Label.POWizardLineItemsHeading}" columns="1">
+            <apex:datatable value="{!returnLines}" var="line" id="thetable" columns="6" cellpadding=".10em" styleClass="customtable" rules="rows" rowClasses="customtable" columnClasses="customtable" border="2px;" frame="border" headerClass="headerCenter">
+                <apex:column width="40%" >
+                    <apex:facet name="header">{!$Label.Description}</apex:facet>
+                    <apex:outputText value="{!line.item_description}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">{!$Label.PAS_Item}</apex:facet>
+                    <apex:outputText value="{!line.ordered_item}"/>
+                </apex:column>
+                <apex:column style="text-align: center;">
+                    <apex:facet name="header">{!$Label.POWizardQuantityHeading}</apex:facet>
+                    <apex:outputText value="{!line.ordered_quantity}" />
+                </apex:column>
+                <apex:column style="text-align: right;">
+                    <apex:facet name="header">{!$Label.POWizardUnitPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                    <apex:outputText value="{!line.unit_priceFORMATTED}" />
+                </apex:column>
+                <apex:column style="text-align: right;">
+                    <apex:facet name="header">{!$Label.POWizardExtendedPriceHeading} ({!currentUser.CurrencyISOCode})</apex:facet>
+                    <apex:outputText value="{!line.extended_priceFORMATTED}" />
+                </apex:column>
+                <apex:column style="text-align: center;">
+                    <apex:facet name="header">Line Type</apex:facet>
+                    <apex:outputText value="{!line.product_line_type}"/>
+                </apex:column>
+            </apex:datatable>
+            <br/>
+
+            <div>
+                <apex:outputText style="font-weight: bold;" value="Total Price: {!totalPriceFormatted} ({!currentUser.CurrencyISOCode})"/>
+            </div>
+            <br/>
+            <div>
+                <em><apex:outputText style="font-size: 07pt;" value="{!$Label.Pricing_API_Disclaimer}" /></em>
+            </div>
+
+            <br/>
+
+            <apex:outputText value=" Generated on {!Now()}" style="float: right;" />
+        </apex:pageBlockSection>
+                    
+    </apex:pageBlock>
+</html>           
+</apex:page>

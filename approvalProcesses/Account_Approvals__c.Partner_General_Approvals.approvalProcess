@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <allowedSubmitters>
+        <submitter>SunpowerCorporation</submitter>
+        <type>roleSubordinatesInternal</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Approval_Step__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>ASM_Approval_Date</name>
+                <type>FieldUpdate</type>
+            </action>
+            <action>
+                <name>Status_Pending_Final_Approval</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>ASM__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>ASM Dealer Opt In</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account_Approvals__c.Approval_Request__c</field>
+                <operation>equals</operation>
+                <value>Dealer Locator Opt In</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>ASM Dealer Opt In</label>
+        <name>ASM_Dealer_Opt_In</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>Marketing_Approval_Date</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>ma.angela.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mina.faminialagao@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Marketing: Dealer Opt In</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account_Approvals__c.Approval_Request__c</field>
+                <operation>equals</operation>
+                <value>Dealer Locator Opt In</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Marketing: Dealer Opt In</label>
+        <name>Marketing_Dealer_Opt_In</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>ASM_Approval_Date</name>
+                <type>FieldUpdate</type>
+            </action>
+            <action>
+                <name>Status_Pending_Final_Approval</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>ASM__c</name>
+                <type>relatedUserField</type>
+            </approver>
+            <whenMultipleApprovers>Unanimous</whenMultipleApprovers>
+        </assignedApprover>
+        <description>ASM Dealer Opt Out</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account_Approvals__c.Approval_Request__c</field>
+                <operation>equals</operation>
+                <value>Dealer Locator Opt Out</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>ASM Dealer Opt Out</label>
+        <name>ASM_Dealer_Opt_Out</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>Marketing_Approval_Date</name>
+                <type>FieldUpdate</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>ma.angela.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>ma.angela.lee@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mina.faminialagao@sunpowercorp.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Marketing: Dealer Opt Out</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account_Approvals__c.Approval_Request__c</field>
+                <operation>equals</operation>
+                <value>Dealer Locator Opt Out</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Marketing: Dealer Opt Out</label>
+        <name>Marketing_Dealer_Opt_Out</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 1</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 1</label>
+        <name>Placeholder_1</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 2</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 2</label>
+        <name>Placeholder_2</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 3</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 3</label>
+        <name>Placeholder_3</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 4</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>equals</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 4</label>
+        <name>Placeholder_4</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 5</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 5</label>
+        <name>Placeholder_5</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 6</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 10,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 6</label>
+        <name>Placeholder_6</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 7</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 7</label>
+        <name>Placeholder_7</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 8</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 8</label>
+        <name>Placeholder_8</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 9</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 9</label>
+        <name>Placeholder_9</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 10</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 10</label>
+        <name>Placeholder_10</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 11</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 1,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Placeholder 11</label>
+        <name>Placeholder_11</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>ragutierrez@sunpower.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Placeholder 12</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Account.Credit_Limit__c</field>
+                <operation>greaterThan</operation>
+                <value>&quot;USD 100,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000&quot;</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Placeholder 12</label>
+        <name>Placeholder_12</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Partner General Approvals</description>
+    <emailTemplate>Account/Account_Approval_Submission_Request</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Account_Approvals__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Partner General Approvals</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account_Approvals__c.Approval_Step__c</field>
+            <operation>notEqual</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account_Approvals__c.Approval_Request__c</field>
+            <operation>equals</operation>
+            <value>Dealer Locator Opt Out,Dealer Locator Opt In</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Dealer_Suspended_Approval_Notification</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Status_Approved</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Dealer_Suspended_Rejected_Lease_Routing_Suspension</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Status_Rejected</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Account_Approval_Submission_Request</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Status_Submitted</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Partner General Approvals</label>
+    <recallActions>
+        <action>
+            <name>Dealer_Suspended_Recalled_Lease_Routing_Suspension</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Status_Recalled</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

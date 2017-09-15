@@ -1,0 +1,333 @@
+<apex:page standardController="Account" extensions="partner360Controller">
+
+    <style type="text/css">
+    
+        .listHoverLinks {
+            font-size: 90%;
+            text-align: center;
+            display: block;
+            line-height: 1.5em;
+            margin: 5px 6px 15px;
+        }
+        
+        .listHoverLinks .linklet {
+            padding-top: 3px;
+            padding-right: 0;
+            padding-bottom: 6px;
+            padding-left: 4px;
+            position: relative;
+            white-space: nowrap;
+            text-decoration: none;
+            border: none;
+        }
+        
+        .listHoverLinks .linklet .listTitle {
+            text-decoration: underline;
+            white-space: nowrap;
+            padding: 3px 6px 6px 3px;
+        }
+
+        a {
+            color: #333435;
+        }
+
+    </style>
+    
+    
+    <apex:pageBlock title="{!Account.Name}">
+        
+        <div class="listHoverLinks" style="visibility: visible;">
+        <a class="linklet" href="#ActivityHistories"><span class="listTitle">Activity History</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#Cases"><span class="listTitle">Cases</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#CasesPartnerName"><span class="listTitle">Cases (Partner Name)</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#ContactRoles"><span class="listTitle">Contact Roles</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#Contacts"><span class="listTitle">Contacts</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#Contracts"><span class="listTitle">Contracts</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#OpenActivities"><span class="listTitle">Open Activities</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#OpportunitiesPartnerAccountId"><span class="listTitle">Opportunities (Partner Account Id)</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#AccountApprovals"><span class="listTitle">Account Approvals</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#Agreements"><span class="listTitle">Agreements</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#BilltoSite"><span class="listTitle">Bill to Site</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#ShippingSitesDealerAccount"><span class="listTitle">Shipping Sites (Dealer Account)</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#CoverageAreas"><span class="listTitle">Coverage Areas</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#BusinessRegistrations"><span class="listTitle">Business Registrations</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#CreditApplications"><span class="listTitle">Credit Applications</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#CSAT"><span class="listTitle">CSAT</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#LeasePaymentsPartnerAccount"><span class="listTitle">Lease Payments (Partner Account)</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#MarketingResourceCenterDetails"><span class="listTitle">Marketing Resource Center Details</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#NotesandAttachments"><span class="listTitle">Notes and Attachments</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#Orders"><span class="listTitle">Orders</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#PurchaseOrders"><span class="listTitle">Purchase Orders</span></a><span class="pipe"> | </span>
+        <a class="linklet" href="#WarrantyRegistrations"><span class="listTitle">Warranty Registrations (Partner Account)</span></a>
+        </div>
+        
+        <br/><br/>
+        
+        <apex:form >
+            <div align="center">
+                <!--<apex:commandButton value="Edit" action="{!toEditPage}"/>-->
+                <apex:commandButton style="margin-left:5px;" value="Partner Short Page" action="{!toShortDetailPage}"/>
+            </div>
+        </apex:form>
+        
+        <br/>
+        
+        <apex:pageBlockSection title="Business Account Detail" columns="2" collapsible="false">
+            <apex:outputField value="{!account.Type}"/>
+            <apex:outputField value="{!account.RecordTypeId}"/>
+            <apex:outputField value="{!account.Theater__c}"/>
+            <apex:outputField value="{!account.Dealer_Tier__c}"/><!--Dealer Tier-->
+            <apex:outputField value="{!account.NH_SSE_Type__c}"/><!--Business Function-->
+            <apex:outputField value="{!account.Country_Domain__c}"/>
+            <apex:outputField value="{!account.Specialized_Seller__c}"/>
+            <apex:outputField value="{!account.Certified__c}"/><!--Certified Installer-->
+            <apex:outputField value="{!account.Line_of_Business__c}"/>
+            <apex:outputField value="{!account.Pending_Litigation__c}"/>
+            <apex:outputField value="{!account.Specialized_Installer__c}"/>
+            <apex:outputField value="{!account.Review_Proposal_Design__c}"/>
+            <apex:outputField value="{!account.Status__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Partner Attributes" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.Name}"/>
+            <apex:outputField value="{!account.Primary_Contact__c}"/>
+            <apex:outputField value="{!account.Account_Display_Name__c}"/>
+            <apex:outputField value="{!account.Email__c}"/>
+            <apex:outputField value="{!account.terminated_icon__c}"/>
+            <apex:outputField value="{!account.Phone}"/>
+            <apex:outputField value="{!account.ParentId}"/>
+            <apex:outputField value="{!account.Fax}"/>
+            <apex:outputField value="{!account.Partner_Application__c}"/>
+            <apex:outputField value="{!account.Website}"/>
+            <apex:outputField value="{!account.Marketing_Zone__c}"/>
+            <apex:outputField value="{!account.Dealer_Locator_Phone__c}"/>
+            <apex:outputField value="{!account.Chatter_Group_Name__c}"/>
+            <apex:outputField value="{!account.CSAT_Cycle_Code__c}"/>
+            <apex:outputField value="{!account.Customer_Interface_Error__c}"/>
+            <apex:outputField value="{!account.SunPower_Dealer_WebPage_URL__c}"/>
+            <apex:outputField value="{!account.Annual_NPS_Report_Link__c}"/>
+            <apex:outputField value="{!account.Warranty_Signed_Italy__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Partner Information" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.Oracle_Account_Number__c}"/>
+            <apex:outputField value="{!account.Bank_Guarantee__c}"/>
+            <apex:outputField value="{!account.Online_Order_Access__c}"/>
+            <apex:outputField value="{!account.Completed_and_Signed_Credit_Application__c}"/>
+            <apex:outputField value="{!account.Partner_Opt_Out_Ok_To_Ship__c}"/>
+            <apex:outputField value="{!account.Review_Cycle__c}"/>
+            <apex:outputField value="{!account.Credit_Limit__c}"/>
+            <apex:outputField value="{!account.Credit_Check__c}"/>
+            <apex:outputField value="{!account.Credit_Limit_Date__c}"/>
+            <apex:outputField value="{!account.Credit_Hold__c}"/>
+            <apex:outputField value="{!account.Net_Terms__c}"/>
+            <apex:outputField value="{!account.Next_Credit_Review__c}"/>
+            <apex:outputField value="{!account.Oracle_Operating_Unit__c}"/>
+            <apex:outputField value="{!account.Business_Hours__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Partner Ownership" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.OwnerId}"/>
+            <apex:outputField value="{!account.RSM__c}"/>
+            <apex:outputField value="{!account.Primary_PSR__c}"/>
+            <apex:outputField value="{!account.CRSM__c}"/>
+            <apex:outputField value="{!account.Area_Sales_Manager__c}"/>
+            <apex:outputField value="{!account.Commercial_PSR__c}"/>
+            <apex:outputField value="{!account.Com_Opp_Recipient_Primary__c}"/>
+            <apex:outputField value="{!account.Assigned_PSR_s__c}"/>
+            <apex:outputField value="{!account.Opportunity_Recipient__c}"/>
+            <apex:outputField value="{!account.Additional_Opportunity_Email_Recipient__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Status Information" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.Signed_Agreement__c}"/>
+            <apex:outputField value="{!account.Promoted_Authorized_Partner_Date__c}"/>
+            <apex:outputField value="{!account.Signed_Authorized_SR2_Partner_Agreement__c}"/>
+            <apex:outputField value="{!account.Authorized_Partner_Date__c}"/>
+            <apex:outputField value="{!account.Signed_Non_Disclosure_Agreement__c}"/>
+            <apex:outputField value="{!account.Promoted_Premier_Date__c}"/>
+            <apex:outputField value="{!account.Resale_Certificate__c}"/>
+            <apex:outputField value="{!account.Promoted_Elite_Partner_Date__c}"/>
+            <apex:outputField value="{!account.Signed_and_Notarized_Personal_Guaranty__c}"/>
+            <apex:outputField value="{!account.Residential_Installer_since_date__c}"/>
+            <apex:outputField value="{!account.Authorized_Sunrise_2_Partner_date__c}"/>
+            <apex:outputField value="{!account.Terminated_Date__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Lease Vendor Information" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.Lease_Program_Partner__c}"/>
+            <!--apex:outputField value="{!account.Contractors_License__c}"/-->
+            <apex:outputField value="{!account.Oracle_Vendor_Number__c}"/>
+            <!--apex:outputField value="{!account.Contractors_Lic_Expiry__c}"/-->
+            <apex:outputField value="{!account.Oracle_Vendor_Site_Code__c}"/>
+            <!--apex:outputField value="{!account.Insurance_Carrier__c}"/-->
+            <apex:outputField value="{!account.Oracle_Vendor_Email__c}"/>
+            <!--apex:outputField value="{!account.General_Liability_Exp__c}"/-->
+            <apex:outputField value="{!account.Oracle_Warehouse__c}"/>
+            <!--apex:outputField value="{!account.Automotive_Exp__c}"/-->
+            <apex:outputField value="{!account.Vendor_Subordinate__c}"/>
+            <!--apex:outputField value="{!account.Workers_Comp_Exp__c}"/-->
+            <apex:outputField value="{!account.Lease_Status_Email_Opt_Out__c}"/>
+            <!--apex:outputField value="{!account.Builders_Risk_Exp__c}"/-->
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Lease Vendor Information" collapsible="false">
+            <apex:pageBlockTable value="{!brList}" var="br" columnsWidth="450px,450px,450px" width="300%">
+                <apex:column value="{!br.State__c}"/>
+                <apex:column value="{!br.License_Number__c}"/>
+                <apex:column value="{!br.Expires_On__c}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Program Participation" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.Lease2_0_Program_Partner__c}"/>
+            <apex:outputField value="{!account.Same_as_Cash_Program_Partner__c}"/>
+            <apex:outputField value="{!account.Alliance_Program_Partner__c}"/>
+            <apex:outputField value="{!account.Can_Sell_SunPower_20yr_Loan__c}"/>
+            <apex:outputField value="{!account.Ford_Program_Partner__c}"/>
+            <apex:outputField value="{!account.Admiral_Program_Partner__c}"/>
+            <apex:outputField value="{!account.Business_Function__c}"/>
+            <apex:outputField value="{!account.Admiral_Program_Type__c}"/>
+            <apex:outputField value="{!account.Oracle_Warehouse__c}"/>
+            <apex:outputField value="{!account.Referral_Program_Status__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Opportunity Information" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.Dealer_Locator_Opt_Out__c}"/>
+            <apex:outputField value="{!account.Lead_Flow_opt_out__c}"/>
+            <apex:outputField value="{!account.Allow_all_to_view_Opportunities__c}"/>
+            <apex:outputField value="{!account.RSM_Discretionary_Adj__c}"/>
+            <apex:outputField value="{!account.Executives_view_all_Opportunities__c}"/>
+            <apex:outputField value="{!account.Dealer_Score_Total__c}"/>
+            <apex:outputField value="{!account.Dealer_Score_Summary__c}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Additional Information" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.MultiQuarter_Contract_Participant__c}"/>
+            <apex:outputField value="{!account.ACBParanet_ID__c}"/>
+            <apex:outputField value="{!account.Woman_Owned_Business__c}"/>
+            <apex:outputField value="{!account.Underrepresented_Minority_Owned_Business__c}"/>
+            <apex:outputField value="{!account.Certification_number_for_woman_owned__c}"/>
+            <apex:outputField value="{!account.Certification_number_for_minority_owned__c}"/>
+            <apex:outputField value="{!account.Certifying_agency_for_woman_owned__c}"/>
+            <apex:outputField value="{!account.Certifying_agency_for_minority_owned__c}"/>
+            <apex:outputField value="{!account.MQC1_Multi_Quarter_Contract_Participant__c}"/>
+            <apex:outputField value="{!account.Monitor_Promotion_Participant__c}"/>
+            <apex:outputField value="{!account.MQC2_Multi_Quarter_Contract_Participant__c}"/>
+            
+            <apex:outputField value="{!account.Partner_Facts__c}"/>
+            <apex:outputField value="{!account.Description}"/>
+        </apex:pageBlockSection>
+        
+        <!--------------------------------------------------ADDRESS INFORMATION------------------------------------------------------->
+        <apex:pageBlockSection title="Address Information" columns="2" collapsible="false" >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Billing Address"/>
+                <apex:outputPanel >
+                <apex:outputLabel value="{!account.BillingStreet}"/><br/>
+                <apex:outputLabel value="{!account.BillingCity}, {!account.BillingState} {!account.BillingPostalCode}"/><br/>
+                <apex:outputLabel value="{!account.BillingCountry}"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Shipping Address"/>
+                <apex:outputPanel >
+                <apex:outputLabel value="{!account.ShippingStreet}"/><br/>
+                <apex:outputLabel value="{!account.ShippingCity}, {!account.ShippingState} {!account.ShippingPostalCode}"/><br/>
+                <apex:outputLabel value="{!account.ShippingCountry}"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:outputField value="{!account.Oracle_County__c}"/>
+            <apex:outputField value="{!account.Oracle_Shipping_County__c}"/>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="GeoLocation"/>
+                <apex:outputPanel >
+                <apex:outputLabel value="{!account.Geolocation__Latitude__s}{!account.Geolocation__Longitude__s}"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="System Information" columns="2" collapsible="false" >
+            <apex:outputField value="{!account.CreatedById}"/>
+            <apex:outputField value="{!account.LastModifiedById}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Manage Opportunity Access" columns="1" collapsible="false" >
+            <apex:include pageName="ManageOpportunityAccess" />
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Custom Links" columns="3" collapsible="false">
+            <apex:outputLink value="/apex/PartnerActivationChecklist?Id={!account.Id}">View Activation Checklist</apex:outputLink>
+            <apex:outputLink value="/apex/EU_PartnerActivationChecklist?Id={!account.Id}">View EU Activation Checklist</apex:outputLink>
+            <apex:outputLink value="/apex/MDTF_Account?Id={!account.Id}">View DP Fund Program Details</apex:outputLink>
+        </apex:pageBlockSection>
+        
+    </apex:pageBlock>
+
+    <a id="ActivityHistories"></a>
+    <apex:relatedList list="ActivityHistories"/>
+    
+    <a id="Cases"></a>
+    <apex:relatedList list="Cases"/>
+    
+    <a id="CasesPartnerName"></a>
+    <apex:relatedList list="Cases1__r"/>
+    
+    <a id="ContactRoles"></a>
+    <apex:relatedList list="AccountContactRoles"/>
+    
+    <a id="Contacts"></a>
+    <apex:relatedList list="Contacts"/>
+    
+    <a id="Contracts"></a>
+    <apex:relatedList list="Contracts"/>
+    
+    <a id="OpenActivities"></a>
+    <apex:relatedList list="OpenActivities"/>
+    
+    <a id="OpportunitiesPartnerAccountId"></a>
+    <apex:relatedList list="Opportunities1__r"/>
+    
+    <a id="AccountApprovals"></a>
+    <apex:relatedList list="Account_Approvals__r"/>
+    
+    <a id="Agreements"></a>
+    <apex:relatedList list="Agreements__r"/>
+    
+    <a id="BilltoSite"></a>
+    <apex:relatedList list="Bill_to_Site__r"/>
+    
+    <a id="ShippingSitesDealerAccount"></a>
+    <apex:relatedList list="Ship_to_Site__r"/>
+    
+    <a id="CoverageAreas"></a>
+    <apex:relatedList list="Coverage_Areas__r"/>
+    
+    <a id="BusinessRegistrations"></a>
+    <apex:relatedList list="Business_Registrations__r"/>
+    
+    <a id="CreditApplications"></a>
+    <apex:relatedList list="Credit_Applications__r"/>
+    
+    <a id="CSAT"></a>
+    <apex:relatedList list="CSAT__r"/>
+    
+    <a id="LeasePaymentsPartnerAccount"></a>
+    <apex:relatedList list="Leases1__r"/>
+    
+    <a id="MarketingResourceCenterDetails"></a>
+    <apex:relatedList list="SmartStore_Details__r"/>
+    
+    <a id="NotesandAttachments"></a>
+    <apex:relatedList subject="{!account}" list="CombinedAttachments" />
+    
+    <a id="Orders"></a>
+    <apex:relatedList list="Orders__r"/>
+    
+    <a id="PurchaseOrders"></a>
+    <apex:relatedList list="Purchase_Orders__r"/>
+    
+    <a id="WarrantyRegistrations"></a>
+    <apex:relatedList list="Warranty_Registrations__r"/>
+    
+</apex:page>

@@ -1,0 +1,313 @@
+<apex:page standardController="Site_Information_Form__c" extensions="HelixDesignRequestController,HelixDesignRequestUtilities" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <apex:stylesheet value="{!$Resource.StyleguideExpansion_CSS}" />
+
+    <style type="text/css">
+        
+        .sunpower-style .btn.disabled, 
+        .sunpower-style .btn:disabled {
+            pointer-events: none !important;
+        }
+
+    </style>
+
+    
+    <div class="sunpower-style container" style="width: 90%; margin-left: auto; margin-right: auto;">
+        <apex:form >
+        
+            <!--header-->
+            <div class="topper"></div>
+
+            <div class="row" style="margin-bottom: .5rem;">
+                <div class="col-xs-12">
+                    <div class="sunpower-logo-black"></div>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <h3>Helix Design Request</h3>               
+            </div>
+            <!--end header-->
+
+            <div style="width: 90%; margin-left: auto; margin-right: auto;">
+
+                <apex:outputPanel rendered="{! !lockInputs}">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="hide-mobile show-desktop" style="width: 100%;">
+                            <ol class="progress">
+                                <li class="progress-done" style="cursor: pointer;" onclick="toggleSpinner(true, false); navigateFunction('1');">General Information</li>
+                                <li class="progress-done" style="cursor: pointer;" onclick="toggleSpinner(true, false); navigateFunction('2');" >Product Information</li>
+                                <li class="progress-active" >Notes and Attachments</li>
+                                <li class="progress-todo" style="cursor: pointer;" onclick="toggleSpinner(true, false); navForward()">Submit&nbsp;&nbsp;&nbsp;</li>
+                            </ol>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel rendered="{!lockInputs}">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="hide-mobile show-desktop" style="width: 100%;">
+                            <ol class="progress">
+                                <li class="progress-done" style="cursor:pointer" onclick="toggleSpinner(true, false); navigateFunction('1');">General Information</li>
+                                <li class="progress-done" style="cursor:pointer" onclick="toggleSpinner(true, false); navigateFunction('2');">Product Information</li>
+                                <li class="progress-done" style="cursor:pointer" >Notes and Attachments</li>
+                                <li class="progress-done" style="cursor:pointer" onclick="toggleSpinner(true, false); navigateFunction('4');">Submit&nbsp;&nbsp;&nbsp;</li>
+                            </ol>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:actionFunction name="navigateFunction" action="{!navigate}" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()">
+                    <apex:param name="pageNumber" assignTo="{!pageNo}" value="" />
+                </apex:actionFunction>
+                <apex:actionFunction name="navForward" action="{!toDisclaimer}" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" />
+
+            
+                <!--error panel-->
+                <apex:outputPanel id="mainPanel">
+                    <apex:outputPanel id="errorPanel" rendered="{!saveQuitErrors}">         
+                        <div class="alert alert--danger">
+                            <span>
+                                <apex:repeat value="{!errorMessages}" var="msg">
+                                    {!msg}<br />
+                                </apex:repeat>
+                            </span>
+                        </div>                                                
+                    </apex:outputPanel>
+                </apex:outputPanel>
+
+                <div class="row">
+                    <div class="col-xs-12 section-header">
+                        <h4>Attachments and Instructions</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p style="font-weight: bold;">Documents &amp; Files</p>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div id="docListSpinner" class="spinner spinner--center"></div>
+                </div>
+                <apex:outputPanel id="documentListOutput">
+                    <div class="row">
+                        <div class="col-xs-7">
+                            <ul id="docList" class="fa-ul" style="margin-top: 0px;">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <!--file uploader-->
+                <div class="row">
+                    <div style="width: 100%;">
+                        <apex:outputPanel rendered="{! !lockInputs || (lockInputs && objDesign.Dealer_Status__c = 'More Information Needed')}">
+                            <c:DocumentAttachmentUploadComponent parentIds="{!objDesign.Id},{!opptyId}" attachmentOnly="false" id="multiUploadComponent" />
+                        </apex:outputPanel>
+                    </div>
+                </div>
+				
+				 <!--Designer Comments-->
+                 <apex:outputPanel rendered="{!objDesign.Dealer_Status__c == 'More Information Needed'}">
+                 <div class="row">
+                    <div class="col-xs-12">
+                        <p style="font-weight: bold;">Designer Comments</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <apex:outputText value="{!objDesign.Comments__c}" styleClass="input-container pretty-inputs" style="height: 7.5rem; cursor: not-allowed;" />
+                        </div>
+                    </div>
+                </div>
+               </apex:outputPanel> 
+                <!--notes-->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p style="font-weight: bold;">Notes and/or Instructions</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <apex:inputField value="{!objDesign.Partner_Comments__c}" styleClass="input-container pretty-inputs" style="height: 7.5rem;" rendered="{! !lockInputs || (lockInputs && objDesign.Dealer_Status__c = 'More Information Needed')}"/>
+                            <apex:outputText value="{!objDesign.Partner_Comments__c}" styleClass="input-container pretty-inputs" style="height: 7.5rem; cursor: not-allowed;" rendered="{!lockInputs && objDesign.Dealer_Status__c != 'More Information Needed'}" />
+                        </div>
+                    </div>
+                </div>
+                
+     
+                <!--buttons-->
+                <div class="row" style="text-align: right;">
+                    <div class="col-xs-4" style="text-align: left;">
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" onclick="toggleSpinner(true, false)" action="{!saveANDQuit}" value="Save & Quit" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" rendered="{! !lockInputs || (lockInputs && objDesign.Dealer_Status__c = 'More Information Needed')}" />
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" onclick="toggleSpinner(true, false)" action="{!returnToOpp}" value="Quit" rendered="{!lockInputs && objDesign.Dealer_Status__c != 'More Information Needed'}" />
+                    </div>
+
+                    <div class="col-xs-4">
+                        <apex:commandButton styleClass="btn btn-primary btn--normal" onclick="toggleSpinner(true, false)" action="{!toProductInfo}" value="Back" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" />
+                    </div>
+                    <div class="col-xs-4">
+                        <apex:commandButton styleClass="btn btn-primary btn--normal" onclick="toggleSpinner(true, false)" action="{!toDisclaimer}" value="Next" reRender="mainPanel, errorPanel" oncomplete="setFocus(); hideOverlay()" />
+                    </div>
+                </div>
+                <!--end buttons-->
+
+            </div>
+
+            <!--footer-->            
+            <div id="home" style="margin-top: .25rem;">
+                <footer>
+                    <div class="footer-content">
+                        <div class="copyright">&copy; SunPower Corporation. All rights reserved.</div>
+                    </div>
+                </footer>
+                <div class="bar"></div>
+            </div>
+            <!--end footer-->
+        
+
+            <apex:actionFunction name="deleteDocument" action="{!deleteDesignDocuments}" oncomplete="fetchDesignDocuments()" reRender="documentListOutput">
+                <apex:param assignTo="{!docIdToDelete}" name="docIdToDelete" value="" />
+            </apex:actionFunction>
+        </apex:form>
+
+    </div>
+
+    <c:SPCommunityAppResources_JS />
+
+    <script type="text/javascript">
+
+
+        var designId = '{!objDesign.Id}';
+        var allDocs = [];
+        var finalDocs = [];
+        var wordDocContentArray = ['.doc', '.docx'];
+        var excelContentArray = ['.xls', '.csv', '.xlsx'];
+        var imageContentArray = ['.png', '.jpeg', '.gif', '.bmp'];
+        var parentRecordArray = '{!objDesign.Id};{!opptyId}';
+
+        $( document ).ready(function() {
+            
+            fetchDesignDocuments();
+
+            //Event listener for click of Upload button
+            $("#uploadButton").click(function() {
+                try {
+                    var listSize = document.getElementById('filesInput').files.length;
+                    if(listSize > 0) {
+                        $( '.btn' ).addClass('disabled');
+                        $("#filesInput").hide();
+                    }
+                } catch(ex) { }
+                prepareFileUploads();
+            });
+        });
+
+        function toggleSpinner(spinState, doCount) {
+            if(spinState) {
+                $( '#docListSpinner' ).show();
+                if(doCount && (typeof totalCount == 'undefined' || (typeof totalCount != 'undefined' && totalCount > 0))) {
+                    $( '.btn' ).addClass('disabled');
+                    $("#filesInput").hide();
+                } else {
+                    $( '.btn' ).addClass('disabled');
+                }
+            }
+            else {
+                $( '#docListSpinner' ).hide();
+                if(doCount && (typeof totalCount == 'undefined' || (typeof totalCount != 'undefined' && totalCount < 1))) {
+                    $( '.btn' ).removeClass('disabled');
+                    $("#filesInput").show();
+                } else if(doCount && (typeof totalCount == 'undefined' || (typeof totalCount != 'undefined' && totalCount > 0))) {
+                    $( '.btn' ).addClass('disabled');
+                    $("#filesInput").hide();
+                } else {
+                    $( '.btn' ).removeClass('disabled');
+                }
+            }
+        }
+
+        function determineSpinner(forceOff, enableButtons) {
+            if(forceOff) {
+                $( '#docListSpinner' ).hide();
+            }
+            if(enableButtons) {
+                $( '.btn' ).removeClass('disabled');
+                $("#filesInput").show();
+            }
+
+
+        }
+
+        function fetchDesignDocuments() {
+            toggleSpinner(true, true);
+            HelixDesignRequestUtilities.fetchDesignDocuments(designId, function(result, event) {
+                if(event.status) {
+                    if(result.success) {
+                        allDocs = result.payloadMap.attachments;
+                        var newTableString = '';
+                        for(var i = 0; i < allDocs.length; i++) {
+                            if(allDocs[i]) {
+                                var finalName = allDocs[i].Parent.Name;
+                                if(finalName.length > 40) {
+                                    finalName = finalName.substring(0,40) + '...';
+                                }
+                                var fileType = 'fa-file';
+                                var contentStr = allDocs[i].Name.substr(allDocs[i].Name.lastIndexOf("."));
+                                if(wordDocContentArray.indexOf(contentStr) != -1) {
+                                    fileType += '-word-o';
+                                } else if(contentStr == '.pdf') {
+                                    fileType += '-pdf-o';
+                                } else if(contentStr == '.zip') {
+                                    fileType += '-archive-o';
+                                } else if(excelContentArray.indexOf(contentStr) != -1) {
+                                    fileType += '-excel-o';
+                                } else if(imageContentArray.indexOf(contentStr) != -1) {
+                                    fileType += '-image-o';
+                                } else {
+                                    console.log('unfound file type extension', contentStr);
+                                    fileType += '-o';
+                                }
+                                var iClass = 'fa fa-trash-o fa-pull-right';
+                                if('{!lockInputs}' == 'true')
+                                    iClass = '';
+                                newTableString += '<li name="'+finalName+'"><i class="fa-li fa '+fileType+'"></i><a href="/servlet/servlet.FileDownload?file='+allDocs[i].Id+'" id="'+allDocs[i].ParentId+'">'+finalName+'</a><a href="#"  id="'+allDocs[i].ParentId+'"><i class="'+iClass+'" aria-hidden="true" onclick="deleteDocument(\''+allDocs[i].ParentId+'\')"></i></a></li>';
+                            }
+                        }
+                        toggleSpinner(false, true);
+                        $( "#docList" ).html(newTableString);
+
+                    } else {
+                        toggleSpinner(false, true);
+                        alert(result.payload[0]);
+                    }
+                } else {
+                    toggleSpinner(false, true);
+                    alert(event.status);
+                }
+                toggleSpinner(false, true);
+            });
+            toggleSpinner(false, true);
+        }
+        
+        function setFocus() {
+            console.log('focusing');
+            window.scrollTo(0, 0);
+        }
+        
+    </script>
+
+
+</apex:page>

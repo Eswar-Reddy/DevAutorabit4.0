@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Lead$ConvertedOpportunity</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedOpportunity.StageName</field>
+    </columns>
+    <columns>
+        <field>Lead$ConvertedDate</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.PartnerAccount</column>
+            <operator>equals</operator>
+            <value>Sunpower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.StageName</column>
+            <operator>notEqual</operator>
+            <value>Appointment No-Show,Sales Accepted,Contacted,Disqualified Sales,Verbal Commitment,Contract Signed,Installation Completed,Opportunity Lost,Contacted - Not Reached,Appointment Confirmed,Flex Community - No Upgrade</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Lead$ConvertedOpportunity.Owner.Name</column>
+            <operator>notContain</operator>
+            <value>christian,justin,rona,randy,ryan,solar advisor,ross</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead$ConvertedOpportunity.Owner.Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead$ConvertedOpportunity.Sub_Stage__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>NH Opportunities per Pipeline</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Leads_with_Campaign_and_converted_Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Lead$ConvertedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

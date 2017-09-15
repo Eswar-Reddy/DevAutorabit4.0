@@ -1,0 +1,150 @@
+<apex:page controller="evalIncentPageCls"><!-- tabStyle="X2010_Channel_Program__tab"-->
+    <apex:pagemessages ></apex:pagemessages>
+    <apex:pageBlock title="{!$Label.UNDER_MAINTENANCE}" rendered="{!IF(theater=='Europe',false,true)}">
+    <br/>
+    <br/><br/><br/><br/><br/><br/><br/><br/>
+    
+    <br/><br/><br/><br/><br/><br/><br/><br/>
+    <br/>
+    
+       <div align="center">
+    <apex:image id="theImage" value="{!$Resource.UM    }" />
+    <br/>
+    <font color="red" size="5">
+    <h1>
+    {!$Label.UNDER_MAINTENANCE}</h1> </font>
+       </div>
+    <br/><br/><br/><br/><br/><br/><br/><br/>
+    </apex:pageBlock>
+      
+  <apex:form rendered="{!IF(theater=='Europe',true,false)}">
+  <!-- Commented By Hemant as per Sunrise2b(this functionality will be managed via reports)-->
+  <!-- <apex:commandButton value="Evaluation and Incentives for Previous Cycle" onclick="window.open('/apex/evalIncentPreviousPage')" styleClass="hyper"/> 
+      <p></p> -->
+  
+  <!--   
+  <apex:outputPanel rendered="{!IsFrenchPortal}"> 
+    <apex:image value="{!$Resource.Program2010Message}" width="80%" height="80%"> 
+    </apex:image>
+  </apex:outputPanel>
+   -->
+  
+  <apex:outputPanel rendered="{!IF(imageToDisplay == 'French', true, false)}" style="height:840px; width:100%" layout="block"> 
+    <apex:image value="{!$Resource.Program2012Belgium_French}" > 
+    </apex:image>
+  </apex:outputPanel>
+  
+  <apex:outputPanel rendered="{!IF(imageToDisplay == 'Flemish', true, false)}" style="height:840px; width:100%" layout="block"> 
+    <apex:image value="{!$Resource.Program2012Belgium_Flemish}"> 
+    </apex:image>
+  </apex:outputPanel>
+  
+  <apex:outputPanel rendered="{!IF(imageToDisplay == 'None', true, false)}">
+  <!--  <apex:outputPanel >-->
+  <apex:pageBlock title="{!$Label.perEvalandIncentive}"> 
+    <apex:tabPanel switchType="server" value="{!selectedTab}" >
+        
+        <!--  CURRENT PERIOD -->
+        <apex:tab label="Current Period" name="currentperiod">
+              <apex:tabPanel switchType="server" selectedTab="comm" rendered="{!IF(isPartnerCombo && (theater == 'North America'),true,false)}">
+                 <apex:tab label="Commercial" name="comm" rendered="{!IF(theater=='North America',true,false)}">
+                     <apex:tabPanel switchType="server" selectedTab="eval">
+                          <apex:tab label="{!$Label.Requirement}" name="eval" rendered="{!IF(theater=='North America',true,false)}">
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="commSPframe" src="/apex/PerformanceEvalPageComm?accId={!accId}"></apex:iframe>
+                          </apex:tab>
+                         
+                          <apex:tab label="{!$Label.Bonus}" name="incentive" id="incentiveD" rendered="{!IF((isActive == true) && (SRI == False) && (theater=='North America'),true,false)}"> <!--"{!isActive}" -->
+                             <apex:iframe width="1050px" height="1000px" scrolling="true"  id="commSPframe1" src="/apex/incentrailComm?accId={!accId}"></apex:iframe>
+                          </apex:tab>
+
+                      </apex:tabPanel>      
+                 </apex:tab>
+                  
+                 <apex:tab label="Residential" name="resi">
+                     <apex:tabPanel switchType="server" selectedTab="eval">
+                          <apex:tab label="{!$Label.Requirement}" name="eval" >
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframe" src="/apex/PerformanceEvalPage?accId={!accId}"></apex:iframe>
+                          </apex:tab>
+                          
+                          <apex:tab label="{!$Label.Bonus}" name="incentive" rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframe1" src="/apex/incentrail?accId={!accId}"></apex:iframe>
+                          </apex:tab>        
+                                  
+                      </apex:tabPanel>  
+                 </apex:tab>                
+              </apex:tabPanel>
+              
+              <apex:tabPanel switchType="server" selectedTab="eval" rendered="{!IF(isPartnerCombo && (theater=='Europe'),true,false)}">
+                  <apex:tab label="{!$Label.Requirement}" name="eval" >
+                    <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframe3" src="/apex/PerformanceEvalPage?accId={!accId}"></apex:iframe>
+                  </apex:tab>
+                  
+                  <apex:tab label="{!$Label.Bonus}" name="incentive" rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+                       <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframe4" src="/apex/incentrail?accId={!accId}"></apex:iframe>
+                  </apex:tab>        
+              </apex:tabPanel>
+              
+              <apex:tabPanel switchType="server" selectedTab="eval" rendered="{!!isPartnerCombo}">
+                  <apex:tab label="{!$Label.Requirement}" name="eval" >
+                      <apex:iframe width="1050px" height="1000px" scrolling="true"  id="nonPartnerSPframe" src="{!EvalPerformance}"></apex:iframe>
+                  </apex:tab>
+                  
+                  <apex:tab label="{!$Label.Bonus}" name="incentive"  rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+                      <apex:iframe width="1050px" height="1000px" scrolling="true"  id="nonPartnerSPframe1" src="{!IncentDetail}"></apex:iframe>
+                  </apex:tab>        
+              </apex:tabPanel>     
+        </apex:tab>
+        
+        <!--  PREVIOIUS PERIOD -->
+        <apex:tab label="Previous Period" name="previousperiod" rendered="{!NOT(IsFrenchPortal)}">
+            <apex:tabPanel switchType="server" selectedTab="comm" rendered="{!IF(isPartnerCombo && (theater == 'North America'),true,false)}">
+                 <apex:tab label="Commercial" name="comm" rendered="{!IF(theater=='North America',true,false)}">
+                     <apex:tabPanel switchType="server" selectedTab="eval">
+                          <apex:tab label="{!$Label.Requirement}" name="eval" rendered="{!IF(theater=='North America',true,false)}">
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="commSPframePre" src="/apex/PerformanceEvalPreviousComm?accId={!accId}&period=2&year=2010"></apex:iframe>
+                          </apex:tab>
+                          
+                          <apex:tab label="{!$Label.Bonus}" name="incentive" id="incentiveDPre" rendered="{!IF((isActive == true) && (SRI == False) && (theater=='North America'),true,false)}"> <!--"{!isActive}" -->
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="commSPframePre1" src="/apex/incentiveDetailPreviousComm?accId={!accId}&period=2&year=2010"></apex:iframe>
+                          </apex:tab>        
+                      </apex:tabPanel>      
+                 </apex:tab>
+                  
+                 <apex:tab label="Residential" name="resi">
+                     <apex:tabPanel switchType="server" selectedTab="eval">
+                          <apex:tab label="{!$Label.Requirement}" name="eval" >
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframePre" src="/apex/PerformanceEvalPrevious?accId={!accId}&period=2&year=2010"></apex:iframe>
+                          </apex:tab>
+                          
+                          <apex:tab label="{!$Label.Bonus}" name="incentive" rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframePre1" src="/apex/IncentiveDetailPrevious?accId={!accId}&period=2&year=2010"></apex:iframe>
+                          </apex:tab>        
+                      </apex:tabPanel>  
+                 </apex:tab>                
+              </apex:tabPanel>
+              
+              <apex:tabPanel switchType="server" selectedTab="eval" rendered="{!IF(isPartnerCombo && (theater=='Europe'),true,false)}">
+                  <apex:tab label="{!$Label.Requirement}" name="eval" >
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframePre3" src="/apex/PerformanceEvalPrevious?accId={!accId}&period=2&year=2010"></apex:iframe>
+                          </apex:tab>
+                          
+                          <apex:tab label="{!$Label.Bonus}" name="incentive" rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+                              <apex:iframe width="1050px" height="1000px" scrolling="true"  id="resiSPframePre4" src="/apex/IncentiveDetailPrevious?accId={!accId}&period=2&year=2010"></apex:iframe>
+                          </apex:tab>        
+              </apex:tabPanel>
+              
+              <apex:tabPanel switchType="server" selectedTab="eval" rendered="{!!isPartnerCombo}">
+                  <apex:tab label="{!$Label.Requirement}" name="eval" >
+                      <apex:iframe width="1050px" height="1000px" scrolling="true"  id="nonPartnerSPframePre" src="{!PreEvalPerformance}"></apex:iframe>
+                  </apex:tab>
+                  
+                  <apex:tab label="{!$Label.Bonus}" name="incentive"  rendered="{!IF((isActive == true) && (SRI == False),true,false)}"> <!--"{!isActive}" -->
+                      <apex:iframe width="1050px" height="1000px" scrolling="true"  id="nonPartnerSPframePre1" src="{!PreIncentDetail}"></apex:iframe>
+                  </apex:tab>        
+              </apex:tabPanel>
+        </apex:tab>     
+      </apex:tabPanel>
+  </apex:pageBlock>  
+  </apex:outputPanel>  
+  </apex:form>
+</apex:page>

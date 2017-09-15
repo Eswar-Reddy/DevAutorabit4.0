@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPageWebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <availability>online</availability>
+    <description>Generic link to the BOM Tool</description>
+    <displayType>link</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Invisimount Design</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>//MAM 14.JUN.2015 update the URL if production instance start
+//var url = &apos;https://invisimountdesign.us.sunpower.com/index.html?baseUrl={!$Label.InvisiMountServerURL}&amp;sessionId={!$Api.Session_ID}&apos;;
+var url = &apos;{!$Setup.Base_URL__c.Invisimount_PORTAL_QA_URL__c}&apos;;
+
+if(&apos;{!$Organization.Id}&apos; == &apos;00D80000000ZF1L&apos;){
+url = &apos;{!$Setup.Base_URL__c.Invisimount_PORTAL_PROD_URL__c}&apos;;
+}
+
+url+=&apos;?baseUrl=https://sunpower.my.salesforce.com/services/Soap/c/32.0&amp;sessionId={!$Api.Session_ID}&apos;;
+//MAM 14.JUN.2015 end
+var win = window.open(url, &apos;_blank&apos;);
+win.focus();</url>
+</CustomPageWebLink>

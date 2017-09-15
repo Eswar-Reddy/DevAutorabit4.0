@@ -1,0 +1,129 @@
+<messaging:emailTemplate subject="{!relatedTo.Opportunity__r.Name +' - ' + relatedTo.Dealer_Status__c}" recipientType="Contact" relatedToType="Design__c">
+    <messaging:htmlEmailBody >
+        <html>
+            <style type="text/css">
+                body {
+                    background-color: #FFFFFF;
+                    font-family: Futura, Arial;
+                    color: #555555;
+                }
+                p,
+                li,
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                table {
+                    margin-top: 0pt;
+                }
+                p,table{
+                    font-size: 11pt;
+                }
+                a { color:#0070c0; text-decoration:none}
+                a:visited { color:#0070c0; text-decoration:none}
+                a:link { color:#0070c0; text-decoration:none}
+                a:hover { color:#0070c0; text-decoration:none}
+
+                li {
+                    line-height:20px;
+                    margin-bottom: 10pt;
+                    display: list-item;
+                    padding-bottom:5px;
+                }        
+            </style>
+            
+            <body>
+                    <table id="topTable" width="100%" cellpadding="0" cellspacing="0" >
+                        <tr valign="middle" >
+                            <td  style=" vertical-align:middle; height:60; text-align:left; background-color:#FFFFFF; bLabel:header; bEditID:r1st1;">
+                                <img style="margin-left:0px;" id="r1sp1" bLabel="headerImage" border="0" bEditID="r1sp1" src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000000h4rS&oid=00D80000000ZF1L" />
+                            </td>
+                        </tr>
+                    </table>
+                    <hr size="1" color="#5496CC"/>
+                    <br/>
+
+                    
+                    <p>
+                        <h5>
+                            Dear {!relatedTo.Project_Contact_Person__r.Name},
+                        </h5>                        
+                    </p>           
+                    <p> 
+                    <!-- Status : Request Under Review -->
+                     <apex:outputPanel rendered="{!relatedTo.Dealer_Status__c == 'Request Under Review'}">
+                            Thank you for sending your Helix Design Request: {!relatedTo.Opportunity_Name_Hidden__c} 
+                            <br/>
+                            Your Design reference number is:                               
+                          <apex:outputlink styleClass="a" value="{! CASE($Organization.Id, '00Dn00000008s4oEAA', $Label.Community_URL_Commercial,'00DK000000XG9tCMAT', $Label.Community_URL_INT,'00DK000000XGBW8MAP', $Label.Community_URL_UAT,'00D4C0000000kwVUAQ', $Label.Community_URL_STG, $Label.Community_URL_PROD) + 'HelixDesignRequest?siteId=' + relatedTo.Site__c + '%26designId='+ relatedTo.Id}" rendered="{! relatedTo.Dealer_Status__c == 'Request Under Review'}"> {!relatedTo.Name} </apex:outputlink>
+                           <br/><br/>              
+                           A Commercial Design Engineer will get in touch with you soon.
+                           <br/>                             
+                     </apex:outputPanel>                    
+                    
+                    <!-- Status: Design In Progress -->
+                        <apex:outputPanel rendered="{! relatedTo.Dealer_Status__c == 'Design In Progress'}">
+                            Thank you for sending your Helix Design Request: {!relatedTo.Opportunity_Name_Hidden__c} 
+                            <br/>
+                            Your Design reference number is:                               
+                          <apex:outputlink styleClass="a" value="{! CASE($Organization.Id, '00Dn00000008s4oEAA', $Label.Community_URL_Commercial,'00DK000000XG9tCMAT', $Label.Community_URL_INT,'00DK000000XGBW8MAP', $Label.Community_URL_UAT,'00D4C0000000kwVUAQ', $Label.Community_URL_STG, $Label.Community_URL_PROD) + 'HelixDesignRequest?siteId=' + relatedTo.Site__c + '%26designId='+ relatedTo.Id}" rendered="{! relatedTo.Dealer_Status__c == 'Design In Progress' }"> {!relatedTo.Name} </apex:outputlink>
+                           <br/><br/>
+                            We are currently processing your request and will provide you with a                   
+                            <ul>
+                                <li>
+                                    Tier 1 Helix Roof/Tracker design in 2 business days.
+                                </li>
+                                <li>
+                                    Tier 2 Helix Roof/Tracker design in 4 business days.
+                                </li>
+                               <li>
+                                   Carport design in 3 business days.
+                               </li>
+                            </ul>
+                           <br/>             
+                        </apex:outputPanel>     
+                     
+                    <!-- Status: More Information Needed -->
+                        <apex:outputPanel rendered="{! relatedTo.Dealer_Status__c == 'More Information Needed'}">
+                            Thank you for sending your Helix Design Request: {!relatedTo.Opportunity_Name_Hidden__c} 
+                            <br/>
+                            Your Design reference number is:                               
+                          <apex:outputlink styleClass="a" value="{! CASE($Organization.Id, '00Dn00000008s4oEAA', $Label.Community_URL_Commercial,'00DK000000XG9tCMAT', $Label.Community_URL_INT,'00DK000000XGBW8MAP', $Label.Community_URL_UAT,'00D4C0000000kwVUAQ', $Label.Community_URL_STG, $Label.Community_URL_PROD) + 'HelixDesignRequest_Attachments?siteId=' + relatedTo.Site__c + '%26designId='+ relatedTo.Id}" rendered="{! relatedTo.Dealer_Status__c == 'More Information Needed'}"> {!relatedTo.Name} </apex:outputlink>
+                           <br/><br/>              
+                           We are currently processing your request and require additional information from your end.
+                           <br/>  
+                           Designer Comments: {!relatedTo.Comments__c}                      
+                           <br/><br/>            
+                           Once all information is complete, we will provide you with the Helix design in 2 business days for Tier 1, or 4 business days for Tier 2.
+                           <br/>                            
+                        </apex:outputPanel>  
+                    
+                    <!-- Status: Design Delivered -->   
+                        <apex:outputPanel rendered="{!relatedTo.Dealer_Status__c == 'Design Delivered'}">
+                            We have completed the Helix Design Request: {!relatedTo.Opportunity_Name_Hidden__c}
+                            <br/>
+                            Your Design reference number is: 
+                            <apex:outputlink styleClass="a" value="{! CASE($Organization.Id, '00Dn00000008s4oEAA', $Label.Community_URL_Commercial,'00DK000000XG9tCMAT', $Label.Community_URL_INT,'00DK000000XGBW8MAP', $Label.Community_URL_UAT,'00D4C0000000kwVUAQ', $Label.Community_URL_STG, $Label.Community_URL_PROD) + 'HelixDesignRequest_Attachments?siteId=' + relatedTo.Site__c + '%26designId='+ relatedTo.Id}" rendered="{! relatedTo.Dealer_Status__c == 'Design Delivered' }"> {!relatedTo.Name} </apex:outputlink>
+                           <br/><br/>                           
+                           <b> System Type: </b>{!IF (CONTAINS(relatedTo.Technology_System__c, 'Tracker'), 'Helix Tracker', IF (CONTAINS(relatedTo.Technology_System__c, 'Carport'), 'Helix Carport',  CASE(relatedTo.Technology_System__c, 'R-Helix Dual Tilt', 'Helix Roof - Dual Tilt', 'R-Helix Single Tilt', 'Helix Roof - Single Tilt', '')))}                      
+                           <br/>
+                           <b>Module Choice: </b>{!relatedTo.ModuleTypeandWattage__c}                      
+                           <br/>                           
+                           <b>System Size: </b>{!relatedTo.Actual_System_Size__c} &nbsp;&nbsp;&nbsp; kW                     
+                           <br/>
+                           <b>Site Address: </b>{!relatedTo.Site__r.Site_Address__c},&nbsp; {!relatedTo.Site__r.Site_City__c},&nbsp;{!relatedTo.Site__r.Site_State__c} -{!relatedTo.Site__r.Site_Zip_Postal_Code__c},&nbsp;{!relatedTo.Site__r.Site_Country__c}                
+                           <br/>
+                           <br/>
+                            The Design documents can be accessed through our partner portal. 
+                        </apex:outputPanel>                  
+                        <br></br>
+                        <br></br>
+                       Warm Regards,
+                       <br></br>
+                       Sunpower Design Team
+                </p>
+            </body>
+        </html>
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

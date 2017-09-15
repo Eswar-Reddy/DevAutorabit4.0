@@ -1,0 +1,45 @@
+<apex:page action="{!insertTrackerObject}" standardController="Content__c" extensions="ContentDetailPageController">
+<!--   <apex:detail subject="{!contentId}"/>  -->
+  <script>    
+      
+          if('{!docurl}'!=null && '{!docurl}'!=''){      
+               //window.location.href='https://uat.sunpowersupport.com/Stringsizer/Login?sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}&targetApp=ContentLibrary&documentId={!docurl}'; 
+               //window.location.href='{!docurl}'; 
+               //sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}
+                if('{!docurl}'.indexOf('/resource/')!= -1){
+                window.location.href='{!docurl}';
+               }else{
+                window.location.href='{!docurl}&sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}';
+               }     
+               //window.location.href='{!docurl}&sessionid={!$Api.Session_ID}&serverurl={!$Api.Enterprise_Server_URL_150}'; 
+          }
+          if('{!url}'!=null && '{!url}'!='' && '{!docurl}'==null){
+            
+                var url = '{!url}';
+                var flag = ValidateURL(url);
+                if(flag.toString() != "false"){
+                    alert(url);
+                    window.location.href=url; 
+                }    
+                else{
+                    window.location.href='/apex/ContentLibrary'; 
+                }
+          }
+
+    
+    function ValidateURL(url) { 
+        var v = new RegExp(); 
+        v.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$"); 
+        if (!v.test(url)) { 
+            alert("Not a valid URL."); 
+            return false; 
+        } 
+        else{
+           return true;
+        }
+    } 
+    
+  </script> 
+  
+
+</apex:page>

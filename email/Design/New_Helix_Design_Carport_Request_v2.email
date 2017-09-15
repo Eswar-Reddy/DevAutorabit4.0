@@ -1,0 +1,27 @@
+<messaging:emailTemplate subject="A New Carport Design Request has been Submitted" recipientType="User" relatedToType="Design__c">
+<messaging:htmlEmailBody >
+Dear CDE Team,
+<p>
+A new carport design request,&nbsp;<apex:outputlink value="{!LEFT($Api.Partner_Server_URL_140,FIND('.com',$Api.Partner_Server_URL_140)+4)+relatedTo.Id}">{!relatedTo.Name}</apex:outputlink>,&nbsp;was recently submitted. Please assign the appropriate technology system.
+</p>
+<p>
+Project Name: {!relatedTo.Opportunity__r.name} <br/>
+Project Location: {!relatedTo.Site__r.Site_Address__c}, {!relatedTo.Site__r.Site_City__c}, {!relatedTo.Site__r.Site_State__c}, {!relatedTo.Site__r.Site_Country__c} {!relatedTo.Site__r.Site_Zip_Postal_Code__c} <br/>
+Partner's Name: {!relatedTo.DealerName__r.name}<br/>
+System Size: {!if(relatedTo.MaxOuttheRoofSpace__c, 'Utilize All Available Space', 
+                  if(relatedTo.Requested_System_Size__c != null || relatedTo.Requested_System_Size__c <> 0, relatedTo.Requested_System_Size__c,
+                     if(relatedTo.DealerRequestedSystemSizeAC__c != null || relatedTo.DealerRequestedSystemSizeAC__c <> 0, relatedTo.DealerRequestedSystemSizeAC__c,
+                        relatedTo.TargetAnnualProduction__c)))}<br/>
+Date of Submission: 
+<apex:outputText value="{0, date, MM'/'dd'/'yyyy}">
+    <apex:param value="{!relatedTo.Design_Submitted_Date__c}"/>
+</apex:outputText>
+</p>
+<p>
+Thank you.
+</p>
+<p>
+<i>This is an automatically generated email.  Please do not respond.</i>
+</p>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <block>
+        <blockInfo>
+            <blockId>B1</blockId>
+            <joinTable>fko</joinTable>
+        </blockInfo>
+        <columns>
+            <field>echosign_dev1__SIGN_Agreement__c.Lease_Number__c</field>
+        </columns>
+        <columns>
+            <field>CUST_NAME</field>
+        </columns>
+        <columns>
+            <field>CUST_OWNER_NAME</field>
+        </columns>
+        <columns>
+            <field>FK_$Account.Partner_Account__c</field>
+        </columns>
+        <currency>USD</currency>
+        <filter>
+            <criteriaItems>
+                <column>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</column>
+                <operator>equals</operator>
+                <value>Waiting for Counter-Signature</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>CUST_RECORDTYPE</column>
+                <operator>equals</operator>
+                <value>echosign_dev1__SIGN_Agreement__c.Lease_Contract</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>FK_OPP_RECORDTYPE</column>
+                <operator>equals</operator>
+                <value>Opportunity.Home_Owner</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>FK_$Opportunity.Theater__c</column>
+                <operator>equals</operator>
+                <value>North America</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>FK_$Account.Partner_Account__c</column>
+                <operator>notEqual</operator>
+                <value>Gabi Solar</value>
+            </criteriaItems>
+        </filter>
+        <format>Summary</format>
+        <name>Agreements with Opportunity block 1</name>
+        <params>
+            <name>co</name>
+            <value>0</value>
+        </params>
+        <reportType>CustomEntity$echosign_dev1__SIGN_Agreement__c@echosign_dev1__SIGN_Agreement__c.echosign_dev1__Opportunity__c</reportType>
+        <scope>organization</scope>
+        <timeFrameFilter>
+            <dateColumn>echosign_dev1__SIGN_Agreement__c.Created_Date_Time__c</dateColumn>
+            <interval>INTERVAL_CUSTOM</interval>
+        </timeFrameFilter>
+    </block>
+    <block>
+        <blockInfo>
+            <blockId>B0</blockId>
+            <joinTable>Opportunity</joinTable>
+        </blockInfo>
+        <columns>
+            <field>Opportunity.Documents__r$Document_Type__c</field>
+        </columns>
+        <columns>
+            <field>Opportunity.Documents__r$Name</field>
+        </columns>
+        <currency>USD</currency>
+        <filter>
+            <criteriaItems>
+                <column>Opportunity.Documents__r$Agreement_Status__c</column>
+                <operator>equals</operator>
+                <value>Waiting for Counter-Signature</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Opportunity$PartnerAccount</column>
+                <operator>notEqual</operator>
+                <value>Gabi Solar</value>
+            </criteriaItems>
+        </filter>
+        <format>Summary</format>
+        <name>Opportunity With Document (C) block 5</name>
+        <params>
+            <name>co</name>
+            <value>1</value>
+        </params>
+        <reportType>Opportunity_With_Document__c</reportType>
+        <scope>organization</scope>
+        <timeFrameFilter>
+            <dateColumn>Opportunity$CreatedDate</dateColumn>
+            <interval>INTERVAL_CUSTOM</interval>
+        </timeFrameFilter>
+    </block>
+    <blockInfo>
+        <blockId xsi:nil="true"/>
+        <joinTable>fko</joinTable>
+    </blockInfo>
+    <format>MultiBlock</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Doc Upload Test_dowley</name>
+    <params>
+        <name>lsk</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$echosign_dev1__SIGN_Agreement__c@echosign_dev1__SIGN_Agreement__c.echosign_dev1__Opportunity__c</reportType>
+    <showDetails>true</showDetails>
+</Report>

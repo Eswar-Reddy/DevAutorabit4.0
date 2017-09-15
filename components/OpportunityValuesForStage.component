@@ -1,0 +1,90 @@
+<apex:component controller="OpportunityValuesController" access="global">
+<apex:attribute name="componentPercent" description="Opportunity Probability Percent" type="String" assignTo="{!OppPer}" />
+<apex:attribute name="componentValue" description="Opportunity value" type="String" assignTo="{!OppId}" />
+<apex:outputPanel rendered="false">{!OppObj.Account.Name}</apex:outputPanel>
+<br/> 
+{!projectManager}, please start compiling the Risk Assessment Matrix. The following Opportunity has reached <b>{!OppPer}</b> Stage
+<br/><br/>
+Account: <b>{!OppObj.Account.Name}</b><br/>
+Business Unit: <b>{!OppObj.Business_Unit__c}</b><br/>
+Opportunity: <b>{!OppObj.Name}</b><br/>
+Product Name: <b>{!prodName}</b><br/>
+System Size(PV): <b>{!OppObj.System_SizePV__c}</b><br/>
+System Size(BOS): <b>{!OppObj.System_SizeBOS__c}</b><br/>
+SPWR Deal Type: <b>{!OppObj.Contract_Type__c}</b><br/>
+Salesperson: <b>{!OppObj.Owner.Name}</b><br/>
+Sales Analyst: <b>{!systemAnalyst}</b><br/>
+Project Manager: <b>{!projectManager}</b><br/>
+
+<apex:outputpanel rendered="{!oppPer='50'}" > 
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+<br/>
+<br/>
+{!OppObj.Lead_Analyst__c} please take the following steps:
+<br/><br/><br/>
+1) Audits: Ensure site audit as been completed and/or assurances have been provided that no site feasibility issues exist.
+<br/><br/><br/>
+2) Cost Estimating: Ensure cost estimate and exclusions/clarification are up-to-date and signed off by PM.
+<br/><br/><br/>
+3) Credit Report: Work with SPWR credit team to obtain internal credit approval.
+<br/><br/><br/>
+4) Deal Sheet / DRC Template: Update Deal Sheet parameters and send to Sales Management for review and approval.  Include simplified DRC template for review by GBU VP & CFO .
+
+</apex:outputpanel>
+
+
+
+
+<apex:outputpanel rendered="{!oppPer='75'}" >  
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+
+
+<b>Sales Analyst:</b> 1) Please schedule the 75% kickoff meeting at least 5 days from today to allow time for preparation. <br/>
+               2) Please attach a Schedule of Values to the Opportunity Role for the Credit Team to conduct a credit check.
+
+ <br/><br/>
+
+<b>Joe Haumann</b> please create an LLC if the SunPower Contract Type is PPA(including EPC)
+
+<br/><br/>
+
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+</apex:outputpanel>
+
+
+<apex:outputpanel rendered="{!oppPer='90'}" > 
+Close Date: <b><apex:outputText value="{0,date, MM/dd/yyyy}"><apex:param value="{!OppObj.CloseDate}" /></apex:outputText></b><br/>
+<br/><br/>
+
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+<br/>
+<br/>
+Sales Operations - 
+<br/>
+Please confirm that the LEAD SOURCE and PRIMARY CAMPAIGN SOURCE fields have been populated for this opportunity.
+
+
+</apex:outputpanel>
+ 
+<apex:outputpanel rendered="{!oppPer='100'}" >
+Proposal Designer: <b>{!proposalDesigner}</b><br/>
+Project Designer: <b>{!projectDesigner}</b><br/>
+Structured Finance: <b>{!structuredFinance}</b><br/>
+Close Date: <b>{!OppObj.CloseDate}</b><br/>
+<br/>
+<br/>
+{!OppObj.Lead_Analyst__c} Please send Projects Administration the <u>Project Summary for Handoff</u> email to expedite the creation of a job number.
+<br/>
+<strong>(Does not apply to Components only sales.)</strong>
+<br/>
+{!OppObj.Owner.Name}, please fill out a Dedication Request form, if appropriate. 
+
+<br/><br/>
+<a href="https://login.salesforce.com/{!OppObj.Id}">https://login.salesforce.com/{!OppObj.Id}</a>
+</apex:outputpanel>
+
+</apex:component>

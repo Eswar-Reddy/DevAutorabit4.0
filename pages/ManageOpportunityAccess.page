@@ -1,0 +1,105 @@
+<apex:page id="pgManageOpportunityAccess" standardController="Account" extensions="ManageOpportunityAccessController">
+
+<script>
+  function checkCreate(userOption){
+    if(userOption=='1'){        
+        var cre = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:created');
+        } else{
+        var cre = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:created2');
+    }    
+    if(cre.value == 'true'){
+      alert('Sharing rules have already been created.');
+      return false;
+    }
+    var answer = confirm("Creating opportunity sharing rules may take few minutes. Continue?")
+    if(answer){   
+      return true;
+    }
+    else{
+      return false;
+    }        
+    return true;
+  }
+  
+  function checkDelete(){    
+    var del = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:deleted');
+    if(del.value == 'true'){
+      alert('Sharing rules have already been deleted.');
+      return false;
+    }
+    var answer = confirm("Deleting opportunity sharing rules may take few minutes. Continue?")
+    if(answer){   
+      return true;
+    }
+    else{
+      return false;
+    }
+    return true;
+  }
+  
+  function doneAdd(str){
+        if(str==1){
+            alert('Partner Executives will see all opportunities.');
+        }else{
+            alert('All Users can see all opportunities.');
+        
+        }
+    var accId = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:accountId');
+    if(accId != null){
+      window.parent.location = '/' + accId.value;
+    }       
+  }
+  
+  function doneDelete(){
+    alert('All Users will not see opportunities owned by other Partner Executives');
+    
+    var accId = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:accountId');
+    if(accId != null){
+      window.parent.location = '/' + accId.value;
+    }
+  }
+   function doneDelete1(){
+   alert('Partner Executives will not see opportunities owned by other Partner Executives'); 
+    var accId = document.getElementById('pgManageOpportunityAccess:frmManageOpportunityAccess:accountId');
+    if(accId != null){
+      window.parent.location = '/' + accId.value;
+    }
+  }
+</script>
+
+<apex:form id="frmManageOpportunityAccess">
+<apex:outputPanel id="outPanel">
+  <apex:inputHidden id="created" value="{!alreadyCreatedForAll}"/>
+  <apex:inputHidden id="deleted" value="{!alreadyDeleted}"/>
+  <apex:inputHidden id="created2" value="{!alreadyCreatedForExecutives}"/>
+  <apex:inputHidden id="accountId" value="{!accountId}"/>  
+</apex:outputPanel>
+  
+  <table width="100%">
+    <tr>
+      <td><apex:commandLink action="{!addSharingRules}" onclick="if(!checkCreate('1')) return false;" value="Allow Partner Executives to see all opportunities" onComplete="doneAdd('1');" rerender="outPanel"/></td>
+      <td><apex:commandLink action="{!addSharingRules2}" onclick="if(!checkCreate('2')) return false;" value="Allow all to see opportunities" onComplete="doneAdd('2');" rerender="outPanel"/></td> 
+      <td><apex:commandLink action="{!deleteSharingRules}" onclick="if(!checkDelete()) return false;" value="Remove manual sharing" onComplete="doneDelete();" rerender="outPanel"/></td>
+<!--  <td><apex:commandLink action="{!deleteSharingRules}" onclick="if(!checkDelete()) return false;" value="Restore default opportunity access rules for All" onComplete="doneDelete();" rerender="outPanel"/></td> -->
+<!--  <td><apex:commandLink action="{!deleteSharingRules2}" onclick="if(!checkDelete()) return false;" value="Restore default opportunity access rules for Executives" onComplete="doneDelete1();" rerender="outPanel"/></td> -->
+    </tr>
+  </table>
+  
+  <!-- <apex:sectionHeader title="Manage Opportunity Access"/> -->
+  <!-- <apex:pageBlock id="pbManageOpportunityAccess">
+    <apex:pageBlockButtons >
+      <apex:commandButton action="{!addSharingRules}" onclick="if(!checkCreate()) return false;" value="Allow Partner Executives to see all opportunities" onComplete="doneAdd();" rerender="outPanel"/>
+      <apex:commandButton action="{!deleteSharingRules}" onclick="if(!checkDelete()) return false;" value="Restore default opportunity access rules" onComplete="doneDelete();" rerender="outPanel"/>
+      <apex:commandButton action="{!redirectToAccount}" value="Return to partner account"/>      
+    </apex:pageBlockButtons>    
+    <ul>
+      <li>Click 'Allow Partner Executives to see all opportunities' to create sharing rules for all opportunities of this account.</li>
+      <li>Click 'Restore default opportunity access rules' to delete sharing rules for all opportunities of this account.</li>
+      <li>Click 'Return to partner account' to return back to account.</li>
+    </ul>
+  </apex:pageBlock>
+  -->
+  
+
+</apex:form>
+</apex:page>

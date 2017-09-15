@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FK_NAME</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.Agreement_Type_2__c</field>
+    </columns>
+    <columns>
+        <field>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</field>
+    </columns>
+    <columns>
+        <field>FK_OPP_CLOSE_DATE</field>
+    </columns>
+    <columns>
+        <field>FK_$Opportunity.Closed_Won_Date__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>FK_$Account.Partner_Account__c</column>
+            <operator>equals</operator>
+            <value>SunPower New Homes</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_OPP_STAGE_NAME</column>
+            <operator>equals</operator>
+            <value>Verbal Commitment,Contract Signed,Installation Completed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_NAME</column>
+            <operator>notContain</operator>
+            <value>test</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_$Opportunity.Reason_Won_Lost_comments__c</column>
+            <operator>notContain</operator>
+            <value>#RP</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>echosign_dev1__SIGN_Agreement__c.Agreement_Type_2__c</column>
+            <operator>equals</operator>
+            <value>cash contract,lease contract</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c</column>
+            <operator>equals</operator>
+            <value>Signed,Waiting for Counter-Signature</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_ACC_ADDR1_CITY</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_PC_$Contact.Campaign__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Closed Opportunity, No RP Linked2</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$echosign_dev1__SIGN_Agreement__c@echosign_dev1__SIGN_Agreement__c.echosign_dev1__Opportunity__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>FK_OPP_CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CURPREV1</interval>
+    </timeFrameFilter>
+</Report>

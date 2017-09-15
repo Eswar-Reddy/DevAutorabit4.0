@@ -1,0 +1,10 @@
+<apex:page standardController="echosign_dev1__SIGN_Agreement__c" extensions="DeleteAgreement_CLS"
+            action="{! if($Profile.Name =='Partner Sales' || $Profile.Name =='Partner Delegated Administrator' || $Profile.Name =='Partner Executive' || $Profile.Name =='Partner Operations' || $Profile.Name =='Partner Restricted' || $Profile.Name =='Partner Technical' , 
+                        null, URLFOR($Action.echosign_dev1__SIGN_Agreement__c.Delete, $CurrentPage.Parameters.id,[retURL='/'+accId],true))}" >
+    <apex:pageBlock >
+        <apex:PageMessage summary="You do not have permission to delete this record"  severity="Warning" strength="3" />
+        <apex:pageMessages /><br/>
+        <div class="ptBreadcrumb">&nbsp;&nbsp;<a href="/{!accId}">Back to Previous Page</a></div>
+    </apex:pageBlock>
+ 
+</apex:page>

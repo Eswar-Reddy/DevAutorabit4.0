@@ -1,0 +1,47 @@
+<apex:page id="partnerApplicationScore" standardController="Partner_Application__c" extensions="PartnerApplicationScoreController">
+<apex:form >
+
+<apex:pageBlock mode="detail" id="detailPageBlock" title="Partner Application Score">
+<apex:pageBlockButtons >
+    <apex:commandButton action="{!returnToApplication}" value="Return to Application"/>
+  </apex:pageBlockButtons>
+  
+  
+      <apex:panelGrid border="1" columns="3" id="theGrid" rules="all" width="100%">
+      	<apex:facet name="header" ><font size="3">STAGE 1: – MUST BE MET BEFORE MOVING TO STAGE 2</font></apex:facet>
+      	 
+      	 <apex:outputLabel ><B>Area</B></apex:outputLabel>
+         <apex:outputLabel ><B>Item</B></apex:outputLabel>
+         <apex:outputLabel ><B>&nbsp;X</B></apex:outputLabel>
+        
+          <apex:outputLabel >Basics Measure</apex:outputLabel>
+          <apex:outputLabel style="text-align:left;">BCSE Accreditation - Install</apex:outputLabel>          
+          <apex:inputField value="{!partnerObj.BCSE_Install__c}"/>         
+          
+          <apex:outputLabel ></apex:outputLabel>
+          <apex:outputLabel style="text-align:left;">BCSE Accreditation #</apex:outputLabel>          
+          <apex:outputField value="{!partnerObj.BCSE_Accreditation__c}"/>          
+          
+          <apex:outputLabel ></apex:outputLabel> 
+          <apex:outputLabel style="text-align:left;">2 years Solar / electrical / roofing history (or similar business experience)</apex:outputLabel>          
+          <apex:inputField value="{!partnerObj.Business_focused_on_PV__c}"/>         
+        
+          <apex:outputLabel ></apex:outputLabel>
+          <apex:outputLabel style="text-align:left;">Public Liability Insurance</apex:outputLabel>          
+          <apex:inputField value="{!partnerObj.Relevant_Insurance__c}"/>          
+          
+          <apex:outputLabel ></apex:outputLabel>  
+          <apex:outputLabel style="text-align:left;">No open litigation or past litigation where court found against dealer</apex:outputLabel>          
+          <apex:inputField value="{!partnerObj.No_major_partner_faulted_litigation__c}"/>        
+           
+          <apex:outputLabel ></apex:outputLabel> 
+          <apex:outputLabel style="text-align:left;">Basic website in place</apex:outputLabel>          
+          <apex:inputField value="{!partnerObj.Basic_Website__c}"/>     
+      </apex:panelGrid>
+      
+      
+  
+  </apex:pageBlock>
+
+</apex:form>
+</apex:page>

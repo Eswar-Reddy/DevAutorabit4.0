@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Intrcnct_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$PIS_Entry_Date__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$SPEB_SO__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Dealer_Fee_PO__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>For lookup</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND (3 or 4)</booleanFilter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>equals</operator>
+            <value>Cancelled,Pending Cancellation,Cancellation with RMA,Terminated,Pending Termination</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$SPEB_SO__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Dealer_Fee_PO__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>FiscalYear</dateGranularity>
+        <field>LeasePayment__c$Date_Delivered__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>PENDING (cancel &amp; terminated)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Closing_Request_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

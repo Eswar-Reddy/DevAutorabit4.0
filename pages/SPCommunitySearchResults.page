@@ -1,0 +1,109 @@
+<apex:page controller="SPCommunitySearch" showHeader="false" sidebar="false" action="{!search}" standardStylesheets="false">
+
+<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
+<apex:stylesheet value="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/jquery.dataTables.min.css" />
+
+<style type="text/css">
+	 .dataTables_filter { visibility: hidden;}
+	 div.dataTables_paginate {
+        text-align: center !important;
+        float: none !important;
+    }
+</style>
+
+<script>
+
+	<apex:variable value="{!1}" var="containerNum"/>
+	<apex:repeat value="{!resultsWrapper}" var="objName">
+		$(document).ready(function() {
+	    $('#tableId{!containerNum}').DataTable( {
+		        "paging":   true,
+		        "ordering": true,
+		        "info":     true,
+		        "language": {
+	                "paginate": {
+	                    "previous": "<",
+	                    "next": ">"
+	                }
+	            },
+	            "bInfo": false,
+	            "bLengthChange": false
+		    } );
+	    	$("#tabId1").addClass("tabs__header-item--active");
+	    	$("#tabContentId1").addClass("tabs__content-item--active");
+		} );
+		<apex:variable var="containerNum" value="{!containerNum + 1}"/>
+	</apex:repeat>
+</script>
+
+<c:SPCommunityAppResources_CSS />
+<c:CommunitiesMainNavComponent activeTab=""/>
+
+<body class="detail-container">
+	<div class="sunpower-style container-fluid" style="margin-top: 1rem; max-width: 1200px;">
+		<apex:outputPanel rendered="{!IF(resultsWrapper != null,true,false)}" >
+		<div class="tabs">
+			<div class="tabs__header-container">
+				<ul class="tabs__header">
+					<apex:variable value="{!1}" var="tabNum"/>
+					<apex:repeat value="{!tabNames}" var="objName">
+					    <apex:repeat value="{!tabNames[objName]}" var="tabName" >
+						    <li class="tabs__header-item" data-tab-id="{!tabNum}" id="tabId{!tabNum}">
+								<span>{!tabName}</span>
+							</li>
+						</apex:repeat>
+						<apex:variable var="tabNum" value="{!tabNum + 1}"/>
+				    </apex:repeat>
+				</ul>
+			</div>
+			<div class="tabs__content-container">
+				<apex:variable value="{!1}" var="containerNum"/>
+				<apex:repeat value="{!resultsWrapper}" var="objName">
+					<div class="tabs__content">
+						<div class="tabs__content-item" data-tab-content="{!containerNum}" id="tabContentId{!containerNum}">
+							<p>
+								<table class="table table-responsive" id="tableId{!containerNum}">
+									<thead>
+										<th>Name</th>
+										<apex:variable value="{!1}" var="objIndex"/>
+										<apex:repeat value="{!resultsWrapper[objName]}" var="wrapperList" >
+											<apex:repeat value="{!wrapperList}" var="wrapper" rendered="{!IF(objIndex==1,true,false)}">
+												<apex:repeat value="{!wrapper.fieldNames}" var="fieldName" >
+													<th>{!$ObjectType[objName].fields[fieldName].Label}</th>
+													<apex:variable var="objIndex" value="{!objIndex + 1}"/>
+												</apex:repeat>
+											</apex:repeat>
+										</apex:repeat>
+									</thead>
+									<tbody>
+										<apex:repeat value="{!resultsWrapper[objName]}" var="wrapperList" >
+											<apex:repeat value="{!wrapperList}" var="wrapper">
+												<tr>
+													<td><a href="/{!wrapper.objectId}">{!wrapper.objectName}</a></td>
+													<apex:repeat value="{!wrapper.fieldValues}" var="fieldValue" >
+														<td>{!fieldValue}</td>
+													</apex:repeat>
+												</tr>
+											</apex:repeat>
+										</apex:repeat>
+									</tbody>
+								</table>
+							</p>
+						</div>
+					</div>
+					<apex:variable var="containerNum" value="{!containerNum + 1}"/>
+				</apex:repeat>
+			</div>
+		</div>
+		</apex:outputPanel>
+		<apex:outputPanel rendered="{!IF(resultsWrapper==null && LEN(searchTerm)<4,true,false)}" >
+			<H3> You must specify more than 3 characters</H3>
+		</apex:outputPanel>
+		<apex:outputPanel rendered="{!IF(resultsWrapper==null && LEN(searchTerm)>=4,true,false)}" >
+			<H3> No results found </H3>
+		</apex:outputPanel>
+	</div>
+</body>
+<!-- Load JS Scripts Last -->
+<c:SPCommunityAppResources_JS />
+</apex:page>

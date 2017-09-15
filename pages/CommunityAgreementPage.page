@@ -1,0 +1,459 @@
+<apex:page showHeader="false" id="cpg" sidebar="false" standardStylesheets="false" standardController="echosign_dev1__SIGN_Agreement__c">
+    <script src="/soap/ajax/28.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/28.0/apex.js" type="text/javascript"></script>
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        #sendImg img{
+            width:30% !important;
+        }
+        
+        #sendImg img[alt="Send"]{
+            width:20% !important;
+        }
+        
+        #sendImg img[alt="Out for Signature"]{
+            width:65% !important;
+        }
+        
+        #docImg img{
+            width:5% !important;
+            float:left;
+            margin-right:5px;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+    </script>
+    <script src="/soap/ajax/10.0/connection.js"> </script >
+    <script src="/soap/ajax/10.0/apex.js"> </script >
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;max-width:1180px;">
+        <!--<div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">-->
+            <apex:form >
+            <div class="row top2" >
+                <div class="col-xs-12 col-md-8">
+                    <a href="/{!echosign_dev1__SIGN_Agreement__c.Account__c}">
+                        <h5 style="font-size: small;color: #0076be !important;">BACK TO ACCOUNT INFORMATION </h5>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-2" style="text-align:right;">
+                    <a class="btn btn-primary btn--small" href="/apex/CommunityAgreementEdit?id={!$CurrentPage.parameters.Id}" >Edit</a>
+                </div>
+                <apex:outputPanel rendered="{!IF(((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'HIC Contract')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Lease Contract')),true,false)}">
+                    <div class="col-xs-12 col-md-2" style="text-align:right;">
+                        <a class="btn btn-secondary btn--small" href="#" onClick="adhocLDA();" >Adhoc Create LDA</a>
+                </div>
+                </apex:outputPanel>
+                
+            </div>
+            
+            <div class="row" style="margin-top:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Agreement Detail</h3>    
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Agreement Name</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Name}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Recipient(Contact)</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Recipient__c}"></apex:outputField>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Account</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Account__r.Name}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Additional Recipient 1(Contact)</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Recipient2__c}"></apex:outputField>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Agreement Type</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Agreement_Type_2__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Agreement Status</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Status__c}"></apex:outputField>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Date Sent</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSent__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Date Viewed</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateViewedDate__c}"></apex:outputField>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Date Signed</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__DateSignedDate__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Quote</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Quote__r.Name}"></apex:outputField>
+                </div>
+            </div>
+            
+            <!--  Onnly for amendment agreeemnt  -->
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Amendment Agreement'),true,false)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Contract Number</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Lease_Number__c}"></apex:outputField>
+                </div>
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Opportunity</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Opportunity__r.Name}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Amendment Agreement') || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Cancelled')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Lien Waiver')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Partner Agreement')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Lease Contract')),false,true)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Message</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Message__c}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Amendment Agreement'),true,false)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Change Order Type</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Change_Order_Type__c}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Lease Contract'),true,false)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Approved</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Approved__c}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(((echosign_dev1__SIGN_Agreement__c.RecordType.Name= 'Amendment Agreement') || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'ACH Update')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Draft Lease Contract')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'FR Agreement')   || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Termination Agreement')),false,true)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Credit Check Status</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Credit_Check_Status__c}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(((echosign_dev1__SIGN_Agreement__c.RecordType.Name= 'Amendment Agreement') || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'ACH Update')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'HIC Contract')  || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Lending Agreement')   || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Cancelled')),false,true)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Owner</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Owner.Name}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <!--
+            <apex:outputPanel rendered="{!IF(((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Cash Contract') || (echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'HIC Contract')),false,true)}">
+            <div class="row">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Record Type</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.RecordType.Name}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            -->   
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Draft Lease Contract'),false,true)}">         
+            <div class="row" style="margin-top:20px;margin-bottom:20px">
+                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-left: auto;margin-right: auto;" />
+            </div>
+            
+            <div class="row" style="margin-top:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>EchoSign</h3>    
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:10px;">
+               <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Amendment Agreement'),false,true)}"> 
+                    <div class="col-md-2 col-xs-12 labelStyle">
+                        <apex:outputLabel >Status</apex:outputLabel>
+                    </div>    
+                    <div class="col-md-4 col-xs-12" id="sendImg">
+                        <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Status__c}"></apex:outputField>
+                    </div>
+                </apex:outputPanel> 
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Document</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12" id="docImg">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__Document__c}"></apex:outputField>
+                </div>
+            </div>
+            <!--  Only for Cancelled Type  -->
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Cancelled'),true,false)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Signature Type</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.echosign_dev1__SignatureType__c}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Amendment Agreement'),true,false)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Available Actions</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!echosign_dev1__SIGN_Agreement__c.Available_Actions__c}"></apex:outputField>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF((echosign_dev1__SIGN_Agreement__c.RecordType.Name = 'Amendment Agreement'),false,true)}">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-2 col-xs-12 labelStyle">
+                    <apex:outputLabel >Custom Links</apex:outputLabel>
+                </div>    
+                <div class="col-md-4 col-xs-12" id="sendImg">
+                    <a href="{!URLFOR($Action.echosign_dev1__SIGN_Agreement__c.Send_For_Signature_Modified_For_VF,echosign_dev1__SIGN_Agreement__c.id)}">Send for Signature</a><br/>
+                    <a href="#" onClick="MyWindow=window.open('{!URLFOR($Action.echosign_dev1__SIGN_Agreement__c.echosign_dev1__SendReminder,echosign_dev1__SIGN_Agreement__c.id)}','Send Reminder','width=100,height=100'); return false;">Send Reminder</a><br/>
+                    <a href="#" onClick="MyWindow=window.open('{!URLFOR($Action.echosign_dev1__SIGN_Agreement__c.echosign_dev1__RefreshStatus,echosign_dev1__SIGN_Agreement__c.id)}','Refresh Status','width=100,height=100'); return false;">Refresh Status</a>
+                </div>
+                
+            </div>
+       </apex:outputpanel> 
+    </apex:outputPanel>
+            <div class="row" style="margin-top:20px;margin-bottom:20px">
+                <div class="col-xs-12" style="border-bottom: .1rem solid !important;border-color: #ffdfb8 !important;margin-left: auto;margin-right: auto;" />
+            </div>
+            
+            
+            <!--
+            <c:CreditCheckTable parentAtt="{!echosign_dev1__SIGN_Agreement__c.Id}" /> -->
+            </apex:form>
+            <c:AttachmentUploadComponent parentId="{!echosign_dev1__SIGN_Agreement__c.Id}"/>
+            <c:NotesTable parentAtt="{!echosign_dev1__SIGN_Agreement__c.Id}" />
+            <c:AgreementEventTable parentAtt="{!echosign_dev1__SIGN_Agreement__c.Id}" />
+
+            
+        <!--</div>-->
+    </body>
+    <script>
+        window.onload = function(){
+        var trgId = document.getElementsByClassName('container-fluid');
+        if(trgId.length==2){
+            trgId[1].style.paddingRight='0px';
+            trgId[1].style.paddingLeft='0px';
+            trgId[1].style.MarginRight='10px';
+        }
+        
+    }
+        
+    function adhocLDA(){
+        sforce.connection.sessionId = "{!$Api.Session_ID}";
+        if(confirm("This action will resend the LDA document! Do you want to proceed?")) 
+        {
+
+        var agrmntId = "{!echosign_dev1__SIGN_Agreement__c.Id}";
+        var alertString = sforce.apex.execute("AdhocLDAUtility","adhocCreateLDA",{agrId : agrmntId});
+        alert(alertString);
+        }
+    }
+    </script>
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+    
+</apex:page>

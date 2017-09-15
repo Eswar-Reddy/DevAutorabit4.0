@@ -1,0 +1,114 @@
+<!--
+Name    : LeadReportCapgemini
+Date    : Feb 20, 2010
+Author  : Aashish Mathur
+Purpose : To generate Lead History Report of Users.
+-->
+
+<apex:page controller="LeadReportCapgeminiController" tabStyle="Lead" title="Lead Report Capgemini">
+  <apex:form >
+    This page can be used to get list of Leads changed during entered time period by active users of given Company and Roles.    
+    <br /><br />
+    
+    <apex:pageBlock title="Search Criteria" id="timePeriodPB">
+      <apex:pageBlockSection >
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="User Company" />
+          <apex:outputPanel >
+            <div class="requiredInput">
+              <div class="requiredBlock" />
+              <apex:inputText value="{!company}" />
+            </div>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="Roles" />
+          <apex:outputPanel >
+            <div class="requiredInput">
+              <div class="requiredBlock" />
+              <!--<apex:inputText value="{!commaSeparatedRoles}" />-->
+              <apex:selectList value="{!lstSelectedRoles}" multiselect="true" size="6" >
+	              	<apex:selectOptions value="{!lstRoles}">
+	              	</apex:selectOptions>
+              </apex:selectList>
+            </div>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="From Date" />
+          <apex:outputPanel >
+            <div class="requiredInput">
+              <div class="requiredBlock" />
+              <!-- Changes done for Case#00061938
+		        SSO_First_Contact_Date_Time__c of lead is not editable for all profiles so changed to CSAT_last_reponse_date__c of contact
+		      -->
+              <apex:inputField value="{!LEAD_FOR_FROM_DATE.CSAT_last_reponse_date__c}" />
+            </div>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="To Date" />
+          <apex:outputPanel >
+            <div class="requiredInput">
+              <div class="requiredBlock" />
+              <!-- Changes done for Case#00061938
+		        SSO_First_Contact_Date_Time__c of lead is not editable for all profiles so changed to CSAT_last_reponse_date__c of contact
+		      -->
+              <apex:inputField value="{!LEAD_FOR_TO_DATE.CSAT_last_reponse_date__c}" />
+            </div>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+      
+      <apex:pageBlockButtons location="bottom">
+        <apex:commandButton value="Search" action="{!doSearch}" status="searchStatus" rerender="timePeriodPB, searchResultPB" />
+      	<apex:commandButton value="Clear"  action="{!clearSearch}" rerender="timePeriodPB, searchResultPB" />      	
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+    
+    
+    <apex:outputPanel layout="block" style="width:100%; text-align:center; color:red; font-weight:bold;">
+      &nbsp;
+      <apex:actionStatus startText="Please Wait..." id="searchStatus" />
+    </apex:outputPanel>
+    
+    <apex:outputPanel id="searchResultPnl">
+      <apex:pageBlock title="Search Result" id="searchResultPB">
+        <apex:pageBlockButtons location="top">
+          <apex:commandButton value="Export To CSV" action="{!exportToCSV}" rendered="{!searchResultList.size > 0}" />
+        </apex:pageBlockButtons>
+        
+        <apex:outputPanel layout="block" style="width:100%; text-align:center; color:red;" rendered="{!NOT(errorMsg == '')}">
+          {!errorMsg}
+        </apex:outputPanel>
+        
+        <apex:pageBlockTable value="{!searchResultList}" var="searchResult" rendered="{!searchResultList.size > 0}">
+          <apex:column headerValue="User Name">
+            <apex:outputLink value="/{!searchResult.USER.Id}">{!searchResult.USER.Name}</apex:outputLink>
+          </apex:column>
+          
+          <apex:column headerValue="User Email" value="{!searchResult.USER.Email}" />
+          
+          <apex:column headerValue="User Company" value="{!searchResult.USER.CompanyName}" />
+          
+          <apex:column headerValue="Lead Name">
+            <apex:outputLink value="/{!searchResult.LEAD.Id}">{!searchResult.LEAD.Name}</apex:outputLink>
+          </apex:column>
+          
+          <apex:column headerValue="Lead Owner">
+            <apex:outputLink value="/{!searchResult.LEAD.OwnerId}">{!searchResult.LEAD.Owner.Name}</apex:outputLink>
+          </apex:column>
+          
+          <apex:column headerValue="Lead CreatedBy">
+            <apex:outputLink value="/{!searchResult.LEAD.CreatedById}">{!searchResult.LEAD.CreatedBy.Name}</apex:outputLink>
+          </apex:column>
+        </apex:pageBlockTable>
+        
+        <apex:outputText value="No records to display" rendered="{!searchResultList.size = 0}" />
+      </apex:pageBlock>
+    </apex:outputPanel>
+  </apex:form>
+</apex:page>

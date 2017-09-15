@@ -1,0 +1,242 @@
+<apex:page controller="WarrantyRegistrationPDFController" renderAs="pdf" readOnly="true" showHeader="false" sidebar="false" standardStylesheets="false">
+<!-- Stylesheets --> 
+ <apex:stylesheet value="{!$Resource.PDFDocumentStyle_2}" />
+ <apex:form >
+ <apex:pageBlock >
+ <apex:outputPanel style="font-family:Arial Regular;">
+             <table width="100%" style="font-size:14px;border:0px;" cellpadding="0px" cellspacing="0px">
+                 <tr>
+                     <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px"/></td>          
+                     <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial Regular;font-size:13pt;" >TARJETA DE REGISTRO DE GARANTÍA</td>
+                  </tr>
+                  <tr>  <!-- Start 00118327 -->                       
+                        <td colspan="4" align="left">
+                            <apex:outputPanel style="font-family:Arial Regular;">                                
+                                  <br></br> Número de Registro de Garantía &nbsp;<apex:outputText value="{!warranty.Warranty_Number__c}"/> <br></br> 
+                            </apex:outputPanel>
+                        </td>
+                    </tr>  
+                    <br/>
+                  <tr >               
+                      <td width="100%" height="25" bgcolor="#FFCC33" colspan="4" style="font-size:15px">&nbsp;&nbsp;DATOS DEL CLIENTE</td>              
+                  </tr>   
+                  <tr >               
+                      <td width="100%" colspan="4" style="font-size:11px;font-style:italic;text-align:justify;padding-top:5px">Todos los datos aquí incluidos son necesarios para procesar esta tarjeta de registro de garantía. Los datos personales proporcionados en este documento serán
+                          enviados por el Partner identificado arriba a SunPower Energy Systems Spain, S.L. -con domicilio en Paseo de la Castellana, 86, Madrid, España- y compartidos con
+                          las siguientes compañías SunPower, en todos los casos para gestionar y controlar la garantía del equipo identificado en este documento:</td>                    
+                  </tr>      
+                  <tr>
+                      <td colspan="4" width="100%" style="padding-top:10px;">
+                          <table width="100%" border="1px" cellpadding="5px" cellspacing="0px" style="font-size:11px;font-style:italic">
+                              <tr style="background: #CCCCCC;">
+                                  <th>Compañía</th>
+                                  <th colspan="2">Domicilio (*)</th>
+                                  <th>Actividad principal</th>
+                              </tr>
+                              <tr>
+                                  <td>SunPower Corporation</td>
+                                  <td>3939 N. 1st Street - San Jose, California 95134 </td>
+                                  <td>EE.UU.</td>
+                                  <td>Energía solar</td>
+                              </tr>
+                              <tr>
+                                  <td>SunPower Systems SA</td>
+                                  <td>8, Avenue de Frontenex - Ginebra, 1207</td>
+                                  <td>Suiza</td>
+                                  <td><I>Energia solar</I></td>
+                              </tr>
+                          </table>
+                      </td>
+                  </tr>     
+                  <tr>
+                      <td colspan="4" width="100%"><I><p style="text-align:justify;font-size:11px">(*) Los países no pertenecientes al EEE no comparten estándares de protección de datos equivalentes a los implementados en los países miembros de la UE.
+                          Los datos personales contenidos en este documento pueden ser tratados por cualquiera de las compañías mencionadas anteriormente también con las finalidades
+                          mencionadas en las casillas que figuran más abajo y que usted tiene que marcar o no para indicar sus preferencias.
+                          La solicitud de acceso, rectificación, cancelación u oposición, cuando sea aplicable, debe ser enviada por el titular de los datos personales, acreditando su identi-
+                          dad, a la dirección de cada una de las compañías identificadas en este documento, responsables de los tratamientos indicados
+                          </p></I>
+                      </td>
+                  </tr>
+             </table>
+        </apex:outputPanel>
+        
+    <apex:outputPanel rendered="{!NOT ISNULL(warranty.Delivery_Date__c)}" style="font-size:11px;">
+            {!$Label.Date_Of_Delivery}:&nbsp;<apex:outputField value="{!warranty.Delivery_Date__c}" />
+        </apex:outputPanel>    
+    <br/>
+    <br/> 
+   <!--Start Product Table -->
+                <apex:outputPanel style="font-family:Arial Regular;"> 
+                    <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;font-size:12px;line-height:20px"> &nbsp;&nbsp;<b>{!$Label.Registered_Items}:</b>&nbsp;&nbsp;&nbsp; {!sNum} {!$Label.Total_Number_of_records}</div>            
+                        <table cellspacing="0" cellpadding="3" style="border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%" id="tblDetails">     
+                             <tbody>         
+                                   
+                                <!-- First Page Header Footer Section Starts -->
+                                <tr  style="background: #CCCCCC;" width="100%">
+                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                </tr>
+                
+                                 <apex:outputPanel id="panelHeaderFooter" 
+                                    styleClass="footer_right"
+                                    layout="block">
+                                    
+                                    <apex:outputPanel layout="none" rendered="true">
+                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                    </apex:outputPanel>
+                                       
+                                </apex:outputPanel>
+                                <!--Loop List of List-->
+                                
+                                <apex:repeat value="{!wProductsWrapper}" var="wProduct">
+                                    
+                                        
+                                        <!--Loop Through Products-->
+                                        <apex:repeat value="{!wProduct}" var="Pro">
+                                            
+                                            <apex:outputPanel layout="none" id="OtherPagesHeader" rendered="{!IF(Pro.isPageBrk,true,false)}">
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="page-break-before: always;background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 20px;">
+                                                <tr style="background: #CCCCCC;border: .06em solid #E9AB17;border-top-color:black;font-size:12px" width="100%">
+                                                   <td width="10%" style="border-width: 0.01em;"> </td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Name}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Product_Type}</b></td>
+                                                   <td width="30%" style="border-width: 0.01em;"><b>{!$Label.Serial_Number}</b></td>
+                                                </tr>
+                                                </table> <!-- End 00118327 -->
+                                                <apex:outputPanel id="panelHeaderFooter" 
+                                                    styleClass="footer_right"
+                                                    layout="block">
+                                                    
+                                                    <apex:outputPanel layout="none" rendered="true">
+                                                        <div>Page <span class="pageNumber"/> of <span class="pageCount"/> </div>
+                                                    </apex:outputPanel>
+                                                       
+                                                </apex:outputPanel>
+                                            </apex:outputPanel>
+                                                <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: none repeat scroll 0% 0% rgb(204, 204, 204); border: 0.06em solid rgb(233, 171, 23); font-size: 12px; line-height: 20px;"> 
+                                            <tr  style="background: #F5F5F5; border: .06em solid #E9AB17;font-size:12px;line-height:20px;"  width="100%">
+                                                <td width="10%">    
+                                                   &nbsp;<apex:outPutText value="{!Pro.sNo}"/> 
+                                                </td>
+                                                
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Product_Name__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.product_type__c}</td>
+                                                <td width="30%"> &nbsp;{!Pro.wrLineItem.WR_FDS_Product__r.Serial_Number__c}</td>
+                                            </tr>                 
+                                                </table>
+                                            </apex:repeat>   
+                             </apex:repeat>  
+                           </tbody> 
+                        </table>  
+                        <br/>
+                        <br/>
+                </apex:outputPanel>  
+    <!--End Product Table --> 
+  </apex:pageBlock>
+  <div style="page-break-after:always">&nbsp;</div>
+      <apex:outputPanel id="panelHeaderFooter" styleClass="footer_right" layout="block">                            
+           <apex:outputPanel style="font-size: 12px; text-align:left; font-family:Arial regular;" layout="block"> <p style="text-align:justify;font-size:13px;line-height:1.3;" valign="bottom">A cumplimentar por el cliente. ¿Preguntas? Póngase en contacto con nuestro Servicio de Atención al Cliente a través del
+            00800-SUNPOWER (00800-78676937) o por correo electrónico a solaresp@sunpowercorp.com</p></apex:outputPanel>
+            <apex:outputPanel style="font-size: 11px;font-family:Arial Regular; text-align:right"><i>Document #001-59331 Rev.*A</i><br/>Page <span class="pageNumber"></span> of <span class="pageCount"></span> </apex:outputPanel>                
+      </apex:outputPanel> 
+      <table width="100%" style="font-size:14px;border:0px;font-family:Arial Regular;" cellpadding="0px" cellspacing="0px">
+          <tr>
+              <td style="background:black;width:10%"><apex:image url="{!$Resource.ImgSunPower}" height="44px"/></td>          
+              <td height="34px" colspan="3" bgcolor="#D9DADB" align="center" style="font-family:Arial Regular;font-size:13pt;" >TARJETA DE REGISTRO DE GARANTÍA</td>
+          </tr>
+          <tr>
+              <td style="padding-top:12px;">&nbsp;</td> 
+          </tr>      
+          <tr >               
+              <td width="100%" height="25" bgcolor="#FFCC33" colspan="4" style="font-size:15px;font-family:Arial Regular;">&nbsp;&nbsp;DATOS DEL CLIENTE</td>              
+          </tr>     
+          <tr >               
+              <td width="100%" colspan="4" style="font-size:11px;font-style:italic;text-align:justify;font-family:Arial Regular;">Todos los datos aquí incluidos son necesarios para procesar esta tarjeta de registro de garantía. Los datos personales proporcionados en este documento serán
+              enviados por el Partner identificado arriba a SunPower Energy Systems Spain, S.L. -con domicilio en Paseo de la Castellana, 86, Madrid, España- y compartidos con
+              las siguientes compañías SunPower, en todos los casos para gestionar y controlar la garantía del equipo identificado en este documento:</td>                      
+          </tr>          
+          <tr>
+              <td colspan="4" width="100%" style="padding-top:10px;">
+                  <table width="100%" border="1px" cellpadding="5px" cellspacing="0px" style="font-size:11px;font-style:italic;font-family:Arial Regular;">
+                      <tr style="background: #CCCCCC;">
+                          <th>Compañía</th>
+                          <th colspan="2">Domicilio (*)</th>
+                          <th>Actividad principal</th>
+                      </tr>
+                      <tr>
+                          <td>SunPower Corporation</td>
+                          <td>3939 N. 1st Street - San Jose, California 95134 </td>
+                          <td>EE.UU.</td>
+                          <td>Energía solar</td>
+                      </tr>
+                      <tr>
+                          <td>SunPower Systems SA</td>
+                          <td>8, Avenue de Frontenex - Ginebra, 1207</td>
+                          <td>Suiza</td>
+                          <td><I>Energia solar</I></td>
+                      </tr>
+                  </table>
+              </td>
+          </tr>      
+          <tr>
+              <td colspan="4" width="100%"><I><p style="text-align:justify;font-size:11px">(*) Los países no pertenecientes al EEE no comparten estándares de protección de datos equivalentes a los implementados en los países miembros de la UE.
+                  Los datos personales contenidos en este documento pueden ser tratados por cualquiera de las compañías mencionadas anteriormente también con las finalidades
+                  mencionadas en las casillas que figuran más abajo y que usted tiene que marcar o no para indicar sus preferencias.
+                  La solicitud de acceso, rectificación, cancelación u oposición, cuando sea aplicable, debe ser enviada por el titular de los datos personales, acreditando su identi-
+                  dad, a la dirección de cada una de las compañías identificadas en este documento, responsables de los tratamientos indicados
+                  </p></I>
+              </td>
+          </tr>
+          <tr>
+              <td width="100%" colspan="4" style="padding-top:10px"><apex:outputText value="Nombre:" style="float:left;" />&nbsp;<span style="border-bottom:1px solid;width:91.9%;float:right;">{!warranty.Customer_SFDC_ID__r.Name}</span></td>      
+          </tr>
+          <tr>
+              <td colspan="4" width="100%" style="padding-top:10px;"><span style="border-bottom:1px solid;width:100%;float:right;" >{!warranty.Customer_SFDC_ID__r.Contact_Name__c}&nbsp;</span></td>
+          </tr>      
+          <tr>
+              <td colspan="4" width="100%" style="padding-top:10px"><apex:outputText value="Dirección:" style="float:left;" />&nbsp;<span style="border-bottom:1px solid;width:90.5%;float:right;">{!warranty.Customer_SFDC_ID__r.BillingStreet}&nbsp;</span></td>
+          </tr>      
+          <tr>
+              <td colspan="2" width="45%" style="padding-top:10px"><apex:outputText value="Ciudad:" style="float:left;padding-right:3px;" />&nbsp; <span style="border-bottom:1px solid;float:left;width:81%">{!warranty.Customer_SFDC_ID__r.Billingcity}&nbsp;</span></td>
+              <td colspan="2" style="padding-top:10px"><apex:outputText value="Provincia:" style="float:left;" />&nbsp; <span style="border-bottom:1px solid;float:right;width:82.5%">{!warranty.Customer_SFDC_ID__r.Billingstate}</span></td>
+          </tr>    
+          <tr>
+              <td colspan="2" style="padding-top:10px"><apex:outputText value="Código Postal:" style="float:left;padding-right:2px" />&nbsp;<span style="border-bottom:1px solid;float:left;width:68.3%;">{!warranty.Customer_SFDC_ID__r.BillingPostalCode}</span></td>
+              <td colspan="2" style="padding-top:10px"><apex:outputText value="Teléfono:" style="float:left;" />&nbsp; <span style="border-bottom:1px solid;float:right;width:83.5%;">{!warranty.Customer_SFDC_ID__r.Phone}</span></td>         
+          </tr>         
+          <tr>
+              <td colspan="4" style="padding-top:10px"><apex:outputText value="Email:" style="float:left;" />&nbsp;<span style="border-bottom:1px solid;width:93.8%;float:right;">{!warranty.Customer_SFDC_ID__r.Email__c}</span></td>
+          </tr>                 
+         <br /><br />
+         <div style="background: #9ec6de url(/resource/1397178559000/Menu_BG) repeat-x left top;">&nbsp;&nbsp;SU OPINIÓN ES IMPORTANTE PARA NOSO TROS </div>                          
+          <tr>
+              <td colspan="4"> 
+                  <p style="text-align:justify;font-size:14px;font-family:Arial Regular;line-height:19px">En SunPower estamos comprometidos a proporcionarle un excelente servicio. Por ello medimos la satisfacción de
+                  nuestros clientes con el servicio ofrecido. Seleccione la casilla correspondiente y proporciónenos su correo electró-
+                  nico para enviarle una breve encuesta donde nos podrá dar su opinión sobre el servicio que ha recibido de nuestro
+                  Partner y de SunPower. Gracias por elegir SunPower.
+                 </p>
+             </td>
+         </tr>     
+         <tr>
+             <td><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+             <td colspan="3" style="text-align:justify;font-size:11px;font-family:Arial Regular;">Marque esta casilla si<b> NO DESEA </b>que se pongan en contacto con usted para futuras inspecciones de calidad.
+             </td>
+         </tr>
+         <tr>
+             <td><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+             <td colspan="3" style="text-align:justify;font-size:11px;font-family:Arial Regular;" valign="middle">Marque esta casilla si<b> NO DESEA</b> que se pongan en contacto con usted para realizar encuestas de satisfacción del cliente.
+             </td>
+         </tr>
+         <br />
+         <tr>
+             <td><img height="12" width="12" style="border:1px solid" title="Not Checked" class="checkImg" alt="Not Checked" src="/img/checkbox_unchecked.gif" /></td>
+             <td colspan="3" valign="middle" style="text-align:justify;font-size:11px;font-family:Arial Regular;" >Marque esta casilla<strong> SI DESEA</strong> recibir información sobre los productos y servicios de SunPower (sector de la tecnología solar) por cuales-
+                 quiera medios de comunicación (incluidos los electrónicos).
+             </td>
+         </tr>     
+     </table>
+     </apex:form>     
+</apex:page>

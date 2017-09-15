@@ -1,0 +1,178 @@
+<apex:page standardController="Site_Information_Form__c" extensions="HelixDesignRequestController,HelixDesignRequestUtilities" showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <c:SPCommunityAppResources_CSS namespaceOnly="false"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <apex:stylesheet value="{!$Resource.StyleguideExpansion_CSS}" />
+
+    <style>
+
+        .disable-btn {
+            cursor: default;
+            opacity: .65;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+    </style>
+
+
+    <div class="sunpower-style container" style="width: 90%; margin-left: auto; margin-right: auto;">
+        <apex:form >
+        
+            <!--header-->
+            <div class="topper"></div>
+
+            <div class="row" style="margin-bottom: .5rem;">
+                <div class="col-xs-12">
+                    <div class="sunpower-logo-black"></div>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <h3>Helix Design Request</h3>               
+            </div>
+            <!--end header-->
+
+            <div style="width: 90%; margin-left: auto; margin-right: auto;">
+
+                <c:SPCommunities_SpinnerOverlay />
+            
+                <apex:outputPanel rendered="{! !lockInputs}">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="hide-mobile show-desktop" style="width: 100%;">
+                            <ol class="progress">
+                                <li class="progress-done blocked" style="cursor:pointer" onclick="navigateFunction('1');">General Information</li>
+                                <li class="progress-done blocked" style="cursor:pointer" onclick="navigateFunction('2');" >Product Information</li>
+                                <li class="progress-done blocked" style="cursor:pointer" onclick="navigateFunction('3');" >Notes and Attachments</li>
+                                <li class="progress-todo blocked" >Submit&nbsp;&nbsp;&nbsp;</li>
+                            </ol>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:outputPanel rendered="{!lockInputs}">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="hide-mobile show-desktop" style="width: 100%;">
+                            <ol class="progress">
+                                <li class="progress-done" style="cursor: pointer;" onclick="showOverlay(); navigateFunction('1');">General Information</li>
+                                <li class="progress-done" style="cursor: pointer;" onclick="showOverlay(); navigateFunction('2');" >Product Information</li>
+                                <li class="progress-done" style="cursor: pointer;" onclick="showOverlay(); navigateFunction('3');" >Notes and Attachments</li>
+                                <li class="progress-done" >Submit&nbsp;&nbsp;&nbsp;</li>
+                            </ol>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+
+                <apex:actionFunction name="navigateFunction" action="{!navigate}" reRender="mainPanel, errorPanel" oncomplete="hideOverlay(); setFocus()">
+                    <apex:param name="pageNumber" assignTo="{!pageNo}" value="" />
+                </apex:actionFunction>
+
+                <!--error panel-->
+                <apex:outputPanel id="mainPanel">
+                    <apex:outputPanel id="errorPanel" rendered="{!saveQuitErrors}">                    
+                        <div class="alert alert--danger">
+                            <span>
+                                <apex:repeat value="{!errorMessages}" var="msg">
+                                    {!msg}<br />
+                                </apex:repeat>
+                            </span>
+                        </div>                                                
+                    </apex:outputPanel>
+                </apex:outputPanel>
+
+                <div class="row">
+                    <div class="col-xs-12 section-header">
+                        <h4>Disclaimer</h4>
+                    </div>
+                </div>
+
+                <!--Section 12 - Disclaimer -->
+                <div class="row">
+                    <div class="main-content col-xs-12">
+                        <p style="font-size: smaller;">
+                            <apex:outputText value="{!headlines[12].APPR_PUB__Long_Description__c}" escape="false" rendered="{!NOT(ISNULL(headlines[12]))}" />
+                        </p>
+                    </div>
+                </div>
+                <!--end disclaimer-->
+
+                <div class="page-header"></div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span>
+                            <apex:inputField value="{!objDesign.Submitted__c}" id="submittedBox" rendered="{! !lockInputs}" onclick="checkAbleToSubmit(this.checked)" />
+                            <apex:outputPanel rendered="{!lockInputs && objDesign.Submitted__c}" style="color: #5e6367;">
+                                &#9745;
+                            </apex:outputPanel>
+                            <label style="font-size: smaller;">I acknowledge that I have read and agree to the above terms and conditions</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="page-header"></div>
+     
+                <!--buttons-->
+                <div class="row" style="text-align: right; margin-bottom: .25rem;">
+                    <div class="col-xs-4" style="text-align: left;">
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal blocked" onclick="showOverlay();" action="{!saveANDQuit}" value="Save & Quit" reRender="mainPanel, errorPanel" oncomplete="hideOverlay(); setFocus()" rendered="{! !lockInputs}" />
+                        <apex:commandButton styleClass="btn btn-secondary btn--normal" action="{!returnToOpp}" value="Quit" rendered="{!lockInputs}" />
+                    </div>
+
+                    <div class="col-xs-4">
+                        <apex:commandButton styleClass="btn btn-primary btn--normal blocked" onclick="showOverlay();" action="{!toAttachments}" value="Back" reRender="mainPanel, errorPanel" oncomplete="hideOverlay(); setFocus()" />
+                    </div>
+                    <div class="col-xs-4">
+                        <apex:commandButton styleClass="btn btn-primary btn--normal disable-btn verify" id="submitButton" onclick="showOverlay();" action="{!submitDesign}" disabled="{!lockInputs && objDesign.Dealer_Status__c != 'More Information Needed'}" value="Submit" reRender="mainPanel, errorPanel" oncomplete="hideOverlay(); setFocus()" />
+                    </div>
+                </div>
+                <!--end buttons-->
+
+            </div>
+
+            <!--footer-->            
+            <div id="home" style="margin-top: .25rem;">
+                <footer>
+                    <div class="footer-content">
+                        <div class="copyright">&copy; SunPower Corporation. All rights reserved.</div>
+                    </div>
+                </footer>
+                <div class="bar"></div>
+            </div>
+            <!--end footer-->
+            
+        </apex:form>
+    </div>
+    
+    
+    <c:SPCommunityAppResources_JS />
+ 
+    <script>
+
+        $(document).ready(function() {        	 
+         
+            if('{!objDesign.Submitted__c}' == 'true') {
+                checkAbleToSubmit(true);
+                $( '.blocked' ).removeClass('disable-btn');
+            }
+        });
+
+        function checkAbleToSubmit(checked) {
+            console.log('checked', checked);
+            if(checked) {
+                $( '.disable-btn' ).removeClass('disable-btn');
+                $( '.blocked' ).addClass('disable-btn');
+            } else {
+                $( '.verify' ).addClass('disable-btn');
+                $( '.blocked' ).removeClass('disable-btn');
+            }
+        }
+        
+        function setFocus() {
+            console.log('focusing');
+            window.scrollTo(0, 0);
+        }
+    </script>
+
+</apex:page>

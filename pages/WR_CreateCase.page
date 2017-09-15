@@ -1,0 +1,22 @@
+<apex:page standardController="Case" extensions="WR_CreateCaseExtension" showHeader="false" sidebar="false">
+    <apex:pageMessages />
+    <apex:form >
+        <apex:pageblock >
+            <apex:pageBlockSection title="Case Information" columns="2" collapsible="false" rendered="{!ISBLANK(caseLog.id)}">
+                <apex:inputfield value="{!caseLog.Subject}" style="width:200%"/><apex:pageBlockSectionItem />
+                <apex:inputfield value="{!caseLog.Description}" style="width:500%;height:107px"/><apex:outputLabel value="" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="3" collapsible="false" rendered="{!ISBLANK(caseLog.id)}">
+            	<apex:pageBlockSectionItem >
+            	<apex:outputLabel value="{!$Label.Attach_File}" /> 
+            	<apex:inputFile value="{!fileContent}" fileName="{!fileStr}" />
+   				</apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+           
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandbutton value="Save" action="{!logCase}" rendered="{!ISBLANK(caseLog.id)}"/>
+                <apex:commandbutton value="Close" onclick="window.close(); " />
+            </apex:pageBlockButtons>
+        </apex:pageblock> 
+    </apex:form>
+</apex:page>

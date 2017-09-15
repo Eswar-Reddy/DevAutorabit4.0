@@ -1,0 +1,35 @@
+<apex:page contentType="" id="addOrder" Controller="PriceBookdesignController"  
+standardStylesheets="true" tabStyle="Design__c" action="{!init}">
+<apex:sectionHeader title="Choose Price Book" />  
+<apex:outputLabel value="Select a price book for this Order." />
+<!--
+ Changing a selected price book will delete all existing products from this Order.
+ -->
+
+<apex:form id="theForm" target="_parent">
+
+     <apex:pageBlock id="pgblock" title="Choose Price Book" >
+    
+     <apex:inputHidden value="{!designId}"/>
+     
+         <apex:pageBlockButtons id="buttons">
+                  <apex:commandButton id="save" value="Save" onClick="doSave(this)" action="{!save}"/> 
+                  <apex:commandButton id="cancel" immediate="true" value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+             <apex:pageBlockSection >
+             <apex:pageBlockSectionItem >
+
+              <apex:outputLabel value="Price Book" for="ChoosedesignPriceBook" />
+                  <apex:selectList title="Price Book" id="ChoosedesignPriceBook" value="{!design.Price_Book__c}" size="1" >
+                   <apex:selectOptions value="{!PriceBook}"/>
+
+                </apex:selectList>
+
+           
+
+              </apex:pageBlockSectionItem>   
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:form>
+
+</apex:page>

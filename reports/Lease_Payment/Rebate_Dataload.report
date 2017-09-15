@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$Status__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c.Invoice_Documents__r$State__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Site_State_Prov__c</column>
+            <operator>equals</operator>
+            <value>ca,az,ny,nv</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>contains</operator>
+            <value>rebate,icf</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Status__c</column>
+            <operator>equals</operator>
+            <value>Not Submitted</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>equals</operator>
+            <value>Active</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Expected_Rebate__c</column>
+            <operator>equals</operator>
+            <value>USD 0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Rebate - Invoice Documents</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payment_and_Invoice_Documents__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Date_Countersigned__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

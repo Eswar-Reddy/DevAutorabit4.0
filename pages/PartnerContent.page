@@ -1,0 +1,282 @@
+<apex:page standardController="Content__c" extensions="RecentContentController" sidebar="true" showHeader="true" id="page1">
+    <apex:pageBlock id="block1">
+    <script type="text/javascript" src="/jslibrary/1243015336000/main.js"/>
+    <script>
+     function deleteCurrent(Id, type) {
+     if(confirm("Are you sure?")) {
+        if(type == 'Announcements') {
+             removeAnnouncements(Id);
+        }
+        else if(type == 'TrainingSchedule'){
+             removeTrainingSchedule(Id);
+        }
+        else if(type == 'UpcomingEvents'){
+             removeUpcomingEvents(Id);
+        }
+        
+     }
+     else
+       return false;     
+   }
+  </script>
+    <style>
+    .BlackHeading {
+        FONT-WEIGHT: bold; FONT-SIZE: 17px; COLOR: #254117;
+    }
+    .YellowHeading {
+        FONT-WEIGHT: bold; FONT-SIZE: 17px; COLOR: #C7A317;
+    }
+    .YellowHeading2 {
+        FONT-WEIGHT: bold; FONT-SIZE: 15px; COLOR: #EAC117;
+    .Page{
+        background-color:white;
+    }
+    
+    </style>
+    <apex:form id="form1">
+         <apex:actionFunction name="removeAnnouncements" action="{!remove}" reRender="panel1,panelReplica1" status="statusDeleting,statusDeleting1">
+           <apex:param assignTo="{!idToDelete}" value="" name="p2"></apex:param>
+         </apex:actionFunction>
+         <apex:actionFunction name="removeTrainingSchedule" action="{!remove}" reRender="panel2" status="statusDeleting2">
+           <apex:param assignTo="{!idToDelete}" value="" name="p2"></apex:param>
+         </apex:actionFunction>
+         <apex:actionFunction name="removeUpcomingEvents" action="{!remove}" reRender="panel3" status="statusDeleting3">
+           <apex:param assignTo="{!idToDelete}" value="" name="p2"></apex:param>
+         </apex:actionFunction>
+         
+         <apex:tabPanel id="tabPanel1" switchType="client" value="{!selectedTab}">
+                <apex:tab rendered="{!isClipsVisible}" label="{!$Label.ContentAnnouncementsTab}" name="Clips" id="tabClips" style="background-color:white;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:10px">
+                           <tr>
+                                <td>
+                                  <apex:outputLabel value="{!$Label.ContentAnnouncementsTabHeading}"  styleClass="YellowHeading" rendered="false"/>
+                                </td>
+                                <td align="right">
+                                    <apex:outputLink value="/{!strPrefixContent}/e?retURL=/apex/ContentLibrary&retTab=Clips&RecordType={!strClipsRecordTypeID}&cancelURL=/apex/ContentLibrary?retTab=Clips" style="COLOR: #151B8D;" rendered="{!isSunPowerSuperUser}">[Add New]</apex:outputLink>
+                                </td>                       
+                           </tr>    
+                            <tr>
+                                <td colspan="2"><hr/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                        <apex:actionStatus startText="Deleting..." id="statusDeleting" stopText="" startStyle="color:red"/>
+                                </td>
+                            </tr>
+                        </table>    
+                        <br/>
+                        <apex:pageBlockSection columns="1"> 
+                          <apex:outputPanel id="panel1">
+                            <apex:repeat value="{!listClips}" var="la" id="repeat1">
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                    <tr style="height:15px">
+                                      <td>
+                                        <apex:outputPanel rendered="{!isSunPowerSuperUser}">
+                                          <apex:outputLink value="/{!la.Id}/e?retURL=/apex/ContentLibrary?retTab=Clips" style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!la.Id}','Announcements');">[Delete]</a>&nbsp;
+                                        </apex:outputPanel><apex:outputLabel value="{!la.IsContentNew}" />&nbsp;<u style="COLOR: #EAC117;"><apex:outputLabel value="{!la.title}" style="COLOR: #EAC117;" /></u>
+                                        <!-- <apex:outputLink value="{!la.detailPageLink}" style="COLOR: #EAC117;">{!la.title}</apex:outputLink>  -->
+                                       </td>
+                                     </tr>
+                                     <tr>
+                                        <td>
+                                            <apex:outputLabel value="{!la.description}" />                                                                      
+                                        </td>
+                                     </tr>  
+                                     <tr>
+                                        <td>
+                                            <apex:outputLabel value="{!la.eventSatrtDate}" />                                          
+                                        </td>
+                                     </tr>
+                                     <tr>
+                                        <td>                                          
+                                            <apex:outputLink value="{!la.location}" target="_blank">{!la.urlLink}</apex:outputLink>
+                                        </td>
+                                     </tr>
+                                     <tr>
+                                        <td>
+                                            <hr/>
+                                         </td>  
+                                     </tr>
+                                     <tr>
+                                        <td>&nbsp;</td>
+                                     </tr>
+                                </table>    
+                            </apex:repeat>
+                           </apex:outputPanel> 
+                        </apex:pageBlockSection>    
+                
+                </apex:tab>
+                <apex:tab label="{!$Label.contentForAnnouncementTab}" name="Announcements" id="tabAnnouncements" style="background-color:white;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:10px">
+                           <tr>
+                                <td>
+                                  <apex:outputLabel value="{!$Label.ContentAnnouncementsTabHeading}"  styleClass="YellowHeading" rendered="false"/>
+                                </td>
+                                <td align="right">
+                                    <apex:outputLink value="/{!strPrefixContent}/e?retURL=/apex/ContentLibrary&retTab=Announcements&RecordType={!strAnnouncemntRecordTypeID}&cancelURL=/apex/ContentLibrary?retTab=Announcements" style="COLOR: #151B8D;" rendered="{!isSunPowerSuperUser}">[Add New]</apex:outputLink>
+                                </td>                       
+                           </tr>    
+                            <tr>
+                                <td colspan="2"><hr/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                        <apex:actionStatus startText="Deleting..." id="statusDeleting1" stopText="" startStyle="color:red"/>                                        
+                                </td>
+                            </tr>
+                        </table>    
+                        <br/>
+                        <apex:pageBlockSection columns="1"> 
+                          <apex:outputPanel id="panelReplica1">
+                            <apex:repeat value="{!listAnnouncements}" var="la" id="repeat1">
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                    <tr style="height:15px">
+                                      <td>
+                                        <apex:outputPanel rendered="{!isSunPowerSuperUser}">
+                                          <apex:outputLink value="/{!la.Id}/e?retURL=/apex/ContentLibrary?retTab=Announcements" style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!la.Id}','Announcements');">[Delete]</a>&nbsp;
+                                        </apex:outputPanel><apex:outputLabel value="{!la.IsContentNew}" />&nbsp;<u style="COLOR: #EAC117;"><apex:outputLabel value="{!la.title}" style="COLOR: #EAC117;" /></u>
+                                        <!-- <apex:outputLink value="{!la.detailPageLink}" style="COLOR: #EAC117;">{!la.title}</apex:outputLink>  -->
+                                       </td>
+                                     </tr>
+                                     <tr>
+                                        <td>
+                                            <apex:outputLabel value="{!la.description}" />                                                                      
+                                        </td>
+                                     </tr>  
+                                     <tr>
+                                        <td>
+                                            <apex:outputLabel value="{!la.eventSatrtDate}" />
+                                        </td>
+                                     </tr>
+                                     <tr>
+                                        <td>
+                                            <apex:outputLink value="{!la.location}" target="_blank">{!la.urlLink}</apex:outputLink>
+                                        </td>
+                                     </tr>
+                                     <tr>
+                                        <td>
+                                            <hr/>
+                                         </td>  
+                                     </tr>
+                                     <tr>
+                                        <td>&nbsp;</td>
+                                     </tr>
+                                </table>    
+                            </apex:repeat>
+                           </apex:outputPanel> 
+                        </apex:pageBlockSection>    
+                
+                </apex:tab>
+                <apex:tab label="{!$Label.ContentTrainingTab}" rendered="{!IF(UserProfile!='Partner Restricted' && UserProfile!='EU Partner Restricted','true','false')}" name="TrainingSchedule" id="tabTrainingSchedule" style="background-color:white;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:10px">
+                            <apex:outputPanel rendered="{!LEFT(UserProfile, 2) != 'EU'}">
+                            <tr style="height:15px">
+                              <td>
+                                <apex:outputLink value="/servlet/servlet.FileDownload?file=01580000000gKF3" target="_blank" >{!$Label.ContentAnnouncementsTabLink1}</apex:outputLink>                              
+                              </td>
+                               <td align="right">
+                                    <apex:outputLink value="/{!strPrefixContent}/e?retURL=/apex/ContentLibrary&retTab=Training&RecordType={!strTrainingRecordTypeID}&cancelURL=/apex/ContentLibrary?retTab=TrainingSchedule" style="COLOR: #151B8D;" rendered="{!isSunPowerSuperUser}">[Add New]</apex:outputLink>
+                                </td>   
+                             </tr>
+                             <tr>
+                                <td colspan="2">
+                                    <apex:outputLink value="/servlet/servlet.FileDownload?file=01580000000gKEy" target="_blank" >{!$Label.ContentAnnouncementsTabLink2}</apex:outputLink>                                
+                                </td>
+                             </tr>
+                             <tr>
+                                <td style="height:10px" colspan="2">&nbsp;</td>
+                             </tr>
+                             </apex:outputPanel>
+                             <tr>
+                                <td colspan="2">
+                                    <apex:outputLabel value="{!$Label.ContentTrainingTabHeading}" styleClass="YellowHeading"/>
+                                </td>   
+                             </tr>
+                              <tr>
+                                <td style="height:15px" colspan="2">&nbsp;</td>
+                             </tr>
+                             <tr>
+                                <td colspan="2">
+                                        <apex:actionStatus startText="Deleting..." id="statusDeleting2" stopText="" startStyle="color:red"/>
+                                </td>
+                            </tr>
+                         </table>                         
+                        <apex:pageBlockSection columns="1">
+                            <apex:outputPanel id="panel2">
+                                <apex:pageBlockTable value="{!listTaining}" var="lt">   
+                                   <apex:Column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+                                            <apex:outputPanel >
+                                              <apex:outputLink value="/{!lt.Id}/e?retURL=/apex/ContentLibrary?retTab=TrainingSchedule"  style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!lt.Id}','TrainingSchedule');">[Delete]</a>&nbsp;&nbsp;
+                                            </apex:outputPanel>
+                                    </apex:Column>
+                                    <apex:Column headerValue="{!$Label.ContentTraningTableHeading5}"  width="15%" rendered="false">    
+                                            {!lt.IsContentNew} &nbsp;
+                                    </apex:Column>
+                                    <apex:Column headerValue="{!$Label.ContentTraningTableHeading1}" width="55%"> 
+                                            <apex:outputLabel value="{!lt.description}" />
+                                       <!--  <apex:outputLink value="{!lt.detailPageLink}">{!lt.description} &nbsp;</apex:outputLink>  -->
+                                    </apex:Column>
+                                    <apex:Column headerValue="{!$Label.ContentTraningTableHeading2}"  width="12%">    
+                                            {!lt.eventSatrtDate} &nbsp;
+                                    </apex:Column>
+                                    <apex:Column headerValue="{!$Label.ContentTraningTableHeading3}" width="12%">   
+                                            {!lt.eventEndDate} &nbsp;
+                                    </apex:Column>
+                                    <apex:Column headerValue="{!$Label.ContentTraningTableHeading4}" width="15%">   
+                                            {!lt.location} &nbsp;
+                                    </apex:Column>
+                                </apex:pageBlockTable> 
+                           </apex:outputPanel>     
+                        </apex:pageBlockSection>
+                        
+    
+                </apex:tab>
+                <apex:tab label="{!$Label.ContentEventTab}" rendered="{!IF(UserProfile!='Partner Restricted' && UserProfile!='EU Partner Restricted','true','false')}" name="UpcomingEvents" id="tabUpcomingEvents" style="background-color:white;">
+                         <table width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:10px">
+                            <tr style="height:15px">
+                              <td>
+                                <apex:outputLabel value="{!$Label.ContentEventTabHeading}" styleClass="YellowHeading"/>                                
+                              </td> 
+                              <td align="right">
+                                    <apex:outputLink value="/{!strPrefixContent}/e?retURL=/apex/ContentLibrary&RecordType={!strEventRecordTypeID}&cancelURL=/apex/ContentLibrary?retTab=UpcomingEvents"   style="COLOR: #151B8D;" rendered="{!isSunPowerSuperUser}">[Add New]</apex:outputLink>
+                                </td>   
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                        <apex:actionStatus startText="Deleting..." id="statusDeleting3" stopText="" startStyle="color:red"/>
+                                </td>
+                            </tr>
+                        </table>      
+                            <br/>
+                        <apex:pageBlockSection columns="1"> 
+                           <apex:outputPanel id="panel3">
+                            <apex:pageBlockTable value="{!listEvent}" var="le" >
+                                <apex:Column headerValue="Action" rendered="{!isSunPowerSuperUser}">
+                                            <apex:outputPanel >
+                                              <apex:outputLink value="/{!le.Id}/e?retURL=/apex/ContentLibrary?retTab=UpcomingEvents"    style="COLOR: #151B8D;" >[Edit]</apex:outputLink>&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#151B8D;" onclick="deleteCurrent('{!le.Id}','UpcomingEvents');">[Delete]</a>&nbsp;&nbsp;
+                                            </apex:outputPanel>
+                                    </apex:Column>
+                                <apex:Column headerValue="{!$Label.ContentTraningTableHeading5}"  width="15%" rendered="false">    
+                                            {!le.IsContentNew} &nbsp;
+                                 </apex:Column> 
+                                <apex:Column headerValue="{!$Label.ContentEventTableHeading1}" width="55%"> 
+                                  
+                                        <apex:outputLabel value="{!le.title}" rendered="{!ISNULL(le.location)}" />
+                                   <apex:outputLink value="{!le.location}" rendered="{!NOT(ISNULL(le.location))}">{!le.title}&nbsp;</apex:outputLink> 
+                                </apex:Column>
+                                <apex:Column headerValue="{!$Label.ContentEventTableHeading2}" width="20%">
+                                    {!le.eventSatrtDate} &nbsp;
+                                </apex:Column>   
+                                <apex:Column headerValue="{!$Label.ContentEventTableHeading3}" width="25%">   
+                                    {!le.targetAudience} &nbsp;
+                                </apex:Column>
+                            </apex:pageBlockTable> 
+                           </apex:outputPanel> 
+                        </apex:pageBlockSection>
+                </apex:tab> 
+            </apex:tabPanel> 
+        </apex:form> 
+    </apex:pageBlock>   
+</apex:page>

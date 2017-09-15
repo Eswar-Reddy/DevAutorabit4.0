@@ -1,0 +1,60 @@
+<apex:page controller="NoteNew" showHeader="false" sidebar="false">
+	<c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+	<c:CommunitiesMainNavComponent activeTab=""/>
+
+<body class="detail-container">
+	<div class="sunpower-style container-fluid" style="margin-top: 1rem; max-width: 1200px;">
+		<apex:outputPanel rendered="{!IF(errorMsg!=null,true,false)}">
+			<div class="alert alert--danger">
+				<span>{!errorMsg}</span>
+			</div>
+		</apex:outputPanel>
+		<apex:form >
+			<apex:actionFunction name="saveAction" action="{!submit}" />
+			<apex:actionFunction name="cancelAction" action="{!cancel}" />
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <H3>Note Edit</H3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label for="isPrivate">Private</label>
+	                    <apex:inputCheckbox id="isPrivate" value="{!isPrivate}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label for="title">Title</label>
+	                    <apex:inputText id="title" value="{!title}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+	            <div class="col-xs-12">
+	            	<div class="form-group">
+	                    <label for="body">Body</label>
+	                    <apex:inputTextarea id="body" value="{!body}" rows="3" cols="40"/><p/>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+	            <div class="col-xs-12 col-md-6">
+	                <a class="btn btn-primary btn--small" onclick="saveAction(); return false" style="float: left; margin-bottom: 1rem;">Save</a>
+	            </div>
+	            <div class="col-xs-12 col-md-6">
+	                <a class="btn btn-secondary btn--small" onclick="cancelAction();" style="float: left; margin-bottom: 1rem;">Cancel</a>
+	            </div>
+	        </div>
+		</apex:form>
+	</div>
+</body>
+<!-- Load JS Scripts Last -->
+<c:SPCommunityAppResources_JS />
+</apex:page>

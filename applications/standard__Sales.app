@@ -2,21 +2,19 @@
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
     <defaultLandingTab>standard-home</defaultLandingTab>
     <tab>standard-Chatter</tab>
-    <tab>standard-Campaign</tab>
-    <tab>standard-Lead</tab>
-    <tab>standard-Account</tab>
-    <tab>standard-Contact</tab>
     <tab>standard-Opportunity</tab>
-    <tab>standard-ForecastItem</tab>
-    <tab>standard-AdvForecast</tab>
-    <tab>standard-Forecasting3</tab>
-    <tab>standard-Contract</tab>
-    <tab>standard-Order</tab>
-    <tab>standard-Invoice</tab>
-    <tab>standard-Case</tab>
-    <tab>standard-Solution</tab>
-    <tab>standard-Product2</tab>
-    <tab>standard-report</tab>
-    <tab>standard-Dashboard</tab>
-    <tab>Mobile__c</tab>
+    <tab>LeasePayment__c</tab>
+    <tab>Metric_Template__c</tab>
+    <tab>Global_Dealer_Program__c</tab>
+    <tab>Metrics__c</tab>
+    <tab>RMA__c</tab>
+    <tab>Price_Request__c</tab>
+    <tab>Dealer_Notification__c</tab>
+    <tab>Sunpower_Spectrum_Debug_Log__c</tab>
+    <tab>Portal_Login_Page_Setup__c</tab>
+    <tab>Order_Discount__c</tab>
+    <tab>POLineFeeSetup__c</tab>
+    <tab>Solar_Access_Presets__c</tab>
+    <tab>S3_Credentials__c</tab>
+    <tab>standard-Quote</tab>
 </CustomApplication>

@@ -1,0 +1,138 @@
+<!--Translations(referring field label or custom label) are set under the case#00089341-->
+<apex:page standardController="Opportunity"
+    extensions="DisplayContactsController" tabStyle="Opportunity" showHeader="false" sidebar="false">
+<script>
+
+//Case#00087597
+function redirect(id){
+window.parent.location.href='/'+id+'?opp={!$CurrentPage.parameters.Id}';
+} 
+</script>
+    <apex:pageBlock >
+    <apex:outputPanel rendered="{!accountRendered}">
+     <h2><font color="#000000" >{!$Label.Address_Information}</font></h2>
+        <hr/> 
+        <apex:outputPanel > 
+            <!-- Put rendred condition for case#00089341 -->
+            <div><b><apex:outputLabel rendered="{!NOT(isPartner)}">{!$Label.Address_Opp}</apex:outputLabel></b></div> 
+        <apex:outputField value="{!account.BillingStreet}"/> &nbsp;
+        <apex:outputField value="{!account.BillingCity}" /> &nbsp;
+        <apex:outputField value="{!account.BillingState}"/> <br />
+        
+        <apex:outputField value="{!account.BillingCountry}"/> &nbsp;
+        <apex:outputField value="{!account.BillingPostalCode}" /> <br/><br/>
+        <!-- Added rendred condition for case#Case#00087597 -->
+        <apex:outputPanel rendered="{!NOT(isPartner)}">
+        <b>{!$ObjectType.Account.fields.Phone.label}</b>&nbsp;<apex:outputField value="{!account.Phone}"/>
+        </apex:outputPanel>
+        
+        </apex:outputPanel>
+          
+    <br/><br/> 
+   
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!isRecordFound}">
+    <h2><font color="#000000" >{!$ObjectType.Contact.label}</font></h2>
+    <hr/>
+   <apex:pageBlockSection columns="1" >
+       <!--<table width="100%" >
+       <tr width="100%" class="dataRow" >
+                <th width="25%">Contact Name</th>
+                <th width="25%">{!$ObjectType.Contact.fields.Title.label}</th>
+                <th width="25%">{!$ObjectType.Contact.fields.Email.label}</th>
+                <th width="25%">{!$ObjectType.Contact.fields.Phone.label}</th>
+        <tr/>
+        <apex:repeat value="{!contacts}" var="con" 
+            rendered="{!isRecordFound}">
+            <tr width="100%" class="dataRow" >
+                <td width="25%" class="dataCell"><apex:Outputlink value="/{!con.id}" target="_blank" id="lnk">{!con.name}</apex:outputLink></td>
+                <td width="25%" class="dataCell"><apex:outputText value="{!con.title}"></apex:outputText></td>
+                
+                <td width="25%" class="dataCell"><apex:outputText value="{!con.email}"></apex:outputText></td>
+                <td width="25%" class="dataCell"><apex:outputText value="{!con.phone}"></apex:outputText></td>
+            <tr/>
+            
+            <tr>
+            <td><apex:outputText value="{!con.Best_Time_to_Call__c}"></apex:outputText></td>
+            </tr>
+          
+        </apex:repeat>
+       </table> -->
+        <apex:PageBlockTable value="{!contacts}" var="con" width="100%"
+            rendered="{!isRecordFound}">
+            
+           <apex:column headerValue="{!$Label.Contact_Name}" width="20%"
+                styleClass="dataCell" rendered="{!NOT(isPartner)}">
+                  <apex:Outputlink value="/{!con.id}" target="_blank" id="lnk">{!con.name}</apex:outputLink>
+            </apex:column>
+            
+            <!-- <apex:column value="{!con.name}" styleClass="dataCell" headerValue="{!$Label.Contact_Name}" width="25%" rendered="{!NOT(isPartner)}"/>-->
+            
+            <!-- Start Case#00087597 -->
+            <apex:column styleClass="dataCell" headerValue="{!$Label.Contact_Name}" width="25%" rendered="{!isPartner}"> 
+                <a href="#" onclick="redirect('{!con.ID}');">{!con.name}</a>
+            </apex:column>
+            <!-- End Case#00087597 -->
+            <!-- Commented Title for case# 00100955 -->
+            <!-- <apex:column value="{!con.title}" styleClass="dataCell"
+                headerValue="{!$ObjectType.Contact.fields.Title.label}" width="20%" />-->
+            <apex:column value="{!con.email}" styleClass="dataCell"
+                headerValue="{!$ObjectType.Contact.fields.Email.label}" width="20%" />
+            <apex:column value="{!con.phone}" styleClass="dataCell"
+                headerValue="{!$ObjectType.Contact.fields.phone.label}" width="20%" />
+            <!-- Start 00100955-->
+            <apex:column value="{!con.mobilephone}" styleClass="dataCell"
+                headerValue="{!$ObjectType.Contact.fields.mobilephone.label}" width="20%" />
+            <!-- End 00100955-->
+            <!-- Start case# 00100955 -->
+            <apex:column value="{!con.Best_Time_to_Call__c}" styleClass="dataCell"
+                headerValue="Best Time To Call" width="20%" /> 
+           
+            <!--<apex:column value="{!con.Contact_Language__c}" styleClass="dataCell"
+                headerValue="Contact Language" width="20%" /> 
+            -->
+            <!-- Below Changes made for Case # 00156389 -->
+            <apex:column value="{!con.Contact_Language__c}" styleClass="dataCell"
+                headerValue="{!$ObjectType.Contact.fields.Contact_Language__c.label}" width="20%" /> 
+            <!-- End Case # 00156389 -->
+            
+            <!-- End case# 00100955 -->
+        </apex:PageBlockTable>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+        <table width="100%">
+            <tr>
+                <td><apex:outputPanel rendered="{!IF(isRecordFound,false,true)}"
+                    style="background-color:#F3F3EC;">
+                    <apex:outputLabel >{!labelMessage}</apex:outputLabel>
+                </apex:outputPanel></td>
+            </tr>
+        </table>
+ </apex:pageBlock>
+ <div><iframe id="resizeHack" width="0" height="0"
+            frameborder="no" /></div>
+        <script>
+        
+            var me = window.name;
+            var height = 0;
+            
+            if (me) {
+            var iframes = parent.document.getElementsByName(me);
+            if (iframes && iframes.length == 1) {
+            height = document.body.offsetHeight;
+            height += 25; // add a few extra pixels, just to make sure the vertical scrollbar goes away
+            if (height > 32768) {
+            height = 32768;
+            }
+            
+            iframes[0].style.height = height + "px";
+            }
+            }  
+        
+          /*document.getElementById("resizeHack").src = "{!URLFOR($SControl.Resize_VF_Iframe)}" +
+                                              "&ifName=" + window.name +
+                                              "&ifHeight=" + document.body.offsetHeight;*/
+                                              
+        
+    </script>
+</apex:page>

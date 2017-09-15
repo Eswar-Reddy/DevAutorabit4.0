@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>oe_order_headers__c$CREATION_DATE__c</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$Name</field>
+    </columns>
+    <columns>
+        <field>oe_order_headers__c$LEASE_NUMBER__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Average</aggregateTypes>
+        <field>oe_order_headers__c$System_Size_division__c</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>oe_order_headers__c$ORDER_TYPE__c</column>
+            <operator>equals</operator>
+            <value>SPNA RVAR Standard</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>oe_order_headers__c$ORDER_STATUS__c</column>
+            <operator>equals</operator>
+            <value>BOOKED,CLOSED,ENTERED</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <aggregateType>RowCount</aggregateType>
+        <dateGranularity>Day</dateGranularity>
+        <field>oe_order_headers__c$Oracle_Account_Number__c</field>
+        <sortByName>RowCount</sortByName>
+        <sortOrder>Desc</sortOrder>
+        <sortType>Aggregate</sortType>
+    </groupingsDown>
+    <name>Partner Orders w System Size</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Sales_Order_with_Lines__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <sortColumn>oe_order_headers__c$CREATION_DATE__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>oe_order_headers__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_LAST120</interval>
+    </timeFrameFilter>
+</Report>

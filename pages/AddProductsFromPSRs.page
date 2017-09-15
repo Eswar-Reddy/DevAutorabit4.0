@@ -1,0 +1,209 @@
+<apex:page standardController="Quote" extensions="AddProductFromPsr_Extension">
+
+
+<apex:form id="form1" >
+
+<table bgcolor="white" width="100%">
+<style>
+    .lbltxt
+    {
+        color:white;
+        align:right;
+        font-weight:bold
+    }
+    .outText
+    {
+      width : 200px; 
+      color:#FFCC66;
+      font : 1em Arial,Verdana, Tahoma, sans-serif;
+    }
+    
+    .panel
+    {
+      background-color: #BBBBBB;
+    }
+    
+     .input
+    {
+      width : 70px; 
+      height :15px;     
+      font : 1em Arial,Verdana, Tahoma, sans-serif;     
+    }
+    
+    .fontsize
+    {
+     font : 1em Arial,Verdana, Tahoma, sans-serif;
+     font-size:10px;
+    }
+
+</style>
+
+
+</table>
+
+
+       
+<apex:variable value="{!0}" var="count" />
+
+<apex:pageBlock >
+<apex:messages id="pgmsg" />
+
+<apex:pageBlockButtons >
+<apex:commandButton status="wait1" value="Add Products from PSRs" action="{!updatelineitem}" reRender="form1" oncomplete="return saveMsg('{!status}')" />
+<apex:commandButton value="Cancel" action="{!goToQuoteView}" />
+
+</apex:pageBlockButtons>
+
+<apex:actionfunction name="toQuote" action="{!goToQuoteView}" />
+<apex:actionStatus id="wait1" startText="Please wait..." ></apex:actionStatus>
+
+<apex:actionFunction name="refreshMsg" />
+
+<apex:repeat value="{!psrLIlst}" var="psr">
+<apex:variable value="{!count+1}" var="count" />
+<table cellPadding="3" width="100%" cellSpacing="0">
+<tr bgcolor="#336699">
+<td width="10%" colspan="6">
+<apex:outputText value="PSR No. " styleClass="lbltxt"></apex:outputText>
+<apex:outputText styleClass="outText" value="{!psr.psrObj.name}"></apex:outputText></td>
+<td bgcolor="#336699" width="10%" colspan="5">
+<apex:outputText value="Site Name " styleClass="lbltxt"></apex:outputText><apex:outputText rendered="true"  value="{!psr.psrObj.Site__r.Site_Name__c}" styleClass="outText" /> 
+</td> 
+<td bgcolor="#336699" width="10%" colspan="5">
+<apex:outputText value="Currency " styleClass="lbltxt"></apex:outputText>
+<apex:outputText rendered="true"  value="{!quoteObj.currencyIsoCode}" styleClass="outText">
+
+</apex:outputText></td>
+
+</tr>
+</table>
+
+<apex:variable value="node{!count}" var="nodeId" />
+<apex:variable value="childnode{!count}" var="childNodeId" />
+
+      <apex:pageBlockTable value="{!psr.cQuoteLTLst}" var="c">
+         <apex:column >
+           <apex:facet name="header">
+       <INPUT TYPE="CHECKBOX"  id="{!nodeId}" onclick="checkAll(this,'{!count}')" />
+       </apex:facet>
+           <apex:inputCheckbox value="{!c.selected}"  title="{!childNodeId}" />
+           
+         </apex:column>
+
+          
+         
+          <apex:column >
+           <apex:facet name="header">Product Family</apex:facet>
+           <apex:outputfield value="{!c.item.Product__r.Family}" styleclass="fontsize"/>
+         
+         </apex:column>
+         
+          <apex:column >
+           <apex:facet name="header">Product</apex:facet>
+           <apex:outputfield value="{!c.item.Product__r.Name}" styleclass="fontsize"/>
+         
+         </apex:column>
+         
+         <apex:column >
+           <apex:facet name="header">Quantity</apex:facet>
+           <apex:inputfield value="{!c.item.Quantity}" styleclass="input" />
+         
+         </apex:column>
+
+          <!-- <apex:column >
+           <apex:facet name="header">Sales Price</apex:facet>
+           <apex:inputfield value="{!c.item.UnitPrice}" styleclass="input" />
+         
+         </apex:column>
+
+            <apex:column >
+           <apex:facet name="header">Cost</apex:facet>
+           <apex:inputfield value="{!c.item.Cost__c}" styleclass="input" />
+         
+         </apex:column> -->
+         
+         
+         <apex:column >
+           <apex:facet name="header">Sales Price</apex:facet>
+           <apex:inputText value="{!c.item.UnitPrice}" styleclass="input" />
+         
+         </apex:column>
+
+            <apex:column >
+           <apex:facet name="header">Cost</apex:facet>
+           <apex:inputText value="{!c.item.Cost__c}" styleclass="input" />
+         
+         </apex:column>
+         
+          <apex:column value="{!c.item.Total_Cost__c}" >
+        </apex:column>
+
+            
+
+       <!--  <apex:column >
+           <apex:facet name="header">Total Cost
+         </apex:facet>
+        <apex:outputfield value="{!c.item.Total_Cost__c}" styleclass="fontsize"/>
+         </apex:column>-->
+
+           
+          <apex:column >
+           <apex:facet name="header">Date</apex:facet>
+           <apex:outputfield value="{!c.item.ServiceDate}" styleclass="fontsize"/>
+         
+         </apex:column>
+
+         <apex:column >
+           <apex:facet name="header">Design No</apex:facet>
+           <apex:outputfield value="{!c.item.Design__r.Name}" styleclass="fontsize" />
+         
+         </apex:column>
+        
+         <apex:column >
+           <apex:facet name="header">Estimate Name</apex:facet>
+           <apex:outputfield value="{!c.item.Estimate__r.Name}" styleclass="fontsize"/>
+         
+         </apex:column>
+        
+         
+      </apex:pageBlockTable>                    
+    </apex:repeat>
+ </apex:pageBlock>
+ 
+</apex:form>
+
+
+<script>
+function checkAll(cb,nodeNo)
+{
+var childId = "childnode" + nodeNo ;
+var nodeId ='node'+ nodeNo ;
+var inputElem = document.getElementsByTagName("input");
+for(var i=0; i<inputElem.length; i++)
+{
+ //alert(inputElem[i].title);
+ if(inputElem[i].title ==childId){  
+  inputElem[i].checked =cb.checked;
+  }
+}
+
+}    
+
+
+function saveMsg(status){
+if(status =='true'){
+    alert("Products added successfully.");
+    toQuote();
+}
+else{
+  // refreshMsg();
+   return false ;
+   
+}
+
+
+
+}
+</script>
+                                                                                              
+</apex:page>

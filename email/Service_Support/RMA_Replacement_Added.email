@@ -1,0 +1,143 @@
+<messaging:emailTemplate subject="{!$Label.RMA_Confirmation_for_Case} {!relatedTo.Case__r.CaseNumber}" recipientType="Contact" relatedToType="RMA__c" 
+language="{!IF(NOT(ISBLANK(relatedTo.Case__r.Contact.Contact_Language__c)),CASE(relatedTo.Case__r.Contact.Contact_Language__c,'Spanish','es','Dutch','nl','German','de','Italian','it','French','fr','en'),CASE(relatedTo.Shipping_Country__c,'Germany','de','France','fr','Italy','it','Spain','es','Netherlands','nl','Finland','fi','Portuguese','pt','Swedish','sv','Poland','pl','Denmark','da','China','cn','en'))}">
+<messaging:htmlEmailBody >
+<html>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="700">
+            <!--Header Wrapper -->                  
+            <tr>
+                <!-- SPWR Header Logo NA in PROD -->
+                <td width="700px"><img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOt&oid=00D80000000ZF1L&lastMod=1395962868000" width="960px"/></td>
+            </tr>
+            
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px;" style="text-decoration:none; outline:none;">
+                    <table width="960px;">
+                        <tr>
+                            <td width="700px" style="padding-left:50px;">                 
+                                <p style="margin-top:20px">{!$Label.Hello} {!relatedTo.Attention_to__c},</p>
+                                <p style="margin-right:20px">
+                                    {!$Label.RMA_Replacement_Added_L1}
+                                </p>
+                                
+                                <!--Table-->
+                                <table width="98%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#FDB723;border-spacing:0;">
+                                <tr>
+                                    <td style="background: #FDB723;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                                        <span style="font-size:16px;font-weight:bold;">{!$Label.RMA_Details}</span>
+                                    </td>
+                                </tr>
+                                <tr style="vertical-align:top;">
+                                    <td style="padding-top:20px;padding-right:30px;"> 
+                                        <ul>
+                                          <li>
+                                            <p> 
+                                                {!$Label.RMA_Number} {!relatedTo.Name}  <br/> 
+                                            </p>
+                                          </li> 
+                                          <li>       
+                                            <p> 
+                                                {!$Label.HO_Name} {!relatedTo.Case__r.Account.Name} <br/>    
+                                            </p>
+                                          </li>
+                                          <li>
+                                            <p> 
+                                                {!$Label.RMA_Replacement} {!relatedTo.RMA_Replacement__c}<br/>     
+                                            </p>  
+                                          </li>
+                                          <li>       
+                                            <p> 
+                                                {!$Label.RMA_Return} {!relatedTo.RMA_Return__c}<br/>     
+                                            </p>
+                                          </li>
+                                          <li>       
+                                            <p> 
+                                                {!$Label.ETA_of_Replacement} {!relatedTo.Delivery_Date_of_Replacement_unit_s__c}   <br/>     
+                                            </p>
+                                          </li>
+                                          <li>       
+                                            <p> 
+                                                {!$Label.Tracking} {!relatedTo.Tracking_No__c} via {!relatedTo.Carrier__c} <br/>     
+                                            </p>
+                                          </li>
+                                          <li>       
+                                            <p> 
+                                                {!$Label.Ship_to_Address_of_Replacement} {!relatedTo.Shipping_Address__c},{!relatedTo.Shipping_Address2__c} {!relatedTo.Shipping_City__c} {!relatedTo.Shipping_State_Province__c}, {!relatedTo.Shipping_Zip_Postal_Code__c} {!relatedTo.Shipping_Country__c}  <br/>     
+                                            </p>
+                                          </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                </table>
+                                <p  style="margin-top:20px">
+                                    {!$Label.RMA_Replacement_Added_L2}
+                                </p>
+                                <p  style="margin-top:20px">
+                                    <b>{!$Label.Important}</b> {!$Label.RMA_Replacement_Added_L3}
+                                </p>
+                                <p  style="margin-top:20px">
+                                    {!$Label.RMA_Replacement_Added_L4}
+                                </p>
+                                <p  style="margin-top:20px">
+                                  <b> <a href="mailto:GBFS-F2D_RMA-NA@sunpowercorp.com"> GBFS-F2D_RMA-NA@sunpowercorp.com </a> </b>  
+                                </p>
+                                <p  style="margin-top:20px">
+                                    <br>{!$Label.Regards} </br>
+                                    <b>{!$Label.SunPower_RMA_Team}</b>
+                                </p>
+                                <!-- Breaks are added to ensure Image and Text alignment at the top -->
+                                <br/><br/><br/>                  
+                            </td>
+                        </tr>
+                    </table>    
+                </td>    
+            </tr>
+            
+            <!--Footer Wrapper-->
+            <tr>
+                <!-- SPWR Footer -->
+                 <td><img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01534000001Zfoa&oid=00D80000000ZF1L"/></td>
+            </tr>
+            
+           
+        </table>
+    </body>
+       <style type="text/css">
+            body {
+                background-color: #FFFFFF;
+                margin-left: 0px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-bottom: 0px;
+                font-family: Arial, Futura;
+                color: #555555;
+            }
+            p,
+            li,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5, 
+            table {
+                margin-top: 0pt;
+            }
+            p,table{
+                font-size: 11pt;
+            }
+            a { color:#0070c0; text-decoration:none}
+            a:visited { color:#0070c0; text-decoration:none}
+            a:link { color:#0070c0; text-decoration:none}
+            a:hover { color:#0070c0; text-decoration:none}
+
+            li {
+                line-height:20px;
+                margin-bottom: 10pt;
+                display: list-item;
+                padding-bottom:5px;
+            }
+        </style>
+</html>
+</messaging:htmlEmailBody></messaging:emailTemplate>

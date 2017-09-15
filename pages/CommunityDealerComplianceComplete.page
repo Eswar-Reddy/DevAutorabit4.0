@@ -1,0 +1,236 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" standardController="Dealer_Compliance_Requirement__c" extensions="DealerComplianceCompletionCC" id="thePage">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleSubtabs(tabActive) {
+
+            if( !($( '#'+tabActive ).hasClass( "subtab-styling__header-item--active" ))) {
+                //remove old main subtab actives                
+                $(document).find('.subtab-styling__header-item').each(function(index, header) {
+                    $(header).removeClass('subtab-styling__header-item--active');
+                });
+                //add new subtab active
+                $( '#'+tabActive ).addClass( "subtab-styling__header-item--active" );
+
+                //remove old subtab content actives
+                $(document).find('.subtab-styling__content-item').each(function(index, content) {
+                    var $content = $(content);
+                    $content.removeClass('subtab-styling__content-item--active');
+                });
+
+                //add new subtab content active
+                $( '#'+tabActive+'Content' ).addClass( "subtab-styling__content-item--active" ) ;
+            }
+        }
+    </script>
+    
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;">
+        <div id="inner-container" style="max-width: 1000px; margin-right: auto; margin-left: auto;">
+            <apex:form >
+            <apex:actionFunction name="submitcomplete" action="{!saveBtn}"/>
+<apex:actionFunction name="cancelcom" action="{!cancelBtn}"/>            
+            <div class="row" style="margin-top:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Compliance Completion</h3>    
+                </div>
+            </div>
+            
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-3 col-xs-12 labelStyle">
+                    <apex:outputLabel >Dealer Name</apex:outputLabel>
+                </div>    
+                <div class="col-md-2 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Dealer_Compliance_Requirement__c.Dealer_Name__c}"></apex:outputField>
+                </div>
+                
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-3 col-xs-12 labelStyle">
+                    <apex:outputLabel >Opportunity Owner</apex:outputLabel>
+                </div>    
+                <div class="col-md-2 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Dealer_Compliance_Requirement__c.Opportunity_Owner__c}"></apex:outputField>
+                </div>
+                
+            </div> 
+            
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-3 col-xs-12 labelStyle">
+                    <apex:outputLabel >Opportunity</apex:outputLabel>
+                </div>    
+                <div class="col-md-2 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Dealer_Compliance_Requirement__c.Opportunity__c}"></apex:outputField>
+                </div>
+            </div> 
+            
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-3 col-xs-12 labelStyle">
+                    <apex:outputLabel >Compliance Description</apex:outputLabel>
+                </div>    
+                <div class="col-md-8 col-xs-12">
+                    <apex:outputField style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!Dealer_Compliance_Requirement__c.Compliance_Description__c}"></apex:outputField>
+                </div>
+            </div> 
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-3 col-xs-12 labelStyle">
+                    <apex:inputCheckbox value="{!DCompReq.Compliance_Completed__c}" id="theCheckbox" > &nbsp;
+                        <apex:param name="dealerComplainceCehckbox" assignTo="{!dealerComplianceChecked}" value="" />
+                    </apex:inputCheckbox>
+                </div>    
+                <div class="col-md-2 col-xs-12">
+                    <apex:outputText style="height: 40px;width: 90%;border-radius: 5px;border: 0px;"  value="{!$Label.Dealer_Compliance_Checkbox_Message}"></apex:outputText>
+                </div>
+            </div>
+            <div class="row top2" >
+             <div class="col-xs-12 col-md-8">
+                    
+                </div>
+                <div class="col-xs-12 col-md-1">
+                    <a class="btn btn-primary btn--small" onclick="submitcomplete();">Submit</a>
+                </div>
+                <div class="col-xs-12 col-md-2" style="text-align:right;">
+                     <a class="btn btn-secondary btn--small" onclick="cancelcom();">Cancel</a>
+                </div>
+            </div>
+            </apex:form>
+        </div>
+    </body>
+    <script>
+     
+    </script>
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+
+</apex:page>

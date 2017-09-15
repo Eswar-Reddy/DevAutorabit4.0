@@ -1,0 +1,159 @@
+<apex:page Controller="SOA2OpenPdfFileController" sidebar="{!isPartner}" showHeader="{!isPartner}">
+ <style>
+ .body{
+   background-color:#FFF;
+   font-size:9px;
+ }
+ .blk_t3 {
+    background-color: #000;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+    padding: 2px;
+    text-align:left;
+}
+.datatable-std {
+    border:1px solid #C8C8C8;
+    background-color:#CCC;
+}
+.data-text-bold {
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    color:#000;
+}
+.sc_data-text-bold-fieldset {
+    font-family:Arial,Verdana, Helvetica, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    color:#333333;
+    border-left:1px solid #272727;
+    border-right:1px solid #272727;
+    border-bottom:1px solid #272727;
+    border-top:1px solid #000000;
+    -o-border-radius:10px;
+    -moz-border-radius:12px;
+    -webkit-border-radius:10px;
+    -webkit-box-shadow:0 3px 7px #adadad;
+    border-radius:10px;
+    padding:0 0 7px 7px;
+}
+.action-command {
+    background-color : #EFAB00;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : 11px;
+    font-style : normal;
+    font-weight : 700;
+    color : #FFF;
+    text-decoration : none;
+    border-style : none;
+    border-width : 0;
+    padding : 3px;
+}
+.datatable-std-row-odd {
+    background-color:#FFFFFF;
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+
+.datatable-std-row-even {
+    background-color:#F4F4F4;
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+.datatable-std-col {
+    color:#000000;
+    font-family:Verdana,Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:400;
+    text-decoration:none;
+}
+.waitingSearchDiv .waitingHolder {
+    font-weight:bold;
+    font-size:1.20em;
+    position:relative;
+    padding:0.5em;
+    white-space:nowrap;
+    margin: auto;
+    background-color:#fff;
+    border:0px;
+}
+</style>
+<script>
+  function displaySaveMsg(){
+    document.getElementById('saveMSG').style.display = '';
+  }
+  function updateAccount(){
+    document.getElementById('saveMSG').style.display = 'none';
+    updateAccount2();
+  }
+</script>
+<apex:form rendered="{!NOT(isAllowed)}">
+<apex:outputlabel value="{!$Label.SOA2Error}" style="color:#cc0000;font-weight:Bold;font-weight:24px"/>
+</apex:form>
+<apex:form id="frm" style="background-color:#FFF;" rendered="{!isAllowed}">
+  <!-- <apex:actionFunction name="updateUser2" action="{!updateUser}" rerender="pnlBody" status="status" oncomplete="displaySaveMsg();"/>  -->
+  <apex:actionFunction name="updateAccount2" action="{!updateAccount}" rerender="pnlBody" status="status" oncomplete="displaySaveMsg();"/>
+  <apex:PageMessages /> 
+  <span id="status">
+       <span style="display: none;" id="status.start">
+         <div style="width: 100%;" class="waitingSearchDiv" id="enhancedList_loading">
+            <div class="waitingHolder" style="top: 150px;width: 180px;" >
+               <img src="/img/loading.gif" class="waitingImage" title="Please Wait..."/>
+               <span class="waitingDescription">Loading...</span>
+            </div>
+         </div>
+       </span>
+       <span id="status.stop"></span>
+  </span>
+  <table width="100%"> 
+    <tr>
+     <td>
+        <br/><br/>
+         <span class="data-text-bold">{!$Label.SOA2SubsTitle} </span>
+         <br/>
+         {!$Label.SOA2SubsSubTitle} 
+      </td>
+    </tr>
+ </table>
+    <apex:outputPanel id="pnlBody"> 
+    <fieldset style="background-color: rgb(255, 255, 255); ;margin-top:20px;" class="sc_data-text-bold-fieldset">
+     <legend>{!$Label.SOA2SubsBodyTitle}</legend>
+     <table width="100%" cellspacing="0" cellpadding="5">
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr>
+            <td colspan="2" align="center" class="data-text-bold" id="saveMSG" style="display:none;">
+               <div style="background-color:#fff;border: 1px solid #333;color:#FF0000;">{!statusMsg}</div>
+            </td>
+        </tr>
+        <tr><td colspan="2">&nbsp;</td></tr>   
+       <tr>
+            <td class="data-text-bold">
+                <apex:outputPanel >
+                     <!-- <apex:inputCheckbox value="{!currentLoginUser.Send_PDF_Notification__c}"/>  -->
+                     <apex:inputCheckbox value="{!currentAccount.Send_PDF_Notification__c}"/>
+                </apex:outputPanel>
+                {!$Label.SOA2SubsBody}
+            </td>
+       </tr>
+       <tr><td colspan="2">&nbsp;</td></tr>
+       <tr>
+            <td class="data-text-bold">
+                <apex:outputPanel >
+                     <!--<input type="button" value="{!$Label.Save}" class="action-command" onclick="updateUser();"/> -->
+                     <input type="button" value="{!$Label.Save}" class="action-command" onclick="updateAccount();"/> 
+                </apex:outputPanel>
+           </td>
+       </tr>
+     </table>
+    </fieldset>
+  </apex:outputPanel>   
+ </apex:form>
+</apex:page>

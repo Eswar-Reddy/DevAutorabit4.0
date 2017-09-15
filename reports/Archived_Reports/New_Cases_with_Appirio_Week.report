@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Case$Appirio_Case_Number__c</field>
+    </columns>
+    <columns>
+        <field>Case$CaseNumber</field>
+    </columns>
+    <columns>
+        <field>Case$Date_Assigned_to_Appirio__c</field>
+    </columns>
+    <columns>
+        <field>Case$SunPower_Employee__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Dashboard Report: CRM Cases - Status of New Cases created in selected week</description>
+    <filter>
+        <criteriaItems>
+            <column>Case.PartnerNetworkRecordConnections$Connection</column>
+            <operator>equals</operator>
+            <value>Appirio</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <name>New Cases with Appirio - Week</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Cases_and_Connections__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Case.PartnerNetworkRecordConnections$StartDate</dateColumn>
+        <interval>INTERVAL_LASTWEEK</interval>
+    </timeFrameFilter>
+</Report>

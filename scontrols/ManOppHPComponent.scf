@@ -1,0 +1,117 @@
+<style>
+  a {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 69%;
+    color: #333333;
+  }
+</style>
+<div id="residentialDiv" style="display:none;">
+<a href="#" onclick="redirectUser('/001/e?retURL=%2F006%2Fo&amp;RecordType=0128000000036xa&amp;00N80000003cHDn=North%20America&amp;00N80000003bME7=Active');">
+  <font color="blue">
+    New Residential Opportunity
+  </font>
+</a>
+<br />
+<a href="#" onclick="redirectUser('/006?fcf=00B80000007Y8cJ');">
+  Abandoned Opportunities
+</a>
+</div>
+<div id="commercialDiv" style="display:none;">
+  <br />
+  <a href="#" onclick="redirectUser('/001/e?retURL=%2F006%2Fo&amp;RecordType=0128000000036xZ&amp;00N80000003cHDn=North%20America&amp;00N80000003bME7=Active');">
+    <font color="red">
+      New Commercial Project
+    </font>
+  </a>
+  <br />
+  <a href="#" onclick="redirectUser('/006?fcf=00B80000007l29v');">
+    Commercial Opportunities
+  </a>
+  <br />
+  <a href="#" onclick="redirectUser('/00O800000047XlZ');">
+    Commercial Pipeline Report
+  </a>
+<br />
+ <!--
+<a href="#" onclick="openDocument('/resource/1294380108000/CommercialSiteAuditForm');">
+ Commercial Site Audit Form
+</a>
+<br />
+               --> 
+ <!--
+<a href="#" onclick="openDocument('/resource/1296294248000/CVAR_Financing_RFQ');">
+ Commercial Request for Financing
+</a>
+</div>
+
+<br />
+               -->
+
+<script src="/soap/ajax/13.0/connection.js"></script>
+
+<script>
+
+
+var resultArray = sforce.connection.query("SELECT Contact.Account.Type  FROM User WHERE Id = '{!$User.Id}'").getArray("records");
+
+
+if (resultArray[0].Contact.Account.Type.indexOf("Residential")>=0) {
+
+    var residentialDiv= (document.getElementById) ? document.getElementById("residentialDiv") : document.all["residentialDiv"];
+      residentialDiv.style.display = "";
+
+  }else if(resultArray[0].Contact.Account.Type.indexOf("Commercial") >=0){
+    var commercialDiv = (document.getElementById) ? document.getElementById("commercialDiv") : document.all["commercialDiv"];
+    commercialDiv.style.display = "";
+
+
+}else if(resultArray[0].Contact.Account.Type.indexOf("Combo") >=0){
+ var commercialDiv = (document.getElementById) ? document.getElementById("commercialDiv") : document.all["commercialDiv"];
+
+  var residentialDiv= (document.getElementById) ? document.getElementById("residentialDiv") : document.all["residentialDiv"];
+      residentialDiv.style.display = "";
+    commercialDiv.style.display = "";
+     residentialDiv.style.display = "";
+}else{
+   var residentialDiv= (document.getElementById) ? document.getElementById("residentialDiv") : document.all["residentialDiv"];
+      residentialDiv.style.display = "";
+}
+
+  
+  function redirectUser(url) {
+    parent.document.location.href = url;
+  }
+  function openDocument(url){
+    window.open(url);
+}
+  function getElement(aID) {
+    return (parent.document.getElementById) ? parent.document.getElementById(aID) : parent.document.all[aID];
+  }
+  
+  function getIFrameDocument(aID) {
+    var rv = null;
+    var frame = getElement(aID);
+    if (frame.contentDocument) { /* if contentDocument exists, W3C compliant (e.g. Mozilla) */
+      rv = frame.contentDocument;
+    } else { /* bad Internet Explorer */
+      rv = parent.document.frames[aID].document;
+    }
+    
+    return rv;
+  }
+  
+  function adjustIFrameSize() {
+    var frame = getElement("iframeManOpp");
+    var frameDoc = getIFrameDocument("iframeManOpp");
+    frame.height = frameDoc.body.scrollHeight;
+  }
+  
+  var originalOnLoad = window.onload;
+  window.onload = function() {
+    if (originalOnLoad) {
+      originalOnLoad();
+    }
+    
+    adjustIFrameSize();
+  }
+</script>

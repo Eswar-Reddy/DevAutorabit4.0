@@ -1,0 +1,115 @@
+<apex:page id="pg" standardController="Opportunity" extensions="InlineActivityOnObject" tabStyle="Opportunity">
+<style type="text/css" media="screen">
+          body {background-color:#F3F3EC;}
+</style>
+<script>
+
+if('{!isRefresh}' == 'true')
+{
+  window.parent.location.href = '/'+ '{!objectId}';
+}
+
+if('{!accessToDelete}' == 'false')
+{
+  alert('You do not have suffecient access to delete the Event');
+}
+
+function openNewURL(){      
+    var urlC = document.getElementById('pg:frm:hdn');
+    if(urlC != null && urlC.value!=null){         
+        window.parent.location.href = urlC.value;
+    }
+}
+function SetEditId(id){
+    var taskIdComp = document.getElementById('pg:frm:EditRecordId');
+    if(taskIdComp != null){    
+        taskIdComp.value = id;       
+     }
+    
+}
+
+function SetCloseTaskId(id){  
+    var taskcloseId = document.getElementById('pg:frm:ClosetaskId');
+    if(taskcloseId != null){        
+        taskcloseId.value = id;
+     }
+}
+function SetDeleteRecordId(id){  
+    var DeleteEventId = document.getElementById('pg:frm:DeleteRecId');
+    if(DeleteEventId != null){  
+        DeleteEventId.value = id;        
+     }        
+}
+
+function GoForDelete(){
+if(confirm('Are you sure?')){
+return true;
+}
+else
+return false;
+}
+
+</script>
+
+
+  <apex:pageMessages />        
+ <apex:form id="frm">
+ <apex:outputPanel id="pnlHidden">
+   <apex:inputHidden id="hdn" value="{!urlStr}"/>
+   <apex:inputHidden id="EditRecordId" value="{!EditRecordId}"/>
+   <apex:inputHidden id="ClosetaskId" value="{!closeTaskId}"/>   
+ </apex:outputPanel>
+
+   <apex:pageBlock >
+    <apex:pageBlockButtons location="top">
+      <apex:commandButton value="New Task" action="{!newTask}" oncomplete="openNewURL();" rerender="pnlHidden"/>
+      <apex:commandButton value="New Event" action="{!newEvent}" oncomplete="openNewURL();" rerender="pnlHidden"/>
+    </apex:pageBlockButtons>
+
+    <apex:pageBlockTable value="{!lstActivities}" var="lst" rendered="{!listpanel }">     
+    <apex:column >
+      <apex:facet name="header">Action</apex:facet>           
+      <b><apex:commandLink value="Edit" onclick="SetEditId('{!lst.activityId}');" action="{!EditLink}" oncomplete="openNewURL();" rerender="pnlHidden"/>&nbsp;|</b>&nbsp;
+      <b><apex:commandLink value="Cls" onclick="SetCloseTaskId('{!lst.activityId}');" action="{!CloseLink}" oncomplete="openNewURL();" rerender="pnlHidden" rendered="{!lst.isTask}"/></b>     
+      <b>
+      <apex:commandLink value="Del"  action="{!DeleteEvent}"  onclick="return GoForDelete();" rendered="{!NOT(lst.isTask)}">
+          <apex:param name="a1" assignTo="{!DeleteRecId}" value="{!lst.activityId}"/>
+      </apex:commandLink>
+      </b>
+     </apex:column>
+   
+    <apex:column >
+      <apex:facet name="header">Subject</apex:facet>  
+      <apex:outputLink value="/{!lst.activityId}" id="subject" target="_parent" >{!lst.Subject}</apex:outputLink>
+    </apex:column>    
+    <apex:column headerValue="Name" value="{!lst.Name}"/> 
+    <apex:column headerValue="Close">
+      <apex:inputCheckbox disabled="true" value="{!lst.isClosed}" rendered="{!NOT(lst.isClosed)}" />  
+      <apex:image rendered="{!lst.isClosed}" url="/img/checkbox_checked.gif"/>
+    </apex:column>
+    <apex:column headerValue="Assigned To" value="{!lst.OwnerName}"/>
+    <apex:column headerValue="Task">
+      <apex:inputCheckbox disabled="true" value="{!lst.isTask}" rendered="{!NOT(lst.isTask)}" />  
+      <apex:image rendered="{!lst.isTask}" url="/img/checkbox_checked.gif"/>
+    </apex:column>
+     
+    </apex:pageBlockTable>
+    <apex:outputLabel rendered="{!NOT(listpanel)}">
+      <span style="color:Black; font-size:13px;">
+           No records to display</span>
+    </apex:outputLabel>    
+   </apex:pageBlock>       
+</apex:form>  
+
+<script>
+window.onload = function() {
+    document.getElementById("resizeHack").src = "{!URLFOR($SControl.Resize_VF_Iframe)}" +
+
+                                          "&ifName=" + window.name +
+
+                                          "&ifHeight=" + document.body.offsetHeight;
+
+}
+</script>  
+<div><iframe id="resizeHack" width="0" height="0" frameborder="no"/></div>   
+</apex:page>

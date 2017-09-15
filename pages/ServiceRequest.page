@@ -1,0 +1,28 @@
+<apex:page controller="ServiceRequestController" tabstyle="WorkOrder">
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_11_3)}"/>
+    <apex:includeScript value="/support/console/36.0/integration.js"/>
+    <apex:includeScript value="{!$Resource.ServiceRequest}"/>
+    <apex:form >
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:PageBlock title="Enter Details">
+        <apex:pageBlockButtons location="top">
+            <apex:commandButton value="Create Service Request" action="{!gotoServiceRequest}" styleClass="save"/>
+            <apex:commandButton value="Cancel" action="{!gotoCancel}" immediate="true" styleClass="cancel"/>
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection columns="1">
+            <apex:repeat value="{!inputFieldList}" var="F">
+                <apex:pageBlockSectionItem rendered="{!F.rendered}">
+                    <apex:outputLabel >{!F.fieldLabel}</apex:outputLabel>
+                    <apex:inputField value="{!tempWorkOrder[F.fieldName]}" style="{!F.style}" required="{!F.required}"/>
+                </apex:pageBlockSectionItem>
+            </apex:repeat>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Create Notification Task</apex:outputLabel>
+                <apex:inputCheckbox value="{!createNotificationTask}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:PageBlock>
+    </apex:form>
+    <apex:pageBlock title="Debug" rendered="false">
+    </apex:pageBlock>
+</apex:page>

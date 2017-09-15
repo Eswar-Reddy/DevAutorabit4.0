@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Id</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Name</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Opportunity__c.Primary_Contact__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Opportunity__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Placed_In_Service__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Opportunity__c.StageName</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Lease_Type__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Booking_Template_Sent_to_LD__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Uncond_Fin_LW_Rcvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Email_1__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Opportunity__c.Primary_Contact_Email__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Correlation between Placed in Service date and Opportunity Stage</description>
+    <filter>
+        <criteriaItems>
+            <column>LeasePayment__c$Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancellation with RMA,Cancelled,Duplicate,Expired,Pending Cancellation,Terminated,Transferred</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Opportunity__c.RecordType</column>
+            <operator>equals</operator>
+            <value>Opportunity.Home_Owner</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Opportunity__c.Theater__c</column>
+            <operator>equals</operator>
+            <value>North America,Central America and the Caribbean</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Lease survey prep</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$Placed_In_Service__c</dateColumn>
+        <endDate>2012-09-30</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2012-04-01</startDate>
+    </timeFrameFilter>
+</Report>

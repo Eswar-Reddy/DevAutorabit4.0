@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Account.Lease_Payments__r$Name</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Partner_Account__c</field>
+    </columns>
+    <columns>
+        <field>Account$SMS_Site_ID__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Intrcnct_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>Account.Lease_Payments__r$Invoice_Admin2__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>To Monitor Lease with NO SMS ID information</description>
+    <filter>
+        <criteriaItems>
+            <column>Account$SMS_Site_ID__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r$Intrcnct_Pymnt_Apprvd__c</column>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account$Partner_Account__c</column>
+            <operator>notEqual</operator>
+            <value>Gabi Solar</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Lease_Payments__r.Invoice_Documents__r$Documents_in_File__c</column>
+            <operator>equals</operator>
+            <value>Acceptance (Exhibit C)</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Account.Lease_Payments__r.Invoice_Documents__r$RSM__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Interconnect Pckg App, But No SMS ID</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Accounts_with_Lease_Payments_with_Invoice_Document__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Account.Lease_Payments__r$Intrcnct_Pymnt_Apprvd__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Account.Lease_Payments__r$Acceptance_Apprvd__c</dateColumn>
+        <endDate>2013-02-28</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2013-01-21</startDate>
+    </timeFrameFilter>
+</Report>

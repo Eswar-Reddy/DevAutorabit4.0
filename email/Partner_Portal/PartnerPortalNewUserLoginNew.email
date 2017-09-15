@@ -1,0 +1,13 @@
+<messaging:emailTemplate subject="{!$Label.TemplateSubjectNewUserInfo}" recipientType="Contact" relatedToType="User" language="{!relatedTo.languageLocaleKey}">
+<messaging:HTMLEmailBody >
+{!$Label.TemplateTextDear}&nbsp;{!$Label.TemplateTextPartner} <!-- <apex:outputLabel value="{!IF(recipient.Country_Domain__c!=null && contains(recipient.Country_Domain__c, 'de'), recipient.LastName, recipient.FirstName)}" rendered="{!IF(recipient.Country_Domain__c!=null && (contains(recipient.Country_Domain__c,'fr') || contains(recipient.Country_Domain__c, 'be')),false, true)}"/> -->,
+<br/><br/>
+{!$Label.TemplateLoginInfoText}
+<br/><br/>
+{!$Label.TemplateTextThanks}<br/>
+{!$Label.TemplateTextThanksByDetail}<br/>
+
+<apex:outputLabel value="{!$Label.TemplateTextPortalURL}" rendered="{!IF(RIGHT(recipient.Account.Country_Domain__c, 2)!='be',true, false)}"/>
+<apex:outputLabel value="http://www.sunpowerportal.com" rendered="{!IF(RIGHT(recipient.Account.Country_Domain__c, 2)=='be',true, false)}"/>
+</messaging:HTMLEmailBody>
+</messaging:emailTemplate>

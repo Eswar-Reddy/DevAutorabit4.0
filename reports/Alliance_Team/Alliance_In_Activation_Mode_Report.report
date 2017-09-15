@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_28948448</developerName>
+        <masterLabel>In Activation Mode</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>Campaign.Stage__c</sourceColumnName>
+        <useOther>false</useOther>
+    </buckets>
+    <columns>
+        <field>CAMPAIGN_NAME</field>
+    </columns>
+    <columns>
+        <field>CAMPAIGN_OWNER</field>
+    </columns>
+    <columns>
+        <field>Campaign.Stage__c</field>
+    </columns>
+    <columns>
+        <field>Campaign.Status_Update__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>Amy&apos;s report for all in activation and program launched partnerships</description>
+    <filter>
+        <criteriaItems>
+            <column>CAMPAIGN_TYPE</column>
+            <operator>equals</operator>
+            <value>Alliance</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Campaign.Theater__c</column>
+            <operator>notContain</operator>
+            <value>North America,Europe,Australia,Asia Pacific,Middle East and Africa,South America,Central America and the Caribbean</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Campaign.Program_Type__c</column>
+            <operator>excludes</operator>
+            <value>BSP,SP</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Campaign.Stage__c</column>
+            <operator>equals</operator>
+            <value>In Activation Mode,Program Launched</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ACTIVE</column>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Alliance In Activation Mode Report</name>
+    <params>
+        <name>scopeid</name>
+        <value></value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CampaignList</reportType>
+    <scope>orgAll</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Campaign.Stage__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+</Report>

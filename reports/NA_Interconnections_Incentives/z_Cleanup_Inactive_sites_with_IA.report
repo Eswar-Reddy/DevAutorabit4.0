@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Opportunity_del__c</field>
+    </columns>
+    <columns>
+        <field>CHILD_NAME</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Status__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.IA_Status__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Utility__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>list of inactive sites, that also have a &quot;non-cancelled&quot; interconection application request</description>
+    <filter>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Site_Status__c</column>
+            <operator>equals</operator>
+            <value>Inactive</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>z-Cleanup: Inactive sites with IA</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntityCustomEntity$Site_Information_Form__c$Interconnection_Application__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CHILD_CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

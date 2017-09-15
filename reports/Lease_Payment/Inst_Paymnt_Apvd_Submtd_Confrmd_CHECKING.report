@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>LeasePayment__c$Lease__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Install_Pymnt_Apprvd__c</field>
+    </columns>
+    <columns>
+        <field>LeasePayment__c$Proj_Admin_Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>This is to check if any of the following three (3) fields were overlook by the lease admins in UPDATING</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10 AND 11</booleanFilter>
+        <criteriaItems>
+            <column>LeasePayment__c$Install_Pymnt_Apprvd__c</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$SMS_Installation_Checklist_Approv__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>11/1/2012</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>LeasePayment__c$Site_State_Prov__c</column>
+            <operator>equals</operator>
+            <value>CA,California,AZ,Arizona,VT,Vermont</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>LeasePayment__c$RSM__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Inst Paymnt Apvd-Submtd-Confrmd CHECKING</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Lease_Payments_C__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>LeasePayment__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2011-01-01</startDate>
+    </timeFrameFilter>
+</Report>

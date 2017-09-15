@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Site_Information_Form__c.Site_Status__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.Oracle_Project__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.Expect_tie_in_by__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.Utility__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Utility_Comments__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.Utility_Customer_Account__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.Utility_Service_Account__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.Interconnection_Meter_Number__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Energy_Intelligence_Solutions__c</field>
+    </columns>
+    <columns>
+        <field>CHILD_NAME</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Address__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_City__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_State__c</field>
+    </columns>
+    <columns>
+        <field>Site_Information_Form__c.Site_Zip_Postal_Code__c</field>
+    </columns>
+    <columns>
+        <field>Interconnection_Application__c.IA_Status__c</field>
+    </columns>
+    <currency>USD</currency>
+    <description>interconnections that need pulse meter installations prior to 60 days from now.</description>
+    <filter>
+        <booleanFilter>1 AND (2 or 3)</booleanFilter>
+        <criteriaItems>
+            <column>Interconnection_Application__c.IA_Status__c</column>
+            <operator>notEqual</operator>
+            <value>Interconnection Completed,Interconnection Cancelled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Energy_Intelligence_Solutions__c</column>
+            <operator>equals</operator>
+            <value>EnergyLink Standard,EnergyLink Professional,EnergyLink Industrial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Site_Information_Form__c.Account__c</column>
+            <operator>contains</operator>
+            <value>Macy</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Pulse Install Needed in next 60 days</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntityCustomEntity$Site_Information_Form__c$Interconnection_Application__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Interconnection_Application__c.Expect_tie_in_by__c</dateColumn>
+        <endDate>2016-08-01</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

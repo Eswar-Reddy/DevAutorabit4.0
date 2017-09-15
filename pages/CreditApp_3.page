@@ -1,0 +1,368 @@
+<apex:page tabStyle="Credit_Application__c" title="CREDIT APPLICATION" standardController="Credit_Application__c" extensions="CreditApplicationController" showHeader="false" id="page1">
+   
+ 
+  <style>
+ .TD1{
+    color:#333333;
+    font-size:91%;
+    font-weight:bold;
+    text-align:left;
+    padding-left:5px
+ }
+ .TD2{
+    text-align:left;
+ }
+  </style>
+         
+    <apex:form id="form1">
+    <!--  Header Part -->
+        <apex:outputPanel layout="block">
+            <table width="100%" style="background-color:black" border="0" height="70px">
+                <tr>
+                    <td colspan="2" align="left" style="padding-left:10px"><font color="#FFFFFF" size="5"><b>CREDIT</b>&nbsp;</font><font color="#FBB917" size="5"><b>APPLICATION</b></font></td>
+                </tr>
+            </table>
+            <table width="100%" style="background-color:#FBB917" border="0">
+                <tr>
+                    <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>BANK REFERENCE INFORMATION</B></font>
+                    </td> 
+                    <td width="50%" align="right" style="padding-right:10px"><font color="#000000" size="2"><B>PAGE 3 OF 4</B></font>
+                    </td>
+                </tr>
+            </table>
+        </apex:outputPanel> 
+        <apex:pageMessages />
+        <!--  Header Part End-->    
+        <apex:pageBlock >
+            
+           <apex:pageBlockButtons >    
+               <apex:commandButton value="Back" action="{!step2}" />
+               <apex:commandButton value="Submit" action="{!step4}"  onclick="return showPopUp();"/>
+               <apex:commandButton value="Cancel"  action="{!cancel}"/> 
+           </apex:pageBlockButtons>
+        <!-- Outer Table  -->
+           <table id="outertable" width="100%" border="0">
+                <tr>
+                    <td width="100%">
+                        <!-- Bank Reference Info -->
+                            <apex:outputPanel layout="block">
+                                <table width="100%" border="0" >
+                                    <tr>
+                                        <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Bank Name:</td>
+                                        <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Bank_Reference_Name__c}" id="Bank_Name__c" style="width:85%"/></td>
+                                        <td width="15%" style="padding-left:5px" class="TD1">Bank Contact:</td>
+                                        <td width="30%"><apex:inputField value="{!creditApp.Bank_Reference_Contact__c}" id="Bank_Contact__c" style="width:75%"/></td>                                                                                   
+                                    </tr>
+                                    <tr>
+                                        <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Street Address:</td>
+                                        <td  class="TD2"><apex:inputField value="{!creditApp.Bank_Reference_Address__c}" id="Bank_Street_Address__c" style="width:85%"/></td>
+                                        <td  style="padding-left:5px" class="TD1" valign="top">Phone Number:</td>
+                                        <td valign="top"><apex:inputField value="{!creditApp.Bank_Reference_Phone__c}" id="Bank_Phone_Number__c" style="width:75%"/></td>                                                                                   
+                                    </tr>
+                                    <tr>
+                                        <td  style="white-space:nowrap;padding-left:5px;" class="TD1">City:</td>
+                                        <td  class="TD2"><apex:inputField value="{!creditApp.Bank_Reference_City__c}" id="Bank_Reference_City__c" style="width:85%"/></td>
+                                        <td  style="padding-left:5px" class="TD1" valign="top">Fax Number:</td>
+                                        <td valign="top"> <apex:inputField value="{!creditApp.Bank_Reference_Fax__c}" id="Bank_Fax_Number__c" style="width:75%"/></td>                                                                                  
+                                    </tr>
+                                    <tr>
+                                        <td  style="white-space:nowrap;padding-left:5px;" class="TD1">State:</td>
+                                        <td>
+                                            <table width="86%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td class="TD2" width="50%"> <apex:inputField value="{!creditApp.Bank_Reference_State__c}" id="State__c" style="width:95%"/></td>
+                                                    <td  class="TD1" width="20%">Zip:</td>
+                                                    <td ><apex:inputField value="{!creditApp.Bank_Reference_Zip__c}" id="Bank_Zip__c"  style="width:95%"/></td>                                                                                                                                     
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td  style="padding-left:5px" class="TD1">E-Mail Address:</td>
+                                        <td ><apex:inputField value="{!creditApp.Bank_Reference_Email__c}" id="Bank_E_Mail_Address__c" style="width:75%"/></td>                                                                                 
+                                    </tr>
+                                    <tr>
+                                        <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Account No(s):</td>
+                                        <td  class="TD2"><apex:inputField value="{!creditApp.Bank_Account_Numbers__c}" id="Bank_Account_No_s__c" style="width:85%"/></td>
+                                        <td  style="padding-left:5px" class="TD1" valign="top">Credit Line Avail:</td>
+                                        <td valign="top"><apex:inputField value="{!creditApp.Bank_Reference_Credit_Line_Available__c}" id="Bank_Credit_Line_Aval__c" style="width:75%"/></td>                                                                                    
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <apex:outputLabel >The company hereby authorizes the above banks to release all information requested. It is understood that all information will be held in the strictest confidence.</apex:outputLabel>
+                                        </td>
+                                    </tr>
+                
+                                </table>
+                             </apex:outputPanel>  
+                        <!-- Bank Reference Info End-->                         
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- Bank Sign Part -->
+                            <table border="0" width="100%" align="left">
+                                   <tr style="height:10px">
+                                       <td colspan="3">&nbsp;</td>
+                                   </tr>
+                                    <tr align="left">
+                                        <td width="35%" align="left">
+                                            <apex:inputField value="{!creditApp.Bank_Information_Release_Signatory_Name__c}" style="width:60%" />         
+                                            <br/>
+                                            <span style="font-size:11px;">Signature to Authorize Release of Bank Information</span>
+                                        </td>
+                                        <td width="20%" align="left">
+                                          <apex:inputField value="{!creditApp.Bank_Information_Release_Signatory_Title__c}" style="width:60%" />    
+                                          <br/>
+                                          <span style="font-size:11px;">Title</span>
+                                        </td>
+                                        <td width="45%" align="left">
+                                            <apex:inputField value="{!creditApp.Bank_Information_Release_Signatory_Date__c}" style="width:30%" />  
+                                            <br/>
+                                          <span style="font-size:11px;">Date</span> 
+                                        </td>                       
+                                   </tr>    
+                              </table> 
+                        <!-- Bank Sign Part End -->
+                    </td>
+                </tr>
+                <tr style="height:10px"> <!--  Blank Cell -->
+                        <td>&nbsp;</td>
+                   </tr> <!--  Blank Cell END-->
+                <tr>
+                    <td>
+                        <!--  Insurence heading -->
+                            <table width="100%" style="background-color:#FBB917" border="0">
+                                <tr>
+                                    <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>INSURANCE INFORMATION</B></font>
+                                    </td> 
+                                    <td width="50%" align="right" style="padding-right:10px">&nbsp;</td>
+                                </tr>
+                            </table>    
+                        <!--  Insurence heading END -->
+                    </td>
+                </tr>
+                <tr>    
+                    <td>
+                        <!-- Insurance Info -->
+                            <table border="0" width="100%" align="left">
+                                <tr>
+                                    <td colspan="6">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td width="10%" style="white-space:nowrap;padding-left:5px;" class="TD1">Insurer:</td>
+                                    <td width="20%" class="TD2"><apex:inputField value="{!creditApp.Insurance_Insurer__c}" id="Insurer__c" style="width:75%"/></td>
+                                    <td width="5%" style="padding-left:5px" class="TD1">Acct #:</td>
+                                    <td width="20%"><apex:inputField value="{!creditApp.Insurance_Account_Number__c}" id="Insurer_Acct__c" style="width:75%"/></td>                                                                                  
+                                    <td width="20%" style="padding-left:5px;wrap:nowrap" class="TD1">Amount of Liability Insured:</td>
+                                    <td ><apex:inputField value="{!creditApp.Insurance_Amount_of_Liability_Insured__c}" id="Amount_of_Liability_Insured__c" style="width:75%"/></td>                                                                                 
+                                    
+                                    
+                                </tr>
+                            </table>    
+                        <!-- Insurance Info End-->                          
+                    </td>                       
+                </tr>
+                <tr style="height:10px"> <!--  Blank Cell -->
+                        <td>&nbsp;</td>
+                   </tr> <!--  Blank Cell END-->
+                <tr>
+                    <td>
+                        <!--  Personal InFo Heading -->
+                        <table width="100%" style="background-color:#FBB917" border="0">
+                            <tr>
+                            <td width="50%" align="left" style="padding-left:10px"><font color="#000000" size="2"><B>PERSONAL INFORMATION</B></font>
+                                            </td> 
+                                <td width="50%" align="right" style="padding-right:10px">&nbsp;</td>
+                            </tr>
+                        </table>
+                        <!--  Personal InFo Heading End-->                          
+                    </td>
+                </tr>   
+                
+                <tr>
+                    <td>
+                        <!--  Personal InFo  -->
+                            <table width="100%" border="0" >
+                                        <tr>
+                                            <td colspan="4"><span>Please list the names and addresses of all officers, directors, and partners of applicant. You may attach another sheet if more space is needed. Social security numbers are only required for sole proprietorships, partnerships, and any applicant using Attachment A.</span></td>
+                                        </tr>
+                                        <tr style="height:5px"> <!--  Blank Cell -->
+                                                <td colspan="4">&nbsp;</td>
+                                        </tr> <!--  Blank Cell END-->
+                                        <tr>
+                                            <td width="15%" style="white-space:nowrap;padding-left:5px;" class="TD1">Principal Name:</td>
+                                            <td width="40%" class="TD2"><apex:inputField value="{!creditApp.Principal_1_Name__c}" id="Principal_Name1__c" style="width:85%"/></td>
+                                            <td width="15%" style="padding-left:5px" class="TD1">Principal Name:</td>
+                                            <td width="30%"><apex:inputField value="{!creditApp.Principal_2_Name__c}" id="Principal_Name2__c" style="width:75%"/></td>                                                                                  
+                                        </tr>
+                                        <tr>
+                                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">SSN:</td>
+                                            <td>
+                                                <table width="86%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                        <td class="TD2" width="50%"> <apex:inputField value="{!creditApp.Principal_1_SSN__c}" id="SSN_1__c" style="width:95%"/></td>
+                                                        <td  class="TD1" width="20%">Title:</td>
+                                                        <td align="right"><apex:inputField value="{!creditApp.Principal_1_Title__c}" id="Title1__c"  style="width:95%"/></td>                                                                                                                                       
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td  style="padding-left:5px" class="TD1">SSN:</td>
+                                            <td>
+                                                <table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                        <td class="TD2"> <apex:inputField value="{!creditApp.Principal_2_SSN__c}" id="SSN2__c" style="width:95%"/></td>
+                                                        <td  class="TD1" width="8%">Title:</td>
+                                                        <td ><apex:inputField value="{!creditApp.Principal_2_Title__c}" id="Title2__c"  style="width:85%"/></td>                                                                                                                                        
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">Home Address:</td>
+                                            <td  class="TD2"><apex:inputField value="{!creditApp.Principal_1_Home_Address__c}" id="Home_Address1__c" style="width:85%"/></td>
+                                            <td  style="padding-left:5px" class="TD1" valign="top">Home Address:</td>
+                                            <td valign="top"> <apex:inputField value="{!creditApp.Principal_2_Home_Address__c}" id="Home_Address2__c" style="width:75%"/></td>                                                                                  
+                                        </tr>
+                                        <tr>
+                                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">City:</td>
+                                            <td  class="TD2"><apex:inputField value="{!creditApp.Principal_1_City__c}" id="Home_Address_City1__c" style="width:85%"/></td>
+                                            <td  style="padding-left:5px" class="TD1" valign="top">City:</td>
+                                            <td valign="top"> <apex:inputField value="{!creditApp.Principal_2_City__c}" id="Home_Address_City2__c" style="width:75%"/></td>                                                                                 
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">State:</td>
+                                            <td>
+                                                <table width="86%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                        <td class="TD2" width="50%"> <apex:inputField value="{!creditApp.Principal_1_State__c}" id="Home_Address_State1__c" style="width:95%"/></td>
+                                                        <td  class="TD1" width="20%">Zip:</td>
+                                                        <td align="right"><apex:inputField value="{!creditApp.Principal_1_Zip__c}" id="Home_Address_Zip1__c" style="width:95%"/></td>                                                                                                                                       
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td  style="padding-left:5px" class="TD1">State:</td>
+                                            <td>
+                                                <table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                        <td class="TD2"> <apex:inputField value="{!creditApp.Principal_2_State__c}" id="Home_Address_State2__c" style="width:95%"/></td>
+                                                        <td  class="TD1" width="8%">Zip:</td>
+                                                        <td ><apex:inputField value="{!creditApp.Principal_2_Zip__c}" id="Home_Address_Zip2__c"  style="width:85%"/></td>                                                                                                                                       
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  style="white-space:nowrap;padding-left:5px;" class="TD1">E-Mail Address:</td>
+                                            <td  class="TD2"><apex:inputField value="{!creditApp.Principal_1_Email__c}" id="Personal_email1__c" style="width:85%"/></td>
+                                            <td  style="padding-left:5px" class="TD1" valign="top">E-Mail Address:</td>
+                                            <td valign="top"><apex:inputField value="{!creditApp.Principal_2_Email__c}" id="Personal_email2__c" style="width:75%"/></td>                                                                                 
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                
+                                            </td>
+                                        </tr>
+                                 </table>
+                        <!--  Personal InFo  End-->                         
+                    </td>
+                </tr>   
+               <tr>
+                    <td>
+                        <!--  Simple Text Start -->
+                             <apex:outputPanel >
+                                 <I>
+                        
+                                      The Federal Equal Credit Opportunity Act prohibits creditors from discrimination against credit applicants on the basis of race, color, religion, national origin, sex, marital status, or age (provided the applicant has the capacity to enter into a binding contract) or because an applicant receives income from a public assistance program.<br/><br/>
+                        
+                                      Terms may vary. The undersigned certifies that all information in this credit application is complete, factual, and correct and authorizes SunPower Corporation to contact any parties listed to verify the information contained in this application and or obtain additional information by securing data from a credit reporting agency Credit availability and/or termination thereof will be at the discretion of SunPower Corporation. We further agree to pay any costs associated with collection, in the event of a default, if the account is placed with an attorney or bonded collection agency. We agree to the Standard Terms and Conditions of SunPower Corporation's Sales Department.<br/><br/>
+                        
+                                      If for any reason the legal status of the applicant changes, applicant is required, and agrees to immediately notify SunPower Corporation in writing by certified mail of any and all changes in their legal status. SunPower reserves the right to require an updated credit application be resubmitted clearing indicating the legal changes that have occurred and conduct a new credit investigation in regard to the continuation of credit availability. SunPower reserves the right to cease extension of credit without notice or to change terms of payment pursuant to any disclosure by customer according to section 409 of the Sarbanes Oxley Act.<br/><br/>
+                        
+                                      In the case of Sole proprietorship or Partnerships (if partnership all partners must sign), the undersigned hereby consent(s) to SunPower Corporation use of a non-business consumer credit and hereby authorize(s) SunPower Corporation to utilize a consumer credit report on the undersigned from time to time in connection with the continuation of the business credit represented by this credit application. The undersigned as [an] individual(s) hereby knowingly consents to the use of such credit report consistent with the Federal Fair Reporting Act as contained in 15 U.S.C. @1681 et seq. This authorization will remain valid and enforceable until Applicant expressly revokes authorization in writing and served on SunPower Corporation by registered or certified mail.<br/><br/>            
+                        
+                                  </I>
+                               </apex:outPutPanel>
+                        <!--  Simple Text End -->
+                    </td>
+               </tr>
+               <tr>
+                    <td>
+                        <!-- SIGN Part Start -->
+                            <apex:outputPanel layout="block">
+                                    <table border="0" width="100%" align="left">
+                                     <tr style="height:10px">
+                                        <td colspan="3">&nbsp;</td>
+                                   </tr>
+                                    <tr align="left">
+                                        <td width="35%" align="left">
+                                            <apex:inputfield value="{!creditApp.Credit_Application_Signatory_1_Name__c}" style="width:60%" />         
+                                            <br/>
+                                            <span style="font-size:11px;">Credit Application Signatory 1 Name</span>
+                                        </td>
+                                        <td width="20%" align="left">
+                                          <apex:inputfield value="{!creditApp.Credit_Application_Signatory_1_Title__c}" style="width:60%" />    
+                                          <br/>
+                                          <span style="font-size:11px;">Title</span>
+                                        </td>
+                                        <td width="45%" align="left">
+                                            <apex:inputfield value="{!creditApp.Credit_Application_Signatory_1_Date__c}" style="width:30%" />  
+                                            <br/>
+                                          <span style="font-size:11px;">Date</span> 
+                                        </td>                       
+                                   </tr> 
+                                   <tr style="height:10px">
+                                        <td colspan="3">&nbsp;</td>
+                                   </tr>
+                                   <tr align="left">
+                                        <td width="35%" align="left">
+                                            <apex:inputfield value="{!creditApp.Credit_Application_Signatory_2_Name__c}" style="width:60%" />         
+                                            <br/>
+                                            <span style="font-size:11px;">Credit Application Signatory 1 Name</span>
+                                        </td>
+                                        <td width="20%" align="left">
+                                          <apex:inputfield value="{!creditApp.Credit_Application_Signatory_2_Title__c}" style="width:60%" />    
+                                          <br/>
+                                          <span style="font-size:11px;">Title</span>
+                                        </td>
+                                        <td width="45%" align="left">
+                                            <apex:inputfield value="{!creditApp.Credit_Application_Signatory_2_Date__c}" style="width:30%" />  
+                                            <br/>
+                                          <span style="font-size:11px;">Date</span> 
+                                            </td>                       
+                                       </tr> 
+                                      </table>
+                                </apex:outputPanel>     
+                        <!-- SIGN Part End -->
+                    </td>
+               </tr>
+           </table>
+           <!-- Outer Table END -->
+        
+  </apex:pageBlock>
+</apex:form>  
+         <script>
+      	function removeWarningMsg(){
+      	       try{
+				    var ctrl = document.getElementById("page1:form1");
+					var pTags = document.getElementById("page1:form1").getElementsByTagName('div');
+					for(i=0;pTags != null && i < pTags.length; i++ ){
+						var pHTML =pTags[i].innerHTML;
+						if(pHTML != null && pHTML.indexOf('Warning') >=0){
+						    pTags[i].innerHTML='&nbsp;';
+							pTags[i].className='&nbsp;';
+						}	
+					}
+									
+				}catch(e){}
+			}
+			removeWarningMsg();
+			
+      </script>  
+ 
+</apex:page>

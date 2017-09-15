@@ -1,0 +1,34 @@
+<apex:page controller="HomeCaseSearchLink" tabStyle="Case">
+<apex:form >
+ 
+ <apex:pageBlock title="Search Case " >
+   <apex:pageBlockSection >
+   <table width="50%">
+    <tr>
+      <td width="10%" nowrap="1" style="Font-size:11px"><b>Enter Value</b></td>
+      <td width="25%"><apex:inputText value="{!theTextInput}" id="theTextInput"/> </td> 
+       
+    </tr>
+ </table>
+      
+   </apex:pageBlockSection> 
+  
+   <apex:pageBlockButtons location="bottom">
+      <apex:commandButton action="{!search}" value="Search" reRender="sResult"/>
+   </apex:pageBlockButtons>
+ </apex:pageBlock>
+ 
+ <apex:outputPanel id="sResult" >
+ <apex:pageBlock id="sR" title="Search Result" rendered="{!ResultTableRenderer }">  
+   <apex:pageBlockTable width="50%" value="{!searchResults}" var="cs">
+       <apex:column width="10%" headerValue="Case Number"><apex:outputLink value="/{!cs.Id}">{!cs.CaseNumber}</apex:outputLink></apex:column>
+       <apex:column width="10%" value="{!cs.Status}"></apex:column>
+       <apex:column width="10%" value="{!cs.Origin}"></apex:column> 
+       <apex:column width="10%" value="{!cs.Serial_Num__c}"></apex:column>     
+
+   </apex:pageBlockTable>                                                                                
+ </apex:pageBlock> 
+</apex:outputPanel>
+
+</apex:form>   
+</apex:page>

@@ -1,0 +1,146 @@
+<apex:page contentType="" id="addProduct" Controller="EstimateQuoteController"  
+standardStylesheets="true" tabStyle="Estimate__c" action="{!init}">
+<apex:pageMessages />
+<apex:sectionHeader title="Products" subtitle="New/Edit Products" />  
+
+
+<head>
+<script  type="text/javascript">
+
+    function reSend(){
+        selectedValue = document.getElementById("addProduct:theForm:pgblock:buttons:chooseFamily").value ;
+        window.parent.location.href =  "/apex/EstimateQuoteController?id={!estimateId}&selectedFamily="+selectedValue;
+    }
+    
+     function doSave(savebutton, size) {
+            
+            document.getElementById("addProduct:theForm:pgblock:buttons:save").disabled=false;
+            document.getElementById("addProduct:theForm:pgblock:buttons:cancel").disabled=false;
+            for(var j = 0 ; j < size ; j++){
+                try{   
+                        var chkbox = document.getElementById('addProduct:theForm:pgblock:items:'+j+":theCheckbox");
+                        if(chkbox.checked){
+                            var product = (document.getElementById('addProduct:theForm:pgblock:items:'+j+":Product").innerHTML);
+                            var unitPrice = (document.getElementById('addProduct:theForm:pgblock:items:'+j+":UnitPrice").value);
+                            var val = (document.getElementById('addProduct:theForm:pgblock:items:'+j+":quantity").value);
+                            val = val.replace(/,/gi, "");
+                            //val = val.substring(0,invent.indexOf('.'));
+                            value = parseInt(val);
+                            
+                            
+                            if(value<0 || isNaN(value) || value==''){
+                                alert('Quantity for the product "'+product+'" can not be blank or text value.');
+                                return false;
+                                
+                            }
+                            unitPriceval = unitPrice.replace(/,/gi, "");
+                            //val = val.substring(0,invent.indexOf('.'));
+                            unitPriceval = parseInt(unitPriceval);
+                            var priceValue = parseInt(unitPriceval);
+                            if(isNaN(unitPriceval) || priceValue <0){
+                                alert('Sales Price for the product "'+product+'" can not be blank or text value.');
+                                return false;
+                            }
+                        } 
+                        
+                 }catch(error){
+                     alert(error);
+                 }
+             }
+       }
+    
+
+</script>
+<style type="text/css">
+            .quantity {width:60px;}
+                
+</style>
+
+</head>
+
+
+
+<apex:form id="theForm" target="_parent"> 
+   <apex:pageBlock id="pgblock" title="Add Products" > 
+          <apex:pageBlockButtons id="buttons">
+               <apex:commandButton id="save" value="Save"  onClick="javascript:return doSave(this,'{!size1}')"  action="{!save1}"/> 
+              <apex:commandButton id="cancel" value="Cancel" immediate="true" action="{!cancel}"/>
+              <b> Product Family: </b>
+            <apex:selectList title="Family" id="chooseFamily" size="1" value="{!selectedFamily}"  onchange="javascript:reSend();">
+                  <apex:selectOptions value="{!family}"/>
+            </apex:selectList>
+              
+          </apex:pageBlockButtons>
+        
+          <apex:dataTable value="{!productLists}" id="items"  var="item" cellpadding="1" border="0" width="100%">
+
+               <apex:column >
+                   <apex:outputText value="" id="Product"  />                        
+                   <apex:inputCheckbox value="{!item.IsActive__c}" disabled="{!item.IsActive__c}"  title="{!item.Product_Name__c}" id="theCheckbox" />
+                   
+               </apex:column>               
+               <apex:column >
+                   <apex:inputHidden id="prods" value="{!item.Product__c}"/> 
+                    <!-- 
+                  <apex:inputHidden id="checked" value="{!item.IsActive__c}"/> 
+                    -->
+                   <apex:outputText value="{!item.Product_Name__c}" id="ProductName"  />                        
+                   <apex:facet name="header">
+                  
+                     <b>Product</b> </apex:facet>
+               </apex:column>
+           
+           
+               <!-- <apex:column >
+                   <apex:facet name="header" >
+            
+            <b>Description</b> </apex:facet>
+                   <apex:inputField id="description" styleClass="Description" value="{!item.Description}" />
+               </apex:column> -->
+               <apex:column headerClass="CurrencyElement">
+                   <apex:facet name="header"  >
+                    <img title="{!$ObjectType.quoteLineItem.Fields.Quantity.inlineHelpText}" class="helpOrb" alt="" src="/s.gif" />
+                   <b>Quantity</b></apex:facet>
+                   <apex:inputText id="quantity" styleClass="quantity"  value="{!item.Quantity}"/> 
+               </apex:column>
+                <apex:column headerClass="CurrencyElement">
+                   <apex:facet name="header" >
+                   <img title="{!$ObjectType.quoteLineItem.Fields.UnitPrice.inlineHelpText}" class="helpOrb" alt="" src="/s.gif" />
+                   <b>Sales Price</b></apex:facet>
+                    <apex:inputText value="{!item.UnitPrice}" id="UnitPrice"/>
+               </apex:column>
+               <apex:column headerClass="CurrencyElement">
+                   <apex:facet name="header" >
+                   <img title="{!$ObjectType.quoteLineItem.Fields.Cost__c.inlineHelpText}" class="helpOrb" alt="" src="/s.gif" />
+                   <b>Cost</b></apex:facet>
+                   <apex:inputField value="{!item.Cost__c}" id="Cost"/>
+                </apex:column>
+                <apex:column headerClass="Date">
+                   <apex:facet name="header" >
+                   
+                   <b>Date</b></apex:facet>
+                   <apex:inputField value="{!item.ServiceDate}" id="Date"/>
+                </apex:column>
+                <!--<apex:column headerClass="NumberElement">
+                   <apex:facet name="header" ><b>KWp</b> </apex:facet>
+                    
+                    <apex:inputText value="{!item.KWp__c}" id="KWp"/>
+               </apex:column> -->
+           <!--
+               <apex:column headerClass="CurrencyElement">
+                   <apex:facet name="header"  ><b>Quantity</b> </apex:facet>
+                   <apex:inputField id="quantity" styleClass="quantity"  value="{!item.Quantity__c}"/> 
+               </apex:column>
+               <apex:column >
+                   <apex:facet name="header" ><b>Discount (%)</b> </apex:facet>
+                    <apex:inputField styleClass="quantity"  value="{!item.Discount}"/> 
+               </apex:column>
+                -->
+                </apex:dataTable>
+
+        
+   </apex:pageBlock>
+
+   </apex:form>    
+    
+</apex:page>

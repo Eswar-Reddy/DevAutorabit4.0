@@ -1,0 +1,19 @@
+<apex:page showHeader="false" sidebar="false" controller="SPCommunityDesignTools">
+    <!-- Load stylesheets first -->
+    <c:SPCommunityAppResources_CSS />
+    <c:CommunitiesMainNavComponent activeTab="Design Tools"/>
+
+    <body class="detail-container">
+        <h4 style="margin: 10px; display: inherit;">Design Tools</h4>
+    	<apex:repeat value="{!headlines}" var="line" >
+	    	<div class="alert alert--info">
+				<!-- <span><apex:outputText value="{!line.APPR_PUB__Long_Description__c}" escape="false" /></span> -->
+				<span>{!line}</span>
+			</div>
+		</apex:repeat>
+		<apex:iframe src="/apex/SPCommunityDesignToolsIFrame" height="400"/>
+    </body>
+
+    <!-- Load JS Scripts Last -->
+    <c:SPCommunityAppResources_JS />
+</apex:page>

@@ -1,0 +1,35 @@
+<apex:page standardController="Document" extensions="UploadDocumentController" showHeader="false" sidebar="false">
+<apex:form >    
+    <apex:pageBlock title="Upload Document">
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton value="Save" action="{!save}"/>
+            <apex:commandButton immediate="true" value="Cancel" onclick="window.close();"/>
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection columns="1">         
+            <apex:inputField value="{!doc.name}" />            
+            <apex:outputPanel >
+            <apex:outputLabel style="font-weight:bold;font-size:11px;margin-right:20px;margin-left:20px;" value="Folder"></apex:outputLabel>
+            <apex:selectList size="1" value="{!doc.folderID}">
+                <apex:selectOptions value="{!lstCategory}">
+                </apex:selectOptions>
+             </apex:selectList>
+             </apex:outputPanel>
+            <apex:outputPanel >
+            <apex:outputLabel style="font-weight:bold;font-size:11px;margin-right:10px;margin-left:10px;" value="Document"></apex:outputLabel>
+            <apex:inputFile value="{!docBody}" contentType="{!doc.contenttype}" />
+            </apex:outputPanel>            
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:form>
+<apex:outputPanel >  
+<script>    
+ 
+ if('{!isSaved}'=='true'){
+                window.parent.opener.location.href = '/apex/Contentlibrary?retTab=Documentation&retSubTab='+'{!subTab}';
+                window.parent.close();
+           // window.parent.location.href = '\apex\Contentlibrary?retTab=Documentation';
+          //  window.close();
+        }
+</script> 
+</apex:outputPanel> 
+</apex:page>

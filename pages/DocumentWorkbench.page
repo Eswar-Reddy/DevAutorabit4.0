@@ -1,0 +1,118 @@
+<apex:page id="DWPage" standardController="LeasePayment__c" extensions="DocumentWorkbenchController" sidebar="false" showHeader="false" standardStyleSheets="false">
+
+<head>
+        <title>{!$Label.Invoice_Document_Upload_Title}</title>
+    </head>
+    <apex:styleSheet value="{!$Resource.invoiceUploadStyle}"/>
+    <apex:styleSheet value="{!$Resource.Twitter_Bootstrap}"/>
+
+    <script type="text/javascript">
+        var googleAnalyticsProfileId = '{! googleAnalyticsProfileId }';
+        var userId = '{!$User.Id}';
+    </script>
+
+    <apex:includeScript value="{!$Resource.twitter_bootstrap_js}"/>
+    <apex:includeScript value="{!$Resource.jquery_16min}"/>
+    <apex:includeScript value="{!$Resource.invoicesubmittalJS}"/>
+    <apex:includeScript value="{!$Resource.tablesorter}"/>
+    <apex:includeScript value="{!$Resource.jqueryBlockUi}"/>
+    <script type="text/javascript" src="{!$Resource.googleAnalyticsJS}"></script>
+
+    <apex:outputText value="{!LeasePayment__c.CreatedDate} {!LeasePayment__c.Date_Countersigned__c}" rendered="false"/>
+    <apex:form id="theform"  styleClass="top">
+        <div class="banner">
+            <div class="logo">
+            </div>
+            <div class="header-info">
+                <h2>#{!LeasePayment__c.Lease__c}</h2>
+                <h4>{!LeasePayment__c.name}</h4>
+                <h4>{!$Label.Uploader_Label_1} - {!LeasePayment__c.Site_State_Prov__c}</h4>
+            </div>
+        </div>
+
+        <apex:pageMessages id="pageMessages"/>
+        
+        <apex:outputPanel id="thePanel" >
+        <apex:outputLabel >Invoice Type </apex:outputLabel>
+        <apex:selectList value="{!invoiceType}" size="1" onchange="queryDocs();">
+        	<apex:selectOptions value="{!options}"/>
+          </apex:selectList>
+        </apex:outputPanel>
+        
+        <apex:actionFunction name="queryDocs" action="{!filterRedirect}"/>
+        
+        
+        <div class="submitted-doc-section">
+            <div class="sub-header">
+                <h4 id="submittedDocumentsHeader">{!$Label.Uploader_Label_2}</h4>
+                <apex:commandButton id="submit-btn" action="{!submit}" value="{!$Label.Uploader_Label_3}" styleClass="btn btn-warning submit-btn" />
+                <div class="clear"></div>
+            </div>
+            <apex:dataTable value="{!invoiceDocumentRows}" var="invoiceDoumentRow" id="submittedDocuments"
+                    styleClass="table table-hover" cellpadding="10px">
+                    
+                    <apex:column headerValue="MileStone" headerClass="underline">
+                    <apex:outputText value="{!invoiceDoumentRow.invoiceDocument['Invoice_Type__c']}"/>
+                    
+                </apex:column>
+                
+                <apex:column headerValue="{!$Label.Uploader_Column_1}" headerClass="underline">
+                    <apex:outputText style="font-weight:bold" value="{!invoiceDoumentRow.invoiceDocument['Documents_in_File__c']}"/>
+                    <input type="hidden" data-status="{!invoiceDoumentRow.invoiceDocument['Status__c']}" data-documentType="{!invoiceDoumentRow.invoiceDocument['Documents_in_File__c']}"/>
+                </apex:column>
+
+                <apex:column headerValue="{!$Label.Uploader_Column_2}" headerClass="underline">
+                    <apex:outputPanel rendered="{! NOT(ISBLANK(invoiceDoumentRow.attId))}">
+                        <a href="/servlet/servlet.FileDownload?file={!invoiceDoumentRow.attId}" target="_blank">{!invoiceDoumentRow.attName}</a>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!invoiceDoumentRow.isArchived}">
+                        {!$Label.Archived}
+                    </apex:outputPanel>
+                </apex:column>
+                
+                <apex:column headerValue="Type" headerClass="underline">
+                    <apex:outputField value="{!invoiceDoumentRow.invoiceDocument['Type__c']}"/>
+                </apex:column>
+                
+                <apex:column headerValue="Document Owner" headerClass="underline">
+                    <apex:outputField value="{!invoiceDoumentRow.invoiceDocument['Document_Owner__c']}"/>
+                </apex:column>
+                
+                <apex:column headerValue="{!$Label.Uploader_Column_3}" headerClass="underline">
+                    <apex:outputField value="{!invoiceDoumentRow.invoiceDocument['Status__c']}"/>
+                </apex:column>
+                
+                
+                <apex:column headerValue="{!$Label.Uploader_Column_4}" headerClass="underline">
+                    
+                    <apex:commandLink styleClass="delete-button" action="{!invoiceDoumentRow.deleteDocument}" value="delete" rendered="{!IF(invoiceDoumentRow.invoiceDocument['Type__c']!='Task' && invoiceDoumentRow.isPending && (NOT(ISPICKVAL($User.UserType,'PowerPartner')) || (ISPICKVAL($User.UserType,'PowerPartner') && partnerRole==invoiceDoumentRow.invoiceDocument['Document_Owner__c'])) ,true,false)}" />
+                    <apex:inputFile styleClass="file-input" value="{!invoiceDoumentRow.att.body}" filename="{!invoiceDoumentRow.att.name}" rendered="{!IF(invoiceDoumentRow.invoiceDocument['Type__c']!='Task' && invoiceDoumentRow.isNew && (NOT(ISPICKVAL($User.UserType,'PowerPartner')) || (ISPICKVAL($User.UserType,'PowerPartner') && partnerRole==invoiceDoumentRow.invoiceDocument['Document_Owner__c'])),true,false)}" />
+               
+                </apex:column>
+
+                <apex:column headerValue="{!$Label.Uploader_Column_5}" headerClass="underline">
+                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+                        <apex:param value="{!invoiceDoumentRow.invoiceDocument['Document_Submitted__c']}"/>
+                    </apex:outputText>
+                </apex:column>
+
+                <apex:column headerValue="{!$Label.Uploader_Column_6}" headerClass="underline">
+                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+                        <apex:param value="{!invoiceDoumentRow.invoiceDocument['Response_Date__c']}"/>
+                    </apex:outputText>
+                </apex:column>
+                
+                <apex:column headerValue="{!$Label.Uploader_Column_7}" headerClass="underline" width="100px">
+                    <apex:inputTextArea value="{!invoiceDoumentRow.invoiceDocument['Partner_Comments__c']}" 
+                        readonly="{!NOT(invoiceDoumentRow.isNew) || invoiceDoumentRow.invoiceDocument['Type__c']=='Task'}"/>
+                </apex:column>
+
+                <apex:column headerValue="{!$Label.Uploader_Column_8}" headerClass="underline">
+                    <apex:outputText value="{!invoiceDoumentRow.invoiceDocument['Notes_to_Dealer__c']}"/>
+                </apex:column>
+            </apex:dataTable>
+        </div>
+
+    </apex:form>
+
+</apex:page>

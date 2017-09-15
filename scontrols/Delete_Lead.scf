@@ -1,0 +1,35 @@
+<html> 
+<head> 
+<script src="/soap/ajax/13.0/connection.js"></script> 
+<script> 
+function init() 
+{ 
+  /* Prevent non-authorized user from deleting this lead*/ 
+  var leadId = "{!Lead.Id}"; 
+  var userRole = "{!$UserRole.Name}";
+  var userProfile = "{!$Profile.Name}";  
+  
+  //Allow the users to delete the Leads who are the member of the Group Lead Delete Access
+  var qryCheckGroup = "Select id from GroupMember where Group.Name='EU Lead Managers' and UserOrGroupId ='{!$User.Id}'";  
+  var data= sforce.connection.query(qryCheckGroup); 
+  var records = data.getArray("records"); 
+  
+  if(userProfile == "System Administrator" || 
+     userProfile == "SunPower Administrator" || 
+     userRole == "Marketing Manager" || records.length==1) { 
+
+    window.parent.location.href = "{!URLFOR($Action.Lead.Delete, Lead.Id, null, true)}"; 
+ 
+  } 
+else{ 
+
+    alert("Only a Marketing Manager can delete a lead."); 
+    window.parent.location.href="{!URLFOR($Action.Lead.View, Lead.Id)}"; 
+  }
+
+} 
+</script> 
+</head> 
+<body onload="init()"> 
+</body> 
+</html>

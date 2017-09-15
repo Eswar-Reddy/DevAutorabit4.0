@@ -1,209 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EscalationRules xmlns="http://soap.sforce.com/2006/04/metadata">
     <escalationRule>
-        <fullName>Standard</fullName>
-        <active>true</active>
+        <fullName>Assignment or attention required</fullName>
+        <active>false</active>
         <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
+            <businessHours>Default</businessHours>
+            <businessHoursSource>Static</businessHoursSource>
             <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
+                <field>Case.OwnerId</field>
+                <operation>contains</operation>
+                <value>Queue</value>
             </criteriaItems>
             <criteriaItems>
-                <field>Account.SLA__c</field>
+                <field>Case.Type</field>
                 <operation>equals</operation>
-                <value>Platinum</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Case.Priority</field>
-                <operation>equals</operation>
-                <value>High</value>
+                <value>Feedback,Customer Service,Customer Complaint,Compliment</value>
             </criteriaItems>
             <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>120</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
+                <minutesToEscalation>4320</minutesToEscalation>
+                <notifyCaseOwner>true</notifyCaseOwner>
+                <notifyToTemplate>Service_Support/SUPPORT_Case_Assignment_Escalation_Notification</notifyToTemplate>
             </escalationAction>
             <escalationStartTime>CaseCreation</escalationStartTime>
         </ruleEntry>
         <ruleEntry>
             <businessHoursSource>Case</businessHoursSource>
             <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
+                <field>Case.OwnerId</field>
+                <operation>notContain</operation>
+                <value>queue</value>
             </criteriaItems>
             <criteriaItems>
-                <field>Account.SLA__c</field>
+                <field>Case.IsClosed</field>
                 <operation>equals</operation>
-                <value>Platinum</value>
+                <value>False</value>
             </criteriaItems>
-            <criteriaItems>
-                <field>Case.Priority</field>
-                <operation>equals</operation>
-                <value>Medium,Low</value>
-            </criteriaItems>
-            <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>360</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
-            </escalationAction>
             <escalationStartTime>CaseCreation</escalationStartTime>
         </ruleEntry>
         <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
+            <businessHours>Default</businessHours>
+            <businessHoursSource>Static</businessHoursSource>
             <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
+                <field>Case.OwnerId</field>
+                <operation>contains</operation>
+                <value>queue</value>
             </criteriaItems>
             <criteriaItems>
-                <field>Account.SLA__c</field>
+                <field>Case.Type</field>
                 <operation>equals</operation>
-                <value>Gold</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Case.Priority</field>
-                <operation>equals</operation>
-                <value>High</value>
+                <value>Tech Support - General,Tech Support - Incident,Site Audit,Field Failure</value>
             </criteriaItems>
             <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>240</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
-            </escalationAction>
-            <escalationStartTime>CaseCreation</escalationStartTime>
-        </ruleEntry>
-        <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
-            <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Gold</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Case.Priority</field>
-                <operation>equals</operation>
-                <value>Medium,Low</value>
-            </criteriaItems>
-            <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>480</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
-            </escalationAction>
-            <escalationStartTime>CaseCreation</escalationStartTime>
-        </ruleEntry>
-        <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
-            <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Silver</value>
-            </criteriaItems>
-            <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>720</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
-            </escalationAction>
-            <escalationStartTime>CaseCreation</escalationStartTime>
-        </ruleEntry>
-        <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
-            <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>equals</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Bronze</value>
-            </criteriaItems>
-            <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>1440</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
-            </escalationAction>
-            <escalationStartTime>CaseCreation</escalationStartTime>
-        </ruleEntry>
-        <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
-            <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>notEqual</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Gold,Platinum</value>
-            </criteriaItems>
-            <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>360</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
-            </escalationAction>
-            <escalationStartTime>CaseCreation</escalationStartTime>
-        </ruleEntry>
-        <ruleEntry>
-            <businessHoursSource>Case</businessHoursSource>
-            <criteriaItems>
-                <field>Account.BillingCountry</field>
-                <operation>notEqual</operation>
-                <value>US,USA,United States,United States of America</value>
-            </criteriaItems>
-            <criteriaItems>
-                <field>Account.SLA__c</field>
-                <operation>equals</operation>
-                <value>Silver,Bronze</value>
-            </criteriaItems>
-            <escalationAction>
-                <assignedTo>eswar.reddy1@ar.com</assignedTo>
-                <assignedToTemplate>unfiled$public/SupportEscalatedCaseReassignment</assignedToTemplate>
-                <assignedToType>User</assignedToType>
-                <minutesToEscalation>1080</minutesToEscalation>
-                <notifyCaseOwner>false</notifyCaseOwner>
-                <notifyTo>eswar.reddy1@ar.com</notifyTo>
-                <notifyToTemplate>unfiled$public/SupportEscalatedCaseNotification</notifyToTemplate>
+                <minutesToEscalation>7200</minutesToEscalation>
+                <notifyCaseOwner>true</notifyCaseOwner>
+                <notifyToTemplate>Service_Support/SUPPORT_Case_Escalation_Notification</notifyToTemplate>
             </escalationAction>
             <escalationStartTime>CaseCreation</escalationStartTime>
         </ruleEntry>

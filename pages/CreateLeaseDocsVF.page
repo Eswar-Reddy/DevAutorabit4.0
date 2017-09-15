@@ -1,0 +1,99 @@
+<apex:page controller="CreateLeaseDocsVFController"  showHeader="{!!inCommunity}" sidebar="{!!inCommunity}" standardStylesheets="false" cache="false" action="{!pageCall}">
+   <c:CommunitiesMainNavComponent activeTab="Accounts" rendered="{!inCommunity}"/>
+   <c:SPCommunityAppResources_CSS namespaceOnly="true" rendered="{!inCommunity}"/>
+    <apex:pageMessages />
+    <apex:includeScript value="{!URLFOR($Resource.JqueryUIForPopUP, 'JqueryUIForPopUP/Jquerymin.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.JqueryUIForPopUP, 'JqueryUIForPopUP/jqueryUInew.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.JqueryUIForPopUP, 'JqueryUIForPopUP/jquerycss.css')}"/> 
+    <apex:form >
+        <apex:outputPanel rendered="{!errorOccured}">
+            <apex:commandLink value="Click here" action="{!customerPage}"></apex:commandLink> to go to Customer page.
+        </apex:outputPanel>  
+        <apex:actionFunction name="callRedirectMethod" action="{!redirect}" >
+            <apex:param name="agreementClick" value="updateValue" id="check" assignTo="{!checkAgreementClick}" />
+        </apex:actionFunction> 
+        <apex:actionFunction name="callRedirectMethodDirect" action="{!redirect}"/>
+        
+        <apex:actionFunction name="callBackPage" action="{!customerPage}" />
+    </apex:form>
+    
+    <script type="text/javascript">
+    var j$ = jQuery.noConflict();
+    function openPopup(){
+        try{
+            if(j$) {
+                
+                //jQuery= jQuery.noConflict();
+            }
+            j$=jQuery.noConflict();
+            jQuery(function() { 
+                /*Create the HTML(DIV Tag) for the Dialog.*/ 
+                var html = 
+                    '<div id="dialog" class="foo"><p>By checking this box, "Yes," I acknowledge that I have verified the identity of this customer through a U.S. federal or state goverment -issued photo ID</p><br><input type="checkbox" name="customerid" value="custid" id="value1"> Verified Customers ID<br><p>By checking the box below, "Yes," I acknowledge that I have verbally notified this customer of his/her right to cancel the contract within 7 calender days of signing the contract.</p><br><input type="checkbox" name="verbalid" value="verbal" id="value2"> Verbally Notified Customer of Right to Cancel<br></div>'; 
+                /*Check if the Dialog(DIV Tag) already exists if not then Append the same to the Body tag.*/ 
+                if(!j$('[id=dialog]').size()){ 
+                    j$('body').append(html); 
+                } 
+                /*Open the jQuery Dialog.*/ 
+                j$( "#dialog" ).dialog({ 
+                    autoOpen: true, 
+                    title: 'Compliance Checks', 
+                    modal: true, 
+                    width:500, 
+                    draggable: false, 
+                    buttons: [{
+                        id:"btn-agreement",
+                        disabled: true,
+                        text: "Generate Agreement",
+                        click: function() {
+                            j$(this).dialog("close"); 
+                            var txtVal='updateValue';
+                            callRedirectMethod(txtVal);
+                            return false;
+                        }
+                    }, 
+                              {
+                                  id:"btn-cancel",
+                                  text: "Cancel",
+                                  click: function() {
+                                      j$(this).dialog("close"); 
+                                      //document.location.reload(true); 
+                                      //history.back();
+                                      callBackPage();
+                                  }
+                              }]
+                }); 
+            }); 
+            j$(document).on('click','.ui-dialog-titlebar-close',function(){ 
+                //document.location.reload(true); 
+                //parent.history.back();
+                callBackPage();
+            }); 
+           
+       var button = document.getElementById('btn-agreement'); 
+       var buttonCancel = j$(".ui-dialog-buttonpane button:contains('Cancel')"); 
+       j$(button).css("color","#000000"); 
+       j$(buttonCancel).css("color","#000000"); 
+   } 
+       catch(e){ 
+           alert('An Error has Occured. Error: ' + e); 
+       } 
+       j$(document).on("change", ["input[name='verbalid']","input[name='customerid']"], function () {
+           if(j$('#value1').prop("checked") == true && j$('#value2').prop("checked") == true){ 
+               j$('#btn-agreement').removeAttr('disabled').removeClass( 'ui-state-disabled' );
+           }
+           else{ 
+               j$('#btn-agreement').attr('disabled', true).addClass( 'ui-state-disabled' );
+           }
+       });
+   }
+    function displaynone(){
+        j$('#dialog').css("display","none");
+    }
+    function redirectionMethodCall(){
+        callRedirectMethodDirect();
+        return false;
+    }
+    </script>
+    <script>{!rScript}</script>  
+    </apex:page>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Contact$Name</field>
+    </columns>
+    <columns>
+        <field>Contact$Account</field>
+    </columns>
+    <columns>
+        <field>Contact$Account.Vertical__c</field>
+    </columns>
+    <columns>
+        <field>Contact$Account.Sub_Vertical__c</field>
+    </columns>
+    <columns>
+        <field>Contact.Activities$Subject</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Contact.Activities$Subject</column>
+            <operator>contains</operator>
+            <value>Call</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact$Account.RecordType</column>
+            <operator>equals</operator>
+            <value>Account.Commercial</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Contact.Activities$Account.Engagement_Priority__c</column>
+            <operator>equals</operator>
+            <value>Tier 1</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Sample Contacts with Activities Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Contacts_with_Activities__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Contact.Activities$CreatedDate</dateColumn>
+        <interval>INTERVAL_PREV2FY</interval>
+    </timeFrameFilter>
+</Report>

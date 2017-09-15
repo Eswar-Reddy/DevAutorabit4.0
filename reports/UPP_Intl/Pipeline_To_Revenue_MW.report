@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Opportunity.Opportunity_Number1__c</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>PRODUCT_NAME</field>
+    </columns>
+    <columns>
+        <field>OpportunityLineItem.System_Size_PV__c</field>
+    </columns>
+    <columns>
+        <field>OpportunityLineItem.Product_Family__c</field>
+    </columns>
+    <columns>
+        <field>PRICEBOOK_NAME</field>
+    </columns>
+    <currency>EUR</currency>
+    <description>Extract product details to build MW view of Pipeline to revenue report</description>
+    <filter>
+        <criteriaItems>
+            <column>Opportunity.Business_Unit__c</column>
+            <operator>equals</operator>
+            <value>UPP Intl</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Country__c</column>
+            <operator>notEqual</operator>
+            <value>China</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Off_Grid__c</column>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FAMILY</column>
+            <operator>notEqual</operator>
+            <value>Freight,Total Price,PV Cell,Development,Misc</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>OpportunityLineItem.Product_Type__c</column>
+            <operator>notEqual</operator>
+            <value>Balance of System</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>PRICEBOOK_NAME</column>
+            <operator>contains</operator>
+            <value>General</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Pipeline To Revenue MW</name>
+    <params>
+        <name>role_territory</name>
+        <value>role</value>
+    </params>
+    <params>
+        <name>terr</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>open</name>
+        <value>open</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>OpportunityProduct</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <endDate>2020-12-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2015-01-01</startDate>
+    </timeFrameFilter>
+</Report>

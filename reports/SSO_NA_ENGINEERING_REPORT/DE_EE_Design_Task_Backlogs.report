@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_2063679</developerName>
+        <masterLabel>Departmental Queue</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>STATUS</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>In Progress</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Not Started</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Overdue</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Completed</sourceValue>
+            </sourceValues>
+            <value>GBFS Design</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Waiting on someone else</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>On Hold</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Deferred</sourceValue>
+            </sourceValues>
+            <value>NA Design</value>
+        </values>
+    </buckets>
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_96968895</developerName>
+        <masterLabel>Request Sub-Category</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>Activity.Request_Sub_Category__c</sourceColumnName>
+        <useOther>false</useOther>
+    </buckets>
+    <columns>
+        <field>SUBJECT</field>
+    </columns>
+    <columns>
+        <field>PRIORITY</field>
+    </columns>
+    <columns>
+        <field>TASK</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT</field>
+    </columns>
+    <columns>
+        <field>CONTACT</field>
+    </columns>
+    <columns>
+        <field>LEAD</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY</field>
+    </columns>
+    <currency>USD</currency>
+    <filter>
+        <criteriaItems>
+            <column>Activity.Task_Type__c</column>
+            <operator>equals</operator>
+            <value>Support Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Activity.Request_Category__c</column>
+            <operator>equals</operator>
+            <value>Electrical Design</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STATUS</column>
+            <operator>equals</operator>
+            <value>Active,Deferred,In Progress,Not Started,On Hold,Overdue,Waiting on someone else</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ASSIGNED</column>
+            <operator>equals</operator>
+            <value>Vic Cris Magdali,Rosalie Dela Cruz,Richelle Dela Cruz,Neal Corey</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Activity.Promised_Date__c</column>
+            <operator>lessThan</operator>
+            <value>YESTERDAY</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>Activity.Promised_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>STATUS</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>BucketField_96968895</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>DUE_DATE</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>DE_EE_Design_Task (Backlogs)</name>
+    <params>
+        <name>closed</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>type</name>
+        <value>t</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Activity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

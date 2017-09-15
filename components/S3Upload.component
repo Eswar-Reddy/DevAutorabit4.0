@@ -1,0 +1,61 @@
+<apex:component controller="S3UploadController">
+	<apex:includeScript value="{!URLFOR($Resource.jQuery_3_2_1_min)}"/>
+	<apex:attribute name="record" description="This is the document record" type="DocObject" required="true" assignTo="{!doc}"/>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</head>
+	<body>
+		<div class="sunpower-style container container-fluid">
+			<h1>Upload File</h1>
+            <div class="alert alert--info" style="margin-top:1em">
+                <span>Please select a file and upload it to proceed</span>
+            </div>
+            <div id="spinner" class="spinner hidden"></div>
+			<form action="https://{!bucket}.s3.amazonaws.com" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="key" id="docName"/>
+				<input type="hidden" name="acl" value="public-read"/>
+				<input type="hidden" name="success_action_redirect" value="{!redirectURL}"/>
+
+				<!-- THESE ARE Ver 2 ATTRIBUTES -->
+				<input type="hidden" name="AWSAccessKeyId" value="{!key}"/>
+				<input type="hidden" name="policy" value="{!policy}"/>
+	        	<input type="hidden" name="signature" value="{!signedPolicy}"/>
+
+				<!-- THESE ARE Ver 4 ATTRIBUTES - rolling back to ver 2 due to issues getting v4 working -->
+				<!-- <input type="hidden" name="x-amz-credential" value="{!path}"/>
+				<input type="hidden" name="x-amz-algorithm" value="AWS4-HMAC-SHA256"/>
+				<input type="hidden" name="x-amz-date" value="{!isoDateTime}"/>
+				<input type="hidden" name="Policy" value="{!policy}"/>
+				<input type="hidden" name="x-amz-signature" value="{!signedPolicy}"/>  -->
+
+				<input type="file" id="s3file" name="file"/>
+				<input type="submit" id="s3submit" value="Upload File" class="hidden"/>
+			</form>
+		</div>
+	</body>
+	<script type="text/javascript">
+		j$ = jQuery.noConflict();
+    	j$(document).ready(function() {
+    		var file, name;
+
+			j$('input[id$=s3file]').change(function(event) {
+				j$('input[id$=s3submit]').toggleClass('hidden');
+				j$('input[id$=s3file]').toggleClass('hidden');
+
+				file = event.target.files[0];
+				var ext = file.name.substring(file.name.lastIndexOf('.') + 1, file.name.length);
+				name = '{!doc.dId}' + '_' + '{!guid}' + '.' + ext;
+				j$('input[id$=docName]').val(name);
+			});
+
+			j$('input[id$=s3submit]').click(function(event) {
+				j$('input[id$=s3submit]').toggleClass('hidden');
+				j$('#spinner').toggleClass('hidden');
+				
+				S3UploadController.updateDocument('{!doc.dId}', file.name, '{!doc.nameField}', 'https://{!bucket}.s3.amazonaws.com/' + name, '{!doc.linkField}', function(result, event) {
+					console.log('event', event);
+				});
+			});
+		});
+	</script>
+</apex:component>

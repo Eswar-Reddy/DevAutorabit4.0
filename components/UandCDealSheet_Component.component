@@ -1,0 +1,85 @@
+<apex:component controller="UandCDealSheet_CC" access="global">
+
+    <apex:attribute name="quoteId" description="QuoteId" type="String" assignTo="{!quoteIdValue}" />
+    <apex:attribute name="opportunityId" description="OpportunityId" type="String" assignTo="{!opportunityIdValue}" />
+    
+    <br/>
+        Please approve this Quote for {!quoteDetails.Opportunity.Name}<br/>
+       <br/> https://login.salesforce.com/{!quoteDetails.Id}<br/>
+    <br/>
+    
+    <!---------------- Opportunity Details --------------->
+    <br/>
+        <u><b>Opportunity Detail (From Opporunity Record)</b></u>
+    <br/>
+    
+    <br/>
+    Business Unit: {!quoteDetails.Business_Unit__c}
+    <br/>
+    Salesperson: {!quoteDetails.Opportunity.Owner.Name}
+    <br/>
+    Close Date:  <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">
+        <apex:param value="{!quoteDetails.Opportunity.CloseDate}" /> 
+    </apex:outputText>
+    <br/>
+    Expected COD/PAC Date: {!quoteDetails.Opportunity.Expected_Commercial_Operation_Date__c}
+    <br/>
+    Probability: {!quoteDetails.Opportunity.Probability}
+    <br/>
+    Stage: {!quoteDetails.Opportunity.StageName}
+    <br/>
+    Customer Funding Type: {!quoteDetails.Opportunity.Customer_Funding_Type__c}
+    <br/>
+    SPWR Deal Type: {!quoteDetails.Opportunity.Contract_Type__c}
+    <br/><br/>
+    
+    <!---------------- Team Member Details --------------->
+    <u><b>Team</b></u><br/> 
+  
+    Sales Analyst: {!salesAnalystVals}
+    <br/>
+    Project Manager: {!projectManagerVals}
+    <br/>
+    Structured Finance: {!structuredFinanceVals}
+    <br/>
+    Designer: {!designerVals}
+    <br/>
+    <br/> 
+    <u><b>Product Information</b></u>
+    <br/>
+    Mounting System: {!mountingSystemVals}
+    <br/>
+    PV Module: {!pvModuleVals}
+    <br/>
+    <br/>
+    <u><b>EPC Information</b></u>
+    <br/>
+    Amount: {!quoteDetails.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!quoteDetails.TotalPrice}"/></apex:outputText> 
+    <br/>
+    Total Cost: {!quoteDetails.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!quoteDetails.Total_Cost__c}"/></apex:outputText>  
+    <br/>
+    Direct Project Margin: {!quoteDetails.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!quoteDetails.Direct_Margin__c}"/></apex:outputText>
+    <br/>
+    Direct Project Margin %: {!quoteDetails.DirectMargin_per__c}
+    <br/>
+    Net Present Value: {!quoteDetails.CurrencyISOCode}&nbsp;<apex:outputText value="{0, number, 000,000.00}"><apex:param value="{!quoteDetails.Opportunity.Net_Present_Value__c}"/></apex:outputText>
+    <br/>
+    NPV $/W: {!quoteDetails.Opportunity.NPV_W__c}
+    <br/>
+    ASP: {!quoteDetails.ASP_Formula__c}
+    <br/>
+    BOS $/W: {!quoteDetails.BOS_w_Formula__c}
+    <br/>
+    PV $/W: {!quoteDetails.PV_w_Formula__c}
+    <br/>
+    System Size (PV): {!quoteDetails.System_Size_PV_Formula__c}
+    <br/>
+    <br/>
+    <u><b>Selling Strategy (From Opportunity Record)</b></u><br/><br/>
+    Selling Strategy: {!quoteDetails.Opportunity.Selling_Strategy__c}<br/><br/>
+    My Position vs Competition: {!quoteDetails.Opportunity.My_Position_vs_Competition__c}<br/><br/>
+    Project/Margin Risks: {!quoteDetails.Opportunity.Project_Margin_Risks__c}<br/><br/>
+    Closure/Deal Risks: {!quoteDetails.Opportunity.Closure_Deal_Risks__c}<br/><br/>
+    Actions Remaining to Close Deal: {!quoteDetails.Opportunity.Actions_Remaining_to_Close_Deal__c}<br/>
+
+</apex:component>

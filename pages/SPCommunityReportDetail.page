@@ -1,0 +1,245 @@
+<apex:page showHeader="false" id="cpg" sidebar="false" Controller="CommunityReportDetail">    
+
+    <style type="text/css">
+
+        //COLORS, FONTS, AND BORDERS
+        .sp-blue {
+            color: #0076be !important;
+        }
+        .sunpower-style {
+            font-family: "Open Sans", sans-serif;
+        }
+        .sunpower-style .tabs__content-container {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .checkImg{
+            width:21px !important;
+        }
+        //SPACING
+        .top1 {
+            margin-top: 1rem;
+        }
+        .top2 {
+            margin-top: 2rem;
+        }
+        .center-row {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        //ADD-INS
+        
+        .subtab-styling__content-container{
+            border-bottom:1px solid #e5e5e5 !important; 
+        }
+        .sp-orange-divider{
+            border-bottom: .1rem solid !important;
+            border-color: #ffdfb8 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #tableId tr:nth-child(even) {background: #f5f5f5}
+        .sunpower-style select{
+            border: 1px solid #5d5e60  !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#5d5e60 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style select:disabled{
+            border: 1px solid #e5e5e5 !important;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            color:#e5e5e5 !important;
+            background-color:white !important;
+        }
+        
+        .sunpower-style h5{
+            color:#5d5e60;
+        }
+        
+        .labelStyle{
+                //font-family:sans-serif;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color:#535353;
+                text-align:right;
+         }
+         .errorStyle{
+                font-size: .95rem;
+                margin-bottom:15px !important;
+            }
+            .errorStyle ul{
+                margin-top:-35px !important;
+            }
+            .errorStyle li{
+                padding-top:0px !important;
+            }
+            .errorStyle table{
+                background-color:#ffc !important;
+            } 
+         
+        .circle
+        {
+            width:35px;
+            height:35px;
+            border-radius:18px;
+            font-size:1.2rem;
+            color:#9b9b9b;
+            line-height:30px;
+            text-align:center;
+            //background:#000;
+            margin-left:auto;
+            margin-right:auto;
+            border:3px solid #e5e5e5;
+        }
+        
+        //SIZING
+        @media all and (max-width: 1200px) {
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        @media all and (max-width: 1024px) {
+            /* styles for narrow desktop browsers and iPad landscape */
+            .sunpower-style {
+                margin-left: auto !important; 
+                margin-right: auto !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        @media all and (max-width: 768px) {
+            /* styles for narrower desktop browsers and iPad portrait */
+            .sunpower-style {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+
+        @media all and (max-width: 480px) {
+            /* styles for iPhone/Android landscape (and really narrow browser windows) */
+            .sunpower-style {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-left: none;
+                margin-right: none;
+            }
+        }
+    </style>
+    
+   
+    
+    <apex:stylesheet value="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <c:SPCommunityAppResources_CSS namespaceOnly="true"/>
+    <apex:stylesheet value="{!$Resource.HelixRequestCustomStyles}" />
+    <!--<apex:outputLabel rendered="{!IsPartner}">
+        <c:CommunitiesMainNavComponent activeTab="Accounts" />
+    </apex:outputLabel>-->
+    <c:CommunitiesMainNavComponent activeTab="Reports" />
+    <body class="sunpower-style container-fluid" style="margin: 1rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem;max-width:1250px;">
+        <div id="inner-container" style="max-width: 1250px; margin-right: auto; margin-left: auto;">
+            <apex:form >
+            <apex:actionFunction name="runreport" action="{!runReport}" reRender="datatab" status="reportload" />
+            <apex:actionFunction name="exportReport" action="{!exportCSV}"/>
+            <div class="row errorStyle" style="margin-top:10px;">
+                <apex:pageMessages />
+            </div>
+            <div class="row" style="margin-top:20px;">
+                <div class="col-xs-12" style="text-align: left;">
+                    <h3>Report Detail</h3>    
+                </div>
+            </div>
+            <div class="row" style="margin-top:20px;margin-bottom:20px;">
+                <div class="col-xs-12 col-md-12">
+                    {!reportName}
+                </div>
+            
+            </div>
+
+            <div class="row" style="margin-top:20px;margin-bottom:20px;">
+                <div class="col-xs-12 col-md-3">
+                    <a class="btn btn-primary btn--small" href="#" onclick="runreport();">Run Report</a>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <a class="btn btn-secondary btn--small" style="float:right;" href="#" onclick="exportReport();">Export</a>
+                </div>
+            </div> 
+            <!--<div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <table class="table" style="background-color:#F5F5F5;font-size:.75rem;margin-top:.25rem;margin-bottom:.25rem;" id="filtertableId">
+                        <tbody>
+                            <apex:repeat value="{!ReportMetaData.reportFilters}" var="filter">
+                            <tr>
+                                <td style="padding:.25rem;">
+                                    &nbsp;&nbsp;&nbsp;<b>{!filter.column}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!filter.operator}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{!filter.value}</b>
+                                </td>  
+                            </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+            <apex:outputPanel id="datatab">
+             <!--<apex:actionStatus startText="Report Loading...." stopText="" id="reportload"/>-->
+             <div class="row" style="margin-top:10px;">
+               <div class="col-xs-12 col-md-6" style="color:#016ca7;">
+                <apex:actionStatus startText="Report Loading...." stopText="" id="reportload"/>  
+               </div>
+               <div class="col-xs-12 col-md-6" style="text-align:right;color:#016ca7;">
+                    {!recordCount} records found.
+                </div>
+            </div>
+            <div class="row" style="margin-top:20px;margin-bottom:20px;">
+                <div class="col-xs-12 col-md-12">
+                <table class="table " style="font-size:1rem;" id="tableId">
+                    <thead>
+                        <apex:repeat value="{!ReportMetaData.detailColumns}" var="colhead">
+                        <!--<th>{!colhead}</th> -->
+                        <th>{!ReportResults.reportExtendedMetadata.detailColumnInfo[colhead].label}</th>
+                        </apex:repeat>
+                   </thead>
+                    <tbody>
+        
+                <apex:repeat value="{!ReportResults.factMap['T!T'].rows}" var="row">
+                <tr>
+                  <apex:repeat value="{!row.dataCells}" var="cell">
+                  <td>
+                      <apex:outputText value="{!cell.label}"/>
+                  
+                  </td>  
+                  </apex:repeat>
+                 </tr>
+              </apex:repeat>
+              </tbody>
+            </table>
+    
+                </div>
+            
+            </div>
+            </apex:outputPanel>
+                        
+            <div class="row top2" style="margin-top:20px"></div>
+            </apex:form>
+        </div>
+    </body>
+    
+    <c:SPCommunityAppResources_JS />
+    <!--<apex:includeScript value="{!$Resource.StyleguideExpansion_JS}" />   -->
+
+</apex:page>

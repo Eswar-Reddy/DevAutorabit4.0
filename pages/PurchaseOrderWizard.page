@@ -1,0 +1,208 @@
+<apex:page standardController="Purchase_Order__c" extensions="PurchaseOrderWizardController" id="page" action="{!updatePOOnAction}" showHeader="{!IF(isCommunitiesPartnerUser,false,true)}">
+    <apex:PageMessages />
+    <apex:form id="tab4form">
+        <apex:actionFunction action="{!calcDayDifference}"
+            name="calcDayDifference" reRender="tab4form">
+        </apex:actionFunction>
+        <apex:pageBlock title="{!submitOrderTitle}" id="tab2pblock5">
+            <apex:pageBlockSection rendered="{!IF(!isPartnerUser && showSubmitButton && isTPSCashOrder && purchaseOrder.Order_Status__c =='New', 'true', 'false')}">
+                <apex:commandButton action="{!submitOrder}" value="{!$Label.POWizardSubmitButton}"/>
+                <br/>
+            </apex:pageBlockSection>
+			<apex:commandLink action="{!comparePOs}" rendered="{!NOT(ISNULL(poDeltaURL))}" value="Compare to Previous PO" target="_blank"/>
+            <apex:pageBlockSection columns="2" title="{!$Label.POWizardStatusTitle}" rendered="{!(!isPartnerUser)}">
+                    <apex:outputField value="{!purchaseOrder.Order_Status__c}"/>
+                    <apex:outputField value="{!purchaseOrder.Order_Status_Interface_Message__c}"/>
+                    <apex:outputField value="{!purchaseOrder.Oracle_Order_Number__c}"/>
+                    <apex:outputField value="{!purchaseOrder.CreatedDate}"/>
+                    <apex:outputField value="{!purchaseOrder.LastModifiedDate}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="{!$Label.POWizardOrderInfoTitle}">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel for="accName">{!$ObjectType.Purchase_Order__c.Fields.Dealer_Account__c.Label}</apex:outputLabel>
+                        {!purchaseOrder.Dealer_Account__r.Name}
+                    </apex:pageBlockSectionItem>
+                    <apex:outputField value="{!purchaseOrder.Name}" />
+                    <apex:pageBlockSectionItem rendered="{!IF(!isPartnerUser && isTPSCashOrder && purchaseOrder.Order_Status__c == 'New', 'true', 'false')}">
+                        <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}</apex:outputLabel>
+                        <apex:inputField value="{!purchaseOrder.Requested_Delivery_Date__c}" onchange="validateCheckBox(this)"></apex:inputField>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!IF(!isPartnerUser && isTPSCashOrder && purchaseOrder.Order_Status__c != 'New', 'true', 'false')}">
+                        <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Requested_Delivery_Date__c.Label}</apex:outputLabel>
+                        <apex:outputField value="{!purchaseOrder.Requested_Delivery_Date__c}" ></apex:outputField>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!IF(selectedOpportunity == null,'false','true')}">
+                        <apex:outputLabel for="custOpp">{!$ObjectType.Purchase_Order__c.Fields.Opportunity__c.Label}</apex:outputLabel>
+                      {!purchaseOrder.Opportunity__r.Name}
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!IF(NOT(ISNULL(purchaseOrder.SunPower_Design__c)),'true','false')}">
+                       <apex:outputLabel for="sysSize">{!$ObjectType.Purchase_Order__c.Fields.System_Size__c.Label}</apex:outputLabel>
+                        <apex:outputLabel id="sysSize">{!purchaseOrder.System_Size__c}</apex:outputLabel>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!isNAUser}">
+                        <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Contact__c.Label}</apex:outputLabel>
+                            {!purchaseOrder.Ship_To_Contact__r.Name}
+                    </apex:pageBlockSectionItem>
+                    <apex:outputField value="{!purchaseOrder.Is_Taxible_Order__c}" rendered="{!isNAUser}"/>
+                    <apex:pageBlockSectionItem rendered="{!partnerAcc.Partner_Opt_Out_Ok_To_Ship__c==false && partnerAcc.Country_Domain__c=='rvar-us' && $Label.Ok_To_Ship_Switch=='ON'}">
+                        <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.OK_To_Ship__c.Label}</apex:outputLabel>
+                        <apex:outputPanel >
+                            <apex:outputLabel value="No" rendered="{!purchaseOrder.OK_To_Ship__c=='HOLD'}"/>
+                            <apex:outputLabel value="Yes" rendered="{!purchaseOrder.OK_To_Ship__c=='RELEASE'}"/>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="{!$Label.POWizardShippingInfoTitle}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$Label.POWizardShipToAddress}</apex:outputLabel>
+                    {!shipToSiteAddress}
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!IF(!isPartnerUser && isTPSCashOrder && purchaseOrder.Order_Status__c == 'New', 'true', 'false')}">
+                        <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}</apex:outputLabel>
+                        <apex:inputField value="{!purchaseOrder.Special_Instructions__c}"></apex:inputField>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!IF(!isPartnerUser && isTPSCashOrder && purchaseOrder.Order_Status__c != 'New', 'true', 'false')}">
+                        <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Special_Instructions__c.Label}</apex:outputLabel>
+                        <apex:outputField value="{!purchaseOrder.Special_Instructions__c}" ></apex:outputField>
+                    </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                    <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_First_Name__c.Label}</apex:outputLabel>
+                    {!shipSite.Contact_First_Name__c}
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                    <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Last_Name__c.Label}</apex:outputLabel>
+                    {!shipSite.Contact_Last_Name__c}
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                    <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Email__c.Label}</apex:outputLabel>
+                    {!shipSite.Contact_Email__c}
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!renderShipToBlock}">
+                    <apex:outputLabel >{!$ObjectType.Ship_to_Site__c.Fields.Contact_Phone__c.Label}</apex:outputLabel>
+                    {!shipSite.Contact_Phone__c}
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!purchaseOrder.Accept_Expedited_Delivery_Charges__c}">
+                     <apex:outputLabel for="deleveryCharges">{!$ObjectType.Purchase_Order__c.Fields.Delivery_Charges__c.Label}</apex:outputLabel>
+                     <apex:outputField value="{!purchaseOrder.Delivery_Charges__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!purchaseOrder.Accept_Expedited_Delivery_Charges__c}"><!-- new added by shailendra for pr 03721 -->
+                <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Accept_Expedited_Delivery_Charges__c.Label}</apex:outputLabel>
+                     <img height="16" width="21" class="checkImg" src="/img/checkbox_checked.gif"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!isNAUser}">
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Shipping_Method__c.Label}</apex:outputLabel>
+                    {!purchaseOrder.Shipping_Method__c}
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" title="{!$Label.POWizardBillingInfoTitle}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$Label.POWizardBillToAddress}</apex:outputLabel>
+                    {!billToSiteAddress}
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="{!$Label.POWizardLineItemsHeading}">
+            <apex:pageBlockTable value="{!selProductItems}" var="item">
+                <apex:column width="10%" >
+                    <apex:facet name="header">
+                    {!$Label.POWizardLineNumberHeading}
+                    </apex:facet>
+                    {!item.lineNumber}
+                </apex:column>
+                <apex:column width="35%">
+                    <apex:facet name="header">
+                    {!$Label.POWizardProductNameHeading}
+                    </apex:facet>
+                    {!item.Name}
+                </apex:column>
+                <apex:column width="15%" rendered="{!NOT(isEUPartnerUser)}">
+                    <apex:facet name="header">
+                    {!$Label.POWizardItemIDHeading}
+                    </apex:facet>
+                    {!item.itemID}
+                </apex:column>
+                <apex:column width="10%">
+                    <apex:facet name="header">
+                    {!$Label.POWizardQuantityHeading}
+                    </apex:facet>
+                    {!item.Qty}
+                </apex:column>
+                <apex:column rendered="{!IF(AND(item.isSmartPack==TRUE,dealerAccount.Theater__c != 'Europe'),'true','false')}" width="10%">
+                    <apex:facet name="header">
+                     {!$Label.POWizardIsSmartPackHeading}
+                    </apex:facet>
+                    <img height="16" width="21" title="{!$Label.POWizardCheckedText}" class="checkImg" alt="{!$Label.POWizardCheckedText}" src="/img/checkbox_checked.gif"/>
+                </apex:column>
+                <apex:column rendered="{!IF(OR(item.isSmartPack==TRUE,dealerAccount.Theater__c == 'Europe'),'false','true')}" width="10%">
+                    <apex:facet name="header">
+                        {!$Label.POWizardIsSmartPackHeading}
+                    </apex:facet>
+                    <img height="16" width="21" title="{!$Label.PoWizardNotCheckedText}" class="checkImg" alt="{!$Label.PoWizardNotCheckedText}" src="/img/checkbox_unchecked.gif"/>
+                </apex:column>
+                <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;">
+                    <apex:facet name="header">
+                  <div style="text-align:right;">{!$Label.POWizardUnitPriceHeading}</div>
+                    </apex:facet>
+                    <apex:outputPanel rendered="{!NOT(AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID))}">
+                      {!purchaseOrder.CurrencyIsoCode}&nbsp;{!item.pOrderLine.Unit_Price__c}
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID)}">
+                      {!purchaseOrder.CurrencyIsoCode}&nbsp;-{!item.pOrderLine.Unit_Price__c}
+                    </apex:outputPanel>
+                </apex:column>
+                <!-- Get healthy Spring 2017  -->
+                <!-- <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;padding-left:10px;" headerValue="POWizardDiscountPercentHeading"  rendered="{!showDiscountColumns}">
+                    <apex:facet name="header">
+                    <div style="text-align:right;padding-left:10px;'">{!$Label.POWizardDiscountPercentHeading}</div>
+                    </apex:facet>
+                    <apex:outputText value="{!item.discountPercent}"/>
+                </apex:column>
+                <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;padding-left:10px;" headerValue="{!$Label.POWizardDiscountAmountHeading}"  rendered="{!showDiscountColumns}">
+                    <apex:facet name="header">
+                    <div style="text-align:right;padding-left:10px;'">{!$Label.POWizardDiscountAmountHeading}</div>
+                    </apex:facet>
+                    <apex:outputText style="padding-right:10px;"  value="{0, number, ###,###,##0.00}">
+                             <apex:param value="{!item.discountAmount}" />
+                             </apex:outputText>
+                </apex:column>
+                <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;padding-left:10px;" headerValue="{!$Label.POWizardServiceFeeHeading}"  rendered="{!showDiscountColumns}">
+                    <apex:facet name="header">
+                    <div style="text-align:right;padding-left:10px;padding-right:10px;'">{!$Label.POWizardServiceFeeHeading}</div>
+                    </apex:facet>
+                    <apex:outputText style="padding-right:10px;"  value="{0, number, ###,###,##0.00}">
+                             <apex:param value="{!item.shippingCharges}" />
+                             </apex:outputText>
+                </apex:column> -->
+                <apex:column width="10%" style="text-align:right;" headerstyle="text-align:right;">
+                    <apex:facet name="header">
+                    <div style="text-align:right;">{!$Label.POWizardExtendedPriceHeading}</div>
+                    </apex:facet>
+                    <apex:outputPanel rendered="{!NOT(AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID))}">
+                      {!purchaseOrder.CurrencyIsoCode}&nbsp;{!item.pOrderLine.Price__c}
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!AND(NOT(ISNULL(serviceCreditSMSItemId)), serviceCreditSMSItemId == item.itemID)}">
+                      {!purchaseOrder.CurrencyIsoCode}&nbsp;-{!item.pOrderLine.Price__c}
+                    </apex:outputPanel>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <script type="text/javascript">
+        function validateCheckBox(ele){
+            var strDate = ele.value;
+            myDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            dateArr = strDate.split('/');
+            if(dateArr.length == 3) {
+                myDate=new Date(dateArr[2],dateArr[0]-1,dateArr[1]);
+                var weekDay = myDate.getDay();
+                if((weekDay == 0 ||weekDay == 6) && {!isNAUser}){
+                    alert("Please contact your PSR.  Weekend delivery requires special handling.");
+                    ele.value='';
+                    ele.focus();
+                } else {
+                    calcDayDifference();
+                }
+            }
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,145 @@
+<messaging:emailTemplate subject="{!relatedTo.Primary_Contact_First_Name__c}, Your Online Appointment is Set " recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+    <style type="text/css">
+    body {
+        background-color: #FFFFFF;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        font-family: Futura, Arial;
+        color: #555555;
+    }
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    table {
+        margin-top: 0pt;
+    }
+    p,table{
+        font-size: 11pt;
+    }
+    a { color:#0070c0; text-decoration:none}
+    a:visited { color:#0070c0; text-decoration:none}
+    a:link { color:#0070c0; text-decoration:none}
+    a:hover { color:#0070c0; text-decoration:none}
+
+    li {
+        line-height:20px;
+        margin-bottom: 10pt;
+        display: list-item;
+        padding-bottom:5px;
+    }
+    
+    </style>
+    <body>
+        <!-- Outer Wrapper -->
+        <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <!--Header Wrapper -->      
+            <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">            
+            <tr>
+             <td  align="left" style="text-align: left; padding: 18px 0px 18px 15px; color: #ffffff; background-color: #ffffff; border-bottom-width: 1px; border-bottom-color: #5496CC; border-bottom-style:solid;">
+                <img class="image_fix" src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001kT2J&oid=00D80000000ZF1L" alt="Sun Power Logo" title="Sun Power" width="200" style="outline:none; text-decoration:none; -ms-interpolation-mode: bicubic; display:block;"/>
+             </td>
+            </tr> </table>
+            <table style="display: inline-table;" align="center" border="0" cellpadding="0" cellspacing="0" width="960">
+            <tr>
+                <td align="right"  style="padding-top:20px; padding-right:50px; outline:none">
+                    <!-- Company Name Merge Field-->
+                    <span style="text-align:right;color:#739DD2;font-family:Avenir Next;font-size:24pt;"><b></b></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <td align="right"  style="padding-top:10px; padding-right:50px; outline:none">
+                                   </td>
+            </tr>
+            
+            <!-- Message Content -->
+            <tr>
+                <td align="left" valign="top" bgcolor="#FFFFFF" width="960px" style="padding-left:50px; padding-right:25px; text-decoration:none; outline:none;">
+                    <h2>YOUR ONLINE SOLAR APPOINTMENT IS SET</h2>
+                                        
+                    <p style="margin-top:20px">Dear {!relatedTo.Primary_Contact_First_Name__c},</p>
+                    
+                    <p style="margin-right:20px">Congratulations! You have taken the next step towards energy independence. Doesn’t it feel good? Below are the details of your appointment. Your comprehensive solar consultation should take about a half-hour. Please review the date, time, and address for accuracy. If you see any issues, please contact me with any changes.</p>
+                                       
+                    <!--Table-->
+                    <table width="98%" cellspacing="0" style="border-collapse:collapse;border-style:solid;border-width:1px;border-color:#F4AB4D;border-spacing:0;">
+                    <tr>
+                        <td style="background: #F4AB4D;padding-left:21px; padding-top:11px;padding-bottom: 11px;">
+                            <span style="font-size:16px;font-weight:bold;"> Appointment Information:</span>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top;">
+                        <td style="padding-top:20px;padding-right:30px;"> 
+                            <ul>
+                                    <b>Appointment Date and Time: </b><apex:outputText value="{0,date,long}">
+<apex:param value="{!relatedTo.Appointment_Date__c}" />
+</apex:outputText> {!relatedTo.Appointment_Time__c}<br/>
+
+                                    <b>Location:</b> Online. Pretty Cool, right? <br/>
+                              <br/>
+                                                                                                                                  
+                                <p><b>Instructions:</b></p>
+                                
+                                    At the time of your appointment, simply click this <apex:outputLink value="{!relatedTo.Meeting_Link__c}" id="eventlink"> link</apex:outputLink> and wait for your Energy Consultant’s presentation to appear on your screen. You will receive a call from your Energy Consultant at this time to go over the presentation.<br/> 
+                               
+                                    <br/>                         
+                                    <b>You will be meeting with {!relatedTo.Owner.Name}</b><br/> 
+                                     
+                                    <b>Cell Phone:</b> {!relatedTo.Owner.MobilePhone}<br/> 
+                                     
+                                    <b>Email:</b> {!relatedTo.Owner.email} <br/><br/>
+                                                                   
+                            </ul>
+                               
+                        </td>
+                    </tr>
+                    </table>
+                    <p style="margin-top:20px">To make effective use of our time together, we will need your electric usage for the past 12 months prior to the meeting so that we can present a personalized proposal. Electric usage is expressed as kilowatt hours (KWh). Please reference the attached document for a list of utility providers and instructions for obtaining your electric usage. Having this ready will ensure that when we meet we can review the perfect system to meet your energy needs.</p>
+                    
+                    <p style="margin-top:20px">Sincerely,</p>
+                    <p style="margin-top:20px">If you have any questions, please call us at the number below or reply back to this email.</p>
+                    <p style="margin-top:20px">
+                        {!relatedTo.Owner.Name}<br></br>
+                        <b>Solar Consultant</b><br></br>
+                        <b>SunPower Corporation</b><br></br>
+                        <b>Direct:</b> {!relatedTo.Owner.MobilePhone}<br></br>
+                        <a href="http://www.sunpower.com">www.sunpower.com</a>
+                        <br></br>
+                       
+                    </p>
+                </td>
+                
+            </tr>
+            <tr>
+                <td>
+                    <!-- SUN IMAGE we can't put this as a background, if we made it as a background image, it will work on gmail but not on MS Outlook -- in PROD -->
+                    <img src="https://c.na29.content.force.com/servlet/servlet.ImageServer?id=01580000001jlOy&oid=00D80000000ZF1L&lastMod=1395962974000" width="960px"/>
+                </td>
+            </tr>
+            <!--Footer Wrapper-->
+            <tr>
+                <td  style="padding-top:20px; padding-left:50px; padding-right:50px; outline:none; margin-bottom:0pt;line-height:normal;margin-left:18pt;margin-right:17pt;font-size:8pt;" align="center">
+                   
+                    <p style="font-size: 8pt">
+                        We do not share your information outside of SunPower and your Dealer Partner. 
+                        <u>Privacy Statement</u>
+                    </p>
+                    <p style="font-size: 8pt">
+                        © 2014 SunPower Corporation. All Rights Reserved. SUNPOWER, the SUNPOWER logo, and MORE ENERGY. FOR LIFE. are trademarks or registered trademarks of SunPower Corporation in the U.S. and other countries.
+                    </p>
+                </td>
+            </tr>
+        </table>
+        </table>
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

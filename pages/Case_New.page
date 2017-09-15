@@ -1,0 +1,22 @@
+<apex:page id="pg" standardController="case" extensions="CaseNewController" >
+  <script type="text/javascript">
+    function redirect() {
+      if(window.parent != null) {
+        window.parent.location = "{!RedirectUrl}";
+      }
+      else {
+         window.location = "{!RedirectUrl}";
+      }        
+    }
+    
+    window.onload = redirect;
+  </script>
+  <div style="width:100%;text-align:center;padding:20px;" id="divPleasewait">
+     <img src="/img/waiting_dots.gif"/><br/>
+     <div style="padding:10px"><h1>Please wait redirecting...</h1></div>
+  </div>
+  
+ <apex:form >
+    <apex:outputField rendered="false" value="{!Case.Id}"></apex:outputField>
+ </apex:form>
+</apex:page>
