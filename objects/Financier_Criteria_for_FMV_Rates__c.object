@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <description>This custom setting stores the criteria for financier&apos;s FMV rates. The &quot;[insert trigger name here]&quot; on the lease payment references this custom setting so that it can query for the correct FMV rate from the FMV Rates object</description>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>FMV_Rate_Field__c</fullName>
+        <description>This is the field on the FMV Rate object that will be queried. (Essentially the Lease Payment Field value is being mapped (looking for a match) to this field on the FMV rate object.</description>
+        <externalId>false</externalId>
+        <label>FMV Rate Field</label>
+        <length>50</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Financier__c</fullName>
+        <externalId>false</externalId>
+        <label>Financier</label>
+        <length>50</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease_Payment_Field__c</fullName>
+        <description>The value from this field on the Lease Payment will be queried (for a match) against the corresponding field on the rates object. The field on the rates object that will be queried is referenced on the record (Field name = FMV Rate Field)</description>
+        <externalId>false</externalId>
+        <label>Lease Payment Field</label>
+        <length>50</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Financier Criteria for FMV Rates</label>
+    <visibility>Protected</visibility>
+</CustomObject>

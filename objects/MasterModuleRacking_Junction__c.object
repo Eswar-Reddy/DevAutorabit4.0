@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Link between racking configurations, a module, and a master. This facilitates different associations of racking collections to each module and sales method.
+Release WW22 - 2016</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>AutorabitExtId__c</fullName>
+        <description>External Id created by AutoRABIT</description>
+        <externalId>true</externalId>
+        <label>AutorabitExtId__c</label>
+        <length>18</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Master_Configurator__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <description>Lookup field to the master configurator to tie the racking junction to the master record for each sales process</description>
+        <externalId>false</externalId>
+        <label>Master Configurator</label>
+        <referenceTo>Master_Configurator__c</referenceTo>
+        <relationshipLabel>MasterModuleRacking Junctions</relationshipLabel>
+        <relationshipName>MasterModuleRacking_Junctions</relationshipName>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ModuleRackingJunction__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <description>Lookup to tie a ModuleRackingJunction to a master record.
+Release WW22 - 2016</description>
+        <externalId>false</externalId>
+        <label>ModuleRackingJunction</label>
+        <referenceTo>ModuleRackingJunction__c</referenceTo>
+        <relationshipLabel>MasterModuleRacking Junctions</relationshipLabel>
+        <relationshipName>MasterModuleRacking_Junctions</relationshipName>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Module__c</fullName>
+        <externalId>false</externalId>
+        <formula>ModuleRackingJunction__r.Module_Configuration__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Module</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Racking__c</fullName>
+        <externalId>false</externalId>
+        <formula>ModuleRackingJunction__r.Racking_Configuration__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Racking</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>MasterModuleRacking Junction</label>
+    <nameField>
+        <displayFormat>MMRJ-{00000}</displayFormat>
+        <label>MasterModuleRacking Junction Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>MasterModuleRacking Junctions</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Master_Configurator__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ModuleRackingJunction__c</lookupDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Master_Configurator__c</searchFilterFields>
+        <searchFilterFields>ModuleRackingJunction__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

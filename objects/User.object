@@ -1,7 +1,1234 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>CallHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>DeleteBannerPhotoAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>EditUserAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>EmailHighlightAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>FreezeUserAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>LinkToSetupUserDetailAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>ManagePermSetsAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>PasswordUnlockAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>ResetPasswordAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>UpdateBannerPhotoAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>UserActivationAction</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <enableEnhancedLookup>true</enableEnhancedLookup>
+    <enableFeeds>true</enableFeeds>
+    <externalSharingModel>Private</externalSharingModel>
+    <fields>
+        <fullName>About__c</fullName>
+        <externalId>false</externalId>
+        <label>About</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Acc_Name_Enc__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( CONTAINS(Contact.Account.Name, &quot;&amp;&quot;) , SUBSTITUTE(Contact.Account.Name, &quot;&amp;&quot;, &quot;%26&quot;), Contact.Account.Name)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Acc Name URL ENCODE</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account_Is_TPS__c</fullName>
+        <externalId>false</externalId>
+        <formula>includes(Contact.Account.NH_SSE_Type__c, &apos;TPS&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Account Is TPS</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Account_Name__c</fullName>
+        <externalId>false</externalId>
+        <formula>Contact.Account.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Account Name</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Admin_Notes__c</fullName>
+        <externalId>false</externalId>
+        <label>Admin Notes</label>
+        <length>10000</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Allow_Financier_Update__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Used for allowing access to users to change the Financier Information of the submitted PO</description>
+        <externalId>false</externalId>
+        <label>Allow Financier Update</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Alternate_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Alternate Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Business_Function__c</fullName>
+        <description>GPP-Story1- This field is created for GPP Project. This replaces various checkboxes with one field that will be assigned to a partner user. Based on the values assigned to a user, user will be authorized to perform various activities on the platform. This field will work in conjunction with Corporate Business Functions which will be controlled by SPWR internal users.</description>
+        <externalId>false</externalId>
+        <label>Business Function</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Create Cash Quote</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Create Lease Quote</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Create Loan Quote</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical Services Manager</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical Services Team Lead</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical Services Product SME</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical Services Engineer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical Services Representative</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Create ManualMode Quote</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Create Equinox Quote</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Aurora Design Licensee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Request Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Commercial Aurora Design Licensee</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Create PPA Quote</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Business_Unit__c</fullName>
+        <externalId>false</externalId>
+        <label>Business Unit</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Global Sales</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>UPP Intl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>UPP Americas</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>RLC</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>NA Commercial</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>ByPassValidation__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>ByPassValidation</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Bypass_Lead_Validation__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Bypass Lead Validation</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Bypass_LoanPath_Validation__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If checked, this user will bypass all the validations related to LoanPath Implentation (Credit Check Process). Namely the validation rules are:
+a.	Object: Account  Loan_Path_Validation_Address_Change
+b.	Object: Contact  Loan_Path_Validation_Name_Change
+c.	Object: Opportunity  AccountName_PrimaryContact_No_Change</description>
+        <externalId>false</externalId>
+        <label>Bypass LoanPath Validation</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Bypass_Workflow__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Created to bypass workflow rules to prevent firing/re-firing of unnecessary WF rules and notifications when mass updating records.
+Release WW 39 - 2016</description>
+        <externalId>false</externalId>
+        <label>Bypass Workflow</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CPR_Salesperson_ID__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <externalId>true</externalId>
+        <label>CPR Salesperson ID</label>
+        <length>42</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Number__c</fullName>
+        <description>Case Number where approval was obtained to create new user.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Case Number where approval was obtained to create new user.</inlineHelpText>
+        <label>Case Number</label>
+        <length>18</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case_Owner__c</fullName>
+        <externalId>false</externalId>
+        <label>Case Owner</label>
+        <relationshipName>Users</relationshipName>
+        <restrictedAdminField>false</restrictedAdminField>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Hierarchy</type>
+    </fields>
+    <fields>
+        <fullName>Count__c</fullName>
+        <externalId>false</externalId>
+        <formula>1</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CounterSignature__c</fullName>
+        <externalId>false</externalId>
+        <label>CounterSignature</label>
+        <length>50</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CountryDomainText__c</fullName>
+        <description>Project: GPP
+Description: Text Value of Country Domain on User Record</description>
+        <externalId>false</externalId>
+        <formula>TEXT(Country_Domain__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>CountryDomainText</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Country_Domain__c</fullName>
+        <description>Used by external design applications to show country-specific content in the Partner Portal and in the external design applications.  Used for both SunPower and Partner Users.  For Partner users this value should default to the Account.Country_Domain.</description>
+        <externalId>false</externalId>
+        <label>Country Domain</label>
+        <picklist>
+            <picklistValues>
+                <fullName>rvar-us</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-es</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-it</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-de</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-us</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-es</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-de</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-it</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-fr</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-fr</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-us</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-de</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-it</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-es</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-fr</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-be</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-be</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-be</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-uk</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-uk</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-uk</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-au</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-au</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-au</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-rl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-rl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-rl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-jp</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-jp</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-jp</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>rvar-nl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>cvar-nl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>combo-nl</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>DSE__DS_Data_Scout_Profile__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Cloud MDM: enter the name of the Cloud MDM profile for this user. If no Cloud MDM Profile is specified, the default profile will be used</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Cloud MDM: enter the name of the Cloud MDM profile for this user. If no Cloud MDM Profile is specified, the default profile will be used</inlineHelpText>
+        <label>Cloud MDM Profile</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Display_Button__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Display Button</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Do_Not_Call__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Privacy preference - Not to be called.</description>
+        <externalId>false</externalId>
+        <label>Do Not Call</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>EC_Regions__c</fullName>
+        <description>SPD: Priti Rastogi- This field will contain Energy Consultant;s regions for reporting purposes.</description>
+        <externalId>false</externalId>
+        <label>EC Regions</label>
+        <picklist>
+            <picklistValues>
+                <fullName>NorCal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SoCal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sacramento</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Edit_Partner_Users__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Edit Partner Users</description>
+        <externalId>false</externalId>
+        <label>Edit Partner Users</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Email_Notifications__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Email Notifications</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Forum_Password__c</fullName>
+        <externalId>false</externalId>
+        <label>Forum Password</label>
+        <length>20</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>HIS_Expiration_Date__c</fullName>
+        <description>Loan- Created for Loan project to capture HIS expiration date. Partner Onboarding team will maintain the data</description>
+        <externalId>false</externalId>
+        <label>HIS Expiration Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>HIS_Registration_Number__c</fullName>
+        <description>Loan- Created for Loan project to capture user&apos;s registration number. Only users with valid number can quote a Loan product. To be maintained by Partner on-boarding team.</description>
+        <externalId>false</externalId>
+        <label>HIS Registration Number</label>
+        <length>50</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Integration_ID__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <description>For Migration</description>
+        <externalId>true</externalId>
+        <label>Integration ID</label>
+        <length>20</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>LMS_Active__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>To activate and de-activate a user in LMS</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Uncheck to Deactivate or Check to Activate this User in LMS</inlineHelpText>
+        <label>LMS Active</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>LMS_ID__c</fullName>
+        <externalId>false</externalId>
+        <label>LMS ID</label>
+        <length>18</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>LMS_Supervisor_ID__c</fullName>
+        <description>This is the LMS user ID of the training supervisor for the current user.</description>
+        <externalId>false</externalId>
+        <label>LMS Supervisor ID</label>
+        <length>20</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead_Team__c</fullName>
+        <externalId>false</externalId>
+        <label>Lead Team</label>
+        <picklist>
+            <picklistValues>
+                <fullName>AE (Account Executive)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>ISR</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Marketing</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SSO</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Lease_doc_creation_allowed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Lease doc creation allowed</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Mail_Opt_Out__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Mail Opt-Out</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ManagerId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Hierarchy</type>
+    </fields>
+    <fields>
+        <fullName>Manager_s_Email__c</fullName>
+        <externalId>false</externalId>
+        <formula>Manager.Email</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Manager&apos;s Email</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NAC_Marketing__c</fullName>
+        <externalId>false</externalId>
+        <label>NAC Marketing</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>PVSIM_Access_Key__c</fullName>
+        <externalId>false</externalId>
+        <label>PVSIM Access Key</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner_Ambassador_Rights__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Partner Ambassador Rights</description>
+        <externalId>false</externalId>
+        <label>Partner Ambassador Rights</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Role__c</fullName>
+        <externalId>false</externalId>
+        <label>Partner Role</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Marketing</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sales</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Store_Visible__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Determine access to &quot;Partner Store&quot; tab.</description>
+        <externalId>false</externalId>
+        <label>Partner Store Visible</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Place_In_Service_Change_Authorize__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Place In Service Change Authorized on Lease Payment Object.</description>
+        <externalId>false</externalId>
+        <label>Place In Service Change Authorize</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Plateau_Id__c</fullName>
+        <description>This is the external user ID used in the Plateau-LMS system.  This ID is generated by the Plateau HR-Connector tool when a new user is provisioned for LMS.  This field is required for all SunPower and Partner users that require access to the Plateau-LMS system.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Plateau-LMS user ID</inlineHelpText>
+        <label>Plateau_Id</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Portal_User_Type__c</fullName>
+        <description>To identify whether a Partner Portal user is active in SFDC or is an LMS Only user</description>
+        <externalId>false</externalId>
+        <inlineHelpText>To identify whether a Partner Portal user is active in SFDC or is an LMS Only user</inlineHelpText>
+        <label>Portal User Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>SFDC User</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>LMS Only User</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Profile_License_Type__c</fullName>
+        <externalId>false</externalId>
+        <formula>TEXT( Profile.UserType)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Profile License Type</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Profile_Text__c</fullName>
+        <externalId>false</externalId>
+        <formula>Profile.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Profile (Text)</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Project_Manager_Access__c</fullName>
+        <externalId>false</externalId>
+        <label>Project Manager Access</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Quote_Creation_Allowed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Quote Creation</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Role_text__c</fullName>
+        <externalId>false</externalId>
+        <formula>UserRole.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Role (text)</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SOA2_Account_Theater__c</fullName>
+        <description>This field is used in Email template to display &quot;Portal login&quot; link based on Account Theater values.</description>
+        <externalId>false</externalId>
+        <formula>TEXT(Contact.Account.Theater__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>This field is used in Email template to display &quot;Portal login&quot; link based on Account Theater values.</inlineHelpText>
+        <label>SOA2 Account Theater</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SOX_Audit_Reviewed__c</fullName>
+        <externalId>false</externalId>
+        <label>SOX Audit Reviewed</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>SOX_Profile_was_approval_received__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>SOX Profile, was approval received?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>You need approval to assign this SOX governed profile.</inlineHelpText>
+        <label>SOX Profile, was approval received?</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SPWR_Added_to_HIS__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>SPWR Added to HIS</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SSO_Validation__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>SSO Validation</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Send_PDF_Notification__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Flag is used to identify the user which can receive the uploaded transaction files email notification ( SOA Ph2)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Flag is used to identify the user which can receive the uploaded transaction files email notification ( SOA Ph2)</inlineHelpText>
+        <label>Send PDF Notification</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SmartStore_ID__c</fullName>
+        <externalId>false</externalId>
+        <label>Marketing Resource Center ID</label>
+        <length>80</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Solutions_Editor__c</fullName>
+        <externalId>false</externalId>
+        <label>Solutions Editor</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Supervisor__c</fullName>
+        <externalId>false</externalId>
+        <label>Supervisor</label>
+        <length>99</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Tenesol__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Tenesol</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Territory__c</fullName>
+        <externalId>false</externalId>
+        <label>Territory</label>
+        <length>50</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Test__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Test</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <externalId>false</externalId>
+        <formula>text( Contact.Account.Type )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Type</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>USERID_18character__c</fullName>
+        <externalId>false</externalId>
+        <formula>CASESAFEID(Id)</formula>
+        <label>USERID 18character</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Update_Closed_Opportunities__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Update Closed Opportunities</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Update_Forecast_Category_Allowed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Update Forecast Category Allowed</description>
+        <externalId>false</externalId>
+        <label>Update Forecast Category Allowed</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>UserContactRole__c</fullName>
+        <externalId>false</externalId>
+        <label>User Contact Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Vendor_Supplier__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Vendor Supplier</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Vendor__c</fullName>
+        <externalId>false</externalId>
+        <label>Vendor</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Appirio</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Birlasoft</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CRM L1</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CRM L2</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Media Net</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SPWR - IT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SPWR - Ops</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Viewable_Inverters__c</fullName>
+        <externalId>false</externalId>
+        <label>Viewable Inverters</label>
+        <picklist>
+            <picklistValues>
+                <fullName>BOTH</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CVAR</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>RVAR</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Web_User__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This field is to find out the User is coming from Web or Not</description>
+        <externalId>false</externalId>
+        <label>Web User</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>echosign_dev1__EchoSign_Allow_Delegated_Sending__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Check this box so that others in this Salesforce organization can send Document Cloud agreements on behalf of this user.</description>
+        <externalId>false</externalId>
+        <label>DC - Allow Sending As Other Users</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>echosign_dev1__EchoSign_Email_Verified__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>This checkbox indicates that the user&apos;s email address has been validated in Document Cloud API.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This checkbox indicates that the user&apos;s email address has been validated in EchoSign API.</inlineHelpText>
+        <label>Document Cloud Email Verified</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>leankor__MyWorkspace__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The personal visual workspace for this user.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select any leankor board as your own personal workspace.</inlineHelpText>
+        <label>My Workspace</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>leankor__Rate__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This is the hourly fully loaded rate for this person.</inlineHelpText>
+        <label>Rate</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>sked__skeduloUserType__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>skeduloUserType</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Scheduler</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Resource</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Administrator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <listViews>
+        <fullName>ActivePartnerUsers</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>CORE.USERS.FIRST_NAME</columns>
+        <columns>CORE.USERS.LAST_NAME</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <filters>
+            <field>CORE.USERS.IS_PARTNER</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>Active Partner Users</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>ActivePartnerUsers_ft</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>CORE.PROFILE.USERTYPE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>Active Partner Users_ft</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
     <listViews>
         <fullName>ActiveUsers</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>CORE.USERS.ACTIVE</field>
@@ -9,20 +1236,657 @@
             <value>1</value>
         </filters>
         <label>Active Users</label>
+        <language>en_US</language>
     </listViews>
     <listViews>
-        <fullName>AdminUsers</fullName>
+        <fullName>Active_Users_INTERNAL</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <filters>
+            <field>CORE.PROFILE.USERTYPE</field>
+            <operation>equals</operation>
+            <value>S</value>
+        </filters>
+        <label>Active Users INTERNAL</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>AllUsers</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CREATED_BY_NAME</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>Country_Domain__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Users</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Cap_Gemini_Users</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.EMAIL</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.EMAIL</field>
+            <operation>contains</operation>
+            <value>capgemini.com</value>
+        </filters>
+        <label>Cap Gemini Users</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Connect_5_for_Reset</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.DIVISION</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.EMAIL</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.DIVISION</field>
+            <operation>equals</operation>
+            <value>Connect 5</value>
+        </filters>
+        <label>Connect 5 for Reset</label>
+        <language>en_US</language>
+        <sharedTo>
+            <role>ExecutiveManagement</role>
+            <role>GlobalSupport</role>
+            <role>ITHelpDesk</role>
+            <role>ITHelpDeskManager</role>
+            <role>SunpowerCorporation</role>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Financial_Analysts2</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USER_ROLE.NAME</field>
+            <operation>equals</operation>
+            <value>Financial Analysts</value>
+        </filters>
+        <label>Financial Analysts</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>MLM_Phase_1_Portal_Users_Part_1</fullName>
+        <booleanFilter>1 AND 2 AND 3 AND (4 OR 5 OR 6 OR 7 OR 8 OR 9) AND 10</booleanFilter>
+        <columns>Account_Name__c</columns>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <filters>
+            <field>Country_Domain__c</field>
+            <operation>equals</operation>
+            <value>rvar-us,cvar-us,combo-us</value>
+        </filters>
+        <filters>
+            <field>Profile_Text__c</field>
+            <operation>contains</operation>
+            <value>Partner</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,AC Solar,Alternative Energy Systems Inc,Arise Solar</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,EmPower Solar,&quot;Evoke Solar, Inc.&quot;,Geopeak Energy LLC</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,Green Convergence,Joule Energy,Luminalt,&quot;New England Clean Energy, LLC&quot;</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,&quot;Positive Energy, Inc., New Mexico&quot;,Quality Home Services,RevoluSun</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,Sea Bright Solar - CA,Sea Bright Solar LLC,Smart Energy USA</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,&quot;Solar Technologies, Inc.&quot;,Sunpower Sales Experience (SSE)</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>MLM Phase 1 Portal Users - Part 1</label>
+        <language>en_US</language>
+        <sharedTo>
+            <group>CRM_Support</group>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>MLM_Phase_1_Portal_Users_Part_2</fullName>
+        <booleanFilter>1 AND 2 AND 3 AND (4 OR 5) AND 6</booleanFilter>
+        <columns>Account_Name__c</columns>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <filters>
+            <field>Country_Domain__c</field>
+            <operation>equals</operation>
+            <value>rvar-us,cvar-us,combo-us</value>
+        </filters>
+        <filters>
+            <field>Profile_Text__c</field>
+            <operation>contains</operation>
+            <value>Partner</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>Sun Valley Solar Solutions</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>equals</operation>
+            <value>,Sun Solar Energy Solutions dba Lifestyles Construction and Solar</value>
+        </filters>
+        <filters>
+            <field>Account_Name__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>MLM Phase 1 Portal Users - Part 2</label>
+        <language>en_US</language>
+        <sharedTo>
+            <group>CRM_Support</group>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>SunPowerSuperUsers</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>CORE.PROFILE.NAME</field>
             <operation>equals</operation>
-            <value>System Administrator</value>
+            <value>SunPower Super User</value>
         </filters>
-        <label>Admin Users</label>
+        <filters>
+            <field>CORE.USERS.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>SunPower Super Users</label>
+        <language>en_US</language>
     </listViews>
     <listViews>
-        <fullName>AllUsers</fullName>
+        <fullName>Technical</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>Country_Domain__c</columns>
         <filterScope>Everything</filterScope>
-        <label>All Users</label>
+        <filters>
+            <field>CORE.USER_ROLE.NAME</field>
+            <operation>contains</operation>
+            <value>Technical</value>
+        </filters>
+        <label>Technical</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
     </listViews>
+    <listViews>
+        <fullName>User_Search_JT</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.PROFILE.NAME</field>
+            <operation>startsWith</operation>
+            <value>System Administrator</value>
+        </filters>
+        <label>User Search - JT</label>
+        <language>en_US</language>
+        <sharedTo>
+            <group>Release_Team</group>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Users_created_By_Duser</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CREATED_BY_ALIAS</field>
+            <operation>equals</operation>
+            <value>Duser</value>
+        </filters>
+        <filters>
+            <field>CPR_Salesperson_ID__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <filters>
+            <field>CORE.USERS.LAST_LOGIN</field>
+            <operation>notEqual</operation>
+            <value>5/29/2012 12:00 AM</value>
+        </filters>
+        <label>Users created By Duser (Migration)</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Users_modified_but_haven_t_logged_in</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CREATED_BY_ALIAS</field>
+            <operation>notEqual</operation>
+            <value>user</value>
+        </filters>
+        <filters>
+            <field>LAST_UPDATE_BY_ALIAS</field>
+            <operation>equals</operation>
+            <value>duser</value>
+        </filters>
+        <filters>
+            <field>CORE.USERS.LAST_LOGIN</field>
+            <operation>lessOrEqual</operation>
+            <value>2/1/2012 12:00 AM</value>
+        </filters>
+        <filters>
+            <field>CPR_Salesperson_ID__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>Users modified but haven&apos;t logged in</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Users_modified_by_Duser</fullName>
+        <booleanFilter>1 AND 2 AND 3</booleanFilter>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.ALIAS</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.LAST_LOGIN</columns>
+        <columns>CORE.USER_ROLE.NAME</columns>
+        <columns>CORE.USERS.ACTIVE</columns>
+        <columns>CORE.PROFILE.NAME</columns>
+        <columns>MANAGER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>LAST_UPDATE_BY_ALIAS</field>
+            <operation>equals</operation>
+            <value>duser</value>
+        </filters>
+        <filters>
+            <field>CREATED_BY_ALIAS</field>
+            <operation>notEqual</operation>
+            <value>duser</value>
+        </filters>
+        <filters>
+            <field>CPR_Salesperson_ID__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>Users modified by Duser (Migration)</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>X1_Test_Users</fullName>
+        <columns>FULL_NAME</columns>
+        <columns>CORE.USERS.LAST_NAME</columns>
+        <columns>CORE.USERS.USERNAME</columns>
+        <columns>CORE.USERS.EMAIL</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CORE.USERS.FIRST_NAME</field>
+            <operation>contains</operation>
+            <value>sunpower</value>
+        </filters>
+        <label>1. Test Users</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>FULL_NAME</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Account_Name__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CORE.USERS.EMAIL</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CORE.USERS.PHONE</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CORE.PROFILE.NAME</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CORE.USER_ROLE.NAME</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CORE.USERS.ACTIVE</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>SFCONTENT_USER</lookupDialogsAdditionalFields>
+        <lookupFilterFields>Account_Name__c</lookupFilterFields>
+        <lookupFilterFields>CORE.USERS.FIRST_NAME</lookupFilterFields>
+        <lookupFilterFields>CORE.USERS.LAST_NAME</lookupFilterFields>
+        <lookupFilterFields>CORE.USERS.EMAIL</lookupFilterFields>
+        <lookupFilterFields>CORE.PROFILE.NAME</lookupFilterFields>
+        <lookupFilterFields>SFCONTENT_USER</lookupFilterFields>
+        <lookupPhoneDialogsAdditionalFields>FULL_NAME</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CORE.USER_ROLE.NAME</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CORE.USERS.PHONE</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CORE.USERS.EXTENSION</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CORE.USERS.CELL</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>SFCONTENT_USER</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>SFCONTENT_USER</searchFilterFields>
+        <searchFilterFields>Account_Name__c</searchFilterFields>
+        <searchFilterFields>FULL_NAME</searchFilterFields>
+        <searchFilterFields>CORE.USERS.FIRST_NAME</searchFilterFields>
+        <searchFilterFields>CORE.USERS.LAST_NAME</searchFilterFields>
+        <searchFilterFields>CORE.USER_ROLE.NAME</searchFilterFields>
+        <searchFilterFields>CORE.PROFILE.NAME</searchFilterFields>
+        <searchFilterFields>CORE.USERS.EMAIL</searchFilterFields>
+        <searchFilterFields>CORE.USERS.USERNAME</searchFilterFields>
+        <searchFilterFields>CORE.USERS.ALIAS</searchFilterFields>
+        <searchResultsAdditionalFields>FULL_NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>SFCONTENT_USER</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CORE.USERS.EMAIL</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CORE.PROFILE.NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CORE.USER_ROLE.NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CORE.USERS.ACTIVE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CORE.USERS.COMPANY_NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>MANAGER</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Lead_Team__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>Read</sharingModel>
+    <validationRules>
+        <fullName>Internal_User_Required_Fields</fullName>
+        <active>true</active>
+        <errorConditionFormula>NOT($User.ByPassValidation__c )&amp;&amp;
+
+AND( 
+NOT(ISPICKVAL( UserType,&quot;PowerPartner&quot;)), 
+OR(LEN(Country)=0, LEN( Division )=0) 
+)</errorConditionFormula>
+        <errorMessage>An internal user must have a division and country.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Limit_Who_Can_Activate_Users</fullName>
+        <active>true</active>
+        <description>Limit Who Can Activate Users</description>
+        <errorConditionFormula>(( ISCHANGED(IsActive )
+&amp;&amp; 
+  $User.Edit_Partner_Users__c  = False
+&amp;&amp;
+( Not(CONTAINS( Role_text__c, &apos;Partner User&apos;)  || 
+  Not(CONTAINS(Role_text__c, &apos;Partner Manager&apos;)  || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Executive&apos;) || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Sales&apos;) || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Delegated Administrator&apos;) || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Operations&apos;) || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Restricted&apos;) || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Operations&apos;) || 
+ Not(CONTAINS(Role_text__c, &apos;Partner Technical&apos;) 
+))))))))))))</errorConditionFormula>
+        <errorMessage>Please contact your system administrator to activate user.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Limit_on_Who_Can_Activate_Portal_Users</fullName>
+        <active>true</active>
+        <description>Limit on Who Can Activate Portal Users</description>
+        <errorConditionFormula>( $User.ByPassValidation__c = False &amp;&amp; ( ISCHANGED(IsActive)
+&amp;&amp;
+  ($User.Edit_Partner_Users__c = False)
+ &amp;&amp; 
+( (    CONTAINS( Role_text__c, &apos;Partner User&apos;)  || 
+ (    CONTAINS( Role_text__c, &apos;Partner Manager&apos;)  || 
+ (    CONTAINS( Role_text__c, &apos;Partner Executive&apos;) 
+))))))</errorConditionFormula>
+        <errorMessage>Please contact partnerportal@sunpowercorp.com to have a new Partner user activated.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Limit_on_Who_Can_Create_Portal_Users</fullName>
+        <active>true</active>
+        <description>Limit on Who Can Create Portal Users</description>
+        <errorConditionFormula>ISNEW()
+&amp;&amp;
+($User.ByPassValidation__c = False 
+&amp;&amp;
+  ($User.Edit_Partner_Users__c = False))
+&amp;&amp;
+(( CONTAINS( Role_text__c, &apos;Partner User&apos;) || 
+( CONTAINS( Role_text__c, &apos;Partner Manager&apos;) || 
+( CONTAINS( Role_text__c, &apos;Partner Executive&apos;) 
+))))</errorConditionFormula>
+        <errorMessage>Please contact partnerportal@sunpowercorp.com to have a new Partner user activated.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Limit_on_Who_Can_Create_Standard_Users</fullName>
+        <active>true</active>
+        <description>Pivotal# 145793091 Add validation rule for system admin</description>
+        <errorConditionFormula>AND (
+  ISNEW(),
+  $User.Profile_Text__c != &apos;System Administrator&apos;,
+  ISPICKVAL(UserType, &apos;Standard&apos;)
+)</errorConditionFormula>
+        <errorMessage>Please contact system administrator to create standard user.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Partner_TenantId_Required</fullName>
+        <active>true</active>
+        <description>This validation rule is to make sure a Partner User is not given Aurora Design Licensee permission unless Partner Account has Tenant ID populated</description>
+        <errorConditionFormula>AND( NOT(ISPICKVAL(UserType, &apos;Standard&apos;)), INCLUDES( Business_Function__c,&apos;Aurora Design Licensee&apos;), 
+OR(ISNULL(Contact.Account.Design_Tool_Organization_Id__c),
+ISBLANK(Contact.Account.Design_Tool_Organization_Id__c)) )</errorConditionFormula>
+        <errorDisplayField>Business_Function__c</errorDisplayField>
+        <errorMessage>Cannot assign &apos;Aurora Design Licensee&apos;  unless Partner Account has a valid Tenant Id</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Request_Design</fullName>
+        <active>false</active>
+        <errorConditionFormula>AND( NOT(ISPICKVAL(UserType, &apos;Standard&apos;)), 
+($User.USERID_18character__c &lt;&gt; &quot;00580000003aECRAA2&quot;), 
+INCLUDES( Business_Function__c,&apos;Request Design&apos;), 
+NOT(ISBLANK(Contact.Account.Design_Tool_Organization_Id__c)), 
+NOT( OR( 
+CONTAINS( Contact.Account_Type__c , &quot;Commercial&quot;), 
+CONTAINS( Contact.Account_Type__c , &quot;Combo&quot;) 
+)) 
+)</errorConditionFormula>
+        <errorDisplayField>Business_Function__c</errorDisplayField>
+        <errorMessage>Request Design is not an option since Partner has Aurora Design License</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>SOX_Compliance_Profile_Added_to_New_User</fullName>
+        <active>true</active>
+        <description>Checks whether a new user is assigned to a SOX regulated profile and whether the &quot;SOX Profile Approval Received&quot; checkbox is checked. - John Taylor 10/30/2014</description>
+        <errorConditionFormula>AND(
+$User.ByPassValidation__c == false,
+ISNEW(),   
+(OR(Profile.Name = &quot;SunPower Lease Payment Access&quot;, 
+Profile.Name = &quot;SunPower Lease/Pricing Administrator&quot;, 
+Profile.Name = &quot;Global Sales Ops&quot;, 
+Profile.Name = &quot;SunPower Order Management&quot;, 
+Profile.Name = &quot;Sunpower Pricing Administrator&quot;,
+Profile.Name = &quot;System Administrator&quot;)),
+SOX_Profile_was_approval_received__c == false)</errorConditionFormula>
+        <errorDisplayField>SOX_Profile_was_approval_received__c</errorDisplayField>
+        <errorMessage>Have you received approval to assign this new user this profile that is governed by SOX Compliance?</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>SOX_Compliance_Profile_Added_to_User</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+NOT(ByPassValidation__c), 
+(SOX_Profile_was_approval_received__c = False),
+(ISCHANGED(  ProfileId  )),
+(PRIORVALUE(ProfileId) &lt;&gt; ProfileId),
+(OR(Profile.Name = &quot;SunPower Lease Payment Access&quot;,
+Profile.Name = &quot;SunPower Lease/Pricing Administrator&quot;,
+Profile.Name = &quot;Global Sales Ops&quot;,
+Profile.Name = &quot;SunPower Order Management&quot;,
+Profile.Name = &quot;Sunpower Pricing Administrator&quot;,
+Profile.Name = &quot;System Administrator&quot;)))</errorConditionFormula>
+        <errorDisplayField>SOX_Profile_was_approval_received__c</errorDisplayField>
+        <errorMessage>Have you received approval to assign this profile that is governed by SOX Compliance?</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>APXTConga4__Conga_Composer_OAuth</fullName>
+        <availability>online</availability>
+        <description>*** DO NOT USE THIS BUTTON ON A PAGE LAYOUT *** 
+
+OAuth buttons require additional setup. Please see the Composer Installation Guide for more details.
+
+COPY THE URL FROM THIS BUTTON and paste it into your own custom button or link. Then add optional parameters to finely tune the button&apos;s behavior. See the Composer Configuration Guide for details.</description>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>660</height>
+        <isResizable>true</isResizable>
+        <linkType>url</linkType>
+        <masterLabel>Conga Composer (OAuth)</masterLabel>
+        <openType>newWindow</openType>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+        <url>/apex/APXTConga4__Conga_Composer
+?id={!User.Id}</url>
+        <width>900</width>
+    </webLinks>
+    <webLinks>
+        <fullName>APXTConga4__Conga_Mail_Merge</fullName>
+        <availability>online</availability>
+        <description>*** DO NOT USE THIS BUTTON ON A PAGE LAYOUT *** 
+
+COPY THE URL FROM THIS BUTTON and paste it into your own custom button or link. Then add optional parameters to finely tune the button&apos;s behavior. See the Conga Configuration Guide for details.</description>
+        <displayType>link</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>false</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>450</height>
+        <isResizable>false</isResizable>
+        <linkType>url</linkType>
+        <masterLabel>Conga Composer</masterLabel>
+        <openType>newWindow</openType>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+        <url>https://composer.congamerge.com
+?sessionId={!API.Session_ID}
+&amp;serverUrl={!API.Partner_Server_URL_290}
+&amp;id={!User.Id}</url>
+        <width>625</width>
+    </webLinks>
+    <webLinks>
+        <fullName>echosign_dev1__Sync_EchoSign_User</fullName>
+        <availability>online</availability>
+        <displayType>link</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>300</height>
+        <isResizable>true</isResizable>
+        <linkType>url</linkType>
+        <masterLabel>Sync Document Cloud User</masterLabel>
+        <openType>newWindow</openType>
+        <position>topLeft</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+        <url>/apex/echosign_dev1__UserGroupMapping?userId={!User.Id}</url>
+        <width>800</width>
+    </webLinks>
 </CustomObject>

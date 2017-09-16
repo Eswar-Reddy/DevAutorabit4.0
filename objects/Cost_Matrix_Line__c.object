@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Commercial:
+Object created to store the EPC Cost matrix task lines used by the PPA Proposal tool
+Allows for state by state cost breakdown of BOS Costs (Materials,Labor,etc) into individual roll-up lines
+PO: Miltiadis Vratimos
+PPA Proposal Project: https://www.pivotaltracker.com/epic/show/3273633
+Target Release: WW21-24</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>false</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <fields>
+        <fullName>AutorabitExtId__c</fullName>
+        <description>External Id created by AutoRABIT</description>
+        <externalId>true</externalId>
+        <label>AutorabitExtId__c</label>
+        <length>18</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Cost_Category__c</fullName>
+        <description>Commercial:
+Field created to store the Cost category of the EPC Cost matrix line used by the PPA Proposal tool
+PO: Miltiadis Vratimos
+PPA Proposal Project: https://www.pivotaltracker.com/epic/show/3273633
+Target Release: WW21-24</description>
+        <externalId>false</externalId>
+        <label>Cost Category</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Materials</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Labor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Accounting/Misc.</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Cost_Matrix__c</fullName>
+        <description>Commercial:
+Field created to associate a line to the EPC Cost matrix used by the PPA Proposal tool
+M/D Relationship allowing for rollup of cost lines to cost task
+PO: Miltiadis Vratimos
+PPA Proposal Project: https://www.pivotaltracker.com/epic/show/3273633
+Target Release: WW21-24</description>
+        <externalId>false</externalId>
+        <label>Cost Matrix</label>
+        <referenceTo>Cost_Matrix__c</referenceTo>
+        <relationshipLabel>Cost Matrix Lines</relationshipLabel>
+        <relationshipName>Cost_Matrix_Lines</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Cost__c</fullName>
+        <description>Commercial:
+Field created to store the cost of the EPC Cost matrix line item used by the PPA Proposal tool
+PO: Miltiadis Vratimos
+PPA Proposal Project: https://www.pivotaltracker.com/epic/show/3273633
+Target Release: WW21-24</description>
+        <externalId>false</externalId>
+        <label>Cost</label>
+        <precision>13</precision>
+        <required>false</required>
+        <scale>3</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Task_Number__c</fullName>
+        <description>Commercial:
+Field to store the task number of the related cost line
+PO: Miltiadis Vratimos
+PPA Proposal Project: https://www.pivotaltracker.com/epic/show/3273633
+Target Release: WW21-24</description>
+        <externalId>false</externalId>
+        <label>Task Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Unit__c</fullName>
+        <description>Commercial:
+Field created to depict the cost unit type of an individual cost line in the EPC Cost matrix used by the PPA Proposal tool
+PO: Miltiadis Vratimos
+PPA Proposal Project: https://www.pivotaltracker.com/epic/show/3273633
+Target Release: WW21-24</description>
+        <externalId>false</externalId>
+        <label>Unit</label>
+        <picklist>
+            <picklistValues>
+                <fullName>$/W</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>$/Site</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Cost Matrix Line</label>
+    <nameField>
+        <label>Cost Line Task Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Cost Matrix Lines</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>PPA</fullName>
+        <active>true</active>
+        <description>Costs associated to PPA Proposal BOS Costs</description>
+        <label>PPA</label>
+        <picklistValues>
+            <picklist>Cost_Category__c</picklist>
+            <values>
+                <fullName>Accounting%2FMisc%2E</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Labor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Materials</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Unit__c</picklist>
+            <values>
+                <fullName>%24%2FSite</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%24%2FW</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>EU Customer Service will deploy Post Call Survey using ClickTools. This survey is different from the CSAT survey.Based on their requirements, Business require again an object in SFDC to dump the Post Call Survey result. 
+
+The object will be name as “Post Call Survey”. This object is independent and it will not affect any objects in SFDC, pretty much the same setup as CSAT object.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Ave_PCS_Score__c</fullName>
+        <externalId>false</externalId>
+        <formula>(Call_Resolution__c +    Product_Knowledge__c + Customer_Service__c +  Professionalism__c) / 4</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Ave PCS Score</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Effectiveness_and_Efficiency__c</fullName>
+        <externalId>false</externalId>
+        <label>Call Effectiveness and Efficiency</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Resolution__c</fullName>
+        <externalId>false</externalId>
+        <label>Call Resolution</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Service_Quality__c</fullName>
+        <externalId>false</externalId>
+        <label>Call Service Quality</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Case__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Lookup field to case object.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Case Number to which this Survey is related to.</inlineHelpText>
+        <label>Case</label>
+        <referenceTo>Case</referenceTo>
+        <relationshipLabel>Post Call Surveys</relationshipLabel>
+        <relationshipName>Post_Call_Surveys</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Commitment__c</fullName>
+        <description>Commitment to work with you until the issue was resolved.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Commitment to work with you until the issue was resolved.</inlineHelpText>
+        <label>Commitment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Complete_Information__c</fullName>
+        <externalId>false</externalId>
+        <label>Complete Information</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact_For_Feedback__c</fullName>
+        <description>May we contact you in regards to your feedback?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>May we contact you in regards to your feedback?</inlineHelpText>
+        <label>Contact?</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Contact_Method__c</fullName>
+        <description>Availability of methods to contact support (i.e. phone, web, chat, email)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Availability of methods to contact support (i.e. phone, web, chat, email)</inlineHelpText>
+        <label>Contact Method</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact_Times__c</fullName>
+        <description>How many times did you initiate contact with SunPower Support about this particular issue?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How many times did you initiate contact with SunPower Support about this particular issue?</inlineHelpText>
+        <label>Contact Times</label>
+        <picklist>
+            <picklistValues>
+                <fullName>None, SunPower contacted me</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>One time</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Two times</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Three or more times</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Don&apos;t Know / Unsure</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Post Call Surveys</relationshipLabel>
+        <relationshipName>Post_Call_Surveys1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Count__c</fullName>
+        <externalId>false</externalId>
+        <formula>1</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Courtesy__c</fullName>
+        <description>Treating you with courtesy and respect.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Treating you with courtesy and respect.</inlineHelpText>
+        <label>Courtesy</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Satisfaction__c</fullName>
+        <externalId>false</externalId>
+        <label>Customer Satisfaction</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Service__c</fullName>
+        <externalId>false</externalId>
+        <label>Customer Service</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Date_Time_Completion__c</fullName>
+        <externalId>false</externalId>
+        <label>Date Time Completion</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Date_of_completion__c</fullName>
+        <externalId>false</externalId>
+        <label>Date of completion</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Effectiveness__c</fullName>
+        <description>Ability to effectively resolve your issue.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Ability to effectively resolve your issue.</inlineHelpText>
+        <label>Effectiveness</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Effort_Level__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>To what extent do you agree with this statement?  SunPower made it easy to resolve my concern.</inlineHelpText>
+        <label>Effort Level</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Strongly Agree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Agree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Somewhat Agree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Neither Agree nor Disagree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Somewhat Disagree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Disagree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Strongly Disagree</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Follow_up__c</fullName>
+        <description>Ownership and follow-up of your issue.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Ownership and follow-up of your issue.</inlineHelpText>
+        <label>Follow up</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Improvement_suggestions__c</fullName>
+        <description>Suggestions about what SunPower could do to improve our Support to better meet or exceed your expectations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>suggestions about what SunPower could do to improve our Support to better meet or exceed your expectations.</inlineHelpText>
+        <label>Improvement suggestions</label>
+        <length>1000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Knowledge__c</fullName>
+        <description>Knowledge about the issue in general.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Knowledge about the issue in general.</inlineHelpText>
+        <label>Knowledge</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lead__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Lead</label>
+        <referenceTo>Lead</referenceTo>
+        <relationshipLabel>Post Call Surveys</relationshipLabel>
+        <relationshipName>Post_Call_Surveys</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Performance__c</fullName>
+        <description>How would you rate the performance of the SunPower Support professional who handled your case?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>How would you rate the performance of the SunPower Support professional who handled your case?</inlineHelpText>
+        <label>Performance</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Excellent</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Good</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Fair</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Poor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Very Poor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Post_Call_Comment__c</fullName>
+        <externalId>false</externalId>
+        <label>Post Call Comment</label>
+        <length>1000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Product_Knowledge__c</fullName>
+        <externalId>false</externalId>
+        <label>Product Knowledge</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Professionalism__c</fullName>
+        <externalId>false</externalId>
+        <label>Professionalism</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Read_Only_Link__c</fullName>
+        <externalId>false</externalId>
+        <label>Read Only Link</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Recommend__c</fullName>
+        <description>Based on your recent experiences with SunPower Support, are you more or less likely to recommend SunPower to a friend or colleague?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Are you more or less likely to recommend SunPower to a friend or colleague?</inlineHelpText>
+        <label>Recommend</label>
+        <picklist>
+            <picklistValues>
+                <fullName>More Likely</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Just as Likely</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Less Likely</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Resolution_Time__c</fullName>
+        <description>Total time to resolve the issue.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total time to resolve the issue.</inlineHelpText>
+        <label>Resolution Time</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Resolved__c</fullName>
+        <description>Has the issue been resolved?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Has the issue been resolved?</inlineHelpText>
+        <label>Resolved?</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Don&apos;t Know / Unsure</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Sender__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Sender</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Post_Call_Surveys</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Status_Updates__c</fullName>
+        <description>Updates on the status or progress of your issue.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Updates on the status or progress of your issue.</inlineHelpText>
+        <label>Status Updates</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Survey_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Survey Name</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Survey_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Survey Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Invitation Sent</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No Response Received</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Responded</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Opted Out</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Time_on_Hold__c</fullName>
+        <description>Time on hold before reaching a SunPower Support Professional.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Time on hold before reaching a SunPower Support Professional.</inlineHelpText>
+        <label>Time on Hold</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Transfer__c</fullName>
+        <description>Being accurately routed to the right person who can resolve the issue.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Being accurately routed to the right person who can resolve the issue.</inlineHelpText>
+        <label>Transfer</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Understanding__c</fullName>
+        <description>Understanding the details of your particular case.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Understanding the details of your particular case.</inlineHelpText>
+        <label>Understanding</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Post Call Survey</label>
+    <nameField>
+        <label>Post Call Survey Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Post Call Surveys</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

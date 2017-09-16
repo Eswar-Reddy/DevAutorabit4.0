@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>AddQuoteLine</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>QuoteLineItemEditRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>EditAllQuoteLine</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>ASP__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( kWp_Components__c!=0, UnitPrice / ( Multiplier__c * kWp_Components__c / Quantity),0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>ASP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Cost_Full__c</fullName>
+        <externalId>false</externalId>
+        <formula>Cost__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Cost (Full)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>3</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Cost__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Systems Opps: Enter Cost in Dollar or Euro per Watt for Mounting System and PV line items. All others, enter total cost of line item.
+
+Components Opps: Enter Cost per unit.</inlineHelpText>
+        <label>Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Description</fullName>
+    </fields>
+    <fields>
+        <fullName>Design_Formula__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(Design_Link__c , Design_Name__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Design</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Design_Link__c</fullName>
+        <externalId>false</externalId>
+        <label>Design Id</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Design_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Design Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Design__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Design</label>
+        <referenceTo>Design__c</referenceTo>
+        <relationshipLabel>Quote Line Items</relationshipLabel>
+        <relationshipName>Quote_Line_Items</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Discount</fullName>
+    </fields>
+    <fields>
+        <fullName>Estimate_Formula__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK( Estimate_Link__c , Estimate_Name__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Estimate</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Estimate_Link__c</fullName>
+        <externalId>false</externalId>
+        <label>Estimate Id</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Estimate_Name_Dup__c</fullName>
+        <externalId>false</externalId>
+        <formula>Estimate__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Estimate Name (Dup)</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Estimate_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Estimate Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Estimate__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Estimate</label>
+        <referenceTo>Estimate__c</referenceTo>
+        <relationshipLabel>Quote Line Items</relationshipLabel>
+        <relationshipName>Quote_Line_Items</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>HasSchedule</fullName>
+    </fields>
+    <fields>
+        <fullName>IsActive__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <label>IsActive</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ListPrice</fullName>
+    </fields>
+    <fields>
+        <fullName>List_Price_duplicate__c</fullName>
+        <externalId>false</externalId>
+        <formula>PricebookEntry.UnitPrice</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>List Price (duplicate)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Multiplier__c</fullName>
+        <externalId>false</externalId>
+        <formula>CASE( Product2.Unit__c , 1000, 1000, 1, 1,1 )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Multiplier</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>O_M1__c</fullName>
+        <externalId>false</externalId>
+        <formula>Text(PricebookEntry.Product2.O_M__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>O&amp;M?</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>O_M__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>O&amp;M</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>PSR__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>PSR</label>
+        <referenceTo>PSR__c</referenceTo>
+        <relationshipLabel>Quote Line Items</relationshipLabel>
+        <relationshipName>Quote_Line_Items</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>PV_Cost_Pricing__c</fullName>
+        <externalId>false</externalId>
+        <formula>Quote.PV_Cost_Pricing__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>PV Cost Pricing</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>PV_Cost_Roll_Up__c</fullName>
+        <externalId>false</externalId>
+        <label>PV Cost (Roll-Up)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>PV_Cost__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( Product_Type__c  = &quot;PV Module&quot;,   Total_Cost__c  , 0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>PV Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Product2Id</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ProductCode</fullName>
+    </fields>
+    <fields>
+        <fullName>Product_Family_Hidden__c</fullName>
+        <externalId>false</externalId>
+        <formula>text(PricebookEntry.Product2.Family)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Product Family (Hidden)</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Family__c</fullName>
+        <externalId>false</externalId>
+        <formula>CASE(PricebookEntry.Product2.Family, &quot;Total Price&quot;,&quot;Total Price&quot;,
+&quot;PV Module&quot;,&quot;PV Module&quot;,
+&quot;PV Cell&quot;,&quot;PV Cell&quot;,
+&quot;O&amp;M&quot;,&quot;O&amp;M&quot;,
+&quot;Development&quot;,&quot;Development&quot;,
+&quot;Services&quot;,&quot;Services&quot;,
+&quot;Mounting Systems - Roof&quot;,&quot;Mounting Systems - Roof&quot;,
+&quot;Mounting Systems - Ground&quot;,&quot;Mounting Systems - Ground&quot;,
+&quot;Mounting Systems - Parking&quot;,&quot;Mounting Systems - Parking&quot;,
+&quot;Balance of Plant&quot;,&quot;Balance of Plant&quot;,
+&quot;Contingency&quot;,&quot;Contingency&quot;,
+&quot;Sales Tax&quot;,&quot;Sales Tax&quot;,&quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Product Family</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Product Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Type__c</fullName>
+        <externalId>false</externalId>
+        <formula>CASE(  PricebookEntry.Product2.Product_Type__c,&quot;Mounting System&quot;,&quot;Mounting System&quot;,&quot;BOS&quot;,&quot;BOS&quot;,&quot;Development&quot;,&quot;Development&quot;,&quot;Balance of System&quot;,&quot;Balance of System&quot;,&quot;Total Price&quot;,&quot;Total Price&quot;,&quot;PV Module&quot;,&quot;PV Module&quot;,&quot;Services&quot;,&quot;Services&quot;,&quot;O&amp;M&quot;,&quot;O&amp;M&quot;,&quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Product Type</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Quote Line Items</relationshipLabel>
+        <relationshipName>Quote_Line_Items</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Quantity</fullName>
+        <inlineHelpText>Systems Opps: Use kWp for Mounting System and PV line items. All others, use quantity of 1.
+
+Components Opps: Number of product (modules, T10 units, etc.)</inlineHelpText>
+    </fields>
+    <fields>
+        <fullName>QuoteId</fullName>
+        <type>MasterDetail</type>
+    </fields>
+    <fields>
+        <fullName>Sales_Unit_Price__c</fullName>
+        <description>Sales Unit Price</description>
+        <externalId>false</externalId>
+        <label>Sales Unit Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Serengeti_Cost_Pricing__c</fullName>
+        <externalId>false</externalId>
+        <formula>Quote.Serengeti_Cost_Pricing__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Serengeti Cost Pricing</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>ServiceDate</fullName>
+    </fields>
+    <fields>
+        <fullName>Single_Line__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Single Line</label>
+        <referenceTo>Single_Line__c</referenceTo>
+        <relationshipLabel>Quote Line Items</relationshipLabel>
+        <relationshipName>Quote_Line_Items</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Site__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Site</label>
+        <referenceTo>Site_Information_Form__c</referenceTo>
+        <relationshipLabel>Quote Line Items</relationshipLabel>
+        <relationshipName>Quote_Line_Items</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Subtotal</fullName>
+    </fields>
+    <fields>
+        <fullName>System_Size_BOS__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(CONTAINS(Quote.Pricebook2.Name , &quot;Comp&quot;) &amp;&amp;  (CONTAINS( PricebookEntry.Product2.Product_Family_Text__c , &quot;Mount&quot;)), Quantity ,
+IF(CONTAINS(Quote.Pricebook2.Name , &quot;System&quot;) &amp;&amp;  (CONTAINS(PricebookEntry.Product2.Product_Family_Text__c , &quot;Mount&quot;)), Quantity , 0))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>System Size (BOS)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>System_Size_PV__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(CONTAINS(Quote.Pricebook2.Name , &quot;Comp&quot;) &amp;&amp;  (CONTAINS(Product_Type__c , &quot;PV&quot;)), Quantity ,
+IF(CONTAINS(Quote.Pricebook2.Name , &quot;System&quot;) &amp;&amp;  (CONTAINS(Product_Type__c , &quot;PV&quot;)), Quantity , 0))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>System Size (PV)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TotalPrice</fullName>
+    </fields>
+    <fields>
+        <fullName>Total_Cost__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( Contains( Quote.Opportunity.Pricebook2.Name , &quot;System&quot;), Cost__c * Quantity * Multiplier__c, Cost__c * PricebookEntry.Product2.Wattage_Out__c * Quantity )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Cost_new__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Cost new</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_List_Price__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(  Contains( Quote.Opportunity.Pricebook2.Name , &quot;System&quot;),   List_Price_duplicate__c   * Quantity * Multiplier__c, Quantity *  PricebookEntry.Product2.Wattage_Out__c * List_Price_duplicate__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total List Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Price_List_Calculated__c</fullName>
+        <description>Total Price List (Calculated)</description>
+        <externalId>false</externalId>
+        <label>Total Price List (Calculated)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>UnitPrice</fullName>
+        <inlineHelpText>Systems: Enter the Total Price of the Opportunity in Euro or USD.
+Components: Enter price per product unit (module, T10, etc.)</inlineHelpText>
+    </fields>
+    <fields>
+        <fullName>Unit__c</fullName>
+        <externalId>false</externalId>
+        <label>Unit</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Wattage_Out__c</fullName>
+        <externalId>false</externalId>
+        <formula>PricebookEntry.Product2.Wattage_Out__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Wattage Out</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>kWp_Components__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Enter the size in kWp per line item.</inlineHelpText>
+        <label>kWp (Component Opps Only)</label>
+        <precision>13</precision>
+        <required>false</required>
+        <scale>3</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>kWp__c</fullName>
+        <externalId>false</externalId>
+        <label>kWp</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Cost_Restriction</fullName>
+        <active>true</active>
+        <description>Cost_Restriction</description>
+        <errorConditionFormula>((ISCHANGED(  Cost__c )
+&amp;&amp; 
+CONTAINS( Product__r.Name, &apos;Component&apos;)))</errorConditionFormula>
+        <errorDisplayField>Cost__c</errorDisplayField>
+        <errorMessage>Cost Cannot be Updated.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>No_Cost_on_Total_Price_Line_Item</fullName>
+        <active>true</active>
+        <description>Total Price line items should not have cost populated.</description>
+        <errorConditionFormula>IF( Contains( Quote.Opportunity.Pricebook2.Description , &quot;System&quot;),
+AND( 
+ISPICKVAL(Product2.Family , &quot;Total Price&quot;), Cost__c &gt;0), false)</errorConditionFormula>
+        <errorDisplayField>Cost__c</errorDisplayField>
+        <errorMessage>The Total Price line item should only contain sales price, cost should not be populated. Please enter a 0 value for cost</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>No_Price_on_Product_Line_Item</fullName>
+        <active>true</active>
+        <description>Product line items should not have sales price populated.</description>
+        <errorConditionFormula>(IF( Contains( Quote.Opportunity.Pricebook2.Description , &quot;No Price in Product&quot;),
+AND(
+NOT(ISPICKVAL(Product2.Family , &quot;Total Price&quot;)), UnitPrice &gt;0,
+NOT(ISPICKVAL(Product2.Family, &quot;Freight&quot;)),
+NOT(ISPICKVAL(Product2.Family , &quot;O&amp;M&quot;)) ), false))</errorConditionFormula>
+        <errorDisplayField>UnitPrice</errorDisplayField>
+        <errorMessage>Sales Price should not be populated for individual product line items. Please put 0 as the Sales Price for this product, add a Total Price product line item to capture the total amount of the deal.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Quantity_must_equal_1_if_multiplier_is_1</fullName>
+        <active>true</active>
+        <description>For any product that has a multiplier as 1, the user must enter a quantity of 1.</description>
+        <errorConditionFormula>IF( Contains( Quote.Opportunity.Pricebook2.Description , &quot;System&quot;),
+AND( Product2.Unit__c &lt;=1, Quantity &gt;1 &amp;&amp; PricebookEntry.Product2.Product_Family_Text__c &lt;&gt; &quot;Inverters&quot;) &amp;&amp; PricebookEntry.Product2.Product_Family_Text__c &lt;&gt; &quot;Freight&quot;
+&amp;&amp; PricebookEntry.Product2.Product_Family_Text__c &lt;&gt; &quot;Storage&quot;
+&amp;&amp; PricebookEntry.Product2.Product_Family_Text__c &lt;&gt; &quot;Development&quot;,  false)</errorConditionFormula>
+        <errorDisplayField>Quantity</errorDisplayField>
+        <errorMessage>Quantity for this product must equal 1.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Sales_Price_Restriction</fullName>
+        <active>true</active>
+        <description>Sales_Price_Restriction</description>
+        <errorConditionFormula>(ISCHANGED( UnitPrice )
+&amp;&amp; 
+(CONTAINS( Product__r.Name, &apos;Component&apos;)  ||  
+ISPICKVAL( Quote.Opportunity.Pricebook2.Pricing_Calculator__c, &quot;Component&quot;)) &amp;&amp;
+NOT(CONTAINS( Product__r.Name, &apos;System&apos;)))</errorConditionFormula>
+        <errorDisplayField>UnitPrice</errorDisplayField>
+        <errorMessage>Change Price back to previous value or cancel. Enter Price At the Sales Unit Price.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Systems_Opportunity_use_Qty_for_kWp</fullName>
+        <active>true</active>
+        <description>This is to validate that if a user is dealing with a Systems opportunity, the Quantity field should be used for kWp, not the kWp field used for Components deals.</description>
+        <errorConditionFormula>IF( Contains( Quote.Opportunity.Pricebook2.Description , &quot;System&quot;), 
+kWp_Components__c   &gt; 0, false)</errorConditionFormula>
+        <errorMessage>This is a Systems Opportunity, you must zero out the kWp field and enter kWp in the Quantity field.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Add_Products</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Add Products</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/EstimateQuoteController?id={!Estimate__c.Id}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Add_Products_Single_Line</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Add Products Single Line</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>/apex/DesignQuoteController?id={!Single_Line__c.DesignId__c}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Add_Products_design</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Add Products</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/DesignQuoteController?id={!Design__c.Id}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Change_Price_Book</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Change Price Book</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/choosepricebook?id={!Estimate__c.Id}</url>
+    </webLinks>
+</CustomObject>

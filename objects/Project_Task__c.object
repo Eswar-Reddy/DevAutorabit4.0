@@ -1,0 +1,3255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>ResidentialProjectTaskEditRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>ResidentialProjectTaskRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>true</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <fields>
+        <fullName>Active_Critical__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Flags the current &apos;Critical Path&apos; task on a Project. Used in Project Dashboard and for reporting.</description>
+        <externalId>false</externalId>
+        <formula>AND(OR(TEXT(Status__c) = &apos;In Progress&apos; , TEXT(Status__c) = &apos;Needs Rework&apos;, TEXT(Status__c) = &apos;Pending Approval&apos;,TEXT(Status__c) = &apos;Hold&apos;), Critical_Path__c == TRUE)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Active Critical</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Apex_Updated__c</fullName>
+        <description>Used in the backend to identify records that have been modified via apex for exclusion in validation rules</description>
+        <externalId>false</externalId>
+        <label>Apex Updated</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Assigned_To__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+The Assigned To User is the person responsible for the completion of this task. They will receive all notifications concerning this task. Assigned To field can be modified manually or programmatically based on Role Assignment.</description>
+        <externalId>false</externalId>
+        <label>Assigned To</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Project_Tasks</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Comment__c</fullName>
+        <description>Residential Installation Project Management
+Explanation used for Sub Tasks</description>
+        <externalId>false</externalId>
+        <label>Comment</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Critical_Path__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Manually assigned on the template and propagated down to clone tasks. Critical path tasks are used in overall project SLA calculations. When a critical path task is completed, the next task in Order will automatically be started.</description>
+        <externalId>false</externalId>
+        <label>Critical Path</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Task description. Populated manually.</description>
+        <externalId>false</externalId>
+        <label>Description</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Document_Required__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Manually set on template, propagated down to clone tasks. If checked, validation will run on status = complete to confirm that all related Document records have related Attachments.</description>
+        <externalId>false</externalId>
+        <label>Document Required</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Due_Date__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Manually populated on Ad Hoc tasks to alert user of task due date. Used in Chatter notifications.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Optional. Define a Due Date for task completion.</inlineHelpText>
+        <label>Due Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Elapsed_DateTime__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically. Used in the SLA Aging formula.</description>
+        <externalId>false</externalId>
+        <label>Elapsed DateTime</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>End_DateTime__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically. DateTime that task was completed. Used in SLA Aging formula.</description>
+        <externalId>false</externalId>
+        <label>End DateTime</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Escalation_Category__c</fullName>
+        <description>Residential Installation Management
+Describes the escalation category.</description>
+        <externalId>false</externalId>
+        <label>Escalation Category</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Missing Information</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interconnection Complexity</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Structural Complexity</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other Job Specifics</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sales Issues</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3rd Party Stamping</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Escalation_Sub_Category__c</fullName>
+        <description>Residential Installation Project Management
+Dependent picklist based on escalation category</description>
+        <externalId>false</externalId>
+        <label>Escalation Sub-Category</label>
+        <picklist>
+            <controllingField>Escalation_Category__c</controllingField>
+            <picklistValues>
+                <fullName>Missing Documents</fullName>
+                <default>false</default>
+                <controllingFieldValues>Missing Information</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>false</default>
+                <controllingFieldValues>Missing Information</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MPU Upgrade</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MCB Downsize</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conductor Taps</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Load Relocation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sub-Panel POI</fullName>
+                <default>false</default>
+                <controllingFieldValues>Interconnection Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Un-Labeled MSP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Stab-Lok Panels</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>3-Phase</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>AC Mod Voltage Drop</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MLO Panels</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Quad/Twin Breakers</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Re-Roof</fullName>
+                <default>false</default>
+                <controllingFieldValues>Structural Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Over-Spanned Rafters</fullName>
+                <default>false</default>
+                <controllingFieldValues>Structural Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Flat Roofs</fullName>
+                <default>false</default>
+                <controllingFieldValues>Structural Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Non Standard Roof</fullName>
+                <default>false</default>
+                <controllingFieldValues>Structural Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Vaulted Ceiling</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Multiple Buildings</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Fire Setback</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Large Systems</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Trenching</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Multiple Strings</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shading</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pre Sales Layout</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inverter Sizing</fullName>
+                <default>false</default>
+                <controllingFieldValues>Sales Issues</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Layout</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Reverse Tilt</fullName>
+                <default>false</default>
+                <controllingFieldValues>3rd Party Stamping</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>AHJ Database</fullName>
+                <default>false</default>
+                <controllingFieldValues>3rd Party Stamping</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>AHJ Corrections</fullName>
+                <default>false</default>
+                <controllingFieldValues>3rd Party Stamping</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Structural Modifications</fullName>
+                <default>false</default>
+                <controllingFieldValues>3rd Party Stamping</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+                <controllingFieldValues>Difficult AHJS</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MSP Upgrade</fullName>
+                <default>false</default>
+                <controllingFieldValues>Interconnection Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>COMPLEX</fullName>
+                <default>false</default>
+                <controllingFieldValues>Interconnection Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>INSET</fullName>
+                <default>false</default>
+                <controllingFieldValues>Structural Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>DQ</fullName>
+                <default>false</default>
+                <controllingFieldValues>Structural Complexity</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>UNPERMITTED</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>EXISTING SYSTEM</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System over 8 kW</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>More than 4 Arrays</fullName>
+                <default>false</default>
+                <controllingFieldValues>Other Job Specifics</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shading Mismatch - Sales</fullName>
+                <default>false</default>
+                <controllingFieldValues>Sales Issues</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Layout Mismatch - Sales</fullName>
+                <default>false</default>
+                <controllingFieldValues>Sales Issues</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shading Mismatch - Max Fit</fullName>
+                <default>false</default>
+                <controllingFieldValues>Sales Issues</controllingFieldValues>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>I_am_Owner__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Formula that represents whether the logged in user is the Assigned To user for this task. Used in Project Dashboard, list views, reports.</description>
+        <externalId>false</externalId>
+        <formula>IF(Assigned_To__c = $User.Id, TRUE, FALSE)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>I am Owner</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Milestone__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated manually on template or ad hoc.</description>
+        <externalId>false</externalId>
+        <label>Milestone</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Project Intake</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Site Survey</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permit</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interconnection</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inspection</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Project Closeout</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Order__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated manually on template. Represents the order that tasks should be completed. When a critical path task is status = compelete, next task in order will be started automatically.</description>
+        <externalId>false</externalId>
+        <label>Order</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Overdue__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Formula to represent if SLA Days Aging is greater than SLA Days.</description>
+        <externalId>false</externalId>
+        <formula>IF(AND(RecordType.Name = &apos;Ad Hoc&apos;, TODAY() &gt; Due_Date__c), TRUE, IF(SLA_Days_Aging__c &gt;  SLA_Days__c, TRUE, FALSE))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Overdue</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Parent_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Residential Installation
+This field identifies the parent task for a sub task</description>
+        <externalId>false</externalId>
+        <label>Parent Task</label>
+        <lookupFilter>
+            <active>true</active>
+            <booleanFilter>(1 OR 2) AND 3</booleanFilter>
+            <errorMessage>Parent Task must be Record Type &apos;Ad Hoc&apos; or &apos;Project Task&apos;</errorMessage>
+            <filterItems>
+                <field>Project_Task__c.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Ad Hoc</value>
+            </filterItems>
+            <filterItems>
+                <field>Project_Task__c.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Project Task</value>
+            </filterItems>
+            <filterItems>
+                <field>Project_Task__c.Residential_Project__c</field>
+                <operation>equals</operation>
+                <valueField>$Source.Residential_Project__c</valueField>
+            </filterItems>
+            <isOptional>false</isOptional>
+        </lookupFilter>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Sub Tasks</relationshipLabel>
+        <relationshipName>Sub_Tasks</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Project_Priority__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically based on Project Priority for all non &apos;Ad Hoc&apos; tasks. &apos;Ad Hoc&apos; task priority is set manually .</description>
+        <externalId>false</externalId>
+        <label>Priority</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Normal</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Fast-tracked</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Project_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Project Task</label>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Project Tasks (Project Task)</relationshipLabel>
+        <relationshipName>Project_Tasks1</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Required_Project_Fields__c</fullName>
+        <description>Residential Project Mgmt 
+Priti Rastogi 
+On a task template you can select the project fields that need to be populated before that task can be completed</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Required Project Fields are data fields on the project record that are required inputs for task completion. If one of these fields is associated with a project task, the system will validate that the field is populated before allowing task completion.</inlineHelpText>
+        <label>Required Project Fields</label>
+        <picklist>
+            <picklistValues>
+                <fullName>AHJ</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Scheduled Site Survey Date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Homeowner Scheduled Installation Date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Type</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Multi Level Home</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Main Service Panel Location</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Main Service Panel Manufacturer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Consumption Monitoring Compatible</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Main Breaker Location</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Main Breaker Rating (Amps)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Battery Storage</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Smart Thermostat</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Homeowner Utility Meter No.</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Homeowner Utility Account No.</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Can solar breaker be installed in MSP?</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>HOA</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Builder WO #</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Builder WO Date of Receipt</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Builder WO $ Value</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Actual Time (Hours)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tracking Number</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Escrow Date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PV Install Promised</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rough Wire Promised</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Trim Promised</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PTA Bldg Inspection Date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Witness Test date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Materials Ship-to location</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Requested Delivery Date</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Solar Rebate (Expected)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Scheduled AHJ Inspection</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Adders</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>8</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Residential_Project__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Project master.</description>
+        <externalId>false</externalId>
+        <label>Residential Project</label>
+        <referenceTo>Residential_Project__c</referenceTo>
+        <relationshipLabel>Project Tasks</relationshipLabel>
+        <relationshipName>Project_Tasks</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Rework_Category__c</fullName>
+        <description>Residential Installation Project Management
+This field gives an explanation category for why a task had to be reworked</description>
+        <externalId>false</externalId>
+        <label>Rework Category</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>true</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Role_Assignment__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Assigned manually at template, propagated down to clone tasks. Role Assignment connects the Assigned To user to related Project Team Member with matching role. Assigned To user will be automatically updated if Project Team Member with matching role is assigned.</description>
+        <externalId>false</externalId>
+        <label>Role Assignment</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Commissioning Technician</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Contract Administrator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Crew Lead</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Engineer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Support Engineer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Energy Consultant</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Engineer of Record</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Field Superintendent</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Financial Products Operations</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inspection Coordinator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Partner Manager</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interconnection Technician</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Partner Support Representative</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PC Supervisor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permit Runner</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permit Technician</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permitting Coordinator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pricing Analyst</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Project Admin</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Project Coordinator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Project Design Administrator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Project Manager</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rebate Administrator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rebate and Interconnection Coordinator</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Regional Operations Manager</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Scheduler</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Site Surveyor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Technical Sales Project Manager</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tier 1 Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tier 2 Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Warehouse Supervisor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>SLA_Days_Aging__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+SLA clock for task completion.</description>
+        <externalId>false</externalId>
+        <formula>IF(Status_Type__c = &apos;Open&apos;, 
+   now() - Elapsed_DateTime__c + Time_Differential__c, 
+   IF(Status_Type__c = &apos;Hold&apos;, 
+       Time_Differential__c, 
+       IF(Status_Type__c = &apos;Completed&apos;,
+           End_DateTime__c - Elapsed_DateTime__c +  Time_Differential__c , 
+           NULL)))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>SLA Days Aging</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SLA_Days__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated manually at template level, propagated down to clones. Defined the target timeline for task completion.</description>
+        <externalId>false</externalId>
+        <label>SLA Days</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SLA_Flag__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Visual indicator if task is overdue. Based on SLA Days vs. SLA Days Aging</description>
+        <externalId>false</externalId>
+        <formula>IF(  OR(ISBLANK(SLA_Days__c),ISBLANK(SLA_Days_Aging__c)), &apos;&apos;, IF(SLA_Days_Aging__c &lt; SLA_Days__c, IMAGE(&quot;/img/samples/flag_green.gif&quot;, &quot;green&quot;, 20, 20), IMAGE(&quot;/img/samples/flag_red.gif&quot;, &quot;red&quot;, 20, 20)))</formula>
+        <label>SLA Flag</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Start_DateTime__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically at time of task start. Used in SLA Days Aging formula</description>
+        <externalId>false</externalId>
+        <label>Start DateTime</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Status_Type__c</fullName>
+        <description>Residential Project Mgmt
+This fields groups the different status types to be used in code so they are easier to manage</description>
+        <externalId>false</externalId>
+        <formula>IF(TEXT(Status__c) = &apos;Not Started&apos;, &apos;New&apos;, IF(OR(TEXT(Status__c) = &apos;Pending Approval&apos;, TEXT(Status__c) = &apos;In Progress&apos;, TEXT(Status__c) = &apos;Needs Rework&apos;), &apos;Open&apos;, IF(OR(TEXT(Status__c) = &apos;Completed&apos;, TEXT(Status__c) = &apos;Approved&apos;), &apos;Completed&apos;, IF(TEXT(Status__c) = &apos;Cancelled&apos;, &apos;Cancelled&apos;, &apos;Hold&apos;))))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Status Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Statuses of task, based on task type. Key data point for task automation and reporting. ** Edit with Caution **</description>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Not Started</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Needs Rework</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Hold</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pending Rework</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pending Approval</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pending Cancellation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>true</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Task_Type_Name__c</fullName>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated manually on template, propagated down. Task Type Name is the Name of the Template task without the Account name prefix. Used in Project Dashboard and to group tasks for analytics.</description>
+        <externalId>false</externalId>
+        <label>Task Type Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Task_Type__c</fullName>
+        <description>Residential Installation Project Management
+Determines the type of task this is. Used for validation and status picklist</description>
+        <externalId>false</externalId>
+        <label>Task Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Ad Hoc</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Approval</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Escalation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Task</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Template_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically. Lookup to the Task Template Parent. This field is used to keep templates in sync with their clones.</description>
+        <externalId>false</externalId>
+        <label>Template Task</label>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Project Tasks</relationshipLabel>
+        <relationshipName>Project_Tasks</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Time_Differential__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically. Used in the SLA Aging formula. 
+Used to track time through hold periods.</description>
+        <externalId>false</externalId>
+        <label>Time Differential</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Time_from_Project_Start__c</fullName>
+        <description>If task is finished, this field will represent the time between the start of the project and the task completion date, otherwise it will be blank.</description>
+        <externalId>false</externalId>
+        <formula>IF(NOT(ISNULL(End_DateTime__c)), End_DateTime__c - Residential_Project__r.CreatedDate, NULL)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Time from Project Start</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Times_Repeated__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+Populated programmatically. Used to count times task has gone from a completed status to an active status.</description>
+        <externalId>false</externalId>
+        <label>Times Repeated</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Project Task</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Project Task Name</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>true</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Project Tasks</pluralLabel>
+    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>Ad_Hoc</fullName>
+        <active>true</active>
+        <description>Used to create one off tasks on residential projects. Not to be used in project templates.</description>
+        <label>Ad Hoc</label>
+        <picklistValues>
+            <picklist>Escalation_Category__c</picklist>
+            <values>
+                <fullName>3rd Party Stamping</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Complexity</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Information</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Other Job Specifics</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Issues</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Complexity</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Escalation_Sub_Category__c</picklist>
+            <values>
+                <fullName>3-Phase</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AC Mod Voltage Drop</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Corrections</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Database</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>COMPLEX</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conductor Taps</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>EXISTING SYSTEM</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Fire Setback</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Flat Roofs</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>INSET</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inverter Sizing</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Large Systems</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Load Relocation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MCB Downsize</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MLO Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MPU Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MSP Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Documents</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>More than 4 Arrays</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Buildings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Strings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Non Standard Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Over-Spanned Rafters</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pre Sales Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Quad%2FTwin Breakers</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Re-Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reverse Tilt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Max Fit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Stab-Lok Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Modifications</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sub-Panel POI</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>System over 8 kW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Trenching</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>UNPERMITTED</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Un-Labeled MSP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Vaulted Ceiling</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Milestone__c</picklist>
+            <values>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Intake</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Survey</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Project_Priority__c</picklist>
+            <values>
+                <fullName>Fast-tracked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Normal</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Required_Project_Fields__c</picklist>
+            <values>
+                <fullName>AHJ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Homeowner Scheduled Installation Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Type</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduled Site Survey Date</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Rework_Category__c</picklist>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Role_Assignment__c</picklist>
+            <values>
+                <fullName>Commissioning Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Crew Lead</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Engineer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Energy Consultant</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Engineer of Record</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Field Superintendent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Partner Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PC Supervisor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Partner Support Representative</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Runner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pricing Analyst</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Admin</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Design Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate and Interconnection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Regional Operations Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduler</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Surveyor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Technical Sales Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 1 Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 2 Design</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Task_Type__c</picklist>
+            <values>
+                <fullName>Ad Hoc</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Escalation</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Project_Task</fullName>
+        <active>true</active>
+        <description>Used on all project tasks that come from a template</description>
+        <label>Project Task</label>
+        <picklistValues>
+            <picklist>Escalation_Category__c</picklist>
+            <values>
+                <fullName>3rd Party Stamping</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Complexity</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Information</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Other Job Specifics</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Issues</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Complexity</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Escalation_Sub_Category__c</picklist>
+            <values>
+                <fullName>3-Phase</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AC Mod Voltage Drop</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Corrections</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Database</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>COMPLEX</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conductor Taps</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>EXISTING SYSTEM</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Fire Setback</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Flat Roofs</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>INSET</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inverter Sizing</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Large Systems</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Load Relocation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MCB Downsize</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MLO Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MPU Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MSP Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Documents</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>More than 4 Arrays</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Buildings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Strings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Non Standard Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Over-Spanned Rafters</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pre Sales Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Quad%2FTwin Breakers</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Re-Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reverse Tilt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Max Fit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Stab-Lok Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Modifications</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sub-Panel POI</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>System over 8 kW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Trenching</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>UNPERMITTED</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Un-Labeled MSP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Vaulted Ceiling</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Milestone__c</picklist>
+            <values>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Closeout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Intake</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Survey</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Project_Priority__c</picklist>
+            <values>
+                <fullName>Fast-tracked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Normal</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Required_Project_Fields__c</picklist>
+            <values>
+                <fullName>AHJ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Homeowner Scheduled Installation Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Type</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduled Site Survey Date</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Rework_Category__c</picklist>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Role_Assignment__c</picklist>
+            <values>
+                <fullName>Commissioning Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Crew Lead</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Engineer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Energy Consultant</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Engineer of Record</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Field Superintendent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Partner Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PC Supervisor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Partner Support Representative</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Runner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pricing Analyst</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Admin</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Design Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate and Interconnection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Regional Operations Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduler</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Surveyor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Technical Sales Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 1 Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 2 Design</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Task_Type__c</picklist>
+            <values>
+                <fullName>Ad Hoc</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Escalation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Task</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Sub_Task</fullName>
+        <active>true</active>
+        <description>A stripped down task layout used for sub tasks of parents</description>
+        <label>Sub Task</label>
+        <picklistValues>
+            <picklist>Escalation_Category__c</picklist>
+            <values>
+                <fullName>3rd Party Stamping</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Complexity</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Information</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Other Job Specifics</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Issues</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Complexity</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Escalation_Sub_Category__c</picklist>
+            <values>
+                <fullName>3-Phase</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AC Mod Voltage Drop</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Corrections</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Database</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>COMPLEX</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conductor Taps</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>EXISTING SYSTEM</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Fire Setback</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Flat Roofs</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>INSET</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inverter Sizing</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Large Systems</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Load Relocation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MCB Downsize</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MLO Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MPU Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MSP Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Documents</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>More than 4 Arrays</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Buildings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Strings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Non Standard Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Over-Spanned Rafters</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pre Sales Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Quad%2FTwin Breakers</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Re-Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reverse Tilt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Max Fit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Stab-Lok Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Modifications</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sub-Panel POI</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>System over 8 kW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Trenching</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>UNPERMITTED</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Un-Labeled MSP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Vaulted Ceiling</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Milestone__c</picklist>
+            <values>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Closeout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Intake</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Survey</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Project_Priority__c</picklist>
+            <values>
+                <fullName>Fast-tracked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Normal</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Required_Project_Fields__c</picklist>
+            <values>
+                <fullName>AHJ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Homeowner Scheduled Installation Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Type</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduled Site Survey Date</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Rework_Category__c</picklist>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Role_Assignment__c</picklist>
+            <values>
+                <fullName>Commissioning Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Crew Lead</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Engineer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Energy Consultant</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Engineer of Record</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Field Superintendent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Partner Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PC Supervisor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Partner Support Representative</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Runner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pricing Analyst</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Admin</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Design Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate and Interconnection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Regional Operations Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduler</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Surveyor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Technical Sales Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 1 Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 2 Design</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Task_Type__c</picklist>
+            <values>
+                <fullName>Ad Hoc</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Escalation</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Task_Template</fullName>
+        <active>true</active>
+        <description>Used for all tasks in a project template.</description>
+        <label>Task Template</label>
+        <picklistValues>
+            <picklist>Escalation_Category__c</picklist>
+            <values>
+                <fullName>3rd Party Stamping</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Complexity</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Information</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Other Job Specifics</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Issues</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Complexity</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Escalation_Sub_Category__c</picklist>
+            <values>
+                <fullName>3-Phase</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AC Mod Voltage Drop</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Corrections</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>AHJ Database</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>COMPLEX</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conductor Taps</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DQ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Difficult AHJS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>EXISTING SYSTEM</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Fire Setback</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Flat Roofs</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>INSET</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inverter Sizing</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Large Systems</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Layout Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Load Relocation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MCB Downsize</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MLO Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MPU Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>MSP Upgrade</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing Documents</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>More than 4 Arrays</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Buildings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multiple Strings</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Non Standard Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Over-Spanned Rafters</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pre Sales Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Quad%2FTwin Breakers</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Re-Roof</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Reverse Tilt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Max Fit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Mismatch - Sales</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Stab-Lok Panels</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Structural Modifications</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sub-Panel POI</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>System over 8 kW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Trenching</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>UNPERMITTED</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Un-Labeled MSP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Vaulted Ceiling</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Milestone__c</picklist>
+            <values>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Closeout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Intake</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Survey</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Project_Priority__c</picklist>
+            <values>
+                <fullName>Fast-tracked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Normal</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Required_Project_Fields__c</picklist>
+            <values>
+                <fullName>AHJ</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Actual Time %28Hours%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Battery Storage</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Builder WO %23</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Builder WO %24 Value</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Builder WO Date of Receipt</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Can solar breaker be installed in MSP%3F</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Consumption Monitoring Compatible</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Escrow Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>HOA</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Homeowner Scheduled Installation Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Homeowner Utility Account No%2E</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Homeowner Utility Meter No%2E</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Type</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Main Breaker Location</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Main Breaker Rating %28Amps%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Main Service Panel Location</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Main Service Panel Manufacturer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Materials Ship-to location</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Multi Level Home</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PTA Bldg Inspection Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PV Install Promised</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Requested Delivery Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rough Wire Promised</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduled AHJ Inspection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduled Site Survey Date</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Smart Thermostat</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Solar Rebate %28Expected%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>System Adders</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tracking Number</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Trim Promised</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Witness Test date</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Rework_Category__c</picklist>
+            <values>
+                <fullName>Incomplete Site Survey</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Role_Assignment__c</picklist>
+            <values>
+                <fullName>Commissioning Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contract Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Crew Lead</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Engineer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Energy Consultant</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Engineer of Record</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Field Superintendent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Partner Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Interconnection Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PC Supervisor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Partner Support Representative</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Runner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permit Technician</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pricing Analyst</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Admin</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Design Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate Administrator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate and Interconnection Coordinator</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Regional Operations Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Scheduler</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Site Surveyor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Technical Sales Project Manager</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 1 Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Tier 2 Design</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Hold</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Not Started</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Task_Type__c</picklist>
+            <values>
+                <fullName>Ad Hoc</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Approval</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Escalation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Task</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <excludedStandardButtons>New</excludedStandardButtons>
+        <lookupDialogsAdditionalFields>Residential_Project__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Residential_Project__c</searchFilterFields>
+        <searchFilterFields>Status__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Active_to_Not_Started_Validation</fullName>
+        <active>true</active>
+        <description>Once a task has been started, it cannot go back into a &apos;Not Started&apos; status.</description>
+        <errorConditionFormula>AND( $User.ByPassValidation__c = FALSE, Status_Type__c == &apos;New&apos; , Priorvalue(Status_Type__c) != &apos;New&apos;, Apex_Updated__c == PRIORVALUE(Apex_Updated__c))</errorConditionFormula>
+        <errorMessage>Once a task is started it cannot go back into &apos;Not Started&apos;</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Completed_to_In_Progress_Validation</fullName>
+        <active>true</active>
+        <description>Once a task is completed it cannot go back into a &apos;In Progress&apos; status.</description>
+        <errorConditionFormula>AND( $User.ByPassValidation__c = FALSE, TEXT(Status__c) = &apos;In Progress&apos; , ISPICKVAL(PRIORVALUE(Status__c), &apos;Completed&apos;))</errorConditionFormula>
+        <errorMessage>Once a task is &apos;Completed&apos; it cannot go back to &apos;In Progress&apos;</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Critical_Path_Order_Within_Range</fullName>
+        <active>true</active>
+        <description>The Order of a critical path task must not be below 1 or above the highest existing order number +1</description>
+        <errorConditionFormula>AND(RecordType.DeveloperName = &apos;Task_Template&apos;, Critical_Path__c = TRUE, OR(Order__c &lt; 1, Order__c &gt; (Residential_Project__r.Max_Order__c +1)))</errorConditionFormula>
+        <errorMessage>The order of this task is invalid. It must not be lower than 1 or above the highest existing order +1</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Critical_Path_and_Order</fullName>
+        <active>true</active>
+        <description>The critical path checkbox cannot be changed in the same action as order</description>
+        <errorConditionFormula>AND(PRIORVALUE(Critical_Path__c) != Critical_Path__c, PRIORVALUE(Order__c) != Order__c)</errorConditionFormula>
+        <errorMessage>Critical Path and Order cannot be changed in the same action. Please update one at a time.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Critical_Path_on_Template_Only</fullName>
+        <active>false</active>
+        <description>The critical path can be set on templates only</description>
+        <errorConditionFormula>AND(Critical_Path__c = TRUE,  Template_Task__c = NULL,  RecordType.Name != &apos;Task Template&apos;)</errorConditionFormula>
+        <errorMessage>Critical Path can only be set at the template level.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Critical_Path_without_Order</fullName>
+        <active>true</active>
+        <description>All critical path tasks must have and order assigned to them.</description>
+        <errorConditionFormula>AND(Critical_Path__c = TRUE, OR(ISNULL(Order__c), Order__c = 0))</errorConditionFormula>
+        <errorMessage>All critical path tasks must have an order assigned to them</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Homeowner_Scheduled_Installation_Date</fullName>
+        <active>false</active>
+        <description>Validates the Homeowner schedule installation date field on the project is populated before completing the supporting task</description>
+        <errorConditionFormula>AND(Name = &apos;Schedule Install with Homeowner&apos;,  ISNULL(Residential_Project__r.Homeowner_Scheduled_Installation_Date__c), Status_Type__c = &apos;Completed&apos;)</errorConditionFormula>
+        <errorMessage>The Homeowner Scheduled Installation Date field on the project must be populated before completing this task.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>In_Progress_to_Completed_Validation</fullName>
+        <active>true</active>
+        <description>A task must be in an &apos;In Progress&apos; status to be moved to Completed</description>
+        <errorConditionFormula>AND( $User.ByPassValidation__c = FALSE, ISPICKVAL(Status__c, &apos;Completed&apos;), PRIORVALUE(Status_Type__c) != &apos;Open&apos;, ISCHANGED(Status__c))</errorConditionFormula>
+        <errorMessage>A task must be In Progress before it moves to Completed</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Needs_Rework_to_In_Progress_Validation</fullName>
+        <active>true</active>
+        <description>A task cannot go from a &apos;Needs Rework&apos; status to an &apos;In Progress&apos; status</description>
+        <errorConditionFormula>AND( $User.ByPassValidation__c = FALSE, ISPICKVAL(Status__c, &apos;In Progress&apos;), ISPICKVAL(PRIORVALUE(Status__c), &apos;Needs Rework&apos;))</errorConditionFormula>
+        <errorMessage>A task cannot go from &apos;Needs Rework&apos; to &apos;In Progress&apos;</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Pending_Rework_to_In_Progress</fullName>
+        <active>true</active>
+        <description>A task can only go from Pending Rework to In Progress automatically. It can not be manually changed.</description>
+        <errorConditionFormula>AND(NOT(ISCHANGED(Apex_Updated__c)),  $User.ByPassValidation__c = FALSE, TEXT(Status__c) = &apos;In Progress&apos; , ISPICKVAL(PRIORVALUE(Status__c), &apos;Pending Rework&apos;))</errorConditionFormula>
+        <errorMessage>Please Complete the Task Rework Request to change the status to &apos;In Progress&apos;</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Require_Task_Assignment</fullName>
+        <active>true</active>
+        <description>If a task is in progress or pending approval an assigned to user is required</description>
+        <errorConditionFormula>AND(OR(TEXT(Status__c) = &apos;In Progress&apos;,TEXT(Status__c) = &apos;Pending Approval&apos;) , Assigned_To__c = NULL)</errorConditionFormula>
+        <errorMessage>Assigned To User is Required</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Sales_to_Operation_Validation</fullName>
+        <active>false</active>
+        <description>Validates that all EC required fields on the Project are populated before the Sales to Operation task can be completed</description>
+        <errorConditionFormula>AND(Name = &apos;Sales to Operations Handoff&apos;, 
+Status_Type__c = &apos;Completed&apos;, OR(
+ ISPICKVAL(Residential_Project__r.HOA__c, &apos;&apos;),
+ ISBLANK(Residential_Project__r.Homeowner_Utility_Account_No__c),  ISBLANK(Residential_Project__r.Homeowner_Utility_Meter_No__c),  ISPICKVAL(Residential_Project__r.Main_Breaker_Location__c,&apos;&apos;), ISPICKVAL(Residential_Project__r.Main_Breaker_Rating_Amps__c,&apos;&apos;), ISPICKVAL(Residential_Project__r.Main_Service_Panel_Location__c,&apos;&apos;),ISPICKVAL(Residential_Project__r.Main_Service_Panel_Manufacturer__c,&apos;&apos;),ISPICKVAL(Residential_Project__r.Smart_Thermostat__c,&apos;&apos;)))</errorConditionFormula>
+        <errorMessage>To complete this task, please populate the following fields. HOA, Homeowner Utility Account No, Homeowner Utility Meter No, Main Breaker Location, Main Breaker Rating(Amps), Main Service Panel Location, Main Service Panel Manufacturer, Smart Thermostat</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Schedule_AHJ_Inspection</fullName>
+        <active>false</active>
+        <description>Validates the Scheudle AHJ Inspection date field on the project is populated before completing the supporting task</description>
+        <errorConditionFormula>AND(Name = &apos;Schedule Inspection&apos;,  ISNULL( Residential_Project__r.Scheduled_AHJ_Inspection__c ), Status_Type__c = &apos;Completed&apos;)</errorConditionFormula>
+        <errorMessage>The Schedule AHJ Inspection field on the project must be populated before completing this task.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Schedule_Site_Survey_Date_Validation</fullName>
+        <active>false</active>
+        <description>Validate the Site Survey Date field on the Project is populated before the Homeowner Welcome Call or Schedule Site Survey tasks can be completed</description>
+        <errorConditionFormula>AND(Name = &apos;Homeowner Welcome Call&apos; , ISNULL( Residential_Project__r.Scheduled_Site_Survey_Date__c ), Status_Type__c = &apos;Completed&apos;)</errorConditionFormula>
+        <errorMessage>The Scheduled Site Survey Date field on the Project must be populated before completing this task.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Task_Progression_Restriction</fullName>
+        <active>true</active>
+        <description>Only tasks next in line can be started.</description>
+        <errorConditionFormula>AND(NOT(ISCHANGED(Apex_Updated__c)),IF(ISNULL(Residential_Project__r.Last_Completed_Step__c), AND(Critical_Path__c = TRUE,ISPICKVAL(PRIORVALUE(Status__c), &apos;Not Started&apos;), ISPICKVAL(Status__c, &apos;In Progress&apos;), Order__c &gt; 1),  AND(Critical_Path__c = TRUE, ISPICKVAL(PRIORVALUE(Status__c), &apos;Not Started&apos;), ISPICKVAL(Status__c, &apos;In Progress&apos;), Order__c &gt; (Residential_Project__r.Last_Completed_Step__c +1))))</errorConditionFormula>
+        <errorMessage>Only tasks next in order can become &apos;In Progress&apos;</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>New_Ad_Hoc_Sub_Task</fullName>
+        <availability>online</availability>
+        <description>Button creates a new Ad Hoc sub task with pre-populated fields</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Ad Hoc Sub Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/a74/e?retURL=%2F{!Project_Task__c.Id}&amp;00N29000000VhmK=Ad+Hoc&amp;RecordType=01234000000GHgI&amp;CF00N34000005CDo4={!Project_Task__c.Residential_Project__c}&amp;CF00N34000005CDo4_lkid={!Project_Task__c.Residential_ProjectId__c}&amp;CF00N23000000L64Q={!Project_Task__c.Name}&amp;CF00N23000000L64Q_lkid={!Project_Task__c.Id}&amp;00N34000005CDog=Not+Started</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Ad_Hoc_Task</fullName>
+        <availability>online</availability>
+        <description>Creates a new task with record type Ad Hoc</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Ad Hoc Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>/a74/e?retURL=%2F{!Residential_Project__c.Id}&amp;RecordType=01234000000BmbM&amp;CF00N34000005CDo4={!Residential_Project__c.Name}&amp;00N34000005cphD=Ad+Hoc&amp;00N34000005CDog=Not+Started</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Ad_Hoc_Task1</fullName>
+        <availability>online</availability>
+        <description>Creates a new task with record type Ad Hoc</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Ad Hoc Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/ResidentialProjectNewTaskRedirect?Residential_Project__c={!Residential_Project__c.Id}&amp;Residential_Project_Name={!Residential_Project__c.Name}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Approval_Sub_Task</fullName>
+        <availability>online</availability>
+        <description>Use this button to create a new approval sub task</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Approval Sub Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/a74/e?retURL=%2F{!Project_Task__c.Id}&amp;00N29000000VhmK=Approval&amp;RecordType=012290000004PdB&amp;CF00N34000005CDo4={!Project_Task__c.Residential_Project__c}&amp;CF00N34000005CDo4_lkid={!Project_Task__c.Residential_ProjectId__c}&amp;CF00N23000000L64Q={!Project_Task__c.Name}&amp;CF00N23000000L64Q_lkid={!Project_Task__c.Id}&amp;00N34000005CDog=Not+Started</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Escalation_Sub_Task</fullName>
+        <availability>online</availability>
+        <description>Creates a new sub task with task type escalation</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Escalation Sub Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/a74/e?retURL=%2F{!Project_Task__c.Id}&amp;00N34000005cphD=Escalation&amp;RecordType=01234000000GHgI&amp;CF00N34000005CDo4={!Project_Task__c.Residential_Project__c}&amp;CF00N34000005CDo4_lkid={!Project_Task__c.Residential_ProjectId__c}&amp;CF00N34000005cphA={!Project_Task__c.Name}&amp;CF00N34000005cphA_lkid={!Project_Task__c.Id}&amp;00N34000005CDog=Not+Started</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Escalation_Sub_Task_Partner</fullName>
+        <availability>online</availability>
+        <description>Creates a new sub task with task type escalation</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Escalation Sub Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/SPCommunityProjectTaskNew?objecttype=Project_Task__c&amp;retURL=%2F{!Project_Task__c.Id}&amp;Task_Type___c=Escalation&amp;RecordType=01234000000GHgI&amp;Residential_Project__c={!Project_Task__c.Residential_ProjectId__c}&amp;Parent_Task__c={!Project_Task__c.Id}&amp;Status__c=Not+Started</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Template_Task</fullName>
+        <availability>online</availability>
+        <description>Creates a new task with record type of &apos;Task Template&apos;</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>New Template Task</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/a74/e?retURL=%2F{!Residential_Project__c.Id}&amp;RecordType=01234000000BmbP&amp;CF00N34000005CDo4={!Residential_Project__c.Name}</url>
+    </webLinks>
+</CustomObject>

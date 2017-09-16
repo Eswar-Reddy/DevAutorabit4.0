@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>WorkOrderEdit</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>GeneratePdf</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <content>WorkOrderNew</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <enableFeeds>true</enableFeeds>
+    <fields>
+        <fullName>AccountId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Address</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Am_i_workorder_owner_manager__c</fullName>
+        <description>Service Management : Adding the field for reporting purpose. Managers/Team Leads wants to see what their team&apos;s workorders are. My Teams cases look for role hierarchies and cant be implemented due to a) Different team members having same role but different team leads (TLs will see other team&apos;s work orders which they don&apos;t want to)  b) Frequently changing teams</description>
+        <externalId>false</externalId>
+        <formula>IF(OR(Owner:User.ManagerId = $User.Id,Owner:User.Manager.ManagerId = $User.Id,Owner:User.Manager.Manager.ManagerId = $User.Id),&quot;Yes&quot;, &quot;No&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Am i workorder owner manager</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AssetId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>BusinessHoursId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CaseId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Commitment_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Commitment Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Completed_Date__c</fullName>
+        <description>Case 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>Completed Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>ContactId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>CurrencyIsoCode</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Date_Action_Completed__c</fullName>
+        <description>Case 00680997 - Need way to handle Unauthorized RMA Materials process - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>Date Action Completed</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Days_Opened__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(
+AND(TEXT(Status) = &apos;Closed&apos;, NOT(ISBLANK(Completed_Date__c))), 
+Completed_Date__c - DATEVALUE(CreatedDate),
+TODAY() - DATEVALUE(CreatedDate)
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Days Opened</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Description</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Discount</fullName>
+    </fields>
+    <fields>
+        <fullName>Duration</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>DurationType</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>EndDate</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>GrandTotal</fullName>
+    </fields>
+    <fields>
+        <fullName>IsClosed</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>LineItemCount</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>LocationId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>OwnerId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Owner_Name__c</fullName>
+        <description>Case 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <formula>IF(NOT(ISBLANK(Owner:User.Id)), Owner:User.FirstName &amp; &apos; &apos; &amp; Owner:User.LastName,
+IF(NOT(ISBLANK(Owner:Queue.Id)), Owner:Queue.Name, null)
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Owner Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ParentWorkOrderId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Pricebook2Id</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Priority</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>Low</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Medium</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>High</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Critical</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>RMA__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Case 00680997 - Need way to handle Unauthorized RMA Materials process - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>RMA</label>
+        <referenceTo>RMA__c</referenceTo>
+        <relationshipLabel>Service Requests</relationshipLabel>
+        <relationshipName>Work_Orders</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Reason_Code__c</fullName>
+        <description>Case 00680997 - Need way to handle Unauthorized RMA Materials process - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>Reason Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Missing RMA Label</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Excess / Unauthorized Parts</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Short</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Wrong Serial Numbers</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cosmetic Damage</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>MultiselectPicklist</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Record_Type__c</fullName>
+        <description>Case# 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <formula>RecordType.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Record Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Requested_Date__c</fullName>
+        <description>Case# 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>Requested Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Response_Code__c</fullName>
+        <description>Case 00680997 - Need way to handle Unauthorized RMA Materials process - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>Response Code</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Receive</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Hold for Pickup</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Response_Comments__c</fullName>
+        <externalId>false</externalId>
+        <label>Response Comments</label>
+        <length>32768</length>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>RootWorkOrderId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ServiceAppointmentCount</fullName>
+    </fields>
+    <fields>
+        <fullName>StartDate</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Status</fullName>
+        <picklist>
+            <picklistValues>
+                <fullName>New</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Assigned</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Closed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Action Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Closed – Unresolved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Closed – Duplicate</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>StatusCategory</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Subject</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Subtotal</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Tax</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>TotalPrice</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Work_Order_Created_By_Me__c</fullName>
+        <description>Case# 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <formula>IF(CreatedById = $User.Id , &apos;Yes&apos;, &apos;No&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Work Order Created By Me</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <listViews>
+        <fullName>All_Service_Requests_I_Received</fullName>
+        <columns>Name</columns>
+        <columns>Subject</columns>
+        <columns>Account</columns>
+        <columns>Priority</columns>
+        <columns>Status</columns>
+        <columns>Requested_Date__c</columns>
+        <columns>CreatedBy</columns>
+        <columns>CreatedDate</columns>
+        <filterScope>Mine</filterScope>
+        <label>All Service Requests I Received</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>All_Service_Requests_I_Sent</fullName>
+        <columns>Name</columns>
+        <columns>Subject</columns>
+        <columns>Account</columns>
+        <columns>Priority</columns>
+        <columns>Status</columns>
+        <columns>Owner_Name__c</columns>
+        <columns>CreatedDate</columns>
+        <columns>Requested_Date__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Work_Order_Created_By_Me__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </filters>
+        <label>All Service Requests I Sent</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Cash_Management_Queue_WorkOrder</fullName>
+        <columns>Name</columns>
+        <columns>Owner</columns>
+        <columns>LastModifiedDate</columns>
+        <columns>LastModifiedBy</columns>
+        <columns>StartDate</columns>
+        <columns>EndDate</columns>
+        <columns>Subject</columns>
+        <columns>Status</columns>
+        <columns>Completed_Date__c</columns>
+        <columns>Owner_Name__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Owner</field>
+            <operation>equals</operation>
+            <value>vcar</value>
+        </filters>
+        <filters>
+            <field>Owner</field>
+            <operation>equals</operation>
+            <value>kclu</value>
+        </filters>
+        <filters>
+            <field>Owner</field>
+            <operation>equals</operation>
+            <value>rtul</value>
+        </filters>
+        <filters>
+            <field>Owner</field>
+            <operation>equals</operation>
+            <value>blig</value>
+        </filters>
+        <label>Cash Management Queue</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Closed_Service_Requests_I_Sent</fullName>
+        <columns>Name</columns>
+        <columns>Subject</columns>
+        <columns>Account</columns>
+        <columns>Priority</columns>
+        <columns>Status</columns>
+        <columns>Requested_Date__c</columns>
+        <columns>CreatedBy</columns>
+        <columns>CreatedDate</columns>
+        <columns>Response_Code__c</columns>
+        <columns>RMA__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Work_Order_Created_By_Me__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operation>equals</operation>
+            <value>Closed</value>
+        </filters>
+        <label>Closed Service Requests I Sent</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Commercial_Marketing_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Commercial Marketing</label>
+        <queue>Commercial_Marketing</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Contract_Management</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Record_Type__c</field>
+            <operation>equals</operation>
+            <value>FPO Case</value>
+        </filters>
+        <label>Cash Management</label>
+        <language>en_US</language>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Contract_Management_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Contract Management</label>
+        <queue>Contract_Management</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Core_Inbound_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Resolution Specialist Queue</label>
+        <queue>Core_Inbound_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Design_Support_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Residential Performance SR Queue</label>
+        <queue>Design_Support_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>GBFS_NA_TM_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>@GBFS_NA_TM</label>
+        <queue>GBFS_NA_TM</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>HomeSale_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>HomeSale Queue</label>
+        <queue>HomeSale_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Lead_Management_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Lead Management Queue</label>
+        <queue>Lead_Management_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Loss_Mitigation_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Loss Mitigation</label>
+        <queue>Loss_Mitigation</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Marketing_ROW_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Marketing ROW Queue</label>
+        <queue>Marketing_ROW_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Marketing_Support_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Marketing Support Queue</label>
+        <queue>Marketing_Support_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>My_WorkOrders</fullName>
+        <filterScope>Mine</filterScope>
+        <label>My Work Orders</label>
+    </listViews>
+    <listViews>
+        <fullName>New_Homes_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>New Homes Queue</label>
+        <queue>New_Homes_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Open_Service_Requests_I_Received</fullName>
+        <columns>Name</columns>
+        <columns>Subject</columns>
+        <columns>Account</columns>
+        <columns>Priority</columns>
+        <columns>Status</columns>
+        <columns>Requested_Date__c</columns>
+        <columns>CreatedBy</columns>
+        <columns>CreatedDate</columns>
+        <columns>Days_Opened__c</columns>
+        <filterScope>Mine</filterScope>
+        <filters>
+            <field>Status</field>
+            <operation>notEqual</operation>
+            <value>Closed,Action Completed</value>
+        </filters>
+        <label>Open Service Requests I Received</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Open_Service_Requests_I_Sent</fullName>
+        <columns>Name</columns>
+        <columns>Subject</columns>
+        <columns>Account</columns>
+        <columns>Priority</columns>
+        <columns>Status</columns>
+        <columns>Owner_Name__c</columns>
+        <columns>CreatedDate</columns>
+        <columns>Requested_Date__c</columns>
+        <columns>Days_Opened__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Work_Order_Created_By_Me__c</field>
+            <operation>equals</operation>
+            <value>Yes</value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operation>notEqual</operation>
+            <value>Closed,Action Completed</value>
+        </filters>
+        <label>Open Service Requests I Sent</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Partner_Marketing_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Partner Marketing Queue</label>
+        <queue>Partner_Marketing_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Partner_Portal_Support_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Partner Portal Support Queue</label>
+        <queue>Partner_Portal_Support_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Partner_Training_Support_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Partner Training Support Queue</label>
+        <queue>Partner_Training_Support_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Refinance_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Refinance Queue</label>
+        <queue>Refinance_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Residential_Field_Technician_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Residential Field Technician Queue</label>
+        <queue>Residential_Field_Technician_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Residential_Supervisor_Que_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Field Service Account Representative Que</label>
+        <queue>Residential_Supervisor_Que</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_Belgium_FL_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR Belgium FL</label>
+        <queue>Service_Request_CSR_Belgium_FL</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_Belgium_FR_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR Belgium FR</label>
+        <queue>Service_Request_CSR_Belgium_FR</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_EU_R_C_Distributors_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR EU R&amp;C Distributors</label>
+        <queue>Service_Request_CSR_EU_R_C_Distributors</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_France_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR France</label>
+        <queue>Service_Request_CSR_France</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_Germany_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR Germany</label>
+        <queue>Service_Request_CSR_Germany</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_Italy_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR Italy</label>
+        <queue>Service_Request_CSR_Italy</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_Netherlands_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR Netherlands</label>
+        <queue>Service_Request_CSR_Netherlands</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_Spain_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR Spain</label>
+        <queue>Service_Request_CSR_Spain</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_CSR_UK_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request CSR UK</label>
+        <queue>Service_Request_CSR_UK</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_Belgium_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE Belgium</label>
+        <queue>Service_Request_TSE_Belgium</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_France_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE France</label>
+        <queue>Service_Request_TSE_France</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_Germany_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE Germany</label>
+        <queue>Service_Request_TSE_Germany</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_Italy_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE Italy</label>
+        <queue>Service_Request_TSE_Italy</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_Netherlands_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE Netherlands</label>
+        <queue>Service_Request_TSE_Netherlands</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_Spain_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE Spain</label>
+        <queue>Service_Request_TSE_Spain</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Service_Request_TSE_UK_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Service Request TSE UK</label>
+        <queue>Service_Request_TSE_UK</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>SunPowerFinancing_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>SunPowerFinancing Queue</label>
+        <queue>SunPowerFinancing_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>System_Support_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>System Support Queue</label>
+        <queue>System_Support_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>TSE_NA_Escalation_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>TSE Product Support</label>
+        <queue>TSE_NA_Escalation</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>TSE_NA_RMA_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>TSE-NA_RMA</label>
+        <queue>TSE_NA_RMA</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>TechnicalSupportQueueNA_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Technical Support Queue NA</label>
+        <queue>TechnicalSupportQueueNA</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Tier2EscalationsQueue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Tier-2 Escalations Queue</label>
+        <queue>Tier2EscalationsQueue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Tier_2_ATSE_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Tier-2 ATSE Queue</label>
+        <queue>Tier_2_ATSE_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Tier_3_Escalations_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Tier-3 Escalations Queue</label>
+        <queue>Tier_3_Escalations_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Wet_Sign_Queue_WorkOrder</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Wet_Sign Queue</label>
+        <queue>Wet_Sign_Queue</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>Service_Request</fullName>
+        <active>true</active>
+        <description>Service Request</description>
+        <label>Service Request</label>
+        <picklistValues>
+            <picklist>Status</picklist>
+            <values>
+                <fullName>Assigned</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Closed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Closed %E2%80%93 Duplicate</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Closed %E2%80%93 Unresolved</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Unauthorized_RMA</fullName>
+        <active>true</active>
+        <description>Unauthorized RMA Materials Service Request</description>
+        <label>Unauthorized RMA</label>
+        <picklistValues>
+            <picklist>Reason_Code__c</picklist>
+            <values>
+                <fullName>Cosmetic Damage</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Excess %2F Unauthorized Parts</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Missing RMA Label</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Short</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Wrong Serial Numbers</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Response_Code__c</picklist>
+            <values>
+                <fullName>Hold for Pickup</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Receive</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status</picklist>
+            <values>
+                <fullName>Action Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Assigned</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Closed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>Subject</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Account</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Priority</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Owner</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CreatedDate</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CreatedBy</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Requested_Date__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>Subject</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Account</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Priority</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Status</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Owner</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Subject</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Account</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Priority</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Status</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>Subject</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Account</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Priority</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Status</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Owner</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Response_Code_required</fullName>
+        <active>true</active>
+        <description>Case 00680997 - Need way to handle Unauthorized RMA Materials process - Arokia Nathan</description>
+        <errorConditionFormula>AND (
+ RecordType.DeveloperName = &apos;Unauthorized_RMA&apos;,
+ ISPICKVAL(Status, &apos;Closed&apos;), 
+ ISBLANK(TEXT(Response_Code__c)) 
+)</errorConditionFormula>
+        <errorDisplayField>Response_Code__c</errorDisplayField>
+        <errorMessage>If Status is set to &quot;Closed&quot;, then &quot;Response Code&quot; must be filled in.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Case_360_View</fullName>
+        <availability>online</availability>
+        <description>Case# 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Case 360 View</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/support/console/36.0/integration.js&quot;)}
+
+function openCase360View() {
+	if (sforce &amp;&amp; sforce.console &amp;&amp; sforce.console.isInConsole()) {
+		log(&quot;in console&quot;); 
+		openCase360Subtab();
+	} else {
+		log(&quot;not in console&quot;); 
+		var loc = &apos;/apex/Case360View?Id=&apos; + &apos;{!WorkOrder.Id}&apos;;
+		window.open(loc, &quot;_blank&quot;);
+	}
+}
+
+function openCase360Subtab() {
+	sforce.console.getFocusedPrimaryTabId(openSubtab);
+}
+
+var openSubtab = function openSubtab(result) {
+	if (result.success == true) {
+		var primaryTabId = result.id;
+		log(&apos;primaryTabId: &apos; + primaryTabId);
+		sforce.console.openSubtab(primaryTabId , &apos;/apex/Case360View?Id={!WorkOrder.Id}&apos;, true, &apos;Case 360 View&apos;, null, openSuccess, &apos;case360ViewSubtab&apos;);
+	} else {
+		log(&apos;getFocusedPrimaryTabId was not successful: &apos; + result.id);
+	}
+};
+
+var openSuccess = function openSuccess(result) {
+	if (result.success == true) {
+		log(&apos;subtab successfully opened&apos;);
+	} else {
+		log(&apos;subtab cannot be opened&apos;);
+	}
+};
+
+function log(value) {
+	if (window.console &amp;&amp; window.console.log) window.console.log(value);
+}
+
+openCase360View();</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Service_Request</fullName>
+        <availability>online</availability>
+        <description>Case# 00654187 - Service Mgmt Phase 2, First Release (Rel 6.0) - Arokia Nathan</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>New Service Request</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/support/console/36.0/integration.js&quot;)}
+
+function openServiceRequest() {
+	if (sforce &amp;&amp; sforce.console &amp;&amp; sforce.console.isInConsole()) {
+		log(&quot;in console&quot;); 
+		openServiceRequestSubtab();
+	} else {
+		log(&quot;not in console&quot;); 
+		var loc = &apos;/apex/ServiceRequest?Id=&apos; + &apos;{!WorkOrder.Id}&apos;;
+		window.open(loc, &quot;_self&quot;);
+	}
+}
+
+function openServiceRequestSubtab() {
+	sforce.console.getFocusedPrimaryTabId(openSubtab);
+}
+
+var openSubtab = function openSubtab(result) {
+	if (result.success == true) {
+		var primaryTabId = result.id;
+		log(&apos;primaryTabId: &apos; + primaryTabId);
+		sforce.console.openSubtab(primaryTabId , &apos;/apex/ServiceRequest?Id={!WorkOrder.Id}&apos;, true, &apos;Service Request&apos;, null, openSuccess, &apos;serviceRequestSubtab&apos;);
+	} else {
+		log(&apos;getFocusedPrimaryTabId was not successful: &apos; + result.id);
+	}
+};
+
+var openSuccess = function openSuccess(result) {
+	if (result.success == true) {
+		log(&apos;subtab successfully opened&apos;);
+	} else {
+		log(&apos;subtab cannot be opened&apos;);
+	}
+};
+
+function log(value) {
+	if (window.console &amp;&amp; window.console.log) window.console.log(value);
+}
+
+openServiceRequest();</url>
+    </webLinks>
+</CustomObject>

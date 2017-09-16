@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>AccountAccessLevel</fullName>
+    </fields>
+    <fields>
+        <fullName>CaseAccessLevel</fullName>
+    </fields>
+    <fields>
+        <fullName>ContactAccessLevel</fullName>
+    </fields>
+    <fields>
+        <fullName>Description</fullName>
+    </fields>
+    <fields>
+        <fullName>DeveloperName</fullName>
+    </fields>
+    <fields>
+        <fullName>Display_Territory__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Display Territory</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ForecastUserId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>MayForecastManagerShare</fullName>
+    </fields>
+    <fields>
+        <fullName>Name</fullName>
+    </fields>
+    <fields>
+        <fullName>OpportunityAccessLevel</fullName>
+    </fields>
+    <fields>
+        <fullName>ParentTerritoryId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RestrictOpportunityTransfer</fullName>
+    </fields>
+    <validationRules>
+        <fullName>Restrict_Other_Users_To_Update_Territory</fullName>
+        <active>true</active>
+        <description>Remove access from all users to update territories in SFDC except for Brynn Anderson, Raul Gutierrez and Barry Serafino.</description>
+        <errorConditionFormula>! OR( ( $User.FirstName  == &apos;Brynn&apos; &amp;&amp;  $User.LastName == &apos;Anderson&apos;), 
+( $User.FirstName  == &apos;Raul&apos; &amp;&amp;  $User.LastName == &apos;Gutierrez&apos;), 
+( $User.FirstName  == &apos;Barry&apos; &amp;&amp;  $User.LastName == &apos;Serafino&apos;) ) 
+&amp;&amp; ( $User.ByPassValidation__c == false)</errorConditionFormula>
+        <errorMessage>You do not have sufficient rights to update the territory.</errorMessage>
+    </validationRules>
+</CustomObject>

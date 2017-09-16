@@ -1,0 +1,972 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>RoofDesignRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Account_Link__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(Left($Api.Enterprise_Server_URL_190,(find(&apos;/services&apos;,$Api.Enterprise_Server_URL_190))) + Account_Name__c, Left($Api.Enterprise_Server_URL_190,(find(&apos;/services&apos;,$Api.Enterprise_Server_URL_190))) + Account_Name__c, Account_Name__r.Name)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Account Link</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account_Name_Formula__c</fullName>
+        <description>Formula field to pull Account Name. For use in Email Alerts</description>
+        <externalId>false</externalId>
+        <formula>Account_Name__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Account Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account_Name__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Roof Designs</relationshipLabel>
+        <relationshipName>Designs</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Active__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>To Identify if the Roof Design record is Active or In Active.</description>
+        <externalId>false</externalId>
+        <label>Active</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Created_Date_Time__c</fullName>
+        <description>Date Time field derived from Created Date for reporting purpose</description>
+        <externalId>false</externalId>
+        <formula>DATETIMEVALUE(CreatedDate)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Created Date Time</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Design_DesignId__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <description>Field to Save Aurora Design Id</description>
+        <externalId>true</externalId>
+        <label>Aurora Design Id</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Design_Details__c</fullName>
+        <description>Hyperlink to view Desgin Details information</description>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(&apos;/apex/DesignDetails?Id=&apos;+Id,&apos;View Info&apos;,&apos;_blank&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Design Details</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Design__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Commercial:
+Field added to record information from Helix Design Request information forms
+Rel WW09 - 2017
+PO: Miltos Vratimos</description>
+        <externalId>false</externalId>
+        <label>Design</label>
+        <referenceTo>Design__c</referenceTo>
+        <relationshipLabel>Roof Designs</relationshipLabel>
+        <relationshipName>Roof_Designs</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Designer_User__c</fullName>
+        <description>Formula field to determine if current user is the designer. To be used in the My Pending Designs list view.</description>
+        <externalId>false</externalId>
+        <formula>IF(Designer__c = $User.Id , true, false)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Designer$User</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Designer__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>User lookup field to assign the Roof Design to a specific designer to make it easier to determine who is working on a design and all the designs that are currently being worked on.</description>
+        <externalId>false</externalId>
+        <label>Designer</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Roof_Designs</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Details__c</fullName>
+        <externalId>false</externalId>
+        <label>Details</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EDDiE_Retrofit__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indication that the record was created as part of EDDiE Data Retrofit</description>
+        <externalId>false</externalId>
+        <label>EDDiE Retrofit</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Expected_SLA_In_Minutes__c</fullName>
+        <description>Expected SLA In Minutes at the time this roof design was created</description>
+        <externalId>false</externalId>
+        <label>Expected SLA In Minutes</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Expedited_Design_Price__c</fullName>
+        <description>Price for Expedited Roof Design</description>
+        <externalId>false</externalId>
+        <label>Expedited Design Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Expedited_Design_Request__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>To Expedite a Design Request</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Expedited design requests will cost an additional $20 per request and will be completed within 30 minutes of initial request</inlineHelpText>
+        <label>Expedited Design Request</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Integration_Message__c</fullName>
+        <description>Field to save Message when Integration fails to update Roof Design Details</description>
+        <externalId>false</externalId>
+        <label>Integration Message</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Integration_Status__c</fullName>
+        <description>Field to save status by Informatica when trying to update Roof Design Details</description>
+        <externalId>false</externalId>
+        <label>Integration Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Latitude__c</fullName>
+        <externalId>false</externalId>
+        <label>Latitude</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Launch_Design__c</fullName>
+        <description>Edit Design to launch the user to Aurora Design page</description>
+        <externalId>false</externalId>
+        <formula>IF( OR( AND(ISPICKVAL($User.UserType, &apos;Standard&apos;), ISPICKVAL(Origin__c, &apos;Request&apos;)),AND(ISPICKVAL($User.UserType , &apos;PowerPartner&apos;), ISPICKVAL(Origin__c, &apos;Self Service&apos;),INCLUDES( $User.Business_Function__c ,&apos;Aurora Design Licensee&apos;))),HYPERLINK(&apos;/apex/LaunchAurora?action=CreateDesign&amp;roofDesignId=&apos;+Id,image(&quot;/servlet/servlet.FileDownload?file=015340000025Quz&quot;, &quot;Launch Design&quot;),&apos;_blank&apos;) , IF(
+OR( AND(ISPICKVAL($User.UserType, &apos;Standard&apos;), ISPICKVAL(Origin__c, &apos;Self Service&apos;)),AND(ISPICKVAL($User.UserType , &apos;PowerPartner&apos;), ISPICKVAL(Origin__c, &apos;Request&apos;))),
+&apos;Not a valid option for this Origin type&apos;,
+IF(
+AND(ISPICKVAL($User.UserType , &apos;PowerPartner&apos;), NOT(INCLUDES( $User.Business_Function__c ,&apos;Aurora Design Licensee&apos;))),
+&apos;Not an Aurora Design Licensee&apos;,&apos;&apos;
+)
+))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Launch Design</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Longitude__c</fullName>
+        <externalId>false</externalId>
+        <label>Longitude</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>MaxFit_Master__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Project Equinox. Self lookup relationship to identify the MaxFit design the actual design is associated with. For a Maxfit design, this field will be blank</description>
+        <externalId>false</externalId>
+        <label>MaxFit Master</label>
+        <referenceTo>Roof_Design__c</referenceTo>
+        <relationshipLabel>Roof Designs</relationshipLabel>
+        <relationshipName>Roof_Designs</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Notes_for_Design_Team__c</fullName>
+        <description>Notes for Design Team when requesting a new design even if an active completed design exits</description>
+        <externalId>false</externalId>
+        <label>Notes for Design Team</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Html</type>
+        <visibleLines>25</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Origin__c</fullName>
+        <description>created for Dynamic Proposal project to different between the designs that were requested and created</description>
+        <externalId>false</externalId>
+        <label>Origin</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Request</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Self Service</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Create</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Paired__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Paired</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Quote__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Quote</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>$Source.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Residential Actual Design</value>
+            </filterItems>
+            <isOptional>false</isOptional>
+        </lookupFilter>
+        <referenceTo>Quote</referenceTo>
+        <relationshipLabel>Roof Designs</relationshipLabel>
+        <relationshipName>Equinox_Designs</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>SLA_In_Hours__c</fullName>
+        <description>Time taken from Design Creation to Status Complete</description>
+        <externalId>false</externalId>
+        <label>SLA In Hours</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SLA_in_Minutes__c</fullName>
+        <description>SLA In Minutes</description>
+        <externalId>false</externalId>
+        <formula>(Status_Completed_Date_Time__c - CreatedDate ) * 24 * 60</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>SLA in Minutes</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status_Completed_Date_Time__c</fullName>
+        <description>DateTime when the Status goes to Complete</description>
+        <externalId>false</externalId>
+        <label>Status Completed Date Time</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Pending</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Locked</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>System_Size__c</fullName>
+        <description>Aurora- Captures the design system size</description>
+        <externalId>false</externalId>
+        <label>System Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <description>Design Type</description>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>MaxFit</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Actual</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Commercial Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Unable_to_Process_Reason__c</fullName>
+        <description>Reason for being unable to process a Roof Design</description>
+        <externalId>false</externalId>
+        <label>Unable to Process Reason</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Ground Mount</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Location cannot be verified</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Minimum panels not met</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>New Construction</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Unclear Roof visibility</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Waiting for additional information</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <label>Roof Design</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Account_Name__c</columns>
+        <columns>Active__c</columns>
+        <columns>Design_DesignId__c</columns>
+        <columns>Design_Details__c</columns>
+        <columns>Launch_Design__c</columns>
+        <columns>Origin__c</columns>
+        <columns>Paired__c</columns>
+        <columns>Status__c</columns>
+        <columns>Type__c</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>LAST_UPDATE</columns>
+        <columns>CREATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>My_Pending_Designs</fullName>
+        <columns>NAME</columns>
+        <columns>Account_Name__c</columns>
+        <columns>Status__c</columns>
+        <columns>Launch_Design__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Roof_Design__c.Residential_MaxFit_Designs</value>
+        </filters>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Pending</value>
+        </filters>
+        <filters>
+            <field>Designer_User__c</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <filters>
+            <field>Unable_to_Process_Reason__c</field>
+            <operation>equals</operation>
+        </filters>
+        <label>My Pending Designs</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Pending_Designs</fullName>
+        <columns>NAME</columns>
+        <columns>Account_Name__c</columns>
+        <columns>Expedited_Design_Request__c</columns>
+        <columns>Status__c</columns>
+        <columns>Launch_Design__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Pending</value>
+        </filters>
+        <filters>
+            <field>Type__c</field>
+            <operation>equals</operation>
+            <value>MaxFit</value>
+        </filters>
+        <filters>
+            <field>Unable_to_Process_Reason__c</field>
+            <operation>equals</operation>
+        </filters>
+        <filters>
+            <field>Designer__c</field>
+            <operation>equals</operation>
+        </filters>
+        <label>Unassigned Pending Designs</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Pending_Expedited_Requests</fullName>
+        <columns>NAME</columns>
+        <columns>Account_Name__c</columns>
+        <columns>Expedited_Design_Request__c</columns>
+        <columns>Status__c</columns>
+        <columns>Launch_Design__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Pending</value>
+        </filters>
+        <filters>
+            <field>Type__c</field>
+            <operation>equals</operation>
+            <value>MaxFit</value>
+        </filters>
+        <filters>
+            <field>Expedited_Design_Request__c</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <filters>
+            <field>Designer__c</field>
+            <operation>equals</operation>
+        </filters>
+        <label>Pending Expedited Requests</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Pending_Test_Demo_Designs</fullName>
+        <columns>NAME</columns>
+        <columns>Account_Link__c</columns>
+        <columns>Account_Name_Formula__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Pending</value>
+        </filters>
+        <filters>
+            <field>RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Roof_Design__c.Residential_MaxFit_Designs</value>
+        </filters>
+        <filters>
+            <field>OWNER.FIRST_NAME</field>
+            <operation>equals</operation>
+            <value>Eugene</value>
+        </filters>
+        <filters>
+            <field>OWNER.LAST_NAME</field>
+            <operation>equals</operation>
+            <value>Buen</value>
+        </filters>
+        <label>Pending Test/Demo Designs</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Unable_to_Process_Designs</fullName>
+        <columns>NAME</columns>
+        <columns>Account_Name__c</columns>
+        <columns>Status__c</columns>
+        <columns>Launch_Design__c</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>Unable_to_Process_Reason__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Pending</value>
+        </filters>
+        <filters>
+            <field>Type__c</field>
+            <operation>equals</operation>
+            <value>MaxFit</value>
+        </filters>
+        <filters>
+            <field>Unable_to_Process_Reason__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>Unable to Process Designs</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <displayFormat>D-{00000}</displayFormat>
+        <label>Design ID</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Roof Designs</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>Commercial_Design</fullName>
+        <active>true</active>
+        <label>Commercial Design</label>
+        <picklistValues>
+            <picklist>Origin__c</picklist>
+            <values>
+                <fullName>Request</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Self Service</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Locked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pending</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>Commercial Design</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Unable_to_Process_Reason__c</picklist>
+            <values>
+                <fullName>Ground Mount</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Location cannot be verified</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Minimum panels not met</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Construction</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Unclear Roof visibility</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Waiting for additional information</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Residential_Actual_Design</fullName>
+        <active>true</active>
+        <description>Residential Actual Design</description>
+        <label>Residential Actual Design</label>
+        <picklistValues>
+            <picklist>Origin__c</picklist>
+            <values>
+                <fullName>Request</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Self Service</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Locked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pending</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>Actual</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Unable_to_Process_Reason__c</picklist>
+            <values>
+                <fullName>Ground Mount</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Location cannot be verified</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Minimum panels not met</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Construction</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Unclear Roof visibility</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Waiting for additional information</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Residential_MaxFit_Designs</fullName>
+        <active>true</active>
+        <description>Residential MaxFit Design</description>
+        <label>Residential MaxFit Designs</label>
+        <picklistValues>
+            <picklist>Origin__c</picklist>
+            <values>
+                <fullName>Request</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Self Service</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Completed</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>In Progress</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>Locked</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Pending</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Type__c</picklist>
+            <values>
+                <fullName>MaxFit</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Unable_to_Process_Reason__c</picklist>
+            <values>
+                <fullName>Ground Mount</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Location cannot be verified</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Minimum panels not met</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New Construction</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Unclear Roof visibility</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Waiting for additional information</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>Account_Name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Type__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Paired__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CREATEDBY_USER</customTabListAdditionalFields>
+        <customTabListAdditionalFields>LAST_UPDATE</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>Account_Name__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Type__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Paired__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CREATEDBY_USER</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>LAST_UPDATE</lookupDialogsAdditionalFields>
+        <searchFilterFields>Account_Name__c</searchFilterFields>
+        <searchFilterFields>Type__c</searchFilterFields>
+        <searchFilterFields>Paired__c</searchFilterFields>
+        <searchFilterFields>CREATEDBY_USER</searchFilterFields>
+        <searchResultsAdditionalFields>Account_Name__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Type__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Paired__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CREATEDBY_USER</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>LAST_UPDATE</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>New_S3_Document</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>New S3 Document</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/S3DocumentUpload?RoofDesignId={!Roof_Design__c.Id}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Pair_Array</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Pair Array</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>if(&apos;{!$Label.Production_Org_Id}&apos;==&apos;{!$Organization.Id}&apos;){
+     window.open(&apos;{!$Label.equinoxproposalURL_Production}&apos;+&apos;/design/&apos;+&apos;{!CASESAFEID(Roof_Design__c.Id)}&apos;)
+}
+else{     window.open(&apos;{!$Label.equinoxproposalURL_Sandbox}&apos;+&apos;/design/&apos;+&apos;{!CASESAFEID(Roof_Design__c.Id)}&apos;)
+}</url>
+    </webLinks>
+</CustomObject>

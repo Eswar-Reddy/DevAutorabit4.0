@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>Private</externalSharingModel>
+    <fields>
+        <fullName>Account_Name__c</fullName>
+        <description>Case# 00612946_Approval Notification and Audit Dashboard for TPS Third Party Seller Program - NY.
+used in email template</description>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Account__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Account Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Account_Owner__c</fullName>
+        <description>Need Account Owner on the Invoice Document Proceed Email template</description>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Account__r.x_Account_Owner__r.FirstName + &apos; &apos; + Financial_Payment__r.Account__r.x_Account_Owner__r.LastName</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Account Owner</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Approved_Notification__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Approved Notification</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Attachment_Link__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(  
+
+     AND(ISBLANK(Link_to_Attachment__c),   ISPICKVAL(Status__c, &quot;Approved&quot;) ) , 
+
+     &quot;File has been archived&quot;,  
+
+
+          IF(ISPICKVAL(Status__c, &quot;Not Submitted&quot;), 
+
+          NULL, HYPERLINK( Link_to_Attachment__c ,&quot;Click to View&quot;) 
+
+)
+)</formula>
+        <label>Attachment Link</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Date_Delivered__c</fullName>
+        <description>Financial_Payment__r.Date_Delivered__c</description>
+        <externalId>false</externalId>
+        <label>Date Delivered</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Document_Owner_Category__c</fullName>
+        <description>Case# 00612946_Approval Notification and Audit Dashboard for TPS Third Party Seller Program - NY. 
+used in report</description>
+        <externalId>false</externalId>
+        <formula>IF(ISBLANK(TEXT(Document_Owner__c)), null, TEXT(Document_Owner__c) &amp; &apos; &apos; &amp; Payment_Category__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Document Owner Category</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Document_Owner__c</fullName>
+        <description>Responsible Party for Document upload</description>
+        <externalId>false</externalId>
+        <label>Document Owner</label>
+        <picklist>
+            <picklistValues>
+                <fullName>TPS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>DRIP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>IP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Document_Submitted__c</fullName>
+        <externalId>false</externalId>
+        <label>Document Submitted</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Documents_in_File__c</fullName>
+        <externalId>false</externalId>
+        <label>Documents in File</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Install Invoice</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Confirmed ICF</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Plan</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Permits</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Photos</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Copy of Proposal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>FPO_Record_Type__c</fullName>
+        <description>case 00848075</description>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.RecordType.DeveloperName</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>FPO Record Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>File_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>File Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Financial_Payment_Link__c</fullName>
+        <description>Created to provide the Financial Payment link in the email template .</description>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(Left($Api.Enterprise_Server_URL_190,(find(&apos;/services&apos;,$Api.Enterprise_Server_URL_190))) + Financial_Payment__c, Left($Api.Enterprise_Server_URL_190,(find(&apos;/services&apos;,$Api.Enterprise_Server_URL_190))) + Financial_Payment__c, Financial_Payment__r.Name)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Financial Payment Link</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Financial_Payment__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Financial Payment</label>
+        <referenceTo>LeasePayment__c</referenceTo>
+        <relationshipLabel>Invoice Compliance Documents</relationshipLabel>
+        <relationshipName>Invoice_Compliance_Documents</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Financier__c</fullName>
+        <description>for case# 00761334</description>
+        <externalId>false</externalId>
+        <formula>Text(Financial_Payment__r.Funding_Tranche__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Financier</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>FinancingType__c</fullName>
+        <externalId>false</externalId>
+        <label>Financing Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Lease</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>NH Lease</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Install_Payment_Approved__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Install_Pymnt_Apprvd__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Install Payment Approved</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interconnect_Payment_Approved__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Intrcnct_Pymnt_Apprvd__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Interconnect Payment Approved</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Invoice_Admin__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Invoice_Admin__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Invoice Admin</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Invoice_Document_Data__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>look up to IDD and track what all IDD created for a project.</description>
+        <externalId>false</externalId>
+        <label>Invoice Document Data</label>
+        <referenceTo>Invoice_Document_Data__c</referenceTo>
+        <relationshipLabel>Invoice Compliance Documents</relationshipLabel>
+        <relationshipName>Invoice_Compliance_Documents</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Invoice_Document_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Invoice Document Email</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Invoice_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Invoice Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Install</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interconnect</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Origination</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permit Received</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Lease_Payment_Status__c</fullName>
+        <externalId>false</externalId>
+        <formula>Text(Financial_Payment__r.Status__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Lease Payment Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Lease__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Lease #</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Link_to_Attachment__c</fullName>
+        <externalId>false</externalId>
+        <label>Link to Attachment</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Location__c</fullName>
+        <externalId>false</externalId>
+        <label>Document Upload Location</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Account</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Opportunity</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Residential Project</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Invoice Document</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Mosaic_Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Mosaic Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Upload Success</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Upload Failed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Mosaic Approved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Not_Required_for_Approval__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Not Required for Approval</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Notes_to_Approver__c</fullName>
+        <externalId>false</externalId>
+        <label>Notes to Approver</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Notes_to_Partner__c</fullName>
+        <externalId>false</externalId>
+        <label>Notes to Partner</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Number_of_Times_Rejected__c</fullName>
+        <description>Count for rejection times - For the ICD Status Changed Reason</description>
+        <externalId>false</externalId>
+        <label>Number of Times Rejected</label>
+        <summaryForeignKey>ICD_Status_Changed_Reason__c.Invoice_Compliance_Document__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Oracle_Vendor_Email_Formula__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Partner_Oracle_Vendor_Email__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Oracle Vendor Email ( Formula)</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Oracle_Vendor_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Oracle Vendor Email</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Oracle_Vendor_Number__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Partner_Account__r.Oracle_Vendor_Number__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Oracle Vendor Number</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner_Comments__c</fullName>
+        <description>Field used by the Invoice Document object to allow the partners to write in comments on the documents that they upload.</description>
+        <externalId>false</externalId>
+        <label>Partner Comments</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Type__c</fullName>
+        <externalId>false</externalId>
+        <formula>TEXT(Financial_Payment__r.Partner_Account__r.Type)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Partner Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( ISPICKVAL(Program__c,&apos;TPS&apos;), null, Financial_Payment__r.Dealer_Name__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Partner</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Category__c</fullName>
+        <description>Case# 00612946_Approval Notification and Audit Dashboard for TPS Third Party Seller Program - NY. 
+used in report</description>
+        <externalId>false</externalId>
+        <formula>CASE(TEXT(Invoice_Type__c), 
+&apos;Interconnect&apos;, &apos;20 %&apos;,
+&apos;80 %&apos;)</formula>
+        <label>Payment Category</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Program__c</fullName>
+        <description>Defines the program for which this document is created. Ex:- TPS</description>
+        <externalId>false</externalId>
+        <label>Program</label>
+        <picklist>
+            <picklistValues>
+                <fullName>TPS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Project_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Project Task</label>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Invoice Compliance Documents</relationshipLabel>
+        <relationshipName>Invoice_Compliance_Documents</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RSM__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.RSM__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>RSM</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Re_submitted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Historical</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Residential_Project__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Residential Project</label>
+        <referenceTo>Residential_Project__c</referenceTo>
+        <relationshipLabel>Invoice Compliance Documents</relationshipLabel>
+        <relationshipName>Invoice_Compliance_Documents</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Response_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Response Date</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Responsible_Partner__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Partner responsible to upload this document</description>
+        <externalId>false</externalId>
+        <label>Responsible Partner</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Invoice Compliance Documents</relationshipLabel>
+        <relationshipName>Invoice_Compliance_Documents</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>SMS_ID__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.SMS_ID__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>SMS ID</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Shared_With__c</fullName>
+        <description>Other Parties this document should be shared with</description>
+        <externalId>false</externalId>
+        <label>Shared With</label>
+        <picklist>
+            <picklistValues>
+                <fullName>TPS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>DRIP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>IP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Sharing_Type__c</fullName>
+        <description>Defines the sharing setup of the object(Secure or Shared)</description>
+        <externalId>false</externalId>
+        <label>Sharing Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Secure</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shared</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>State__c</fullName>
+        <externalId>false</externalId>
+        <formula>Financial_Payment__r.Site_State_Prov__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>State</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Pending</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Not Submitted</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Legacy Rejected</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <description>Defines the type. Document or a Task. Task are also being tracked as part of Invoice document data starting from TPS project</description>
+        <externalId>false</externalId>
+        <label>Event Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Document</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Task</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>UpdateSharing__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This field is used to invoke the ICD Sharing logic so doc sharing is updated when needed.</description>
+        <externalId>false</externalId>
+        <label>UpdateSharing</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>Invoice Compliance Document</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Invoice Compliance Documents</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <sharingReasons>
+        <fullName>Document_Owner_Partner__c</fullName>
+        <label>Document Owner Partner</label>
+    </sharingReasons>
+    <sharingReasons>
+        <fullName>Shared_With_Partner__c</fullName>
+        <label>Shared With Partner</label>
+    </sharingReasons>
+</CustomObject>

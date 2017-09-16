@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>false</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <fields>
+        <fullName>End_DateTime__c</fullName>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+Captures the date the rework was completed or cancelled</description>
+        <externalId>false</externalId>
+        <label>End DateTime</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Explanation__c</fullName>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+An explanation for why the task must be reworked</description>
+        <externalId>false</externalId>
+        <label>Explanation</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Initiating_Task__c</fullName>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+The task that was put on hold because a previous task needed to be reworked</description>
+        <externalId>false</externalId>
+        <label>Initiating Task</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>Project_Task__c.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Project Task</value>
+            </filterItems>
+            <filterItems>
+                <field>Project_Task__c.Status_Type__c</field>
+                <operation>equals</operation>
+                <value>Open</value>
+            </filterItems>
+            <isOptional>true</isOptional>
+        </lookupFilter>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Task Rework Requests (Initiating Task)</relationshipLabel>
+        <relationshipName>Task_Rework_Requests</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Reason_Level_1__c</fullName>
+        <externalId>false</externalId>
+        <label>Reason Level 1</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Incorrect Survey</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Upsize</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Downsize</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Incorrect Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Product Change</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Utility Issue</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>AHJ Redline</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>HOA Rejection</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SPWR AM/EC Request</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SPWR PM Request</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Premature Task Completion</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Reason_Level_2__c</fullName>
+        <externalId>false</externalId>
+        <label>Reason Level 2</label>
+        <picklist>
+            <controllingField>Reason_Level_1__c</controllingField>
+            <picklistValues>
+                <fullName>Additional Documentation Required</fullName>
+                <default>false</default>
+                <controllingFieldValues>HOA Rejection</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Aesthetics</fullName>
+                <default>false</default>
+                <controllingFieldValues>HOA Rejection</controllingFieldValues>
+                <controllingFieldValues>SPWR AM/EC Request</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>As-Built</fullName>
+                <default>false</default>
+                <controllingFieldValues>SPWR PM Request</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Builder Architectural Change</fullName>
+                <default>false</default>
+                <controllingFieldValues>System Downsize</controllingFieldValues>
+                <controllingFieldValues>System Upsize</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Contractual Changes</fullName>
+                <default>false</default>
+                <controllingFieldValues>SPWR AM/EC Request</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer request</fullName>
+                <default>false</default>
+                <controllingFieldValues>System Downsize</controllingFieldValues>
+                <controllingFieldValues>System Upsize</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Designer error - At Fault</fullName>
+                <default>false</default>
+                <controllingFieldValues>Incorrect Design</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Designer Error - Not At Fault</fullName>
+                <default>false</default>
+                <controllingFieldValues>Incorrect Design</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Fit Issue</fullName>
+                <default>false</default>
+                <controllingFieldValues>System Downsize</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Issues</fullName>
+                <default>false</default>
+                <controllingFieldValues>SPWR PM Request</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inverter</fullName>
+                <default>false</default>
+                <controllingFieldValues>Product Change</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Missing/Incorrect Equipment</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+                <controllingFieldValues>Utility Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Missing/Incorrect Notes</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+                <controllingFieldValues>Utility Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Missing/Incorrect Placard</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+                <controllingFieldValues>Utility Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Missing Stamps</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Module</fullName>
+                <default>false</default>
+                <controllingFieldValues>Product Change</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Monitoring</fullName>
+                <default>false</default>
+                <controllingFieldValues>Product Change</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Product Compliance</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+                <controllingFieldValues>Utility Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Racking</fullName>
+                <default>false</default>
+                <controllingFieldValues>Product Change</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Resurvey-at fault</fullName>
+                <default>false</default>
+                <controllingFieldValues>Incorrect Survey</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Resurvey-not at fault</fullName>
+                <default>false</default>
+                <controllingFieldValues>Incorrect Survey</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Roof Attachment</fullName>
+                <default>false</default>
+                <controllingFieldValues>Product Change</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Design</fullName>
+                <default>false</default>
+                <controllingFieldValues>Product Change</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Design - Architectural</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+                <controllingFieldValues>Utility Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Design - Electrical</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+                <controllingFieldValues>Utility Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>System Design - Structural</fullName>
+                <default>false</default>
+                <controllingFieldValues>AHJ Redline</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Premature Task compilation(Level 1)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Reason_Level_3__c</fullName>
+        <externalId>false</externalId>
+        <label>Reason Level 3</label>
+        <picklist>
+            <controllingField>Reason_Level_2__c</controllingField>
+            <picklistValues>
+                <fullName>Max fit - Dimension</fullName>
+                <default>false</default>
+                <controllingFieldValues>Fit Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Max fit - Obstruction</fullName>
+                <default>false</default>
+                <controllingFieldValues>Fit Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Max fit - Scaling</fullName>
+                <default>false</default>
+                <controllingFieldValues>Fit Issue</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Drafting Errors</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Jurisdiction Requirements</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>North Arrow</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Paper Size</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PE Stamp</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Plan Type</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Title Block Info</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Vicinity Map</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Project Info (Cover)</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Array Layout</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>FM Path</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Framing Detail - Incorrect Attachments</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Framing Detail - Incorrect Detail</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Framing Detail - Incorrect Spans</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Garage Handing</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Electrical Calculation</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Electrical Details/Notes</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Incorrect Conductor Schedule</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Incorrect Spec Sheet/Template</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Incorrect/Missing BOS</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Incorrect BOS size</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interconnection: 120% Rule</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Interconnection: Load Relocation</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Labeling Specs</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Structural Details/Notes</fullName>
+                <default>false</default>
+                <controllingFieldValues>Designer error - At Fault</controllingFieldValues>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Rework_Category__c</fullName>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi</description>
+        <externalId>false</externalId>
+        <label>Rework Category</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Resurvey</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Correction</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Other</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Rework_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+The task that was reopened because of this rework request</description>
+        <externalId>false</externalId>
+        <label>Rework Task</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>Project_Task__c.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Project Task</value>
+            </filterItems>
+            <filterItems>
+                <field>Project_Task__c.Status_Type__c</field>
+                <operation>equals</operation>
+                <value>Completed</value>
+            </filterItems>
+            <isOptional>true</isOptional>
+        </lookupFilter>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Task Rework Requests (Rework Task)</relationshipLabel>
+        <relationshipName>Task_Rework_Requests1</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Start_DateTime__c</fullName>
+        <defaultValue>Now()</defaultValue>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+The datetime this request was created</description>
+        <externalId>false</externalId>
+        <label>Start DateTime</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+The status of the rework request</description>
+        <externalId>false</externalId>
+        <inlineHelpText>To complete task rework request, complete task that rework was requested on.</inlineHelpText>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Open</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Task Rework Request</label>
+    <nameField>
+        <displayFormat>TRR-{00000}</displayFormat>
+        <label>Task Rework Request Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Task Rework Requests</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Cannot_change_Rework_Task</fullName>
+        <active>true</active>
+        <description>Once the rework task is set it cannot be changed</description>
+        <errorConditionFormula>AND(ISCHANGED(Rework_Task__c),NOT(ISNEW()))</errorConditionFormula>
+        <errorMessage>Rework Task cannot be updated once selected.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Initiating_and_Rework_Task_cannot_match</fullName>
+        <active>true</active>
+        <description>Initiating and Rework Task cannot be the same</description>
+        <errorConditionFormula>Initiating_Task__c =  Rework_Task__c</errorConditionFormula>
+        <errorMessage>Initiating Task and Rework Task must be different</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Rework_Task_must_be_Completed</fullName>
+        <active>true</active>
+        <description>When selecting a rework task, it must be in status &apos;completed&apos;</description>
+        <errorConditionFormula>AND(OR(ISCHANGED(Rework_Task__c), ISNEW()), TEXT(Rework_Task__r.Status__c) != &apos;Completed&apos;)</errorConditionFormula>
+        <errorMessage>Rework Task must be a Completed Task</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Rework_and_Initiating_Task_Project</fullName>
+        <active>true</active>
+        <description>The rework task and initiating task must come from the same project</description>
+        <errorConditionFormula>Initiating_Task__r.Residential_Project__c != Rework_Task__r.Residential_Project__c</errorConditionFormula>
+        <errorMessage>The rework task and initiating task must be from the same residential project.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>New_Task_Rework_Request</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>New Task Rework Request</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/SPCommunityTaskReworkNew?objecttype=Task_Rework_Request__c&amp;Initiating_Task__c={!Project_Task__c.Id}&amp;retURL=/{!Project_Task__c.Id}</url>
+    </webLinks>
+</CustomObject>

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Mapping of Dealer Name, Utility , State and the Leasing File name</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Dealer__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Dealer</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Dealer Utility Pricing Files</relationshipLabel>
+        <relationshipName>Dealer_Utility_Pricing_Files</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Pricing_File_Name__c</fullName>
+        <description>It is the Pricing File name which should be sent to CPR(which in turn sends for ABC)</description>
+        <externalId>false</externalId>
+        <label>Pricing File Name</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>State_Code__c</fullName>
+        <description>Case# 00543268 - This is formula field refereing to state code of utility code object - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <formula>TEXT(Utility_Code__r.State_Code__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>State Code</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>State__c</fullName>
+        <description>It contains the State Code</description>
+        <externalId>false</externalId>
+        <label>State</label>
+        <picklist>
+            <picklistValues>
+                <fullName>CA</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>NY</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>AZ</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>HI</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>NJ</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MA</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>VT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>NV</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CO</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>CT</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>MD</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Utility_Code__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Case# 00543268 - Unlike the text name of the utility, the encoded name is a unique value that does not change. We will need to capture the encoded name in the quote and match it up with the price file - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <label>Utility Code</label>
+        <referenceTo>Utility_Code__c</referenceTo>
+        <relationshipLabel>Dealer Utility Pricing Files</relationshipLabel>
+        <relationshipName>Dealer_Utility_Pricing_Files</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Utility_Name__c</fullName>
+        <description>Case# 00543268 - This is formula field refereing to utility name of utility code object - Arokia Nathan</description>
+        <externalId>false</externalId>
+        <formula>Utility_Code__r.Utility_Name__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Utility Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Utility__c</fullName>
+        <description>It contains Utility information</description>
+        <externalId>false</externalId>
+        <label>Utility</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Anaheim Public Utilities Department</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Azusa Light &amp; Water Department</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Colton Public Utilities</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Glendale Water &amp; Power</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Imperial Irrigation District (IID)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Lompoc, City of</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Los Angeles Department of Water &amp; Power  (LADWP)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Modesto Irrigation District (MID)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Moreno Valley Utility (MVU)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Pacific Gas and Electric Company (PG&amp;E)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Riverside Utilities Department</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>San Diego Gas &amp; Electric (SDG&amp;E)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Southern California Edison (SCE)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Turlock Irrigation District (TID)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>APS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SRP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Unisource Energy Services (UES)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Hawaii Electric Light Company (HELCO) (Big Island of Hawaii)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Hawaiian Electric Company (HECO) (Oahu)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Maui Electric Co. (MECO) (Maui)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Central Hudson Gas &amp; Electric</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Consolidated Edison</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Long Island Power Authority (LIPA)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>New York State Electric and Gas (NYSEG)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Orange and Rockland</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PSEGLI (formerly Long Island Power Authority (LIPA))</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Atlantic City Electric (Conectiv)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PSE&amp;G (Public Service Electric and Gas Co.)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tucson Electric Power (TEP)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sacramento Municipal Utility District (SMUD)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>National Grid (Niagara Mohawk)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>First Energy (Jersey Central Power &amp; Light - formerly General Public Utilities GPU)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>United Illuminating Company</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Eversource (Connecticut Light and Power)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Dealer Utility Pricing File</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Dealer__c</columns>
+        <columns>Utility_Code__c</columns>
+        <columns>State__c</columns>
+        <columns>Utility__c</columns>
+        <columns>Pricing_File_Name__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <displayFormat>DUPF-{0000}</displayFormat>
+        <label>Dealer Utility Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Dealer Utility Pricing Files</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

@@ -1,0 +1,2931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>ACH_Yes_No__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( Lease_Payment__r.ACH__c = TRUE , &quot;Yes&quot;, &quot;No&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>ACH Yes/No</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Applicant_Bank_Account_Number__c</fullName>
+        <description>This is a placeholder field for the Booking Template Report. Data for this field will be populated outside of SFDC</description>
+        <externalId>false</externalId>
+        <label>Applicant Bank Account Number</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Applicant_Bank_Routing_Number__c</fullName>
+        <description>This is a placeholder field for the Booking Template Report. Data for this field will be populated outside of SFDC</description>
+        <externalId>false</externalId>
+        <label>Applicant Bank Routing Number</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Book_Tax_Depreciation_Basis_in__c</fullName>
+        <description>Total cost less the projected ITC/cash grant amount.
+For AU its the System Price passed from GPP</description>
+        <externalId>false</externalId>
+        <formula>IF(Country_Domain__c  =  &apos;au&apos;, Quote__r.System_Price_Excluding_Tax__c, 
+IF(  Lease_Payment__r.PIS_Entry_Date__c  &gt;  DATE(2015,7,17),Lease_Payment__r.Lease_Cost__c ,(Lease_Payment__r.Lease_Cost__c  -  Lease_Payment__r.ITC_Cash_Grant_Valuation_acctg__c)
+)
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Total cost less the projected ITC/cash grant amount. For AU its the System Price passed from GPP</inlineHelpText>
+        <label>Book/Tax Depreciation Basis in $</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Booked_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>Lease_Payment__r.Booked_Date__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Booked Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>CSI_Rebate__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(Country_Domain__c &lt;&gt; &apos;au&apos;,Quote__r.Solar_Rebate_Amount__c,0)</formula>
+        <label>CSI Rebate</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Calculated_Operation_and_Maintenance_Fee__c</fullName>
+        <description>Monthly O&amp;M Fee</description>
+        <externalId>false</externalId>
+        <formula>IF(Country_Domain__c &lt;&gt; &apos;au&apos;,System_Size__c * 0.4 / 240,0)</formula>
+        <inlineHelpText>Monthly O&amp;M Fee</inlineHelpText>
+        <label>Calculated Operation and Maintenance Fee</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Capital_Lease_Min_Lease_Payment_Total__c</fullName>
+        <externalId>false</externalId>
+        <formula>Total_Lease_Payments__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Capital Lease: Min Lease Payment Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Capital_Lease_Net_Investment__c</fullName>
+        <description>This is revenue added to PV residual if the lease type is capital.  If this is an operating lease, then no value is shown.</description>
+        <externalId>false</externalId>
+        <formula>IF (
+AND (
+Capital_Lease_Revenue__c &lt;&gt; &quot;N/A&quot; ,
+Capital_Lease_PV_of_Residual__c &lt;&gt; &quot;N/A&quot; 
+) , If(RIGHT(Quote__r.Opportunity.Owner.CountryDomainText__c, 2) &lt;&gt;&apos;au&apos;,
+&quot;$&quot;,&quot;&quot;) &amp; TEXT ( ROUND ( NPV_of_MLP__c + NPV_of_UGRV__c , 2 ) ) ,
+&quot;N/A&quot;
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>This is revenue added to PV residual if the lease type is capital.  If this is an operating lease, then no value is shown.</inlineHelpText>
+        <label>Capital Lease: Net Investment</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Capital_Lease_PV_of_Residual__c</fullName>
+        <description>Displays the NPV of UGRV if this is a capital lease.</description>
+        <externalId>false</externalId>
+        <formula>IF(Country_Domain__c&lt;&gt; &apos;au&apos;,IF (
+Lease_Classification__c = &quot;Capital Lease&quot; ,
+&quot;$&quot; &amp; TEXT ( ROUND ( NPV_of_UGRV__c , 2 ) ) ,
+&quot;N/A&quot;
+),TEXT(0))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the NPV of UGRV if this is a capital lease.</inlineHelpText>
+        <label>Capital Lease: PV of Residual</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Capital_Lease_Revenue__c</fullName>
+        <description>Displays the NPV of MLP if this is a capital lease; otherwise, no value is shown.</description>
+        <externalId>false</externalId>
+        <formula>IF (
+Lease_Classification__c = &quot;Capital Lease&quot; , If(RIGHT(Quote__r.Opportunity.Owner.CountryDomainText__c, 2) &lt;&gt;&apos;au&apos;,
+&quot;$&quot;,&quot;&quot;) &amp; TEXT ( ROUND ( NPV_of_MLP__c , 2 ) ) ,
+&quot;N/A&quot;
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the NPV of MLP if this is a capital lease; otherwise, no value is shown.</inlineHelpText>
+        <label>Capital Lease: Revenue</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Capital_Lease_Yield__c</fullName>
+        <description>Displays the Implicit Rate from the testing template if this is a capital lease.</description>
+        <externalId>false</externalId>
+        <formula>IF (
+Lease_Classification__c = &quot;Capital Lease&quot; ,
+TEXT ( 
+ROUND ( Implicit_Rate__c * 100 , 2 )  
+) &amp; &quot;%&quot; ,
+&quot;N/A&quot;
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the Implicit Rate from the testing template if this is a capital lease.</inlineHelpText>
+        <label>Capital Lease: Yield</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Capitalized_Cost_on_Operating_Leases__c</fullName>
+        <description>If this is a capital lease, then the cost is the system size multiplied by $0.28; otherwise, if this is an operating lease, then the cost is the system size multiplied by $0.24.</description>
+        <externalId>false</externalId>
+        <formula>If(Country_Domain__c =&apos;au&apos;,&quot;0&quot;, 
+&quot;$&quot; &amp;
+		IF(Lease_Payment__r.PIS_Entry_Date__c &gt; DATE (2014,06,30), 
+		IF(Lease_Classification__c = &quot;Capital Lease&quot; ,TEXT(ROUND(System_Size__c* Cost_Factor_Capital__c,2)),TEXT(ROUND(System_Size__c*  Cost_Factor_Operating__c ,2))), 	
+		IF(Lease_Classification__c = &quot;Capital Lease&quot; ,TEXT(ROUND(System_Size__c*0.28,2)),TEXT(ROUND(System_Size__c* 0.24,2))		
+		)	
+	)
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>If this is a capital lease, then the cost is the system size multiplied by $0.28; if  operating lease, then  multiplied by $0.24.All with PIS since 10/1/2013 removed VPR of 0.03 cents. All with PIS since 7/1/2014 reduce DPF 0.02.</inlineHelpText>
+        <label>Capitalized Cost on Operating Leases</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Cost_Factor_Capital__c</fullName>
+        <description>Multiplier if Lease Classification is Capital Lease. Factor to calculate Capitalized Cost on Operating Leases. Values driven when Lease Sched Summary gets updated trigger field update based on PIS entry date value</description>
+        <externalId>false</externalId>
+        <label>Cost Factor_Capital</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Cost_Factor_Operating__c</fullName>
+        <description>Multiplier if Lease Classification is Operating Lease. Factor to calculate Capitalized Cost on Operating Leases.  Values driven when Lease Sched Summary gets updated trigger field update based on PIS entry date value</description>
+        <externalId>false</externalId>
+        <label>Cost Factor_Operating</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Country_Domain__c</fullName>
+        <externalId>false</externalId>
+        <formula>RIGHT(Quote__r.Opportunity.Owner.CountryDomainText__c, 2)</formula>
+        <label>Country Domain</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Credit_Score__c</fullName>
+        <description>This is a placeholder field for the Booking Template Report. Data for this field will be populated outside of SFDC</description>
+        <externalId>false</externalId>
+        <label>Credit Score</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Prepayment__c</fullName>
+        <externalId>false</externalId>
+        <formula>Quote__r.Full_PrePayment_Amount_Base_Amount__c</formula>
+        <label>Customer Prepayment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Date_Countersigned__c</fullName>
+        <description>Date of which this lease is entered into</description>
+        <externalId>false</externalId>
+        <formula>Lease_Payment__r.Date_Countersigned__c</formula>
+        <inlineHelpText>Date of which this lease is entered into</inlineHelpText>
+        <label>Date Countersigned</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Date_Of_Last_Calculations_Attempt__c</fullName>
+        <externalId>false</externalId>
+        <label>Date Of Last Calculations Attempt</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Error_Message__c</fullName>
+        <externalId>false</externalId>
+        <label>Error Message</label>
+        <length>32768</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>FMV__c</fullName>
+        <externalId>false</externalId>
+        <formula>Lease_Payment__r.Fair_Market_Value_acctg__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>FMV</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Fed_ID_SSN__c</fullName>
+        <description>This is a placeholder field for the Booking Template Report. Data for this field will be populated outside of SFDC</description>
+        <externalId>false</externalId>
+        <label>Fed ID/SSN</label>
+        <length>55</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Finance_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Finance Type</label>
+        <length>25</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Financier__c</fullName>
+        <description>This is the financier for this lease and used in the Lease Test calculations.</description>
+        <externalId>false</externalId>
+        <formula>TEXT( Lease_Payment__r.Funding_Tranche__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Financier</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Financing_Term_in_Months__c</fullName>
+        <defaultValue>240</defaultValue>
+        <description>Default value for Booking Template. Will need to change if leases vary from current standard of 240 months.</description>
+        <externalId>false</externalId>
+        <label>Financing Term in Months</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Financing_Type__c</fullName>
+        <defaultValue>&quot;Lease&quot;</defaultValue>
+        <description>Default Value for booking Template. Only Financing Type = Lease are inserted into booking template.</description>
+        <externalId>false</externalId>
+        <label>Financing Type</label>
+        <length>15</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Full_Prepaid_Lease__c</fullName>
+        <description>Lease Type</description>
+        <externalId>false</externalId>
+        <formula>IF (
+ Quote__r.Full_Prepaid_Lease__c  = TRUE ,
+&quot;Prepaid&quot; ,
+&quot;Monthly&quot;
+)</formula>
+        <inlineHelpText>Lease Type</inlineHelpText>
+        <label>Full Prepaid Lease</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Grant_Method_Basis__c</fullName>
+        <externalId>false</externalId>
+        <label>Grant Method Basis</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Gross_Cash_Payments_Year_1_Month_1__c</fullName>
+        <description>First Monthly Payment</description>
+        <externalId>false</externalId>
+        <formula>IF( ( Lease_Type__c == &quot;Monthly&quot; ), (
+if(Country_Domain__c &lt;&gt;&apos;au&apos;,
+Quote__r.RoundOff_First_Monthly_Payment_Base_Amo__c - Calculated_Operation_and_Maintenance_Fee__c ,
+Quote__r.Monthly_Base_Plus_Tax_Year_1__c - 7.50 - Calculated_Operation_and_Maintenance_Fee__c))
+, 0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>First Monthly Payment</inlineHelpText>
+        <label>Gross Cash Payments (Year 1 Month 1)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Gross_Cash_Payments_prepay__c</fullName>
+        <externalId>false</externalId>
+        <formula>Customer_Prepayment__c + CSI_Rebate__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Gross Cash Payments (prepay)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Gross_MLP_13_20__c</fullName>
+        <externalId>false</externalId>
+        <formula>Yr_13_Annual_Lease_Payment__c  +  Yr_14_Annual_Lease_Payment__c  +  Yr_15_Annual_Lease_Payment__c  +  Yr_16_Annual_Lease_Payment__c  +  Yr_17_Annual_Lease_Payment__c  +  Yr_18_Annual_Lease_Payment__c  +  Yr_19_Annual_Lease_Payment__c  +  Yr_20_Annual_Lease_Payment__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Gross MLP 13-20</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Gross_MLP_1_12__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF (
+Lease_Type__c = &quot;Prepaid&quot; ,
+Gross_Cash_Payments_prepay__c ,
+Yr_01_Annual_Lease_Payment__c  +  Yr_02_Annual_Lease_Payment__c  +  Yr_03_Annual_Lease_Payment__c  +  Yr_04_Annual_Lease_Payment__c  +  Yr_05_Annual_Lease_Payment__c  +  Yr_06_Annual_Lease_Payment__c  +  Yr_07_Annual_Lease_Payment__c  +  Yr_08_Annual_Lease_Payment__c  +  Yr_09_Annual_Lease_Payment__c  +  Yr_10_Annual_Lease_Payment__c  +  Yr_11_Annual_Lease_Payment__c  +  Yr_12_Annual_Lease_Payment__c +  CSI_Rebate__c 
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Gross MLP 1-12</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Gross_MLP_21_25__c</fullName>
+        <externalId>false</externalId>
+        <formula>Yr_21_Annual_Lease_Payment__c + Yr_22_Annual_Lease_Payment__c + Yr_23_Annual_Lease_Payment__c + Yr_24_Annual_Lease_Payment__c + Yr_25_Annual_Lease_Payment__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Gross MLP 21-25</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>ITC__c</fullName>
+        <externalId>false</externalId>
+        <formula>Lease_Payment__r.ITC_Cash_Grant_Valuation_acctg__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>ITC</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Implicit_Rate__c</fullName>
+        <description>This field is populated by code that calculates the Implicit Rate based on the FMV and monthly lease payments</description>
+        <externalId>false</externalId>
+        <label>Implicit Rate</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Joint_Applicant_Middle_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Joint Applicant Middle Name</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease_Calculations_Finished__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This controls the batch job processing the calculations.  If this is false, the summary record will be calculated in the timed batch job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This controls the batch job processing the calculations.  If this is false, the summary record will be calculated in the timed batch job.</inlineHelpText>
+        <label>Lease Calculations Finished</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Lease_Classification__c</fullName>
+        <description>Displays whether the lease is a capital lease or operating lease.</description>
+        <externalId>false</externalId>
+        <formula>IF(RIGHT(Quote__r.Opportunity.Owner.CountryDomainText__c, 2) &lt;&gt;&apos;au&apos;, IF (
+X90_Test__c &gt; 0.90 ,
+&quot;Capital Lease&quot; ,
+  IF(X90_Test__c = 0, &quot;&quot;,
+&quot;Operating Lease&quot;)
+), &apos;Capital Lease&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays whether the lease is a capital lease or operating lease.</inlineHelpText>
+        <label>Lease Classification</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease_FMV__c</fullName>
+        <externalId>false</externalId>
+        <formula>FMV__c - ITC__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Lease FMV for 90% test (cost-ITC)</inlineHelpText>
+        <label>Lease FMV</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Lease_Number__c</fullName>
+        <description>This is the lease number for this particular summary record</description>
+        <externalId>false</externalId>
+        <formula>Quote__r.Consolidated_Lease_Number__c</formula>
+        <label>Lease Number</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease_Payment__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Lease Payment</label>
+        <referenceTo>LeasePayment__c</referenceTo>
+        <relationshipLabel>Lease Schedule Summaries</relationshipLabel>
+        <relationshipName>Lease_Schedule_Summaries</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Lease_Program__c</fullName>
+        <defaultValue>2.4</defaultValue>
+        <externalId>false</externalId>
+        <label>Lease Program</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>1</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease_Residual_Amount__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(RIGHT(Quote__r.Opportunity.Owner.CountryDomainText__c, 2) &lt;&gt;&apos;au&apos;, Lease_Payment__r.Fair_Market_Value_acctg__c * 0.10, 0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Lease Residual $ Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Lease_Type__c</fullName>
+        <externalId>false</externalId>
+        <formula>Lease_Payment__r.Lease_Type__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Lease Type</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Leasee__c</fullName>
+        <description>This is the name of the leasee based on the quote and related account</description>
+        <externalId>false</externalId>
+        <formula>Quote__r.Account__r.Name</formula>
+        <label>Leasee</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Material_Margin__c</fullName>
+        <externalId>false</externalId>
+        <label>Material Margin</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Month__c</fullName>
+        <externalId>false</externalId>
+        <label>Month</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Monthly_O_M_Amortization_Amount__c</fullName>
+        <description>Total operating and maintenance fee income divided by the number of periods in a lease (240).</description>
+        <externalId>false</externalId>
+        <formula>IF(Text(Quote__r.QuoteType__c) &lt;&gt; &apos;Loan&apos;,IF( RIGHT(Quote__r.Opportunity.Owner.CountryDomainText__c, 2) &lt;&gt;&apos;au&apos;,Total_O_M_Income__c / 240, 0),0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Total operating and maintenance fee income divided by the number of periods in a lease (240).</inlineHelpText>
+        <label>Monthly O&amp;M Amortization Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>NPV__c</fullName>
+        <externalId>false</externalId>
+        <formula>NPV_of_MLP__c + NPV_of_UGRV__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>NPV</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>NPV_of_MLP__c</fullName>
+        <description>Populated and calculated by code</description>
+        <externalId>false</externalId>
+        <label>NPV of MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>NPV_of_UGRV__c</fullName>
+        <description>Populated and calculated by code</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Net present value of the unguaranteed residual value</inlineHelpText>
+        <label>NPV of UGRV</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>PBI_or_UPFRONT__c</fullName>
+        <description>This is a temporary placeholder field for the booking template report. One the formula to determine whether a lease is PBI or UPFRONT is confirmed, this will be changed to be a formula field.</description>
+        <externalId>false</externalId>
+        <label>PBI or UPFRONT</label>
+        <length>20</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PV_Residual__c</fullName>
+        <description>Present value of Residual (uses Implicit Rate value, Lease Schedules and Unguaranteed Residual Value).  Populated and calculated by code.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Present value of Residual (uses Implicit Rate value, Lease Schedules and Unguaranteed Residual Value).  Populated and calculated by code.</inlineHelpText>
+        <label>PV Residual</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Amount_2_12__c</fullName>
+        <externalId>false</externalId>
+        <formula>Y1_MLP__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Payment Amount 2 - 12</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Amount_Yr_1_Month_1__c</fullName>
+        <description>This field holds the first monthly payment and any prepayment amount.</description>
+        <externalId>false</externalId>
+        <formula>Y1_MLP__c  +  Quote__r.Partial_Prepayment__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>This field holds the first monthly payment and any prepayment amount.</inlineHelpText>
+        <label>Payment Amount Yr 1 Month 1</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Placed_in_Service__c</fullName>
+        <description>In Service Date</description>
+        <externalId>false</externalId>
+        <formula>Lease_Payment__r.Placed_In_Service__c</formula>
+        <inlineHelpText>In Service Date</inlineHelpText>
+        <label>Placed in Service</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Primary_Applicant_Middle_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Primary Applicant Middle Name</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Principle_Payment__c</fullName>
+        <description>Customer Prepayment plus CSI Rebate for the first payment in the first month and year.</description>
+        <externalId>false</externalId>
+        <formula>CSI_Rebate__c + Customer_Prepayment__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Customer Prepayment plus CSI Rebate for the first payment in the first month and year.</inlineHelpText>
+        <label>Principle Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Projected_Cash_Grant_in__c</fullName>
+        <externalId>false</externalId>
+        <label>Projected Cash Grant in $</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Property_Classification__c</fullName>
+        <defaultValue>&quot;Residential&quot;</defaultValue>
+        <description>Default value for the booking template - all leases are currently residential.</description>
+        <externalId>false</externalId>
+        <label>Property Classification</label>
+        <length>15</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Quote__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Quote</label>
+        <referenceTo>Quote</referenceTo>
+        <relationshipLabel>Lease Schedule Summaries</relationshipLabel>
+        <relationshipName>Lease_Schedule_Summaries</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>System_Size__c</fullName>
+        <description>The maximum rated capacity in watts, taken from the quote</description>
+        <externalId>false</externalId>
+        <formula>Quote__r.Maximum_Rated_Capacity_Watts__c</formula>
+        <inlineHelpText>Maximum Rated Capacity (Watts)</inlineHelpText>
+        <label>System Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Lease_Payments__c</fullName>
+        <externalId>false</externalId>
+        <formula>Gross_MLP_1_12__c  +  Gross_MLP_13_20__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Lease Payments</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_O_M_Income__c</fullName>
+        <description>$0.40 multiplied by the system size.</description>
+        <externalId>false</externalId>
+        <formula>0.40 *  System_Size__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>$0.40 multiplied by the system size.</inlineHelpText>
+        <label>Total O&amp;M Income</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>UPFRONT_or_PBI__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(Country_Domain__c = &apos;au&apos;,&apos; &apos;,
+
+
+IF(Lease_Payment__r.Site_State_Prov__c!=null &amp;&amp; CONTAINS($Setup.Multi_State_Settings__c.PBI_States__c,Lease_Payment__r.Site_State_Prov__c),&apos;PBI&apos;,&apos;UPFRONT&apos;)
+
+
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>UPFRONT or PBI</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Unguaranteed_Residual__c</fullName>
+        <externalId>false</externalId>
+        <formula>FMV__c *0.10</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Unguaranteed Residual</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>WW__c</fullName>
+        <externalId>false</externalId>
+        <label>WW</label>
+        <length>60</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>X90_Test__c</fullName>
+        <description>This field displays the ratio of the Lease FMV to the NPV</description>
+        <externalId>false</externalId>
+        <formula>NPV_of_MLP__c/Lease_FMV__c</formula>
+        <label>90% Test</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Y10_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y10 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y11_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y11 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y12_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y12 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y13_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y13 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y14_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y14 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y15_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y15 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y16_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y16 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y17_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y17 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y18_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y18 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y19_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y19 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y1_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y1 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y20_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y20 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y21_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y21 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y22_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y22 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y23_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y23 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y24_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y24 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y25_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y25 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y2_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y2 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y3_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y3 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y4_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y4 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y5_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y5 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y6_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y6 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y7_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y7 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y8_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y8 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Y9_MLP__c</fullName>
+        <description>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This takes the total yearly payment summed up from the lease schedules that are calculated via code and then subtracts the monthly O&amp;M fee to show the ACH payment per month, which is used to calculate the IRR.</inlineHelpText>
+        <label>Y9 MLP</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_01_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_01_Guaranteed_Output__c ,
+LEN ( Year_01_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_01_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 01 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_01_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_01_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_01_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 01 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_01_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 01 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_02_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_02_Guaranteed_Output__c ,
+LEN ( Year_02_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_02_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 02 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_02_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_02_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_02_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 02 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_02_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 02 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_03_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_03_Guaranteed_Output__c ,
+LEN ( Year_03_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_03_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 03 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_03_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_03_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_03_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 03 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_03_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 03 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_04_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_04_Guaranteed_Output__c ,
+LEN ( Year_04_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_04_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 04 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_04_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_04_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_04_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 04 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_04_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 04 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_05_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_05_Guaranteed_Output__c ,
+LEN ( Year_05_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_05_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 05 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_05_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_05_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_05_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 05 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_05_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 05 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_06_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_06_Guaranteed_Output__c ,
+LEN ( Year_06_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_06_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 06 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_06_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_06_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_06_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 06 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_06_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 06 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_07_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_07_Guaranteed_Output__c ,
+LEN ( Year_07_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_07_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 07 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_07_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_07_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_07_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 07 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_07_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 07 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_08_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_08_Guaranteed_Output__c ,
+LEN ( Year_08_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_08_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 08 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_08_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_08_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_08_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 08 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_08_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 08 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_09_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_09_Guaranteed_Output__c ,
+LEN ( Year_09_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_09_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 09 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_09_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_09_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_09_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 09 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_09_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 09 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_10_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 10 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_10_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_10_Guaranteed_Output__c ,
+LEN ( Year_10_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_10_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 10 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_10_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_10_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_10_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 10 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_10_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 10 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_11_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 11 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_11_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_11_Guaranteed_Output__c ,
+LEN ( Year_11_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_11_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 11 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_11_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_11_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_11_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 11 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_11_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 11 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_12_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 12 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_12_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_12_Guaranteed_Output__c ,
+LEN ( Year_12_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_12_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 12 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_12_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_12_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_12_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 12 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_12_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 12 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_13_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.v</inlineHelpText>
+        <label>Year 13 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_13_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_13_Guaranteed_Output__c ,
+LEN ( Year_13_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_13_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 13 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_13_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_13_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_13_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 13 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_13_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 13 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_14_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 14 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_14_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_14_Guaranteed_Output__c ,
+LEN ( Year_14_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_14_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 14 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_14_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_14_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_14_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 14 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_14_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 14 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_15_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 15 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_15_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_15_Guaranteed_Output__c ,
+LEN ( Year_15_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_15_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 15 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_15_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_15_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_15_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 15 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_15_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 15 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_16_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 16 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_16_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_16_Guaranteed_Output__c ,
+LEN ( Year_16_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_16_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 16 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_16_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_16_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_16_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 16 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_16_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 16 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_17_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 17 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_17_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_17_Guaranteed_Output__c ,
+LEN ( Year_17_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_17_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 17 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_17_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_17_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_17_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 17 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_17_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 17 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_18_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 18 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_18_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_18_Guaranteed_Output__c ,
+LEN ( Year_18_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_18_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 18 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_18_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_18_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_18_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 18 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_18_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 18 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_19_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 19 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_19_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_19_Guaranteed_Output__c ,
+LEN ( Year_19_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_19_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 19 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_19_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_19_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_19_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 19 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_19_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 19 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_1_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 01 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_20_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 20 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_20_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_20_Guaranteed_Output__c ,
+LEN ( Year_20_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_20_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 20 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_20_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_20_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_20_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values.  Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 20 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_20_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes.  Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 20 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_21_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 21 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_21_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_21_Guaranteed_Output__c ,
+LEN ( Year_21_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_21_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Year 21 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_21_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_21_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_21_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 21 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_21_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes. Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 21 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_22_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 22 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_22_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_22_Guaranteed_Output__c ,
+LEN ( Year_22_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_22_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Year 22 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_22_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_22_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_22_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 22 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_22_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes. Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes. Please do not modify without consulting a Sys Admin.</inlineHelpText>
+        <label>Year 22 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_23_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 23 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_23_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_23_Guaranteed_Output__c ,
+LEN ( Year_23_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_23_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Year 23 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_23_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_23_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_23_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 23 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_23_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes. Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 23 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_24_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 24 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_24_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_24_Guaranteed_Output__c ,
+LEN ( Year_24_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_24_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Year 24 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_24_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_24_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_24_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 24 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_24_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes. Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 24 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_25_Annual_Lease_Payment__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting. Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 25 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_25_Guaranteed_Output_High_Value__c</fullName>
+        <description>Displays the high value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>RIGHT (
+Year_25_Guaranteed_Output__c ,
+LEN ( Year_25_Guaranteed_Output__c ) - FIND ( &quot;-&quot; , Year_25_Guaranteed_Output__c )
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Year 25 Guaranteed Output - High Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_25_Guaranteed_Output_Low_Value__c</fullName>
+        <description>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</description>
+        <externalId>false</externalId>
+        <formula>LEFT ( 
+Year_25_Guaranteed_Output__c ,
+FIND ( &quot;-&quot; , Year_25_Guaranteed_Output__c ) - 1
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Displays the low value guaranteed output information from the corresponding Guaranteed Output field with both values. Note that the originating Guaranteed Output values need to be properly formatted in order for this display correctly.</inlineHelpText>
+        <label>Year 25 Guaranteed Output - Low Value</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_25_Guaranteed_Output__c</fullName>
+        <description>Used to display guaranteed values from the lease schedule onto the lease schedule summary object for Booking Template reporting purposes. Please do not modify without consulting a Sys Admin.</description>
+        <externalId>false</externalId>
+        <label>Year 25 Guaranteed Output</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Year_2_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 02 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_3_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 03 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_4_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 04 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_5_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 05 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_6_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 06 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_7_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 07 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_8_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 08 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Year_9_Annual_Lease_Payment__c</fullName>
+        <description>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This is a rollup of all lease payments for the year and is used for reporting.  Please do not modify field properties without consulting a sys admin.</inlineHelpText>
+        <label>Year 09 Annual Lease Payment</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_01_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>(Y1_MLP__c  * 11) +  Payment_Amount_Yr_1_Month_1__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 01 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_02_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y2_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 02 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_03_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y3_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 03 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_04_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y4_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 04 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_05_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y5_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 05 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_06_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y6_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 06 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_07_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y7_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 07 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_08_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y8_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 08 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_09_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y9_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 09 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_10_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y10_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 10 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_11_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y11_MLP__c   * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 11 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_12_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y12_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 12 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_13_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y13_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 13 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_14_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y14_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 14 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_15_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y15_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 15 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_16_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y16_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 16 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_17_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y17_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 17 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_18_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y18_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 18 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_19_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y19_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 19 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_20_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y20_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 20 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_21_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y21_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 21 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_22_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y22_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 22 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_23_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y23_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 23 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_24_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y24_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 24 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Yr_25_Annual_Lease_Payment__c</fullName>
+        <description>These are formula fields that calculate the annual lease payment for each year of the loan. The formula is based on the MLP (field on lease schedule summary)</description>
+        <externalId>false</externalId>
+        <formula>Y25_MLP__c  * 12</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Yr 25 Annual Lease Payment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <label>Lease Schedule Summary</label>
+    <nameField>
+        <displayFormat>LSS-{0000}</displayFormat>
+        <label>Lease  Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Lease Schedule Summaries</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

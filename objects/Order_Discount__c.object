@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Used for calculating ordering discount matrix based on dealer tiers and bulk orders
+
+Created for EU Pricing matrix enhancement Dec 2014</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Bundle_Quantity__c</fullName>
+        <externalId>false</externalId>
+        <label>Bundle Quantity</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Country__c</fullName>
+        <description>Country to which the discount record applies</description>
+        <externalId>false</externalId>
+        <label>Country</label>
+        <picklist>
+            <picklistValues>
+                <fullName>United States</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>United Kingdom</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Germany</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>France</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Italy</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Belgium</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Spain</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Netherlands</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Dealer_Tier__c</fullName>
+        <description>Dealer trier to which the discount is applicable</description>
+        <externalId>false</externalId>
+        <label>Dealer Tier</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Authorized</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Premier</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Standard</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Elite</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Discontinue_Date__c</fullName>
+        <description>Date on which the discount discontinues</description>
+        <externalId>false</externalId>
+        <label>Discontinue Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Discount__c</fullName>
+        <description>Discount Percentage</description>
+        <externalId>false</externalId>
+        <label>Discount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Effective_Date__c</fullName>
+        <defaultValue>TODAY()</defaultValue>
+        <description>Discount Effective Date</description>
+        <externalId>false</externalId>
+        <label>Effective Date</label>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Item_Description__c</fullName>
+        <externalId>false</externalId>
+        <formula>Oracle_Item_ID__r.Description__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Item Description</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Maximum_Quantity__c</fullName>
+        <defaultValue>99999</defaultValue>
+        <description>Maximum Quantity for the order to get discount</description>
+        <externalId>false</externalId>
+        <label>Maximum Quantity</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Minimum_Quantity__c</fullName>
+        <description>Minimum Quantity for the order to get discount</description>
+        <externalId>false</externalId>
+        <label>Minimum Quantity</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Oracle_Item_ID__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Oracle item id</description>
+        <externalId>false</externalId>
+        <label>Oracle Item ID</label>
+        <referenceTo>Item__c</referenceTo>
+        <relationshipLabel>Order Discounts</relationshipLabel>
+        <relationshipName>Order_Discounts</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Service_Fee__c</fullName>
+        <description>Service Fee. New requirement for EU Pricing.</description>
+        <externalId>false</externalId>
+        <label>Service Fee</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Theatre__c</fullName>
+        <description>Region/Market to which the discount applies
+Eg.
+North America
+Australia
+Asia Pacific</description>
+        <externalId>false</externalId>
+        <label>Theatre</label>
+        <picklist>
+            <picklistValues>
+                <fullName>North America</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Europe</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Australia</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Asia Pacific</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Middle East and Africa</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>South America</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Central America and the Caribbean</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>New Zealand</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Order Discount</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Theatre__c</columns>
+        <columns>Oracle_Item_ID__c</columns>
+        <columns>Item_Description__c</columns>
+        <columns>Dealer_Tier__c</columns>
+        <columns>Country__c</columns>
+        <columns>Discount__c</columns>
+        <columns>Minimum_Quantity__c</columns>
+        <columns>Maximum_Quantity__c</columns>
+        <columns>Bundle_Quantity__c</columns>
+        <columns>Service_Fee__c</columns>
+        <columns>CURRENCY_ISO_CODE</columns>
+        <columns>Effective_Date__c</columns>
+        <columns>Discontinue_Date__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Specific</fullName>
+        <columns>NAME</columns>
+        <columns>Bundle_Quantity__c</columns>
+        <columns>Effective_Date__c</columns>
+        <columns>Theatre__c</columns>
+        <columns>Oracle_Item_ID__c</columns>
+        <columns>Item_Description__c</columns>
+        <columns>Maximum_Quantity__c</columns>
+        <columns>Minimum_Quantity__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Country__c</field>
+            <operation>includes</operation>
+            <value>United States</value>
+        </filters>
+        <label>Specific</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <displayFormat>OD-{000000}</displayFormat>
+        <label>Order Discount Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Order Discounts</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

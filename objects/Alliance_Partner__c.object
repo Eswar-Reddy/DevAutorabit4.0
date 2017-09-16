@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>AlliancePartnerEditRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>AlliancePartnerRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Community__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Community</label>
+        <referenceTo>NH_Community__c</referenceTo>
+        <relationshipLabel>Alliance Partners</relationshipLabel>
+        <relationshipName>Alliance_Partners</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Account_Text__c</fullName>
+        <externalId>false</externalId>
+        <formula>Partner_Account__r.Name</formula>
+        <label>Partner Account</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner_Account__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi</description>
+        <externalId>false</externalId>
+        <label>Partner Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Alliance Partners</relationshipLabel>
+        <relationshipName>Alliance_Partners</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Project_Record_Type__c</fullName>
+        <description>Returns the Residential Projects record type, used as criteria in trigger handlers</description>
+        <externalId>false</externalId>
+        <formula>Residential_Project__r.RecordType.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Project Record Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Residential_Project__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi</description>
+        <externalId>false</externalId>
+        <label>Residential Project</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>Residential_Project__c.RecordTypeId</field>
+                <operation>notEqual</operation>
+                <value>Project Template</value>
+            </filterItems>
+            <isOptional>false</isOptional>
+        </lookupFilter>
+        <referenceTo>Residential_Project__c</referenceTo>
+        <relationshipLabel>Alliance Partners</relationshipLabel>
+        <relationshipName>Alliance_Partners</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Role__c</fullName>
+        <description>Residential Installation Project Mgmt
+Priti Rastogi
+The Roles a Partner Account can play on a residential project
+
+New Roles are added for adding roles to community.</description>
+        <externalId>false</externalId>
+        <label>Role</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Builder HERS Rater</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Service Partner</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Dealer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>DRIP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Field Service Representative</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inspection Partner</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Partner</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+            </picklistValues>
+            <picklistValues>
+                <fullName>IP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permitting Partner</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PV HERS Provider</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SPWR HERS Rater</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>TPS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Alliance Partner</label>
+    <nameField>
+        <displayFormat>AP-{000000}</displayFormat>
+        <label>Alliance Partner Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Alliance Partners</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypes>
+        <fullName>Community_Alliance_Partner</fullName>
+        <active>true</active>
+        <description>Alliance Partner related to a NH Community record</description>
+        <label>Community Alliance Partner</label>
+        <picklistValues>
+            <picklist>Role__c</picklist>
+            <values>
+                <fullName>Builder HERS Rater</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Service Partner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DRIP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Dealer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Field Service Representative</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection Partner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PV HERS Provider</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting Partner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SPWR HERS Rater</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Project_Alliance_Partner</fullName>
+        <active>true</active>
+        <description>Alliance Partner related to a Residential Project record</description>
+        <label>Project Alliance Partner</label>
+        <picklistValues>
+            <picklist>Role__c</picklist>
+            <values>
+                <fullName>Builder HERS Rater</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Service Partner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DRIP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Dealer</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Field Service Representative</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inspection Partner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PV HERS Provider</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting Partner</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SPWR HERS Rater</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>TPS</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

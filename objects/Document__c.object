@@ -1,0 +1,1320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>DocumentEditRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>DocumentRedirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Access__c</fullName>
+        <externalId>false</externalId>
+        <label>Access</label>
+        <picklist>
+            <picklistValues>
+                <fullName>FULL_CONTROL</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>public-read</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>WRITE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Account__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Lookup to provide access to documents on the account level</description>
+        <externalId>false</externalId>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Agreement__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Link to agreement</description>
+        <externalId>false</externalId>
+        <label>Agreement</label>
+        <referenceTo>echosign_dev1__SIGN_Agreement__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Bucket_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>Bucket Name</label>
+        <length>122</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Content_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Content Type</label>
+        <length>18</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Design__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Commercial:
+Field created to link document (attachments) to the design object record</description>
+        <externalId>false</externalId>
+        <label>Design</label>
+        <referenceTo>Design__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Document_Link__c</fullName>
+        <externalId>false</externalId>
+        <formula>HYPERLINK(&apos;https://&apos; + Bucket_Name__c + &apos;.s3.amazonaws.com/&apos;&amp; File_Name__c , File_Name__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Document Link</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Document_Type__c</fullName>
+        <description>Field for TPS - this field will be used to identify the documents uploaded by TPS or any other partner</description>
+        <externalId>false</externalId>
+        <label>Document Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>12 Month Utility Bills</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>ACP5 - Asbestos Inspection Report</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Alliance Rebate Form</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>ANSI C12 Certified Meter Worksheet</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Appendix A - NY State Interconnection Contract</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Appendix B and C - NY State Interconnection Contract</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Aurora Deliverables</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Certificate of Acceptance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Change Order</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Commercial Design Deliverables</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Commissioning Report</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Complete Design Package</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed ICF</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed Incentive Claim Form</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed SRP Final As-Built Worksheet</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conditional Final LW</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conditional Lien Waiver - DRIP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conditional Lien Waiver - DRIP (Interconnect)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conditional Lien Waiver - IP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conditional Lien Waiver - IP (Interconnect)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Conditional Progress LW</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Confirmed ICF</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Confirmed Rebate Reservation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Confirmed Rebate Resv</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Copy of Property Survey</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Countersigned Attachment Rebate Application</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Countersigned Rebate Reservation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Countersigned Schedule A</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Countersigned SREC Reservation Form</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Acceptance Form</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Letter of Authorization - for Interconnection</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Signed Exhibit H</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Signed Interconnection Application</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Signed Layout</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Signed Schedule Z (NEM Agreement)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Signed SRP Form</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Customer Signed SunPower Proposal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Invoice</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Plan</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Design Plan (Existing or Updated)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>DOB Report (PTA-4 &amp; TR-1)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Energy Audit</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Inspection/Inspection Sticker Photo</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Invoice-DRIP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Invoice-IP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Invoice-TPS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Final Permit</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Friends &amp; Family Rebate Form</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Installation Invoice</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Install Invoice</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>InterConnect Documents (For Projects&gt;10KW Signed Application Agreement)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>InterConnect Documents ( Signed Part 1 application)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inter-connect Invoice</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inverter Equipment Information</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Lien Waiver - IP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Origination Invoice</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Permitting (DOB)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Photos</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Proof of Homeowner Insurance</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PTO</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PTO Letter</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Purchase Order Copy</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rebate Award Letter</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Roof Addendums (Additional)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sales Photos</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Sales Site Survey</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shading Analysis Documentation</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shading Report</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Shading Report/Solar Census</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Aurora Layout</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Contract</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Copy of Proposal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Final As Built SRP Worksheet:Page 3 (1.HO 2.IP Signatures)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Inspection Card</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed-NTS</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed NY SUN Addendum</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Part 2 of IC documents: {1. HO 2. IP}</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Rebate Resv</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Signed Residential Solar Investment Program Terms &amp; Conditions</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SMS Checklist</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SMS Installation Check List</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SREC Certification Number</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SREC Registration Letter</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SRP (1072 NJCEA Tech Worksheet)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SRP Final As-Built Technical Worksheet &amp; System Photos</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Warranty Reg.</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Warranty Serial Nos.</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>true</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Extension__c</fullName>
+        <description>The extension type of the document. (.pdf,.doc.xls,etc...)</description>
+        <externalId>false</externalId>
+        <label>Extension</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>File_Name__c</fullName>
+        <externalId>false</externalId>
+        <label>File Name</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>File_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>File Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>DXF</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PDF</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>JSON</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>XML</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Financial_Payment__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Financial Payment</label>
+        <referenceTo>LeasePayment__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Invoice_Document_Data__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>When the template is applied to an active project any Document record associated to an IDD will turn into an ICD record instead of a Document record.</description>
+        <externalId>false</externalId>
+        <label>Invoice Document Data</label>
+        <referenceTo>Invoice_Document_Data__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Document__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <description>It&apos;s field to store the OppId + documentType on a unique field. By doing this, We can make documentType unique for a particular Opportunity. It&apos;s created to avoid the custom trigger coding and test classes to cover that.</description>
+        <externalId>false</externalId>
+        <label>Quote-Document</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>TPS: Lookup to Opportunity to capture the document for related Opportunity</description>
+        <externalId>false</externalId>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Project_Task__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+This field connects the document to a project task.</description>
+        <externalId>false</externalId>
+        <label>Project Task</label>
+        <referenceTo>Project_Task__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Quote__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The quote this document is related to.</description>
+        <externalId>false</externalId>
+        <label>Quote</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>Quote.OpportunityId</field>
+                <operation>equals</operation>
+                <valueField>$Source.Opportunity__c</valueField>
+            </filterItems>
+            <isOptional>true</isOptional>
+        </lookupFilter>
+        <referenceTo>Quote</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Residential_Project__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Project Name: Residential Installation Management 
+Requester: Priti Rastogi 
+This field is programmatically populated for documents connected to an opportunity when a related residential project is created.</description>
+        <externalId>false</externalId>
+        <label>Residential Project</label>
+        <referenceTo>Residential_Project__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Roof_Design__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Reference to Documents in S3 associated with Roof Design object.</description>
+        <externalId>false</externalId>
+        <label>Roof Design</label>
+        <referenceTo>Roof_Design__c</referenceTo>
+        <relationshipLabel>Documents</relationshipLabel>
+        <relationshipName>Documents</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>URL__c</fullName>
+        <description>The url sent from Spectrum to access the document.</description>
+        <externalId>false</externalId>
+        <label>URL</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <label>Document</label>
+    <nameField>
+        <label>Document Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Documents</pluralLabel>
+    <recordTypes>
+        <fullName>Document</fullName>
+        <active>true</active>
+        <label>Document</label>
+        <picklistValues>
+            <picklist>Access__c</picklist>
+            <values>
+                <fullName>FULL_CONTROL</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>WRITE</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>public-read</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Document_Type__c</picklist>
+            <values>
+                <fullName>12 Month Utility Bills</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>ACP5 - Asbestos Inspection Report</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>ANSI C12 Certified Meter Worksheet</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alliance Rebate Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Appendix A - NY State Interconnection Contract</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Appendix B and C - NY State Interconnection Contract</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Certificate of Acceptance</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Change Order</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Commercial Design Deliverables</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Commissioning Report</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Complete Design Package</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Completed ICF</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Completed Incentive Claim Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Completed SRP Final As-Built Worksheet</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Final LW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Lien Waiver - DRIP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Lien Waiver - DRIP %28Interconnect%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Lien Waiver - IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Lien Waiver - IP %28Interconnect%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Progress LW</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Confirmed ICF</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Confirmed Rebate Reservation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Confirmed Rebate Resv</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Copy of Property Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Countersigned Attachment Rebate Application</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Countersigned Rebate Reservation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Countersigned SREC Reservation Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Countersigned Schedule A</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Acceptance Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Letter of Authorization - for Interconnection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed Exhibit H</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed Interconnection Application</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed SRP Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed Schedule Z %28NEM Agreement%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed SunPower Proposal</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DOB Report %28PTA-4 %26 TR-1%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Invoice</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Plan</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Design Plan %28Existing or Updated%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Energy Audit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Final Inspection%2FInspection Sticker Photo</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Final Invoice-DRIP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Final Invoice-IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Final Invoice-TPS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Final Permit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Friends %26 Family Rebate Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Install Invoice</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Installation Invoice</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inter-connect Invoice</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>InterConnect Documents %28 Signed Part 1 application%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>InterConnect Documents %28For Projects%3E10KW Signed Application Agreement%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Inverter Equipment Information</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Lien Waiver - IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Origination Invoice</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PTO</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PTO Letter</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting %28DOB%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Photos</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Proof of Homeowner Insurance</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Purchase Order Copy</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Rebate Award Letter</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Roof Addendums %28Additional%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SMS Checklist</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SMS Installation Check List</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SREC Certification Number</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SREC Registration Letter</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SRP %281072 NJCEA Tech Worksheet%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SRP Final As-Built Technical Worksheet %26 System Photos</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Photos</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Site Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Analysis Documentation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Report</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Report%2FSolar Census</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Aurora Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Contract</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Copy of Proposal</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Final As Built SRP Worksheet%3APage 3 %281%2EHO 2%2EIP Signatures%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Inspection Card</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed NY SUN Addendum</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Part 2 of IC documents%3A %7B1%2E HO 2%2E IP%7D</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Rebate Resv</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Residential Solar Investment Program Terms %26 Conditions</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed-NTS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Warranty Reg%2E</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Warranty Serial Nos%2E</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>File_Type__c</picklist>
+            <values>
+                <fullName>DXF</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>JSON</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PDF</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>XML</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>S3_Document</fullName>
+        <active>true</active>
+        <label>S3 Document</label>
+        <picklistValues>
+            <picklist>Access__c</picklist>
+            <values>
+                <fullName>FULL_CONTROL</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>WRITE</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>public-read</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Document_Type__c</picklist>
+            <values>
+                <fullName>12 Month Utility Bills</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alliance Rebate Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Appendix A - NY State Interconnection Contract</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Appendix B and C - NY State Interconnection Contract</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Aurora Deliverables</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Change Order</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Commercial Design Deliverables</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Commissioning Report</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Complete Design Package</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Completed Incentive Claim Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Completed SRP Final As-Built Worksheet</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Lien Waiver - DRIP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Conditional Lien Waiver - IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Confirmed Rebate Resv</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Copy of Property Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Acceptance Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Letter of Authorization - for Interconnection</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Customer Signed SRP Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>DOB Report %28PTA-4 %26 TR-1%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Energy Audit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Final Permit</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Friends %26 Family Rebate Form</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>InterConnect Documents %28 Signed Part 1 application%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>InterConnect Documents %28For Projects%3E10KW Signed Application Agreement%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Lien Waiver - IP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PTO</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Permitting %28DOB%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Photos</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Roof Addendums %28Additional%29</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SMS Checklist</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Photos</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Sales Site Survey</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Report</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Shading Report%2FSolar Census</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Aurora Layout</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Contract</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Copy of Proposal</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Inspection Card</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed NY SUN Addendum</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed Rebate Resv</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Signed-NTS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Warranty Reg%2E</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>File_Type__c</picklist>
+            <values>
+                <fullName>DXF</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>JSON</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>PDF</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>XML</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>Add_New_Document</fullName>
+        <availability>online</availability>
+        <description>Spectrum UI/UX - Partner facing Button to create a new Documentt</description>
+        <displayType>massActionButton</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Add New Document</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>/apex/SPCommunityDocumentNew?objecttype=Document__c&amp;Opportunity__c={!Opportunity.Id}&amp;Account__c={!Account.Id}&amp;Residential_Project__c={!Residential_Project__c.Id}&amp;Project_Task__c={!Project_Task__c.Id}&amp;retURL=
+{!NULLVALUE(Project_Task__c.Id,NULLVALUE(NULLVALUE(Opportunity.Id, Account.Id), Residential_Project__c.Id))}</url>
+    </webLinks>
+</CustomObject>

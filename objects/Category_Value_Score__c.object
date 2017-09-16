@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>This object will be use for Opportunity Score related Main Category &gt; Sub=Category&gt;Category&gt;Category Value Score.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <fields>
+        <fullName>Category__c</fullName>
+        <description>It will be use for Opportunity Score related Main Category &gt; Sub=Category&gt;Category.</description>
+        <externalId>false</externalId>
+        <label>Category</label>
+        <referenceTo>Category__c</referenceTo>
+        <relationshipLabel>Category Value Scores</relationshipLabel>
+        <relationshipName>Category_Value_Scores</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>true</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Input_Type__c</fullName>
+        <description>This field will be showing type of input.</description>
+        <externalId>false</externalId>
+        <label>Input Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Picklist</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Number</fullName>
+                <default>false</default>
+            </picklistValues>
+            <restrictedPicklist>true</restrictedPicklist>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Maximum_Value__c</fullName>
+        <description>Enter Max value for input type number selection</description>
+        <externalId>false</externalId>
+        <label>Maximum Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Minimum_Value__c</fullName>
+        <description>Enter min number value</description>
+        <externalId>false</externalId>
+        <label>Minimum Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Score__c</fullName>
+        <description>This field will be use for storing score of each category.</description>
+        <externalId>false</externalId>
+        <label>Score</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Scoring_Guide__c</fullName>
+        <description>This field use for Scoring Guide.</description>
+        <externalId>false</externalId>
+        <label>Scoring Guide</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Category Value Score</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Category__c</columns>
+        <columns>Input_Type__c</columns>
+        <columns>Maximum_Value__c</columns>
+        <columns>Minimum_Value__c</columns>
+        <columns>Score__c</columns>
+        <columns>Scoring_Guide__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <label>Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Category Value Scores</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Min_Max_required_for_Input_Type_number</fullName>
+        <active>true</active>
+        <description>Min Max required for Input Type number</description>
+        <errorConditionFormula>IF($User.ByPassValidation__c == false,(AND( 
+ISPICKVAL( Input_Type__c, &quot;Number&quot;), 
+OR ( 
+ISBLANK( Minimum_Value__c ) , 
+ISBLANK( Maximum_Value__c ) )
+)),null)</errorConditionFormula>
+        <errorMessage>Min Max required for Input Type number</errorMessage>
+    </validationRules>
+</CustomObject>

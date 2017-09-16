@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Aurora- This object contains the list of inverters per design. It is possible for an inverter to be associated with multiple roofs. This object will carry this list.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>EDDiE_Retrofit__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Indication that the record was created as part of EDDiE Data Retrofit</description>
+        <externalId>false</externalId>
+        <label>EDDiE Retrofit</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Index__c</fullName>
+        <description>To store index value of Inverter to be used by Informatica</description>
+        <externalId>false</externalId>
+        <label>Index</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Integration_Message__c</fullName>
+        <description>Aurora: This field will capture messages from Aurora Integration. For example, if a configuration is not found, this field will capture the item information for which configuration is missing.</description>
+        <externalId>false</externalId>
+        <label>Integration Message</label>
+        <length>32768</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>InverterConfiguration__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Aurora: lookup to the inverter record</description>
+        <externalId>false</externalId>
+        <label>Inverter Configuration</label>
+        <referenceTo>Inverter_Configuration__c</referenceTo>
+        <relationshipLabel>Inverter List</relationshipLabel>
+        <relationshipName>Inverter_List</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RoofDesign__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Inverter list record will be associated with this roof design</description>
+        <externalId>false</externalId>
+        <label>Roof Design</label>
+        <referenceTo>Roof_Design__c</referenceTo>
+        <relationshipName>Design_Inverter_List</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <label>Inverter List</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Inverter List Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Inverter List</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>
